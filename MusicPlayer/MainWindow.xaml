@@ -13,7 +13,7 @@
          SnapsToDevicePixels="False"
          FontSize="13"
          x:Name="me"
-         FontFamily="微软雅黑"
+         FontFamily="Segoe UI Light;造字工房悦黑体验版纤细体"
          Title="虾米下载">
     <Window.Resources>
         <Style TargetType="Button"

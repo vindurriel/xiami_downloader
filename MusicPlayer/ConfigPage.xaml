@@ -3,7 +3,7 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              FontSize="15"
              xmlns:controls="http://jean.doe/controls"
-             FontFamily="微软雅黑"
+             FontFamily="Segoe UI Light;造字工房悦黑体验版纤细体"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Grid x:Name="root">
         <Grid.Resources>

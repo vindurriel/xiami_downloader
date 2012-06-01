@@ -55,7 +55,7 @@
                         <Setter Property="FontSize"
                                 Value="15" />
                         <Setter Property="FontFamily"
-                                Value="微软雅黑" />
+                                Value="Segoe UI Light;造字工房悦黑体验版纤细体" />
                         <Setter Property="MinWidth"
                                 Value="80" />
                         <Setter Property="Template">
