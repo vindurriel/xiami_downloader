@@ -31,27 +31,18 @@ public static class MagnetBehavior
             storyboard.Completed += storyboard_Completed;
             win.StateChanged += win_StateChanged;
         }
-        bool canShow = true;
         void win_StateChanged(object sender, EventArgs e)
         {
-            if(window.WindowState == WindowState.Normal)
+            if (window.WindowState == WindowState.Normal)
             {
-                if(canShow)
-                    slideShow(true);
-                else
-                    canShow = false;
+                slideShow(true);
             }
-            if(window.WindowState == WindowState.Minimized)
-            {
-                window.WindowState = WindowState.Normal;
-            }
-
         }
         void storyboard_Completed(object sender, EventArgs e)
         {
             isPlaying = false;
             hiding = !hiding;
-            if(!topmost)
+            if (!topmost)
                 window.Topmost = Rim != EnumRim.None;
         }
         void MainWindow_MouseEnter(object sender, MouseEventArgs e)
@@ -80,12 +71,12 @@ public static class MagnetBehavior
         double showPos;
         EnumRim DetectRim()
         {
-            if(window.WindowState == WindowState.Maximized) return EnumRim.None;
+            if (window.WindowState == WindowState.Maximized) return EnumRim.None;
             screen = window.GetScreen().WorkingArea;
-            if(window.Left - screen.X < Border) return EnumRim.Left;
-            if(window.Top - screen.Y < Border) return EnumRim.Top;
-            if(screen.X + screen.Width - window.Left - window.Width < Border) return EnumRim.Right;
-            if(screen.Y + screen.Height - window.Top - window.Height < Border) return EnumRim.Bottom;
+            if (window.Left - screen.X < Border) return EnumRim.Left;
+            if (window.Top - screen.Y < Border) return EnumRim.Top;
+            if (screen.X + screen.Width - window.Left - window.Width < Border) return EnumRim.Right;
+            if (screen.Y + screen.Height - window.Top - window.Height < Border) return EnumRim.Bottom;
             return EnumRim.None;
         }
         public event EventHandler RimChanged;
@@ -97,7 +88,7 @@ public static class MagnetBehavior
             set
             {
                 rim = value;
-                switch(value)
+                switch (value)
                 {
                     case EnumRim.Top:
                         Storyboard.SetTargetProperty(anim, new PropertyPath("Top"));
@@ -124,16 +115,16 @@ public static class MagnetBehavior
                     default:
                         break;
                 }
-                if(RimChanged != null)
+                if (RimChanged != null)
                     RimChanged(this, EventArgs.Empty);
             }
         }
         bool isPlaying = false;
         void slideShow(bool fullAnimation = false)
         {
-            if(Rim == EnumRim.None) return;
-            if(isPlaying) return;
-            if(!hiding) return;
+            if (Rim == EnumRim.None) return;
+            if (isPlaying) return;
+            if (!hiding) return;
             isPlaying = true;
             anim.BeginTime = TimeSpan.FromMilliseconds(0);
             anim.From = hidingPos;
@@ -142,9 +133,9 @@ public static class MagnetBehavior
         }
         void slideHide(bool fullAnimation = false)
         {
-            if(Rim == EnumRim.None) return;
-            if(isPlaying) return;
-            if(hiding) return;
+            if (Rim == EnumRim.None) return;
+            if (isPlaying) return;
+            if (hiding) return;
             isPlaying = true;
             anim.BeginTime = TimeSpan.FromMilliseconds(600);
             anim.From = showPos;
@@ -154,7 +145,7 @@ public static class MagnetBehavior
     }
     public static void SetMagnetBorder(this Window w, double b)
     {
-        if(!dict.ContainsKey(w.GetHashCode())) return;
+        if (!dict.ContainsKey(w.GetHashCode())) return;
         dict[w.GetHashCode()].Border = b;
     }
     public static System.Windows.Forms.Screen GetScreen(this Window window)
@@ -165,7 +156,7 @@ public static class MagnetBehavior
     public static void EnableMagnet(this Window window)
     {
         var hash = window.GetHashCode();
-        if(dict.ContainsKey(hash)) return;
+        if (dict.ContainsKey(hash)) return;
         var mw = new MagnetHost(window);
         dict.Add(hash, mw);
     }
@@ -173,14 +164,14 @@ public static class MagnetBehavior
     public static void DisableMagnet(this Window window)
     {
         var hash = window.GetHashCode();
-        if(!dict.ContainsKey(hash)) return;
+        if (!dict.ContainsKey(hash)) return;
         dict[hash].Dispose();
         dict.Remove(hash);
     }
     public static void ListenToRimChanged(this Window window, Action<EnumRim> a)
     {
         var hash = window.GetHashCode();
-        if(!dict.ContainsKey(hash)) return;
+        if (!dict.ContainsKey(hash)) return;
         dict[hash].RimChanged += (s, e) => a(dict[hash].Rim);
     }
 

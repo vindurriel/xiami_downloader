@@ -5,13 +5,13 @@
          xmlns:controls="http://jean.doe/controls"
          xmlns:common="clr-namespace:Jean_Doe.Common;assembly=Jean_Doe.Common"
          WindowStyle="None"
-         ResizeMode="CanResizeWithGrip"
          Background="#01ffffff"
          Foreground="{DynamicResource lightBrush}"
          AllowsTransparency="True"
          Icon="icon.ico"
-         SnapsToDevicePixels="False"
-         FontSize="13"
+         SnapsToDevicePixels="True"
+         FontSize="15"
+         ResizeMode="CanResizeWithGrip"
          x:Name="me"
          FontFamily="Segoe UI Light;造字工房悦黑体验版纤细体"
          Title="虾米下载">
@@ -84,12 +84,6 @@
             <DockPanel LastChildFill="False"
                        x:Name="navi"
                        Margin="0">
-                <controls:ProgressBar ItemWidth="5"
-                                      x:Name="busyIndicator"
-                                      Margin="0"
-                                      IsIndeterminate="False"
-                                      HorizontalAlignment="Stretch"
-                                      DockPanel.Dock="Bottom" />
                 <TextBlock Text="虾米下载"
                            Width="100"
                            Visibility="Collapsed"
@@ -251,6 +245,13 @@
                     </Grid>
                 </Grid>
             </Border>
+            <controls:ProgressBar ItemWidth="5"
+                                  x:Name="busyIndicator"
+                                  Margin="0"
+                                  Grid.Row="2"
+                                  IsIndeterminate="False"
+                                  HorizontalAlignment="Stretch"
+                                  DockPanel.Dock="Bottom" />
             <TextBlock x:Name="statusBar"
                        Grid.Row="2" />
         </Grid>

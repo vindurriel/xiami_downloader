@@ -272,7 +272,7 @@ namespace MusicPlayer
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                statusBar.Text = status;
+                //statusBar.Text = status;
             }));
         }
 

@@ -49,7 +49,7 @@
                         <Setter Property="Padding"
                                 Value="5" />
                         <Setter Property="Margin"
-                                Value="5,0" />
+                                Value="0" />
                         <Setter Property="Foreground"
                                 Value="#bbbbbb" />
                         <Setter Property="FontSize"
