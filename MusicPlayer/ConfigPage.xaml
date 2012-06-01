@@ -1,0 +1,175 @@
+﻿<UserControl x:Class="MusicPlayer.ConfigPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             FontSize="15"
+             xmlns:controls="http://jean.doe/controls"
+             FontFamily="微软雅黑"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid x:Name="root">
+        <Grid.Resources>
+            <sys:Double x:Key="lineHeight">30</sys:Double>
+            <Thickness x:Key="lineMargin">0,10</Thickness>
+            <Style TargetType="ComboBox"
+                   BasedOn="{StaticResource {x:Type ComboBox}}">
+                <EventSetter Event="ComboBox.SelectionChanged"
+                             Handler="combo_SelectionChanged" />
+                <Setter Property="HorizontalContentAlignment"
+                        Value="Left" />
+                <Setter Property="Margin"
+                        Value="{StaticResource lineMargin}" />
+                <Setter Property="Background"
+                        Value="#555" />
+                <Setter Property="Height"
+                        Value="{StaticResource lineHeight}" />
+            </Style>
+            <Style TargetType="DockPanel">
+                <Setter Property="Margin"
+                        Value="{StaticResource lineMargin}" />
+                <Setter Property="Height"
+                        Value="{StaticResource lineHeight}" />
+            </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <!--dirty popup-->
+        <Border x:Name="pop"
+                Grid.ColumnSpan="3"
+                Background="{DynamicResource selectBrush}">
+            <DockPanel>
+                <Button x:Name="btn_save"
+                        Content="保存"
+                        VerticalContentAlignment="Center"
+                        MinWidth="80"
+                        Padding="5,2"
+                        Margin="5,0"
+                        MinHeight="{StaticResource lineHeight}"
+                        DockPanel.Dock="Right" />
+                <TextBlock  HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Foreground="White"
+                            Text="有未保存的修改" />
+            </DockPanel>
+        </Border>
+        <!--labels-->
+        <StackPanel Grid.Row="1"
+                    Margin="0,0,30,0">
+            <StackPanel.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Margin"
+                            Value="{StaticResource lineMargin}" />
+                    <Setter Property="FontSize"
+                            Value="15" />
+                    <Setter Property="Height"
+                            Value="{StaticResource lineHeight}" />
+                    <Setter Property="HorizontalAlignment"
+                            Value="Right" />
+                    <Setter Property="VerticalAlignment"
+                            Value="Center" />
+                </Style>
+            </StackPanel.Resources>
+            <TextBlock Text="下载位置" />
+            <TextBlock Text="同时下载数量" />
+            <TextBlock Text="歌曲名称规则" />
+            <TextBlock Text="目录名称规则" />
+            <TextBlock Text="边界停靠" />
+            <TextBlock Text="主题颜色" />
+        </StackPanel>
+        <GridSplitter Width="30"
+                      Grid.Row="1"
+                      HorizontalAlignment="Right"
+                      Background="#01000000" />
+        <!--options-->
+        <StackPanel Grid.Column="1"
+                    Grid.Row="1"
+                    Margin="5,0">
+            <Grid Margin="{StaticResource lineMargin}"
+                  Height="{StaticResource lineHeight}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="label_downloadfolder"
+                           MinWidth="100"
+                           Margin="0"
+                           Height="{StaticResource lineHeight}"
+                           HorizontalAlignment="Stretch"
+                           VerticalAlignment="Center"
+                           Background="#555" />
+                <Button x:Name="btn_browse"
+                        Click="btn_browse_Click"
+                        Content="浏览"
+                        MinWidth="80"
+                        Margin="2,0,0,0"
+                        Padding="5,2"
+                        MinHeight="{StaticResource lineHeight}"
+                        Grid.Column="1" />
+                <FrameworkElement Width="2" />
+            </Grid>
+            <ComboBox x:Name="combo_maxconnection">
+                <ComboBoxItem Content="10"
+                              Tag="10" />
+                <ComboBoxItem Content="20"
+                              Tag="20" />
+                <ComboBoxItem Content="不限制"
+                              Tag="9999" />
+            </ComboBox>
+            <ComboBox x:Name="combo_songnamepattern">
+                <ComboBoxItem Content="艺术家 - 歌曲名 - 专辑名"
+                              Tag="%ArtistName - %Name - %AlbumName" />
+                <ComboBoxItem Content="歌曲名 - 歌曲ID"
+                              Tag="%Name - %Id" />
+                <ComboBoxItem Content="艺术家 - 歌曲名"
+                              Tag="%ArtistName - %Name" />
+            </ComboBox>
+            <ComboBox x:Name="combo_folderpattern">
+                <ComboBoxItem Content="不建立目录"
+                              Tag="" />
+                <ComboBoxItem Content="艺术家\专辑"
+                              Tag="%ArtistName\%AlbumName" />
+                <ComboBoxItem Content="仅专辑"
+                              Tag="%AlbumName" />
+                <ComboBoxItem Content="仅艺术家"
+                              Tag="%ArtistName" />
+            </ComboBox>
+            <ComboBox x:Name="combo_enablemagnet">
+                <ComboBoxItem Content="启用"
+                              Tag="1" />
+                <ComboBoxItem Content="停用"
+                              Tag="0" />
+            </ComboBox>
+            <Button Width="auto"
+                    x:Name="btn_skin"
+                    HorizontalAlignment="Left"
+                    MinWidth="0"
+                    Click="btn_skin_click"
+                    Padding="2"
+                    Margin="0,10">
+                <Rectangle Width="80"
+                           Height="30"
+                           Margin="0">
+                    <Rectangle.Fill>
+                        <SolidColorBrush Color="{Binding SelectedColor,ElementName=color_colorskin}" />
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Button>
+            <Popup x:Name="pop_skin"
+                   IsOpen="False"
+                   PopupAnimation="Slide"
+                   StaysOpen="False"
+                   PlacementTarget="{Binding ElementName=btn_skin}"
+                   AllowsTransparency="True">
+                <Grid>
+                    <controls:ColorPicker FontSize="10"
+                                          x:Name="color_colorskin"></controls:ColorPicker>
+                </Grid>
+            </Popup>
+        </StackPanel>
+    </Grid>
+</UserControl>

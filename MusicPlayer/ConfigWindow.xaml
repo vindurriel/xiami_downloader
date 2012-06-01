@@ -1,0 +1,54 @@
+﻿<Window x:Class="MusicPlayer.ConfigWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="配置"
+        SizeToContent="Height"
+        Icon="icon.ico"
+        Width="250">
+    <Grid Margin="10">
+        <StackPanel x:Name="labels">
+            <TextBlock Text="下载位置"
+                       Margin="0,5" />
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="btn_browse"
+                        Click="btn_browse_Click"
+                        Content="浏览"
+                        Width="50"
+                        Height="Auto" />
+                <TextBlock x:Name="label_downloadfolder" />
+            </StackPanel>
+            <TextBlock Text="同时下载数量"
+                       Margin="0,5" />
+            <ComboBox x:Name="combo_maxconnection"
+                      Margin="0,5">
+                <ComboBoxItem Content="10"
+                              Tag="10" />
+                <ComboBoxItem Content="20"
+                              Tag="20" />
+                <ComboBoxItem Content="不限制"
+                              Tag="9999" />
+            </ComboBox>
+            <TextBlock Text="歌曲名称规则" />
+            <ComboBox x:Name="combo_songnamepattern"
+                      Margin="0,5">
+                <ComboBoxItem Content="艺术家 - 歌曲名 - 专辑名"
+                              Tag="%ArtistName - %Name - %AlbumName" />
+                <ComboBoxItem Content="歌曲名 - 歌曲ID"
+                              Tag="%Name - %Id" />
+                <ComboBoxItem Content="艺术家 - 歌曲名"
+                              Tag="%ArtistName - %Name" />
+            </ComboBox>
+            <TextBlock Text="目录名称规则" />
+            <ComboBox x:Name="combo_folderpattern">
+                <ComboBoxItem Content="不建立目录"
+                              Tag="" />
+                <ComboBoxItem Content="艺术家\专辑"
+                              Tag="%ArtistName\%AlbumName" />
+                <ComboBoxItem Content="仅专辑"
+                              Tag="%AlbumName" />
+                <ComboBoxItem Content="仅艺术家"
+                              Tag="%ArtistName" />
+            </ComboBox>
+        </StackPanel>
+    </Grid>
+</Window>

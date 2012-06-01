@@ -1,0 +1,25 @@
+﻿<ComboBox x:Class="Jean_Doe.MusicControl.HistorySearch"
+          TextSearch.TextPath="Key"
+          Style="{DynamicResource comboStyle}"
+          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ComboBox.ItemTemplate>
+        <DataTemplate>
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Key}" VerticalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal"
+                            Margin="5"
+                            Grid.Column="1"
+                            HorizontalAlignment="Right">
+                    <TextBlock Text="搜索" />
+                    <TextBlock   Text="{Binding SearchCount}" />
+                    <TextBlock Text="次" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </ComboBox.ItemTemplate>
+</ComboBox>

@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="Jean_Doe.MusicControl.TitleBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             x:Name="me"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/TouchButtonStyle.xaml" />
+                <ResourceDictionary>
+                    <DropShadowEffect x:Key="shadow"
+                                      Color="Black"
+                                      BlurRadius="3"
+                                      Direction="-45"
+                                      ShadowDepth="0" />
+                    <Style TargetType="Image">
+                        <Setter Property="Width"
+                                Value="10" />
+                        <Setter Property="Height"
+                                Value="10" />
+                        <Setter Property="Stretch"
+                                Value="UniformToFill" />
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="#01000000">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Column="1">
+            <Button x:Name="min"
+                    Style="{DynamicResource StyleWindowButton}"
+                    Click="BtnMinimizeClick">
+                <Image Source="/Jean_Doe.MusicControl;component/Resources/min.png"  
+                       Effect="{StaticResource shadow}"></Image>
+            </Button>
+            <Button x:Name="max"
+                    Style="{DynamicResource StyleWindowButton}"
+                    Click="BtnMaximizeClick">
+                <Image Source="/Jean_Doe.MusicControl;component/Resources/max.png"
+                       Effect="{StaticResource shadow}"></Image>
+            </Button>
+            <Button x:Name="close"
+                    Width="50"
+                    Style="{DynamicResource StyleWindowButton}"
+                    Click="BtnCloseClick">
+                <Image Source="/Jean_Doe.MusicControl;component/Resources/close.png"
+                       Effect="{StaticResource shadow}"></Image>
+            </Button>
+        </DockPanel>
+    </Grid>
+</UserControl>
