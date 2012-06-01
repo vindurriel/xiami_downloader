@@ -29,8 +29,17 @@
         </Style>
         <Style x:Key="{x:Type ResizeGrip}"
                TargetType="{x:Type ResizeGrip}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver"
+                         Value="True">
+                    <Setter Property="Foreground"
+                            Value="{DynamicResource skinBrush}" />
+                </Trigger>
+            </Style.Triggers>
             <Setter Property="OverridesDefaultStyle"
                     Value="true" />
+            <Setter Property="Foreground"
+                    Value="#555" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ResizeGrip}">
@@ -39,7 +48,7 @@
                                 Width="16"
                                 Height="16">
                             <Viewbox>
-                                <Path Fill="{DynamicResource skinBrush}"
+                                <Path Fill="{TemplateBinding Foreground}"
                                       Data="M 4 0 L 4 4 L 0 4 z"></Path>
                             </Viewbox>
                         </Border>

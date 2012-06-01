@@ -61,8 +61,8 @@
                                     BorderBrush="{DynamicResource BorderBrush}" />
                             <Grid x:Name="OverRect"
                                   Opacity="0">
-                                <Border Opacity="1"
-                                        Background="{DynamicResource skinBrush}" />
+                                <Border Background="{DynamicResource skinBrush}" />
+                                <Border Background="#3fff" />
                             </Grid>
                             <Grid x:Name="PressRect"
                                   Opacity="0">
