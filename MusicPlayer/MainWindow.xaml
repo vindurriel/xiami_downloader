@@ -59,6 +59,8 @@
             </Setter>
         </Style>
         <controls:IntToVisibilityConverter x:Key="int2vis" />
+        <!--pages-->
+        
     </Window.Resources>
     <Grid>
         <Border x:Name="border"
@@ -179,7 +181,7 @@
             <!--contents-->
             <Border Grid.Row="1"
                     Background="Transparent">
-                <Grid>
+                <Grid x:Name="content">
                     <Grid x:Name="page1"
                           Visibility="Collapsed">
                         <Grid.RowDefinitions>
