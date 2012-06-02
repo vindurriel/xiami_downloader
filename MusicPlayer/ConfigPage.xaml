@@ -35,11 +35,12 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <!--dirty popup-->
         <Border x:Name="pop"
+                Grid.Row="1"
                 Grid.ColumnSpan="3"
                 Background="{DynamicResource selectBrush}">
             <DockPanel>
@@ -58,8 +59,7 @@
             </DockPanel>
         </Border>
         <!--labels-->
-        <StackPanel Grid.Row="1"
-                    Margin="0,0,30,0">
+        <StackPanel Margin="0,0,30,0">
             <StackPanel.Resources>
                 <Style TargetType="TextBlock">
                     <Setter Property="Margin"
@@ -82,12 +82,10 @@
             <TextBlock Text="主题颜色" />
         </StackPanel>
         <GridSplitter Width="30"
-                      Grid.Row="1"
                       HorizontalAlignment="Right"
                       Background="#01000000" />
         <!--options-->
         <StackPanel Grid.Column="1"
-                    Grid.Row="1"
                     Margin="5,0">
             <Grid Margin="{StaticResource lineMargin}"
                   Height="{StaticResource lineHeight}">

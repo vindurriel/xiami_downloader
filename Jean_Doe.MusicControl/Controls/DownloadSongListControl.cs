@@ -23,6 +23,7 @@ namespace Jean_Doe.MusicControl
                 CellTemplate = dataGrid.FindResource("statusTemplate") as DataTemplate,
                 Width = DataGridLength.SizeToCells,
                 Header = "状态",
+                SortMemberPath="Status"
             });
         }
         public override void Load()

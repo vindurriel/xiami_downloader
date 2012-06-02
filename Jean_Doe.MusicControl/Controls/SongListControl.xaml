@@ -215,7 +215,7 @@
                             <Setter Property="Background"
                                     Value="{StaticResource selectBrush}" />
                         </Trigger>
-                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                        <!--<EventTrigger RoutedEvent="FrameworkElement.Loaded">
                             <BeginStoryboard>
                                 <Storyboard>
                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
@@ -234,7 +234,7 @@
                                                      To="0" />
                                 </Storyboard>
                             </BeginStoryboard>
-                        </EventTrigger>
+                        </EventTrigger>-->
                     </Style.Triggers>
                     <Setter Property="Background"
                             Value="Transparent" />

@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using Artwork.MessageBus;
 using Artwork.MessageBus.Interfaces;
 using Jean_Doe.Common;
@@ -28,12 +29,14 @@ namespace MusicPlayer
         public event PropertyChangedEventHandler PropertyChanged;
         void Notify(string prop)
         {
-            if(PropertyChanged != null)
+            if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
         #endregion
         //public enum EnumPage { one, two, three,four }
+
         readonly int pageCount = 4;
+        FrameworkElement lastPage;
         private int page;
         public int Page
         {
@@ -41,29 +44,37 @@ namespace MusicPlayer
             set
             {
                 page = value;
-                if(page == 1)
+                if (page == 1)
                 {
                     head1.IsChecked = true;
                     expander1.IsExpanded = true;
-                    page1.Visibility = Visibility.Visible;
                 }
                 else
                 {
                     head1.IsChecked = false;
                     expander1.IsExpanded = false;
-                    page1.Visibility = Visibility.Collapsed;
                 }
 
-                for(int i = 2; i < pageCount + 1; i++)
+                for (int i = 2; i < pageCount + 1; i++)
                 {
                     var header = FindName("head" + i.ToString()) as ToggleButton;
-                    var content = FindName("page" + i.ToString()) as Grid;
                     header.IsChecked = i == page;
-                    content.Visibility = i == page ? Visibility.Visible : Visibility.Collapsed;
                 }
+                var content = FindName("page" + page.ToString()) as FrameworkElement;
+                if (content != null)
+                    showPage(content);
             }
         }
-
+        void showPage(FrameworkElement content)
+        {
+            if (content == lastPage) return;
+            var slideOut = FindResource("SlideOut") as Storyboard;
+            var slideIn = FindResource("SlideIn") as Storyboard;
+            if (lastPage != null)
+                slideOut.Begin(lastPage, true);
+            slideIn.Begin(content, true);
+            lastPage = content;
+        }
         public MainWindow()
         {
             Global.LoadSettings();
@@ -84,10 +95,10 @@ namespace MusicPlayer
             //tag control events
             head1 = expander1.Template.FindName("ExpanderButton", expander1) as ToggleButton;
             head1.Click += (s, a) => Page = 1;
-            for(int i = 2; i < pageCount + 1; i++)
+            for (int i = 2; i < pageCount + 1; i++)
             {
                 var header = FindName("head" + i.ToString()) as ToggleButton;
-                if(header != null)
+                if (header != null)
                     header.Click += (s, a) =>
                     {
                         Page = int.Parse((s as FrameworkElement).Name.Substring(4));
@@ -95,12 +106,12 @@ namespace MusicPlayer
             }
             //load last window position
             var rect = Rect.Parse(Global.AppSettings["WindowPos"]);
-            if(rect.Width * rect.Height != 0)
+            if (rect.Width * rect.Height != 0)
             {
                 Left = rect.Left; Top = rect.Top; Width = rect.Width; Height = rect.Height;
             }
-            if(Left < 0) Left = 0;
-            if(Top < 0) Top = 0;
+            if (Left < 0) Left = 0;
+            if (Top < 0) Top = 0;
             //load last active page
             Page = int.Parse(Global.AppSettings["ActivePage"]);
             //enable magnet 
@@ -120,7 +131,7 @@ namespace MusicPlayer
 
         void SetEnableMagnet(string on)
         {
-            if(on == "1")
+            if (on == "1")
             {
                 this.EnableMagnet();
                 this.ListenToRimChanged(OnRimChanged);
@@ -134,7 +145,7 @@ namespace MusicPlayer
         {
             var t = new Thickness(0);
             var width = 2;
-            switch(rim)
+            switch (rim)
             {
                 case EnumRim.Top:
                     t.Bottom = width;
@@ -175,7 +186,7 @@ namespace MusicPlayer
         void btn_download_add_Click(object sender, RoutedEventArgs e)
         {
             var list = list_search.SelectedItems.ToList();
-            foreach(var item in list)
+            foreach (var item in list)
             {
                 list_download.Add(item);
                 list_search.Remove(item);
@@ -194,7 +205,7 @@ namespace MusicPlayer
         {
             DownloadManager.Instance.Remove(list_download.SelectedItems.Select(x => x.Id).ToList());
             var list = list_download.SelectedItems.ToList();
-            foreach(var item in list)
+            foreach (var item in list)
             {
                 list_download.Remove(item);
             }
@@ -202,7 +213,7 @@ namespace MusicPlayer
         void btn_remove_complete_Click(object sender, RoutedEventArgs e)
         {
             var list = list_complete.SelectedItems.ToList();
-            foreach(var item in list)
+            foreach (var item in list)
             {
                 list_complete.Remove(item);
             }
@@ -219,7 +230,7 @@ namespace MusicPlayer
         void btn_save_playlist_Click(object sender, RoutedEventArgs e)
         {
             var list = list_complete;
-            if(!list.SelectedItems.Any())
+            if (!list.SelectedItems.Any())
                 return;
             var win = new System.Windows.Forms.SaveFileDialog
             {
@@ -228,7 +239,7 @@ namespace MusicPlayer
                 OverwritePrompt = true,
                 Title = "存为播放列表"
             };
-            if(win.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (win.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 SavePlaylist(win.FileName);
             }
@@ -236,10 +247,10 @@ namespace MusicPlayer
         void btn_complete_Click(object sender, RoutedEventArgs e)
         {
             var list = list_download;
-            if(!list.SelectedItems.Any())
+            if (!list.SelectedItems.Any())
                 return;
             DownloadManager.Instance.Stop(list_download.SelectedItems.Select(x => x.Id).ToList());
-            foreach(var item in list.SelectedItems)
+            foreach (var item in list.SelectedItems)
             {
                 item.HasMp3 = true; item.HasLrc = true; item.HasArt = true;
                 MessageBus.Instance.Publish(new MsgDownloadStateChanged
@@ -253,16 +264,16 @@ namespace MusicPlayer
         string SavePlaylist(string path = null)
         {
             var list = list_complete;
-            if(!list.SelectedItems.Any())
+            if (!list.SelectedItems.Any())
                 return null;
             Playlist.Clear();
-            foreach(var item in list.SelectedItems)
+            foreach (var item in list.SelectedItems)
             {
-                if(!item.HasMp3) continue;
+                if (!item.HasMp3) continue;
                 Playlist.Add(string.Format("#EXTINF:{0}", item.Id));
                 Playlist.Add(System.IO.Path.Combine(".", item.Dir, item.FileNameBase + ".mp3"));
             }
-            if(path == null)
+            if (path == null)
                 path = Global.AppSettings["DownloadFolder"] + "\\default.m3u";
             File.WriteAllLines(path, Playlist, Encoding.GetEncoding("gb2312"));
             return path;
@@ -283,7 +294,7 @@ namespace MusicPlayer
 
         public void Handle(MsgSearchStateChanged message)
         {
-            switch(message.State)
+            switch (message.State)
             {
                 case EnumSearchState.Started:
                     Dispatcher.BeginInvoke(new Action(() =>
@@ -294,7 +305,7 @@ namespace MusicPlayer
                     SetStatus("开始搜索");
                     break;
                 case EnumSearchState.Working:
-                    if(message.SearchResult == null) return;
+                    if (message.SearchResult == null) return;
                     SetStatus(string.Format("正在获取第{0}页", message.SearchResult.Page));
                     break;
                 case EnumSearchState.Finished:
@@ -315,14 +326,14 @@ namespace MusicPlayer
         }
         public void Handle(MsgChangeWindowState message)
         {
-            switch(message.State)
+            switch (message.State)
             {
                 case EnumChangeWindowState.Close:
                     Close();
                     break;
                 case EnumChangeWindowState.Maximized:
                     var s = WindowState;
-                    if(s == WindowState.Maximized)
+                    if (s == WindowState.Maximized)
                     {
                         WindowState = WindowState.Normal;
                     }
@@ -344,7 +355,7 @@ namespace MusicPlayer
         }
         public void Handle(MsgSetBusy message)
         {
-            if(message.On)
+            if (message.On)
                 busyIndicator.StartSpin();
             else
                 busyIndicator.StopSpin();

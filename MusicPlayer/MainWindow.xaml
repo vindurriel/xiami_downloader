@@ -16,6 +16,31 @@
          FontFamily="Segoe UI Light;造字工房悦黑体验版纤细体"
          Title="虾米下载">
     <Window.Resources>
+        <Storyboard x:Key="SlideIn">
+            <ThicknessAnimation Duration="0:0:.2"
+                                Storyboard.TargetProperty="Margin"
+                                From="-10,0,10,0"
+                                To="0"
+                                DecelerationRatio=".7" />
+            <DoubleAnimation Duration="0:0:.1"
+                             Storyboard.TargetProperty="Opacity"
+                             From="0"
+                             To="1" />
+            <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="IsHitTestVisible">
+                <DiscreteBooleanKeyFrame KeyTime="0"
+                                         Value="True" />
+            </BooleanAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="SlideOut">
+            <DoubleAnimation Duration="0"
+                             Storyboard.TargetProperty="Opacity"
+                             From="1"
+                             To="0" />
+            <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="IsHitTestVisible">
+                <DiscreteBooleanKeyFrame KeyTime="0"
+                                         Value="False" />
+            </BooleanAnimationUsingKeyFrames>
+        </Storyboard>
         <Style TargetType="Button"
                BasedOn="{StaticResource {x:Type Button}}">
             <Setter Property="MinWidth"
@@ -183,7 +208,7 @@
                     Background="Transparent">
                 <Grid x:Name="content">
                     <Grid x:Name="page1"
-                          Visibility="Collapsed">
+                         Opacity="0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
@@ -201,7 +226,7 @@
                         </StackPanel>
                     </Grid>
                     <Grid x:Name="page2"
-                          Visibility="Collapsed">
+                         Opacity="0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
@@ -222,7 +247,7 @@
                         </StackPanel>
                     </Grid>
                     <Grid x:Name="page3"
-                          Visibility="Collapsed">
+                         Opacity="0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
@@ -242,7 +267,7 @@
                         </StackPanel>
                     </Grid>
                     <Grid x:Name="page4"
-                          Visibility="Collapsed">
+                         Opacity="0">
                         <my:ConfigPage />
                     </Grid>
                 </Grid>
