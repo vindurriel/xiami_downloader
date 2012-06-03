@@ -21,6 +21,7 @@ namespace MusicPlayer
                 {"EnableMagnet", EnumConfigControlType.combo},
                 {"MaxConnection", EnumConfigControlType.combo},
                 {"ColorSkin", EnumConfigControlType.color},
+                {"ShowDetails", EnumConfigControlType.combo},
             };
         public ConfigPage()
         {

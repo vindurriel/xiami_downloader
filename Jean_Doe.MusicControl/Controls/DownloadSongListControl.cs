@@ -18,6 +18,13 @@ namespace Jean_Doe.MusicControl
     {
         public DownloadSongListControl()
         {
+            dataGrid.Columns.Insert(0, new DataGridTemplateColumn
+            {
+                CellTemplate = dataGrid.FindResource("imageTemplate") as DataTemplate,
+                Width = DataGridLength.SizeToCells,
+                CanUserResize=false,
+                CanUserReorder=false
+            });
             dataGrid.Columns.Add(new DataGridTemplateColumn
             {
                 CellTemplate = dataGrid.FindResource("statusTemplate") as DataTemplate,

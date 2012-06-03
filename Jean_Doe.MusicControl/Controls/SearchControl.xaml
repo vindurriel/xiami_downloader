@@ -65,7 +65,6 @@
                               Grid.Column="1"
                               SelectionChanged="combo_search_type_SelectionChanged_1">
                         <ComboBoxItem Content="关键词"
-                                      IsSelected="True"
                                       Tag="{StaticResource enumkey}" />
                         <ComboBoxItem  Content="网址"
                                        Tag="{StaticResource enumurl}" />
@@ -75,7 +74,6 @@
                               Grid.Row="1"
                               SelectionChanged="combo_xiami_type_SelectionChanged_1">
                         <ComboBoxItem Content="所有"
-                                      IsSelected="True"
                                       Tag="{StaticResource any}" />
                         <ComboBoxItem Content="歌曲"
                                       Tag="{StaticResource song}" />

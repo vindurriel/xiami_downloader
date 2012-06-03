@@ -17,6 +17,8 @@ namespace Jean_Doe.MusicControl
             MessageBus.Instance.Subscribe(this);
             dataGrid.Columns.Insert(0, new DataGridTemplateColumn
             {
+                CanUserReorder=false,
+                CanUserResize=false,
                 CellTemplate = dataGrid.FindResource("imageTemplate") as DataTemplate,
                 Width = DataGridLength.SizeToCells,
             });

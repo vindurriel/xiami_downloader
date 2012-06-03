@@ -39,22 +39,25 @@
             <Setter Property="FontFamily"
                     Value="Segoe UI Light" />
             <Setter Property="Margin"
-                    Value="10" />
+                    Value="0" />
+            <Setter Property="TextTrimming"
+                    Value="WordEllipsis" />
         </Style>
         <Style TargetType="TextBlock"
-               x:Key="tag_base" BasedOn="{StaticResource label_base}">
+               x:Key="tag_base"
+               BasedOn="{StaticResource label_base}">
             <Setter Property="Margin"
-                    Value="0,20,100,0" />
+                    Value="0,0,0,-5" />
             <Setter Property="Foreground"
                     Value="#555" />
             <Setter Property="ClipToBounds"
-                    Value="False" />
+                    Value="True" />
             <Setter Property="FontSize"
-                    Value="35" />
+                    Value="40" />
             <Setter Property="HorizontalAlignment"
-                    Value="Left" />
+                    Value="Right" />
             <Setter Property="Height"
-                    Value="35" />
+                    Value="40" />
             <Setter Property="VerticalAlignment"
                     Value="Bottom" />
             <Style.Triggers>
@@ -110,68 +113,75 @@
                                 <ScaleTransform ScaleX="{Binding Percent}" />
                             </Rectangle.RenderTransform>
                         </Rectangle>
-                        <Rectangle ToolTip='Mp3已下载'
+                        <Rectangle ToolTip='Mp3下载'
                                    x:Name="mp3Indicator"
-                                   ToolTipService.IsEnabled='{Binding HasMp3}'
                                    Opacity='{Binding HasMp3,Converter={StaticResource bool2opa}}' />
                     </Grid>
                     <Rectangle Grid.Column="1"
-                               ToolTip='封面已下载'
-                               ToolTipService.IsEnabled='{Binding HasArt}'
+                               ToolTip='封面下载'
                                Opacity='{Binding HasArt,Converter={StaticResource bool2opa}}' />
                     <Rectangle Grid.Column="2"
-                               ToolTip='歌词已下载'
-                               ToolTipService.IsEnabled='{Binding HasLrc}'
+                               ToolTip='歌词下载'
                                Opacity='{Binding HasLrc,Converter={StaticResource bool2opa}}' />
                 </Grid>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="AlbumTemplate">
-            <Grid>
-                <TextBlock Style="{StaticResource tag_base}">
-                    <Hyperlink Style="{StaticResource linkStyle}"
-                               Click='go_album'>album</Hyperlink></TextBlock>
+            <Grid Margin="5">
                 <TextBlock   Style="{StaticResource label_base}">
                                         <Hyperlink Click='link_album'
                                                    Style="{StaticResource linkStyle}">
                                             <TextBlock  Text="{Binding AlbumName}" />
                                         </Hyperlink>
                                     </TextBlock>
+                <TextBlock Style="{StaticResource tag_base}">
+                    <Hyperlink Style="{StaticResource linkStyle}"
+                               Click='go_album'>album</Hyperlink></TextBlock>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="ArtistTemplate">
-            <Grid>
-                <TextBlock Style="{StaticResource tag_base}">
-                    <Hyperlink Style="{StaticResource linkStyle}"
-                               Click='go_artist'>artist</Hyperlink></TextBlock>
+            <Grid Margin="5">
                 <TextBlock  Style="{StaticResource label_base}">
                                         <Hyperlink Click='link_artist'
                                                    Style="{StaticResource linkStyle}">
                                             <TextBlock  Text="{Binding ArtistName}" />
                                         </Hyperlink>
                                     </TextBlock>
+                <TextBlock Style="{StaticResource tag_base}">
+                    <Hyperlink Style="{StaticResource linkStyle}"
+                               Click='go_artist'>artist</Hyperlink></TextBlock>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="CollectionTemplate">
-            <Grid>
-                <TextBlock Style="{StaticResource tag_base}">
-                    <Hyperlink Style="{StaticResource linkStyle}"
-                               Click='go_collect'>collect</Hyperlink></TextBlock>
+            <Grid Margin="5">
                 <TextBlock  Style="{StaticResource label_base}">
                                         <Hyperlink Click='link_collection'
                                                    Style="{StaticResource linkStyle}">
                                             <TextBlock  Text="{Binding CollectionName}" />
                                         </Hyperlink>
                                     </TextBlock>
+                <TextBlock Style="{StaticResource tag_base}">
+                    <Hyperlink Style="{StaticResource linkStyle}"
+                               Click='go_collect'>collect</Hyperlink></TextBlock>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SongTemplate">
-            <Grid>
-                <TextBlock Style="{StaticResource tag_base}">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock Style="{StaticResource label_base}">
                     <Hyperlink Style="{StaticResource linkStyle}"
-                               Click='go_song'>song</Hyperlink></TextBlock>
-                <TextBlock Text="{Binding Name}"
-                           Style="{StaticResource label_base}" />
+                               Click='go_song'>
+                        <TextBlock  Text="{Binding Name}" />
+                    </Hyperlink></TextBlock>
+                <TextBlock Style="{StaticResource label_base}"
+                           Grid.Row="1">
+                    <Hyperlink Style="{StaticResource linkStyle}"
+                               Click='link_artist'>
+                        <TextBlock  Text="{Binding ArtistName}" />
+                    </Hyperlink></TextBlock>
             </Grid>
         </DataTemplate>
         <my:MyStyleSelector x:Key="styleSelector"
@@ -213,11 +223,17 @@
                         <Trigger Property="IsSelected"
                                  Value="True">
                             <Setter Property="Background"
-                                    Value="{StaticResource selectBrush}" />
+                                    Value="{DynamicResource selectBrush}" />
+                            <Setter Property="BorderBrush"
+                                    Value="{DynamicResource skinBrush}" />
                         </Trigger>
-                        <!--<EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                             <BeginStoryboard>
                                 <Storyboard>
+                                    <ThicknessAnimation Storyboard.TargetProperty="Margin"
+                                                        Duration="0:0:0.5"
+                                                        From="-10,0,10,0"
+                                                        To="0" />
                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                      Duration="0:0:0.5"
                                                      From="0"
@@ -234,12 +250,16 @@
                                                      To="0" />
                                 </Storyboard>
                             </BeginStoryboard>
-                        </EventTrigger>-->
+                        </EventTrigger>
                     </Style.Triggers>
                     <Setter Property="Background"
                             Value="Transparent" />
                     <Setter Property="Margin"
                             Value="0,0,0,10" />
+                    <Setter Property="BorderThickness"
+                            Value="2,0,0,0" />
+                    <Setter Property="BorderBrush"
+                            Value="Transparent" />
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.CellStyle>
@@ -277,6 +297,10 @@
                         <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                             <BeginStoryboard>
                                 <Storyboard>
+                                    <ThicknessAnimation Storyboard.TargetProperty="Margin"
+                                                        Duration="0:0:0.5"
+                                                        From="-10,0,10,0"
+                                                        To="0" />
                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                      Duration="0:0:0.5"
                                                      From="0"
@@ -294,13 +318,6 @@
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
-                        <Trigger Property="IsMouseOver"
-                                 Value="True">
-                            <Setter Property="Background"
-                                    Value="#888" />
-                            <Setter Property="Foreground"
-                                    Value="White" />
-                        </Trigger>
                     </Style.Triggers>
                 </Style>
             </DataGrid.ColumnHeaderStyle>
@@ -313,28 +330,15 @@
                 <DataGridTemplateColumn  SortMemberPath="ArtistName"
                                          IsReadOnly='True'
                                          Width="Auto"
+                                         x:Name="col_artist"
                                          Header="艺术家"
                                          CellTemplate="{StaticResource ArtistTemplate}" />
                 <DataGridTemplateColumn  SortMemberPath="AlbumName"
                                          IsReadOnly='True'
                                          Header="专辑"
+                                         x:Name="col_album"
                                          Width="Auto"
                                          CellTemplate="{StaticResource AlbumTemplate}" />
-                <!--<DataGridTemplateColumn Header="试听"
-                                            CanUserResize="False">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <DockPanel Margin="2">
-                                    <Button Content="试听"
-                                            Click="btn_play_Click" />
-                                    <ContentControl Margin="2,0"
-                                                    Content="{Binding PlayContent}"
-                                                    ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                                                    ScrollViewer.VerticalScrollBarVisibility="Hidden" />
-                                </DockPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>-->
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

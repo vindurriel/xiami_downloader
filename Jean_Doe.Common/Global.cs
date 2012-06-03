@@ -39,7 +39,10 @@ namespace Jean_Doe.Common
             {"WindowPos","0,0,0,0"},
             {"EnableMagnet","1"},
             {"MaxConnection","10"},
+            {"ShowDetails","1"},
             {"ColorSkin","#ffaaff"},
+            {"SearchType","key"},
+            {"SearchResultType","song"},
         };
         public static void LoadSettings()
         {

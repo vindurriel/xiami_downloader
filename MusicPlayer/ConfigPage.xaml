@@ -80,6 +80,7 @@
             <TextBlock Text="目录名称规则" />
             <TextBlock Text="边界停靠" />
             <TextBlock Text="主题颜色" />
+            <TextBlock Text="列表中显示专辑和艺术家信息" />
         </StackPanel>
         <GridSplitter Width="30"
                       HorizontalAlignment="Right"
@@ -168,6 +169,12 @@
                                           x:Name="color_colorskin"></controls:ColorPicker>
                 </Grid>
             </Popup>
+            <ComboBox x:Name="combo_showdetails">
+                <ComboBoxItem Content="显示"
+                              Tag="1" />
+                <ComboBoxItem Content="隐藏"
+                              Tag="0" />
+            </ComboBox>
         </StackPanel>
     </Grid>
 </UserControl>

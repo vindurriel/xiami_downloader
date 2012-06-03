@@ -141,6 +141,7 @@
       <DependentUpon>SongListControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="RelativeAnimatingContentControl.cs" />
+    <Compile Include="ResizeWindow.cs" />
     <Compile Include="ViewModels\ArtistViewModel.cs" />
     <Compile Include="ViewModels\AlbumViewModel.cs" />
     <Compile Include="ViewModels\CollectViewModel.cs" />
