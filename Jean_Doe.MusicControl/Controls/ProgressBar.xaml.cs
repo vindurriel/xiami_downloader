@@ -13,6 +13,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Jean_Doe.Common;
 
 namespace Jean_Doe.MusicControl
 {
@@ -35,14 +36,14 @@ namespace Jean_Doe.MusicControl
         
         public void StopSpin()
         {
-            Dispatcher.BeginInvoke(new Action(() =>
+            UIHelper.RunOnUI(new Action(() =>
             {
                 IsIndeterminate = false;
             }));
         }
         public void StartSpin()
         {
-            Dispatcher.BeginInvoke(new Action(() =>
+            UIHelper.RunOnUI(new Action(() =>
             {
                 IsIndeterminate = true;
             }));

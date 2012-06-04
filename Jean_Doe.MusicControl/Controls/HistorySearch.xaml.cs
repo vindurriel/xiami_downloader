@@ -91,7 +91,7 @@ namespace Jean_Doe.MusicControl
         public void Handle(SearchResult message)
         {
             if (message == null || message.SearchType != SearchType) return;
-            Dispatcher.BeginInvoke(new Action(() =>
+            UIHelper.RunOnUI(new Action(() =>
             {
                 this.Upsert(message.Keyword, message.Count);
                 this.Save();

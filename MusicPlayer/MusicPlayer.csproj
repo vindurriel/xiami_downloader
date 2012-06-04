@@ -73,8 +73,6 @@
     <Compile Include="ConfigPage.xaml.cs">
       <DependentUpon>ConfigPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DisplayHelper.cs" />
-    <Compile Include="StoryBoard.cs" />
     <Compile Include="WindowManager.cs" />
     <Page Include="ConfigPage.xaml">
       <SubType>Designer</SubType>

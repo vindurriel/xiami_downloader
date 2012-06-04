@@ -221,7 +221,7 @@
                                      Visibility="{Binding SelectCount, ElementName=list_search,Converter={StaticResource int2vis}}"
                                      Orientation="Horizontal">
                             <Button Click="btn_download_add_Click"
-                                    Content="加入下载队列"
+                                    Content="下载"
                                     Height="30" />
                         </StackPanel>
                     </Grid>
@@ -237,9 +237,9 @@
                                      Visibility="{Binding SelectCount, ElementName=list_download,Converter={StaticResource int2vis}}"
                                      Orientation="Horizontal">
                             <Button Click="btn_download_start_Click"
-                                    Content="下载" />
+                                    Content="开始" />
                             <Button Click="btn_cancel_Click"
-                                    Content="取消" />
+                                    Content="暂停" />
                             <Button Click="btn_remove_Click"
                                     Content="删除" />
                             <Button x:Name="btn_complete"

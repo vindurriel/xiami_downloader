@@ -31,9 +31,9 @@
         <Style TargetType="TextBlock"
                x:Key="label_base">
             <Setter Property="VerticalAlignment"
-                    Value="Top" />
+                    Value="Center" />
             <Setter Property="HorizontalAlignment"
-                    Value="Right" />
+                    Value="Left" />
             <Setter Property="FontSize"
                     Value="18" />
             <Setter Property="FontFamily"
@@ -53,11 +53,11 @@
             <Setter Property="ClipToBounds"
                     Value="True" />
             <Setter Property="FontSize"
-                    Value="40" />
+                    Value="35" />
             <Setter Property="HorizontalAlignment"
-                    Value="Right" />
+                    Value="Left" />
             <Setter Property="Height"
-                    Value="40" />
+                    Value="35" />
             <Setter Property="VerticalAlignment"
                     Value="Bottom" />
             <Style.Triggers>
@@ -69,13 +69,13 @@
             </Style.Triggers>
         </Style>
         <DataTemplate x:Key="imageTemplate">
-            <Image Source="{Binding ImageSource}"
-                   MouseLeftButtonUp='btn_open_click'
-                   MinWidth="0"
-                   MinHeight="0"
-                   Width="60"
-                   Margin="0"
-                   Stretch="Uniform" />
+            <Grid Background="{DynamicResource selectBrush}">
+                <Image Source="{Binding ImageSource}"
+                       MouseLeftButtonUp='btn_open_click'
+                       Width="60"
+                       Margin="0"
+                       Stretch="Uniform" />
+            </Grid>
         </DataTemplate>
         <DataTemplate x:Key="statusTemplate">
             <Grid Margin="5"
@@ -128,60 +128,64 @@
         </DataTemplate>
         <DataTemplate x:Key="AlbumTemplate">
             <Grid Margin="5">
+                <TextBlock Style="{StaticResource tag_base}">
+                    <Hyperlink Style="{StaticResource linkStyle}"
+                               Click='go_album'>album</Hyperlink></TextBlock>
                 <TextBlock   Style="{StaticResource label_base}">
                                         <Hyperlink Click='link_album'
                                                    Style="{StaticResource linkStyle}">
                                             <TextBlock  Text="{Binding AlbumName}" />
                                         </Hyperlink>
                                     </TextBlock>
-                <TextBlock Style="{StaticResource tag_base}">
-                    <Hyperlink Style="{StaticResource linkStyle}"
-                               Click='go_album'>album</Hyperlink></TextBlock>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="ArtistTemplate">
             <Grid Margin="5">
+                <TextBlock Style="{StaticResource tag_base}">
+                    <Hyperlink Style="{StaticResource linkStyle}"
+                               Click='go_artist'>artist</Hyperlink></TextBlock>
                 <TextBlock  Style="{StaticResource label_base}">
                                         <Hyperlink Click='link_artist'
                                                    Style="{StaticResource linkStyle}">
                                             <TextBlock  Text="{Binding ArtistName}" />
                                         </Hyperlink>
                                     </TextBlock>
-                <TextBlock Style="{StaticResource tag_base}">
-                    <Hyperlink Style="{StaticResource linkStyle}"
-                               Click='go_artist'>artist</Hyperlink></TextBlock>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="CollectionTemplate">
             <Grid Margin="5">
+                <TextBlock Style="{StaticResource tag_base}">
+                    <Hyperlink Style="{StaticResource linkStyle}"
+                               Click='go_collect'>collect</Hyperlink></TextBlock>
                 <TextBlock  Style="{StaticResource label_base}">
                                         <Hyperlink Click='link_collection'
                                                    Style="{StaticResource linkStyle}">
                                             <TextBlock  Text="{Binding CollectionName}" />
                                         </Hyperlink>
                                     </TextBlock>
-                <TextBlock Style="{StaticResource tag_base}">
-                    <Hyperlink Style="{StaticResource linkStyle}"
-                               Click='go_collect'>collect</Hyperlink></TextBlock>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SongTemplate">
             <Grid Margin="5">
-                <Grid.RowDefinitions>
+                <!--<Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
-                </Grid.RowDefinitions>
-                <TextBlock Style="{StaticResource label_base}">
+                </Grid.RowDefinitions>-->
+                <DockPanel>
+                    <TextBlock Style="{StaticResource label_base}">
                     <Hyperlink Style="{StaticResource linkStyle}"
                                Click='go_song'>
                         <TextBlock  Text="{Binding Name}" />
                     </Hyperlink></TextBlock>
-                <TextBlock Style="{StaticResource label_base}"
-                           Grid.Row="1">
+                    <TextBlock Style="{StaticResource label_base}"
+                               Text=" - " />
+                    <TextBlock Style="{StaticResource label_base}"
+                               Grid.Row="1">
                     <Hyperlink Style="{StaticResource linkStyle}"
                                Click='link_artist'>
                         <TextBlock  Text="{Binding ArtistName}" />
                     </Hyperlink></TextBlock>
+                </DockPanel>
             </Grid>
         </DataTemplate>
         <my:MyStyleSelector x:Key="styleSelector"
@@ -232,8 +236,8 @@
                                 <Storyboard>
                                     <ThicknessAnimation Storyboard.TargetProperty="Margin"
                                                         Duration="0:0:0.5"
-                                                        From="-10,0,10,0"
-                                                        To="0" />
+                                                        From="-10,0,10,10"
+                                                        To="0,0,0,10" />
                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                      Duration="0:0:0.5"
                                                      From="0"
@@ -299,8 +303,8 @@
                                 <Storyboard>
                                     <ThicknessAnimation Storyboard.TargetProperty="Margin"
                                                         Duration="0:0:0.5"
-                                                        From="-10,0,10,0"
-                                                        To="0" />
+                                                        From="-10,0,10,10"
+                                                        To="0,0,0,10" />
                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                      Duration="0:0:0.5"
                                                      From="0"
@@ -322,9 +326,13 @@
                 </Style>
             </DataGrid.ColumnHeaderStyle>
             <DataGrid.Columns>
+                <DataGridTemplateColumn IsReadOnly='True'
+                                        Width="Auto"
+                                        CellTemplate="{StaticResource imageTemplate}" />
                 <DataGridTemplateColumn  SortMemberPath="Name"
                                          IsReadOnly='True'
                                          Width="Auto"
+                                         MinWidth="200"
                                          CellTemplateSelector="{StaticResource styleSelector}"
                                          Header="信息" />
                 <DataGridTemplateColumn  SortMemberPath="ArtistName"

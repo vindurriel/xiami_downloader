@@ -20,7 +20,7 @@
         <Setter Property="Foreground"
                 Value="White" />
         <Setter Property="Background"
-                Value="#888888" />
+                Value="{DynamicResource skinBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">

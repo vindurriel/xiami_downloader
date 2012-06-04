@@ -175,9 +175,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\nocover.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\arrow.png" />
     <Resource Include="Resources\close.png" />
     <Resource Include="Resources\max.png" />
@@ -192,6 +189,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\nocover.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

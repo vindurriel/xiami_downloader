@@ -18,19 +18,19 @@ namespace Jean_Doe.MusicControl
     {
         public DownloadSongListControl()
         {
-            dataGrid.Columns.Insert(0, new DataGridTemplateColumn
-            {
-                CellTemplate = dataGrid.FindResource("imageTemplate") as DataTemplate,
-                Width = DataGridLength.SizeToCells,
-                CanUserResize=false,
-                CanUserReorder=false
-            });
+            //dataGrid.Columns.Insert(0, new DataGridTemplateColumn
+            //{
+            //    CellTemplate = dataGrid.FindResource("imageTemplate") as DataTemplate,
+            //    Width = DataGridLength.SizeToCells,
+            //    CanUserResize=false,
+            //    CanUserReorder=false
+            //});
             dataGrid.Columns.Add(new DataGridTemplateColumn
             {
                 CellTemplate = dataGrid.FindResource("statusTemplate") as DataTemplate,
                 Width = DataGridLength.SizeToCells,
                 Header = "状态",
-                SortMemberPath="Status"
+                SortMemberPath = "Status"
             });
         }
         public override void Load()
@@ -43,9 +43,15 @@ namespace Jean_Doe.MusicControl
             base.Add(song);
             PrepareDownload(song);
         }
+        public  void AddAndStart(SongViewModel song)
+        {
+            base.Add(song);
+            PrepareDownload(song);
+            DownloadManager.Instance.Start(new List<string> { song.Id });
+        }
         public static void PrepareDownload(IEnumerable<SongViewModel> list)
         {
-            foreach (var item in list)
+            foreach(var item in list)
             {
                 PrepareDownload(item);
             }
@@ -53,7 +59,7 @@ namespace Jean_Doe.MusicControl
         public static void PrepareDownload(SongViewModel item)
         {
             var nameBase = System.IO.Path.Combine(Global.BasePath, "cache", item.Id);
-            if (!item.HasMp3)
+            if(!item.HasMp3)
             {
                 var mp3 = nameBase + ".mp3";
                 var d = new DownloaderMp3
@@ -68,7 +74,7 @@ namespace Jean_Doe.MusicControl
                 };
                 DownloadManager.Instance.Add(d);
             }
-            if (!item.HasLrc)
+            if(!item.HasLrc)
             {
                 var lrc = nameBase + ".lrc";
                 var d = new DownloaderLrc
@@ -83,7 +89,7 @@ namespace Jean_Doe.MusicControl
                 };
                 DownloadManager.Instance.Add(d);
             }
-            if (!item.HasArt)
+            if(!item.HasArt)
             {
                 var art = System.IO.Path.Combine(
                     Global.BasePath, "cache",
@@ -99,7 +105,7 @@ namespace Jean_Doe.MusicControl
                     }
                 };
                 var first = DownloadManager.Instance.GetDownloader(d.Info.Id) as DownloaderArt;
-                if (first == null)
+                if(first == null)
                     DownloadManager.Instance.Add(d);
                 else
                 {
@@ -111,8 +117,8 @@ namespace Jean_Doe.MusicControl
         {
             var id = message.Id;
             var item = GetItemById(id);
-            if (item == null) return;
-            Dispatcher.BeginInvoke(new Action(() =>
+            if(item == null) return;
+            UIHelper.RunOnUI(new Action(() =>
             {
                 item.SetProgress(message.Percent);
             }));
@@ -120,16 +126,16 @@ namespace Jean_Doe.MusicControl
         public void Handle(MsgDownloadStateChanged message)
         {
             var item = message.Item as SongViewModel;
-            if (item == null) return;
-            if (item.AllDone)
+            if(item == null) return;
+            if(item.AllDone)
             {
                 Remove(item);
                 return;
             }
             var msg = message.Message;
-            if (msg == null)
+            if(msg == null)
             {
-                switch (message.State)
+                switch(message.State)
                 {
                     case EnumDownloadState.StandBy:
                         msg = "停止";
@@ -152,8 +158,8 @@ namespace Jean_Doe.MusicControl
                         break;
                 }
             }
-           
-            Dispatcher.BeginInvoke(new Action(() =>
+
+            UIHelper.RunOnUI(new Action(() =>
             {
                 item.Status = msg;
             }));

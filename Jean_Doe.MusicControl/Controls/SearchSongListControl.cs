@@ -22,10 +22,7 @@ namespace Jean_Doe.MusicControl
         }
         public void AddItems(IEnumerable<IMusic> items)
         {
-            Dispatcher.BeginInvoke(new Action(() =>
-            {
-                Items.AddItems(items);
-            }));
+            Items.AddItems(items);
         }
 
         public void Handle(MsgSearchStateChanged message)
@@ -45,6 +42,6 @@ namespace Jean_Doe.MusicControl
             }
         }
     }
-   
-   
+
+
 }

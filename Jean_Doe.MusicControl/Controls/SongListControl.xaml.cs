@@ -26,21 +26,21 @@ namespace Jean_Doe.MusicControl
         #region list methods
         public virtual void Add(SongViewModel song)
         {
-            Dispatcher.BeginInvoke(new Action(() =>
+            UIHelper.RunOnUI(new Action(() =>
             {
                 items.Add(song);
             }));
         }
         public virtual void Insert(int index, SongViewModel song)
         {
-            Dispatcher.BeginInvoke(new Action(() =>
+            UIHelper.RunOnUI(new Action(() =>
             {
                 items.Insert(index, song);
             }));
         }
         public void Remove(SongViewModel song)
         {
-            Dispatcher.BeginInvoke(new Action(() =>
+            UIHelper.RunOnUI(new Action(() =>
             {
                 items.Remove(song);
             }));
@@ -52,7 +52,7 @@ namespace Jean_Doe.MusicControl
         }
         public void Clear()
         {
-            Dispatcher.BeginInvoke(new Action(() =>
+            UIHelper.RunOnUI(new Action(() =>
             {
                 items.Clear();
             }));
@@ -174,16 +174,16 @@ namespace Jean_Doe.MusicControl
         }
         void items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            Dispatcher.BeginInvoke(new Action(() =>
+            UIHelper.RunOnUI(new Action(() =>
             {
                 ItemsCount = Items.Count;
-                fitToContent();
+                //fitToContent();
             }));
             Save();
         }
         void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Dispatcher.BeginInvoke(new Action(() =>
+            UIHelper.RunOnUI(new Action(() =>
           {
               SelectCount = SelectedItems.Count();
           }));

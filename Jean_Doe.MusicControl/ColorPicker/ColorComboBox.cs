@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Controls.Primitives;
+using Jean_Doe.Common;
 
 namespace ColorPicker
 {
@@ -53,10 +54,9 @@ namespace ColorPicker
             // Mask HistTest visibility of toggle button otherwise when pressing it
             // and popup is open the popup is closed (since StaysOpen is false)
             // and reopens immediately
-            if (colorComboBox.m_toggleButton != null)
+            if(colorComboBox.m_toggleButton != null)
             {
-                colorComboBox.Dispatcher.BeginInvoke(
-                    System.Windows.Threading.DispatcherPriority.Normal,
+                UIHelper.RunOnUI(
                     new Action(
                       delegate()
                       {
@@ -72,11 +72,11 @@ namespace ColorPicker
         {
             ColorComboBox colorComboBox = d as ColorComboBox;
 
-            if (colorComboBox.m_withinChange)
+            if(colorComboBox.m_withinChange)
                 return;
 
             colorComboBox.m_withinChange = true;
-            if (colorComboBox.m_colorPicker != null)
+            if(colorComboBox.m_colorPicker != null)
                 colorComboBox.m_colorPicker.SelectedColor = colorComboBox.SelectedColor;
             colorComboBox.m_withinChange = false;
         }
@@ -85,11 +85,11 @@ namespace ColorPicker
         {
             ColorComboBox colorComboBox = sender as ColorComboBox;
 
-            if (colorComboBox.m_withinChange)
+            if(colorComboBox.m_withinChange)
                 return;
 
             colorComboBox.m_withinChange = true;
-            if (colorComboBox.m_colorPicker != null)
+            if(colorComboBox.m_colorPicker != null)
                 colorComboBox.SelectedColor = colorComboBox.m_colorPicker.SelectedColor;
             colorComboBox.m_withinChange = false;
         }
@@ -98,11 +98,11 @@ namespace ColorPicker
         {
             base.OnApplyTemplate();
 
-            m_popup        = GetTemplateChild("PART_Popup") as UIElement;
-            m_colorPicker  = GetTemplateChild("PART_ColorPicker") as ColorPicker;
+            m_popup = GetTemplateChild("PART_Popup") as UIElement;
+            m_colorPicker = GetTemplateChild("PART_ColorPicker") as ColorPicker;
             m_toggleButton = GetTemplateChild("PART_ToggleButton") as ToggleButton;
 
-            if (m_colorPicker != null)
+            if(m_colorPicker != null)
                 m_colorPicker.SelectedColor = SelectedColor;
         }
 
@@ -111,9 +111,9 @@ namespace ColorPicker
 
         #region Private Members
 
-        private UIElement    m_popup;
-        private ColorPicker  m_colorPicker;
-        private bool         m_withinChange;
+        private UIElement m_popup;
+        private ColorPicker m_colorPicker;
+        private bool m_withinChange;
         private ToggleButton m_toggleButton;
 
         #endregion

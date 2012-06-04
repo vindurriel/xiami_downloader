@@ -114,7 +114,7 @@ namespace Jean_Doe.MusicControl
         }
         public void Handle(MsgSearchStateChanged message)
         {
-            this.Dispatcher.BeginInvoke(new Action(() =>
+            UIHelper.RunOnUI(new Action(() =>
             {
                 switch (message.State)
                 {

@@ -15,13 +15,13 @@ namespace Jean_Doe.MusicControl
         public CompleteSongListControl()
         {
             MessageBus.Instance.Subscribe(this);
-            dataGrid.Columns.Insert(0, new DataGridTemplateColumn
-            {
-                CanUserReorder=false,
-                CanUserResize=false,
-                CellTemplate = dataGrid.FindResource("imageTemplate") as DataTemplate,
-                Width = DataGridLength.SizeToCells,
-            });
+            //dataGrid.Columns.Insert(0, new DataGridTemplateColumn
+            //{
+            //    CanUserReorder=false,
+            //    CanUserResize=false,
+            //    CellTemplate = dataGrid.FindResource("imageTemplate") as DataTemplate,
+            //    Width = DataGridLength.SizeToCells,
+            //});
         }
         public void Handle(MsgDownloadStateChanged message)
         {
