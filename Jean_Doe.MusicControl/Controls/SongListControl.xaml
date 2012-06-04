@@ -69,12 +69,36 @@
             </Style.Triggers>
         </Style>
         <DataTemplate x:Key="imageTemplate">
-            <Grid Background="{DynamicResource selectBrush}">
+            <Grid Background="{DynamicResource selectBrush}"
+                >
                 <Image Source="{Binding ImageSource}"
-                       MouseLeftButtonUp='btn_open_click'
                        Width="60"
                        Margin="0"
                        Stretch="Uniform" />
+                <Grid Width="20"
+                      Margin="-1,-1,0,0"
+                      Height="20"
+                      Background="#01ffffff"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top"
+                      Visibility="{Binding IsSelected,
+                                   RelativeSource={RelativeSource AncestorType=DataGridCell},
+                                   Converter={StaticResource bool2vis}}">
+                    <Path Data="M 0 0 L 20 0 L 0 20 Z"
+                          Cursor="Hand"
+                          Width="20"
+                          Height="20"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Top"
+                          Fill="{DynamicResource skinBrush}" />
+                    <TextBlock Text="a"
+                               Margin="-3,-3,0,0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               FontFamily="Webdings"
+                               Foreground="White"
+                               FontSize="20" />
+                </Grid>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="statusTemplate">
@@ -256,12 +280,14 @@
                             </BeginStoryboard>
                         </EventTrigger>
                     </Style.Triggers>
+                    <EventSetter Event="MouseLeftButtonDown"
+                                 Handler="btn_select_click" />
                     <Setter Property="Background"
                             Value="Transparent" />
                     <Setter Property="Margin"
                             Value="0,0,0,10" />
                     <Setter Property="BorderThickness"
-                            Value="2,0,0,0" />
+                            Value="0,0,0,0" />
                     <Setter Property="BorderBrush"
                             Value="Transparent" />
                 </Style>
@@ -349,5 +375,6 @@
                                          CellTemplate="{StaticResource AlbumTemplate}" />
             </DataGrid.Columns>
         </DataGrid>
+        
     </Grid>
 </UserControl>

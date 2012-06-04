@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -19,7 +20,7 @@ namespace Jean_Doe.MusicControl
         public event PropertyChangedEventHandler PropertyChanged;
         void Notify(string prop)
         {
-            if (PropertyChanged != null)
+            if(PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
         #endregion
@@ -87,7 +88,7 @@ namespace Jean_Doe.MusicControl
         }
         void HandleShowDetails(string show)
         {
-            if (show == "1")
+            if(show == "1")
             {
                 col_artist.Visibility = Visibility.Visible;
                 col_album.Visibility = Visibility.Visible;
@@ -109,26 +110,24 @@ namespace Jean_Doe.MusicControl
             items.Load();
         }
 
-        protected virtual void btn_open_click(object sender, RoutedEventArgs e)
+        protected virtual void btn_select_click(object sender, RoutedEventArgs e)
         {
-            var t = sender as FrameworkElement;
-            if (t == null) return;
-            var x = t.DataContext as SongViewModel;
-            if (x == null) return;
-            x.Open();
+            var t = sender as DataGridRow;
+            if(t == null) return;
+            t.IsSelected = !t.IsSelected;
         }
 
         protected virtual async void link_album(object sender, RoutedEventArgs e)
         {
             var t = (sender as Hyperlink).DataContext as IHasAlbum;
-            if (t == null) return;
+            if(t == null) return;
             var id = t.AlbumId;
             await SearchManager.GetSongOfType(t.AlbumId, EnumXiamiType.album);
         }
 
         void fitToContent()
         {
-            foreach (DataGridColumn column in dataGrid.Columns)
+            foreach(DataGridColumn column in dataGrid.Columns)
             {
                 //if you want to size ur column as per the cell content
                 column.Width = DataGridLength.SizeToCells;
@@ -138,38 +137,38 @@ namespace Jean_Doe.MusicControl
         protected virtual async void link_artist(object sender, RoutedEventArgs e)
         {
             var t = (sender as Hyperlink).DataContext as IHasArtist;
-            if (t == null) return;
+            if(t == null) return;
             await SearchManager.GetSongOfType(t.ArtistId, EnumXiamiType.artist);
         }
         protected virtual async void link_collection(object sender, RoutedEventArgs e)
         {
             var t = (sender as Hyperlink).DataContext as IHasCollection;
-            if (t == null) return;
+            if(t == null) return;
             await SearchManager.GetSongOfType(t.CollectionId, EnumXiamiType.collect);
         }
 
         protected virtual void go_song(object sender, RoutedEventArgs e)
         {
             var t = (sender as Hyperlink).DataContext as MusicViewModel;
-            if (t == null) return;
+            if(t == null) return;
             RunProgramHelper.RunProgram(XiamiUrl.GoSong(t.Id), null);
         }
         protected virtual void go_artist(object sender, RoutedEventArgs e)
         {
             var t = (sender as Hyperlink).DataContext as IHasArtist;
-            if (t == null) return;
+            if(t == null) return;
             RunProgramHelper.RunProgram(XiamiUrl.GoArtist(t.ArtistId), null);
         }
         protected virtual void go_album(object sender, RoutedEventArgs e)
         {
             var t = (sender as Hyperlink).DataContext as IHasAlbum;
-            if (t == null) return;
+            if(t == null) return;
             RunProgramHelper.RunProgram(XiamiUrl.GoAlbum(t.AlbumId), null);
         }
         protected virtual void go_collect(object sender, RoutedEventArgs e)
         {
             var t = (sender as Hyperlink).DataContext as MusicViewModel;
-            if (t == null) return;
+            if(t == null) return;
             RunProgramHelper.RunProgram(XiamiUrl.GoCollect(t.Id), null);
         }
         void items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -200,7 +199,7 @@ namespace Jean_Doe.MusicControl
         private void btn_play_Click(object sender, RoutedEventArgs e)
         {
             var item = (sender as Button).DataContext as SongViewModel;
-            if (item == null) return;
+            if(item == null) return;
             PlayItem = item;
         }
         private static SongViewModel playItem = null;
@@ -210,15 +209,15 @@ namespace Jean_Doe.MusicControl
             get { return playItem; }
             set
             {
-                if (playItem == value)
+                if(playItem == value)
                 {
                     playItem.TogglePlay();
                     return;
                 }
-                if (playItem != null)
+                if(playItem != null)
                     playItem.Stop();
                 playItem = value;
-                if (playItem != null)
+                if(playItem != null)
                     playItem.Play();
             }
         }

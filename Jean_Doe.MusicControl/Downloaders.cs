@@ -124,8 +124,11 @@ namespace Jean_Doe.MusicControl
         {
             var item = Info.Entity as SongViewModel;
             if(item != null)
+            {
                 if(ArtDownloaded != null)
                     ArtDownloaded(this, new ArtDownloadedEventArgs { song = item });
+                item.ImageSource = Info.FileName;
+            }
             base.OnDownloaded();
         }
         public override void Process()
@@ -142,7 +145,6 @@ namespace Jean_Doe.MusicControl
                 var id3 = new MusicInfo.MusicInfo(mp3);
                 id3.Cover = Info.FileName;
                 id3.Commit();
-                item.ImageSource = Info.FileName;
                 item.HasArt = true;
             }
             catch(Exception e)
