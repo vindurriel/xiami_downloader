@@ -76,7 +76,7 @@
                        Margin="0"
                        Stretch="Uniform" />
                 <Grid Width="20"
-                      Margin="-1,-1,0,0"
+                      Margin="0"
                       Height="20"
                       Background="#01ffffff"
                       HorizontalAlignment="Left"
@@ -229,11 +229,9 @@
                   HeadersVisibility="Column"
                   BorderThickness="0"
                   Background="Transparent"
-                  GridLinesVisibility="Vertical"
-                  VerticalGridLinesBrush="#333"
-                  HorizontalGridLinesBrush="Transparent"
+                  GridLinesVisibility="None"
                   VirtualizingStackPanel.IsVirtualizing="True"
-                  VirtualizingStackPanel.VirtualizationMode="Standard"
+                  VirtualizingStackPanel.VirtualizationMode="Recycling"
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
                   SelectionUnit="FullRow"
@@ -252,18 +250,19 @@
                                  Value="True">
                             <Setter Property="Background"
                                     Value="{DynamicResource selectBrush}" />
-                            <Setter Property="BorderBrush"
-                                    Value="{DynamicResource skinBrush}" />
+                            <!--<Setter Property="BorderBrush"
+                                    Value="{DynamicResource skinBrush}" />-->
                         </Trigger>
                         <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                             <BeginStoryboard>
                                 <Storyboard>
                                     <ThicknessAnimation Storyboard.TargetProperty="Margin"
-                                                        Duration="0:0:0.5"
+                                                        Duration="0:0:0.3"
                                                         From="-10,0,10,10"
+                                                        DecelerationRatio="0.8"
                                                         To="0,0,0,10" />
                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                     Duration="0:0:0.5"
+                                                     Duration="0:0:0.3"
                                                      From="0"
                                                      To="1" />
                                 </Storyboard>
@@ -287,9 +286,9 @@
                     <Setter Property="Margin"
                             Value="0,0,0,10" />
                     <Setter Property="BorderThickness"
-                            Value="0,0,0,0" />
+                            Value="0,0,0,1" />
                     <Setter Property="BorderBrush"
-                            Value="Transparent" />
+                            Value="#555" />
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.CellStyle>
@@ -318,9 +317,9 @@
                     <Setter Property="Foreground"
                             Value="{DynamicResource lightBrush}" />
                     <Setter Property="BorderBrush"
-                            Value="#555" />
+                            Value="#888" />
                     <Setter Property="BorderThickness"
-                            Value="0,0,1,0" />
+                            Value="0,0,0,0" />
                     <Setter Property="Margin"
                             Value="0,0,0,10" />
                     <Style.Triggers>
@@ -360,7 +359,7 @@
                                          Width="Auto"
                                          MinWidth="200"
                                          CellTemplateSelector="{StaticResource styleSelector}"
-                                         Header="信息" />
+                                           />
                 <DataGridTemplateColumn  SortMemberPath="ArtistName"
                                          IsReadOnly='True'
                                          Width="Auto"
