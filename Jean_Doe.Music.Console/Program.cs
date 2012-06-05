@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Serialization;
 using Jean_Doe.Common;
+using Flexware.Core.Share;
 namespace Jean_Doe.Music.Console
 {
     class Program
@@ -13,11 +17,19 @@ namespace Jean_Doe.Music.Console
         }
         static void Main(string[] args)
         {
-            var str="4h%2Fxit1%5251%%%%58_3pt3Ffi.%%5EFE%5255E%463tA%1an25E9512E5EE155.p%2.meFE%%%3F321%4E9m";
-            var decipher = str.DicipherCaesar();
-            print(decipher);
-            System.Console.ReadKey();
-
+            var rule = new EquationFileParserRule
+            {
+                ID = Guid.NewGuid(),
+                Name = "new rule",
+                ParserRuleDirection = RuleDirection.InOut,
+                ParserRuleSeparatorString = "=",
+                ParserRulePriority = 1,
+            };
+            var s = new XmlSerializer(typeof(EquationFileParserRule));
+            var writer = new StreamWriter(".\\a.xml");
+            s.Serialize(writer, rule);
+            var reader = new StreamReader(".\\a.xml");
+            rule = s.Deserialize(reader) as EquationFileParserRule;
         }
         static async void getlrc()
         {
