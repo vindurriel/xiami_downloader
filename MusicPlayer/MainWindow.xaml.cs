@@ -278,7 +278,7 @@ namespace MusicPlayer
             }
             if(path == null)
                 path = Global.AppSettings["DownloadFolder"] + "\\default.m3u";
-            File.WriteAllLines(path, Playlist, Encoding.GetEncoding("gb2312"));
+            File.WriteAllLines(path, Playlist, Encoding.UTF8);
             return path;
         }
 

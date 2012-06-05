@@ -39,18 +39,18 @@ namespace Jean_Doe.MusicControl
             var sel = combo_search_type.Items
                 .OfType<ComboBoxItem>()
                 .FirstOrDefault(x => x.Tag != null && x.Tag.ToString() == type.ToString());
-            if (sel != null) combo_search_type.SelectedItem = sel;
+            if(sel != null) combo_search_type.SelectedItem = sel;
             var xtype = EnumXiamiType.song;
             Enum.TryParse(Global.AppSettings["SearchResultType"], out xtype);
             sel = combo_xiami_type.Items
                 .OfType<ComboBoxItem>()
                 .FirstOrDefault(x => x.Tag != null && x.Tag.ToString() == xtype.ToString());
-            if (sel != null) combo_xiami_type.SelectedItem = sel;
+            if(sel != null) combo_xiami_type.SelectedItem = sel;
         }
 
         void refresh()
         {
-            if (hs == null) return;
+            if(hs == null) return;
             hs.SearchType = SearchType;
             hs.SavePath = SavePath;
             hs.Load();
@@ -80,14 +80,14 @@ namespace Jean_Doe.MusicControl
         static T FindParentOfType<T>(DependencyObject e) where T : DependencyObject
         {
             var p = LogicalTreeHelper.GetParent(e);
-            if (p == null) return null;
-            if (p is T) return p as T;
+            if(p == null) return null;
+            if(p is T) return p as T;
             return FindParentOfType<T>(p);
         }
 
         async void btn_search_Click(object sender, RoutedEventArgs e)
         {
-            if (SearchManager.State == EnumSearchState.Finished)
+            if(SearchManager.State == EnumSearchState.Finished)
             {
                 await search();
             }
@@ -99,24 +99,16 @@ namespace Jean_Doe.MusicControl
         async Task search()
         {
             var key = hs.Text.Trim();
-            switch (SearchType)
-            {
-                case EnumSearchType.key:
-                    await SearchManager.Search(key, MusicType);
-                    break;
-                case EnumSearchType.url:
-                    await SearchManager.SearchByUrl(key);
-                    break;
-                default:
-                    break;
-            }
-
+            if(key.Contains(@"www.xiami.com"))
+                await SearchManager.SearchByUrl(key);
+            else
+                await SearchManager.Search(key, MusicType);
         }
         public void Handle(MsgSearchStateChanged message)
         {
             UIHelper.RunOnUI(new Action(() =>
             {
-                switch (message.State)
+                switch(message.State)
                 {
                     case EnumSearchState.Started:
                         img_search.Visibility = Visibility.Collapsed;
@@ -135,17 +127,17 @@ namespace Jean_Doe.MusicControl
         private void combo_xiami_type_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
             var x = (combo_xiami_type.SelectedItem as ComboBoxItem).Tag;
-            if (x is EnumXiamiType)
+            if(x is EnumXiamiType)
                 MusicType = (EnumXiamiType)x;
-                Global.AppSettings["SearchResultType"] = MusicType.ToString();
+            Global.AppSettings["SearchResultType"] = MusicType.ToString();
         }
 
         private void combo_search_type_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
             var x = (combo_search_type.SelectedItem as ComboBoxItem).Tag;
-            if (x is EnumSearchType)
+            if(x is EnumSearchType)
                 SearchType = (EnumSearchType)x;
-                Global.AppSettings["SearchType"] = SearchType.ToString();
+            Global.AppSettings["SearchType"] = SearchType.ToString();
         }
     }
 }

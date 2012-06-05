@@ -20,7 +20,7 @@ namespace Jean_Doe.MusicControl
             else {
                 Task.Run(new System.Action(() =>
                 {
-                    var stack = new Stack<IMusic>(list);
+                    var stack = new Stack<IMusic>(list.Reverse());
                     while(stack.Count > 0)
                     {
                         var music = stack.Pop();
