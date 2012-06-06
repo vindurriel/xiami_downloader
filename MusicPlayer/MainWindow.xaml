@@ -89,13 +89,8 @@
     <Grid>
         <Border x:Name="border"
                 Background="{DynamicResource darkBrush}"
-                BorderBrush="{DynamicResource skinBrush}"
-                BorderThickness="0">
-            <Border.Effect>
-                <DropShadowEffect ShadowDepth="0"
-                                  BlurRadius="5"
-                                  Color="Black" />
-            </Border.Effect>
+                BorderBrush="Black"
+                BorderThickness="1.5">
         </Border>
         <Grid  Margin="5">
             <Grid.RowDefinitions>

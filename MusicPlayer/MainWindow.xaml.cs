@@ -163,7 +163,7 @@ namespace MusicPlayer
                 default:
                     break;
             }
-            border.BorderThickness = t;
+            //border.BorderThickness = t;
         }
         void SetColorSkin(string s)
         {
