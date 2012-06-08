@@ -136,6 +136,8 @@ namespace Jean_Doe.MusicControl
             base.Process();
             var item = Info.Entity as SongViewModel;
             if(item == null) return;
+            if(item.ImageSource==null)
+                item.ImageSource = Info.FileName;
             var folder = Path.Combine(Global.AppSettings["DownloadFolder"], item.Dir);
             if(folder != null && !Directory.Exists(folder))
                 Directory.CreateDirectory(folder);

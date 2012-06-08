@@ -147,7 +147,7 @@ namespace Jean_Doe.MusicControl
                         msg = "正在下载";
                         break;
                     case EnumDownloadState.Cancel:
-                        msg = "下载取消";
+                        msg = "下载暂停";
                         break;
                     case EnumDownloadState.Success:
                         break;

@@ -135,6 +135,7 @@ namespace MusicPlayer
             if(on == "1")
             {
                 this.EnableMagnet();
+                this.SetMagnetBorder(10);
                 this.ListenToRimChanged(OnRimChanged);
             }
             else

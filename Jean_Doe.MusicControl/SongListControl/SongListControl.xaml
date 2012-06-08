@@ -11,9 +11,6 @@
         <my:IntReverseToVisibilityConverter x:Key="rint2vis" />
         <my:BoolToOpacityConverter x:Key='bool2opa' />
         <my:BoolToVisibilityConverter x:Key="bool2vis" />
-        <SolidColorBrush Color='{DynamicResource skinColor}'
-                         Opacity="0.2"
-                         x:Key='skinBrushFade' />
         <Style x:Key="linkStyle"
                TargetType="{x:Type Hyperlink}">
             <Style.Triggers>
@@ -71,6 +68,7 @@
         <DataTemplate x:Key="imageTemplate">
             <Grid Background="{DynamicResource selectBrush}"
                   MouseLeftButtonUp="btn_open_click"
+                  Margin="5"
                 >
                 <Image Source="{Binding ImageSource}"
                        Width="60"
@@ -191,7 +189,7 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SongTemplate">
-            <Grid Margin="5">
+            <Grid Margin="5" >
                 <!--<Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
@@ -200,7 +198,7 @@
                     <TextBlock Style="{StaticResource label_base}">
                     <Hyperlink Style="{StaticResource linkStyle}"
                                Click='go_song'>
-                        <TextBlock  Text="{Binding Name}" />
+                        <TextBlock  Text="{Binding Name}" IsHitTestVisible="True"/>
                     </Hyperlink></TextBlock>
                     <TextBlock Style="{StaticResource label_base}"
                                Text=" - " />
@@ -213,6 +211,11 @@
                 </DockPanel>
             </Grid>
         </DataTemplate>
+
+        <SolidColorBrush Color='{DynamicResource skinColor}'
+                         Opacity="0.2"
+                         x:Key='skinBrushFade' />
+
         <my:MyStyleSelector x:Key="styleSelector"
                             AlbumTemplate="{StaticResource AlbumTemplate}"
                             ArtistTemplate="{StaticResource ArtistTemplate}"
@@ -375,6 +378,6 @@
                                          CellTemplate="{StaticResource AlbumTemplate}" />
             </DataGrid.Columns>
         </DataGrid>
-        
+
     </Grid>
 </UserControl>
