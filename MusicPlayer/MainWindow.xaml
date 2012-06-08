@@ -20,7 +20,7 @@
         <Storyboard x:Key="SlideIn">
             <ThicknessAnimation Duration="0:0:.2"
                                 Storyboard.TargetProperty="Margin"
-                                From="-10,0,10,0"
+                                From="-20,0,20,0"
                                 To="0"
                                 DecelerationRatio=".7" />
             <DoubleAnimation Duration="0:0:.1"

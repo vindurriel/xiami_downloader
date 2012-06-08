@@ -21,7 +21,7 @@ namespace Jean_Doe.Common
         }
         public static async Task GetSongOfType(string id, EnumXiamiType type)
         {
-            if(string.IsNullOrEmpty(id)) return;
+            if (string.IsNullOrEmpty(id)) return;
             state = EnumSearchState.Started;
             notifyState();
             state = EnumSearchState.Working;
@@ -34,7 +34,7 @@ namespace Jean_Doe.Common
 
         public static async Task SearchAll(string key)
         {
-            if(string.IsNullOrEmpty(key)) return;
+            if (string.IsNullOrEmpty(key)) return;
             state = EnumSearchState.Started;
             notifyState();
             state = EnumSearchState.Working;
@@ -42,14 +42,14 @@ namespace Jean_Doe.Common
             string json = await NetAccess.DownloadStringAsync(url);
             /////////////
             dynamic obj = json.ToDynamicObject();
-            if(obj != null)
+            if (obj != null)
             {
                 var items = new List<IMusic>();
-                foreach(var type in new string[] { "song", "album", "artist", "collect" })
+                foreach (var type in new string[] { "song", "album", "artist", "collect" })
                 {
                     var data = obj[type + "s"] as ArrayList;
-                    if(data == null) continue;
-                    foreach(dynamic x in data)
+                    if (data == null) continue;
+                    foreach (dynamic x in data)
                     {
                         items.Add(MusicFactory.CreateFromJson(x, (EnumXiamiType)Enum.Parse(typeof(EnumXiamiType), type)));
                     }
@@ -68,8 +68,8 @@ namespace Jean_Doe.Common
         }
         public static async Task Search(string key, EnumXiamiType type = EnumXiamiType.song)
         {
-            if(string.IsNullOrEmpty(key)) return;
-            if(type == EnumXiamiType.any)
+            if (string.IsNullOrEmpty(key)) return;
+            if (type == EnumXiamiType.any)
             {
                 await SearchAll(key);
                 return;
@@ -77,21 +77,21 @@ namespace Jean_Doe.Common
             state = EnumSearchState.Started;
             notifyState();
             int page = 1;
-            while(true)
+            while (true)
             {
                 SearchResult sr = await NetAccess.Search(key, page, type);
                 /////////////////////////////////////////
-                if(sr == null || state == EnumSearchState.Cancelling)
+                if (sr == null || state == EnumSearchState.Cancelling)
                 {
                     MessageBus.Instance.Publish("cancelling");
                     break;
                 }
-                if(state == EnumSearchState.Started)
+                if (state == EnumSearchState.Started)
                 {
                     state = EnumSearchState.Working;
                     MessageBus.Instance.Publish(sr);
                 }
-                if(sr.Count == 0)
+                if (sr.Count == 0)
                 {
                     MessageBus.Instance.Publish("no more results");
                     break;
@@ -104,21 +104,16 @@ namespace Jean_Doe.Common
         }
         public static async Task SearchByUrl(string url)
         {
-            if(string.IsNullOrEmpty(url)) return;
+            if (string.IsNullOrEmpty(url)) return;
             state = EnumSearchState.Started;
             notifyState();
             state = EnumSearchState.Working;
             var sr = await NetAccess.SearchByUrl(url);
-            if(sr == null)
+            if (sr != null && state != EnumSearchState.Cancelling)
             {
-                return;
+                MessageBus.Instance.Publish(sr);
+                notifyState(sr);
             }
-            if(state == EnumSearchState.Cancelling)
-            {
-                return;
-            }
-            MessageBus.Instance.Publish(sr);
-            notifyState(sr);
             state = EnumSearchState.Finished;
             notifyState();
         }

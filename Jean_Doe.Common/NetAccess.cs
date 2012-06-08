@@ -77,8 +77,8 @@ namespace Jean_Doe.Common
         public async static Task<SearchResult> SearchByUrl(string url)
         {
             var patterns = new List<Regex>{
-                new Regex(@"www\.xiami\.com/(album|artist|song)/(\d+)/?$"),//album,artist,song
-                new Regex(@"www\.xiami\.com/song/show(collect)/id/(\d+)/?$"),//collection
+                new Regex(@"(album|artist|song)/(\d+)"),//album,artist,song
+                new Regex(@"show(collect)/id/(\d+)"),//collection
             };
             string strType = null, id = null;
             bool IsPatternRecognized = false;

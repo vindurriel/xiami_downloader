@@ -257,11 +257,11 @@
                         <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                             <BeginStoryboard>
                                 <Storyboard>
-                                    <ThicknessAnimation Storyboard.TargetProperty="Margin"
+                                    <!--<ThicknessAnimation Storyboard.TargetProperty="Margin"
                                                         Duration="0:0:0.3"
                                                         From="-10,0,10,10"
                                                         DecelerationRatio="0.8"
-                                                        To="0,0,0,10" />
+                                                        To="0,0,0,10" />-->
                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                      Duration="0:0:0.3"
                                                      From="0"
@@ -327,10 +327,10 @@
                         <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                             <BeginStoryboard>
                                 <Storyboard>
-                                    <ThicknessAnimation Storyboard.TargetProperty="Margin"
+                                    <!--<ThicknessAnimation Storyboard.TargetProperty="Margin"
                                                         Duration="0:0:0.5"
                                                         From="-10,0,10,10"
-                                                        To="0,0,0,10" />
+                                                        To="0,0,0,10" />-->
                                     <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                      Duration="0:0:0.5"
                                                      From="0"
