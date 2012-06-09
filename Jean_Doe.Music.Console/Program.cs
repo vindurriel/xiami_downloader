@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Serialization;
 using Jean_Doe.Common;
-using Flexware.Core.Share;
 namespace Jean_Doe.Music.Console
 {
     class Program
@@ -17,19 +16,6 @@ namespace Jean_Doe.Music.Console
         }
         static void Main(string[] args)
         {
-            var rule = new EquationFileParserRule
-            {
-                ID = Guid.NewGuid(),
-                Name = "new rule",
-                ParserRuleDirection = RuleDirection.InOut,
-                ParserRuleSeparatorString = "=",
-                ParserRulePriority = 1,
-            };
-            var s = new XmlSerializer(typeof(EquationFileParserRule));
-            var writer = new StreamWriter(".\\a.xml");
-            s.Serialize(writer, rule);
-            var reader = new StreamReader(".\\a.xml");
-            rule = s.Deserialize(reader) as EquationFileParserRule;
         }
         static async void getlrc()
         {
