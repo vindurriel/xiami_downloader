@@ -6,6 +6,12 @@ namespace Jean_Doe.MusicControl
     public class SongViewModel : MusicViewModel, IHasArtist,IHasAlbum
     {
         #region Properties
+        double playTimes = 0;
+        public double  PlayTimes
+        {
+            get { return playTimes; }
+            set { playTimes = value; Notify("PlayTimes"); }
+        }
         public bool HasLrc
         {
             get { return song.HasLrc; }
@@ -30,6 +36,7 @@ namespace Jean_Doe.MusicControl
         public string UrlMp3 { get { return song.UrlMp3; } }
         public string UrlArt { get { return song.UrlArt; } }
         public string UrlLrc { get { return song.UrlLrc; } set { song.UrlLrc = value; } }
+        public int TrackNo { get { return song.TrackNo; } set { song.TrackNo = value; } }
 
 
         private string status;

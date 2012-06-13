@@ -11,7 +11,10 @@ namespace Jean_Doe.Common
         public string UrlMp3 { get; set; }
         public string UrlArt { get; set; }
         public string UrlLrc { get; set; }
+        public int TrackNo { get; set; }
+
         private string id;
+
         public string Id
         {
             get { return id; }
@@ -80,8 +83,6 @@ namespace Jean_Doe.Common
         public EnumXiamiType Type { get { return EnumXiamiType.song; } }
         [XmlIgnore]
         public string Name { get; set; }
-        [XmlIgnore]
-        public string TrackNo { get; set; }
         private string artistName;
         [XmlIgnore]
         public string ArtistName
@@ -118,7 +119,9 @@ namespace Jean_Doe.Common
             AlbumId = MusicHelper.Get(obj, "album", "id");
             AlbumName = MusicHelper.Get(obj, "album", "name");
             UrlMp3 = (MusicHelper.Get(obj, "song", "location") as string).EscapeUrl();
-            TrackNo = MusicHelper.Get(obj, "song", "track");
+            int track=0;
+            int.TryParse(MusicHelper.Get(obj, "song", "track"),out track);
+            TrackNo = track;
             UrlLrc = (MusicHelper.Get(obj, "song", "lrc") as string).EscapeUrl();
             Logo = MusicHelper.Get(obj, "album", "logo");
         }

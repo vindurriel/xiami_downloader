@@ -30,7 +30,7 @@ namespace Jean_Doe.Common
         readonly static string url_search_parts = "http://www.xiami.com/app/android/search-part?key={key}&type={type}&page={page}";
         readonly static string fmtUrlPlaylistByIdAndType = "http://www.xiami.com/song/playlist/id/{0}/type/{1}";
         readonly static string fmtUrlSearchWithKeyAndPage = "http://www.xiami.com/app/nineteen/search/key/{0}/page/{1}";
-        public readonly static string url_song = "http://www.xiami.com/app/android/song/id/{id}";
+        public readonly static string url_song = "http://www.xiami.com/app/iphone/song/id/{id}";
         readonly static string url_type_id = "http://www.xiami.com/app/android/{type}/id/{id}";
         public static string UrlPlaylistByIdAndType(string id, EnumXiamiType type)
         {

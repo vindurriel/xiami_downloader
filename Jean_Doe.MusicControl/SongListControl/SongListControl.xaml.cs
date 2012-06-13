@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Artwork.MessageBus;
 using Jean_Doe.Common;
@@ -18,7 +19,7 @@ namespace Jean_Doe.MusicControl
     {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
-        void Notify(string prop)
+        protected void Notify(string prop)
         {
             if(PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
@@ -76,6 +77,7 @@ namespace Jean_Doe.MusicControl
 
         public SongListControl()
         {
+            var a = new Image();
             InitializeComponent();
             Global.ListenToEvent("ShowDetails", HandleShowDetails);
             col_album.Visibility = Visibility.Collapsed;
@@ -234,5 +236,26 @@ namespace Jean_Doe.MusicControl
             }
         }
 
+        private void Image_SourceUpdated_1(object sender, System.Windows.Data.DataTransferEventArgs e)
+        {
+            var img=sender as Image;
+            Show(img);
+        }
+
+        private static void Show(UIElement obj)
+        {
+            var da = new DoubleAnimation
+            {
+                From=0,
+                To = 1,
+                FillBehavior = FillBehavior.HoldEnd,
+                Duration = TimeSpan.FromMilliseconds(200),
+            };
+            Storyboard.SetTarget(da, obj);
+            Storyboard.SetTargetProperty(da, new PropertyPath("(UIElement.Opacity)"));
+            var sb = new Storyboard();
+            sb.Children.Add(da);
+            sb.Begin();
+        }
     }
 }

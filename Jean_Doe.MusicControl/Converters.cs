@@ -14,17 +14,37 @@ namespace Jean_Doe.MusicControl
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             double res = 1;
-            foreach(var item in values)
+            foreach (var item in values)
             {
                 res *= (double)item;
             }
-            return res/100.0;
+            return res / 100.0;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             string[] splitValues = ((string)value).Split(' ');
             return splitValues;
+        }
+    }
+    public class DivideConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values.Count() != 2) return 0;
+            try
+            {
+                return (double)values[0] / (double)values[1];
+            }
+            catch 
+            {
+                return 0;
+            }
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
     public class BoolToOpacityConverter : IValueConverter
