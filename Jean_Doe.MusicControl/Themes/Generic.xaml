@@ -5,7 +5,7 @@
     <Style x:Key="ResizeWindowResizeThumbStyle"
            TargetType="{x:Type Thumb}">
         <Setter Property="Background"
-                Value="Transparent" />
+                Value="#01000000" />
         <Setter Property="HorizontalAlignment"
                 Value="Stretch" />
         <Setter Property="VerticalAlignment"

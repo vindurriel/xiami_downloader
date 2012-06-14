@@ -83,7 +83,6 @@ namespace Jean_Doe.Common
                 /////////////////////////////////////////
                 if (sr == null || state == EnumSearchState.Cancelling)
                 {
-                    MessageBus.Instance.Publish("cancelling");
                     break;
                 }
                 if (state == EnumSearchState.Started)
@@ -93,7 +92,6 @@ namespace Jean_Doe.Common
                 }
                 if (sr.Count == 0)
                 {
-                    MessageBus.Instance.Publish("no more results");
                     break;
                 }
                 notifyState(sr);
@@ -134,8 +132,8 @@ namespace Jean_Doe.Common
         //}
         public static void Cancel()
         {
-            state = EnumSearchState.Cancelling;
             NetAccess.CancelAsync();
+            state = EnumSearchState.Cancelling;
         }
     }
     public enum EnumSearchState { Started, Working, Cancelling, Finished }

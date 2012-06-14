@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,9 +20,10 @@ namespace Jean_Doe.MusicControl
             {
                 CellTemplate = FindResource("PlayTimesTemplate") as DataTemplate,
                 Header = "播放次数",
+                SortDirection=ListSortDirection.Ascending,
                 SortMemberPath = "PlayTimes",
             };
-            dataGrid.Columns.Insert(2, col);
+            dataGrid.Columns.Add(col);
             Items.CollectionChanged += Items_CollectionChanged;
         }
         private double maxPlayTimes = 1;
@@ -35,31 +37,46 @@ namespace Jean_Doe.MusicControl
                 Notify("MaxPlayTimes");
             }
         }
-
+        object lck = new object();
         void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action != NotifyCollectionChangedAction.Add) return;
+            if (e.Action != NotifyCollectionChangedAction.Add)
+            {
+                maxPlayTimes = 1;
+                return;
+            }
             foreach (var item in e.NewItems.OfType<SongViewModel>())
             {
                 if (item.PlayTimes == 0)
-                    Task.Run(async () =>
-                    {
-                        var times = await NetAccess.GetPlayTimes(item.Id);
-                        UIHelper.RunOnUI(() =>
+                {
+                    var bw1 = new BackgroundWorker();
+                    bw1.DoWork += async (a, b) =>
                         {
-                            if (times > MaxPlayTimes) MaxPlayTimes = times;
-                            item.PlayTimes = times;
-                        });
-                    }); 
+                            var times = await NetAccess.GetPlayTimes(item.Id);
+                            if (times != 0)
+                                UIHelper.RunOnUI(() =>
+                                {
+                                    if (times > MaxPlayTimes)
+                                        MaxPlayTimes = times;
+                                    item.PlayTimes = times;
+                                });
+                        };
+                    bw1.RunWorkerAsync();
+                }
                 if (item.TrackNo == 0)
-                    Task.Run(async () =>
+                {
+                    var bw2 = new BackgroundWorker();
+                    bw2.DoWork += async (a, b) =>
                     {
-                        var trackNo = await NetAccess.GetTrackNo(item.Id,item.AlbumId);
-                        UIHelper.RunOnUI(() =>
-                        {
-                            item.TrackNo = trackNo;
-                        });
-                    });
+                        var trackNo = await NetAccess.GetTrackNo(item.Id, item.AlbumId);
+                        if (trackNo != 0)
+                            UIHelper.RunOnUI(() =>
+                            {
+                                item.TrackNo = trackNo;
+                            });
+                    };
+                    bw2.RunWorkerAsync();
+                }
             }
         }
         public void Handle(MsgSearchStateChanged message)

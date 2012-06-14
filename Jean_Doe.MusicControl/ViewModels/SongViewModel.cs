@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Windows.Controls;
 using Jean_Doe.Common;
 namespace Jean_Doe.MusicControl
@@ -7,10 +8,16 @@ namespace Jean_Doe.MusicControl
     {
         #region Properties
         double playTimes = 0;
-        public double  PlayTimes
+        public double PlayTimes
         {
             get { return playTimes; }
             set { playTimes = value; Notify("PlayTimes"); }
+        }
+        DateTime date = DateTime.Now;
+        public DateTime Date
+        {
+            get { return date; }
+            set { date = value; Notify("Date"); }
         }
         public bool HasLrc
         {
@@ -36,7 +43,7 @@ namespace Jean_Doe.MusicControl
         public string UrlMp3 { get { return song.UrlMp3; } }
         public string UrlArt { get { return song.UrlArt; } }
         public string UrlLrc { get { return song.UrlLrc; } set { song.UrlLrc = value; } }
-        public int TrackNo { get { return song.TrackNo; } set { song.TrackNo = value; } }
+        public int TrackNo { get { return song.TrackNo; } set { song.TrackNo = value; Notify("TrackNo"); } }
 
 
         private string status;

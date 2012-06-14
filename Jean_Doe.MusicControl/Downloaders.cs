@@ -15,7 +15,7 @@ namespace Jean_Doe.MusicControl
     {
         public override async Task Download()
         {
-            if(!(Info.Entity is SongViewModel))
+            if (!(Info.Entity is SongViewModel))
                 return;
             Info.Url = (Info.Entity as SongViewModel).UrlMp3;
             await base.Download();
@@ -24,9 +24,9 @@ namespace Jean_Doe.MusicControl
         {
             base.Process();
             var item = Info.Entity as SongViewModel;
-            if(item == null) return;
+            if (item == null) return;
             var folder = Path.Combine(Global.AppSettings["DownloadFolder"], item.Dir);
-            if(folder != null && !Directory.Exists(folder))
+            if (folder != null && !Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
             var mp3 = Path.Combine(folder, item.FileNameBase + ".mp3");
             try
@@ -39,10 +39,12 @@ namespace Jean_Doe.MusicControl
                     Title = item.Name,
                     Id = item.Id,
                 };
+                if (item.TrackNo > 0)
+                    id3.TrackNo = item.TrackNo.ToString();
                 id3.Commit();
                 item.HasMp3 = true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 State = EnumDownloadState.Error;
                 NotifyState(e.Message);
@@ -68,14 +70,14 @@ namespace Jean_Doe.MusicControl
         public override async Task Download()
         {
             var item = Info.Entity as SongViewModel;
-            if(item == null)
+            if (item == null)
                 return;
-            if(string.IsNullOrEmpty(item.UrlLrc))
+            if (string.IsNullOrEmpty(item.UrlLrc))
             {
                 item.UrlLrc = await NetAccess.GetUrlLrc(item.Id);
             }
             Info.Url = item.UrlLrc;
-            if(string.IsNullOrEmpty(Info.Url))
+            if (string.IsNullOrEmpty(Info.Url))
             {
                 return;
             }
@@ -85,9 +87,9 @@ namespace Jean_Doe.MusicControl
         {
             base.Process();
             var song = Info.Entity as SongViewModel;
-            if(song == null) return;
+            if (song == null) return;
             var folder = Path.Combine(Global.AppSettings["DownloadFolder"], song.Dir);
-            if(folder != null && !Directory.Exists(folder))
+            if (folder != null && !Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
             var lrc = Path.Combine(folder, song.FileNameBase + ".lrc");
             try
@@ -95,7 +97,7 @@ namespace Jean_Doe.MusicControl
                 File.Copy(Info.FileName, lrc, true);
                 song.HasLrc = true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 State = EnumDownloadState.Error;
                 NotifyState(e.Message);
@@ -115,7 +117,7 @@ namespace Jean_Doe.MusicControl
 
         public override async Task Download()
         {
-            if(!(Info.Entity is SongViewModel))
+            if (!(Info.Entity is SongViewModel))
                 return;
             Info.Url = (Info.Entity as SongViewModel).UrlArt;
             await base.Download();
@@ -123,9 +125,9 @@ namespace Jean_Doe.MusicControl
         protected override void OnDownloaded()
         {
             var item = Info.Entity as SongViewModel;
-            if(item != null)
+            if (item != null)
             {
-                if(ArtDownloaded != null)
+                if (ArtDownloaded != null)
                     ArtDownloaded(this, new ArtDownloadedEventArgs { song = item });
                 item.ImageSource = Info.FileName;
             }
@@ -135,11 +137,11 @@ namespace Jean_Doe.MusicControl
         {
             base.Process();
             var item = Info.Entity as SongViewModel;
-            if(item == null) return;
-            if(item.ImageSource==null)
+            if (item == null) return;
+            if (item.ImageSource == null)
                 item.ImageSource = Info.FileName;
             var folder = Path.Combine(Global.AppSettings["DownloadFolder"], item.Dir);
-            if(folder != null && !Directory.Exists(folder))
+            if (folder != null && !Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
             var mp3 = Path.Combine(folder, item.FileNameBase + ".mp3");
             try
@@ -149,7 +151,7 @@ namespace Jean_Doe.MusicControl
                 id3.Commit();
                 item.HasArt = true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 State = EnumDownloadState.Error;
                 NotifyState(e.Message);
@@ -157,9 +159,9 @@ namespace Jean_Doe.MusicControl
         }
         public void HandleDownloaded(object sender, ArtDownloadedEventArgs e)
         {
-            if(e == null || e.song == null) return;
+            if (e == null || e.song == null) return;
             var song = Info.Entity as SongViewModel;
-            if(song == null) return;
+            if (song == null) return;
             OnDownloaded();
         }
         public event EventHandler<ArtDownloadedEventArgs> ArtDownloaded;

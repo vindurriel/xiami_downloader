@@ -10,8 +10,6 @@
     <UserControl.Resources>
         <my:IntToVisibilityConverter
             x:Key="int2vis" />
-        <my:IntReverseToVisibilityConverter
-            x:Key="rint2vis" />
         <my:BoolToOpacityConverter
             x:Key='bool2opa' />
         <my:BoolToVisibilityConverter
@@ -105,35 +103,41 @@
                     Width="60"
                     Height="60"
                     Margin="0"
-                    Source="{Binding ImageSource,IsAsync=True,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
+                    Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
                     Stretch="Uniform"></Image>
                 <!--<Grid
-                    Margin="-5"
                     Background="#01ffffff"
-                    Visibility="{Binding IsSelected, IsAsync=True,
-                                   RelativeSource={RelativeSource AncestorType=DataGridCell},
-                                   Converter={StaticResource bool2vis}}">
+                    Visibility="{Binding TrackNo,
+                                 Converter={StaticResource int2vis}}">
                     <Border
                         BorderBrush="{DynamicResource skinBrush}"
                         BorderThickness="5" />
                     <Path
-                        Data="M 20 0 L 20 20 L 0 20 Z"
+                        Data="M 25 0 L 25 25 L 0 25 Z"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"
                         Cursor="Hand"
-                        Width="20"
-                        Height="20"
+                        Width="25"
+                        Height="25"
                         Fill="{DynamicResource skinBrush}" />
-                    <TextBlock
-                        Text="a"
-                        Margin="0,0,-4,-4"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Bottom"
-                        FontFamily="Webdings"
-                        Foreground="White"
-                        FontSize="20" />
+
                 </Grid>-->
             </Grid>
+        </DataTemplate>
+        <DataTemplate
+            x:Key="trackNoTemplate">
+            <TextBlock
+                Visibility="{Binding TrackNo,
+                                 Converter={StaticResource int2vis}}"
+                Text="{Binding TrackNo,StringFormat={}{0:D2}.}"
+                Margin="0"
+                Style="{StaticResource label_base}" />
+        </DataTemplate>
+        <DataTemplate
+            x:Key="dateTemplate">
+            <TextBlock
+                Text="{Binding Date, StringFormat={}{0:yyyy/MM/dd HH:mm:ss}}"
+                Style="{StaticResource label_base}" />
         </DataTemplate>
         <DataTemplate
             x:Key="statusTemplate">
@@ -203,7 +207,7 @@
         <DataTemplate
             x:Key="PlayTimesTemplate">
             <Grid
-                MinWidth="200"
+                MinWidth="100"
                 Margin="5"
                 x:Name="grid">
                 <TextBlock
@@ -301,8 +305,6 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>-->
                 <DockPanel>
-                    <TextBlock
-                        Style="{StaticResource label_base}" Text="{Binding TrackNo,StringFormat={}{0} }"/>
                     <TextBlock
                         Style="{StaticResource label_base}">
                     <Hyperlink
@@ -463,11 +465,16 @@
                         Value="#888" />
                     <Setter
                         Property="BorderThickness"
-                        Value="0,0,0,0" />
+                        Value="0,0,1,0" />
                     <Setter
                         Property="Margin"
                         Value="0,0,0,10" />
                     <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                             <Setter
+                                Property="Background"
+                                Value="#888" />
+                        </Trigger>
                         <EventTrigger
                             RoutedEvent="FrameworkElement.Loaded">
                             <BeginStoryboard>
@@ -499,7 +506,13 @@
                 <DataGridTemplateColumn
                     IsReadOnly='True'
                     Width="Auto"
+                    SortMemberPath="AlbumName"
                     CellTemplate="{StaticResource imageTemplate}" />
+                <DataGridTemplateColumn
+                    IsReadOnly='True'
+                    Width="Auto"
+                    SortMemberPath="TrackNo"
+                    CellTemplate="{StaticResource trackNoTemplate}" />
                 <DataGridTemplateColumn
                     SortMemberPath="Name"
                     IsReadOnly='True'

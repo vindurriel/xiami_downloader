@@ -119,9 +119,6 @@ namespace Jean_Doe.Common
             AlbumId = MusicHelper.Get(obj, "album", "id");
             AlbumName = MusicHelper.Get(obj, "album", "name");
             UrlMp3 = (MusicHelper.Get(obj, "song", "location") as string).EscapeUrl();
-            int track=0;
-            int.TryParse(MusicHelper.Get(obj, "song", "track"),out track);
-            TrackNo = track;
             UrlLrc = (MusicHelper.Get(obj, "song", "lrc") as string).EscapeUrl();
             Logo = MusicHelper.Get(obj, "album", "logo");
         }

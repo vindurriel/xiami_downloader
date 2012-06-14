@@ -86,17 +86,4 @@ namespace Jean_Doe.MusicControl
             throw new NotImplementedException();
         }
     }
-    public class IntReverseToVisibilityConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            var from = (int)value;
-            return from != 0 ? Visibility.Collapsed : Visibility.Visible;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
 }

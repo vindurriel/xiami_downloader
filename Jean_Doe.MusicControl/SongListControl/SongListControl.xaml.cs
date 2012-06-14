@@ -239,7 +239,7 @@ namespace Jean_Doe.MusicControl
         private void Image_SourceUpdated_1(object sender, System.Windows.Data.DataTransferEventArgs e)
         {
             var img=sender as Image;
-            Show(img);
+            //Show(img);
         }
 
         private static void Show(UIElement obj)

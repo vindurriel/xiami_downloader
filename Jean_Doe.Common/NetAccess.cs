@@ -11,30 +11,53 @@ using Artwork.MessageBus;
 using System.Windows;
 using System.Web.Script.Serialization;
 using System.Collections;
+using System.Net.Http;
 namespace Jean_Doe.Common
 {
     public static class NetAccess
     {
+        static object lck = new object();
         public static void CancelAsync()
         {
-            if (client != null && client.IsBusy)
+            Task.Run(() =>
             {
-                client.CancelAsync();
-            }
+                lock (lck)
+                {
+                    foreach (var token in cancelTokens)
+                    {
+                        if (token == null || token.IsCancellationRequested) continue;
+                        token.Cancel(true);
+                    }
+                }
+            });
         }
-        static WebClient client;
+        static List<CancellationTokenSource> cancelTokens = new List<CancellationTokenSource>();
         public async static Task<string> DownloadStringAsync(string url)
         {
-            client = new WebClient();
+            var tcs = new CancellationTokenSource();
+            var client = new HttpClient();
+            lock (lck)
+            {
+                cancelTokens.Add(tcs);
+            }
             string res = null;
             try
             {
-                res = await client.DownloadStringTaskAsync(url);
+                var x = await client.GetAsync(url, tcs.Token);
+                res = await x.Content.ReadAsStringAsync();
             }
-            catch { }
+            catch (OperationCanceledException e)
+            {
+
+            }
             finally
             {
                 client.Dispose();
+                lock (lck)
+                {
+                    cancelTokens.Remove(tcs);
+                }
+                tcs.Dispose();
             }
             return res;
         }
@@ -42,6 +65,7 @@ namespace Jean_Doe.Common
         public async static Task<string> GetUrlLrc(string songId)
         {
             var json = await NetAccess.DownloadStringAsync(XiamiUrl.UrlSong(songId));
+            if (json == null) return null;
             try
             {
                 return json.ToDynamicObject().lyric as string;
@@ -55,6 +79,7 @@ namespace Jean_Doe.Common
         {
             double res = 0;
             var json = await NetAccess.DownloadStringAsync(XiamiUrl.UrlSong(songId));
+            if (json == null) return 0;
             try
             {
                 var str = json.ToDynamicObject().year_play as string;
@@ -64,17 +89,23 @@ namespace Jean_Doe.Common
             return res;
         }
         static Dictionary<string, int> TrackNoCache = new Dictionary<string, int>();
+        static object l = new object();
         public async static Task<int> GetTrackNo(string songId, string albumId)
         {
             if (TrackNoCache.ContainsKey(songId)) return TrackNoCache[songId];
             var json = await NetAccess.DownloadStringAsync(XiamiUrl.UrlAlbum(albumId));
+            if (json == null) return 0;
             try
             {
-                var songs = json.ToDynamicObject().songs;
+                var songs = json.ToDynamicObject().album.songs;
                 int i = 1;
                 foreach (var song in songs)
                 {
-                    TrackNoCache[song.song_id.ToString()] = i;
+                    lock (l)
+                    {
+                        TrackNoCache[song.song_id.ToString()] = i;
+                    }
+                    i++;
                 }
                 return TrackNoCache[songId];
             }
@@ -85,6 +116,7 @@ namespace Jean_Doe.Common
             string url = XiamiUrl.UrlSearch(keyword, page, type);
             string json = await DownloadStringAsync(url);
             /////////////
+            if (json == null) return null;
             dynamic obj = json.ToDynamicObject();
             if (obj == null) return null;
             var data = obj.data as IList<dynamic>;
@@ -140,6 +172,7 @@ namespace Jean_Doe.Common
             }
             var json = await DownloadStringAsync(url);
             ///////////////////////////////////////////////////////
+            if (json == null) return null;
             List<IMusic> items = new List<IMusic>();
             switch (type)
             {
@@ -228,6 +261,7 @@ namespace Jean_Doe.Common
             {
                 var json = await DownloadStringAsync(url);
                 ////////
+                if (json == null) return null;
                 var obj = json.ToDynamicObject().song;
                 song = MusicFactory.CreateFromJson(obj, EnumXiamiType.song);
             }
