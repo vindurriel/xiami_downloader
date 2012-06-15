@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 11
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicPlayer", "MusicPlayer\MusicPlayer.csproj", "{FA0502AD-7D36-4C1E-87BF-8B7CEC375033}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jean_Doe.MusicInfo", "Jean_Doe.MusicInfo\Jean_Doe.MusicInfo.csproj", "{7BE8780C-F5EB-40CC-977A-DAECF99A1C34}"
@@ -86,5 +86,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal
