@@ -19,7 +19,7 @@ namespace Jean_Doe.MusicControl
             MessageBus.Instance.Subscribe(this);
             dataGrid.Columns.Add(new DataGridTemplateColumn
             {
-                Header="完成日期",
+                Header = "完成日期",
                 CellTemplate = dataGrid.FindResource("dateTemplate") as DataTemplate,
                 SortMemberPath = "Date",
                 SortDirection = System.ComponentModel.ListSortDirection.Ascending,
@@ -32,17 +32,18 @@ namespace Jean_Doe.MusicControl
             if (e.Action != System.Collections.Specialized.NotifyCollectionChangedAction.Add) return;
             foreach (var item in e.NewItems.OfType<SongViewModel>())
             {
-                Task.Run(() =>
+                var file = Path.Combine(Global.BasePath, "cache", item.Id + ".mp3");
+                if (File.Exists(file))
                 {
-                    var file = Path.Combine(Global.BasePath, "cache", item.Id + ".mp3");
-                    if (File.Exists(file))
-                    {
-                        var date = new FileInfo(file).LastWriteTime;
-                        UIHelper.RunOnUI(() =>
-                            item.Date = date
-                        );
-                    }
-                });
+                    var date = new FileInfo(file).LastWriteTime;
+                    UIHelper.RunOnUI(() =>
+                        item.Date = date
+                    );
+                }
+                if (item.Song.FilePath == null)
+                {
+                    item.Song.FilePath = Path.Combine(Global.AppSettings["DownloadFolder"], item.Dir, item.FileNameBase + ".mp3");
+                }
             }
         }
         public void Handle(MsgDownloadStateChanged message)

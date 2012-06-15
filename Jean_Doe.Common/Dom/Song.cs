@@ -11,6 +11,7 @@ namespace Jean_Doe.Common
         public string UrlMp3 { get; set; }
         public string UrlArt { get; set; }
         public string UrlLrc { get; set; }
+        public string FilePath { get; set; }
         public int TrackNo { get; set; }
 
         private string id;

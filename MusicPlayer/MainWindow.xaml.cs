@@ -275,7 +275,10 @@ namespace MusicPlayer
             {
                 if(!item.HasMp3) continue;
                 Playlist.Add(string.Format("#EXTINF:{0}", item.Id));
-                Playlist.Add(System.IO.Path.Combine(".", item.Dir, item.FileNameBase + ".mp3"));
+                if(string.IsNullOrEmpty(item.Song.FilePath))
+                    Playlist.Add(System.IO.Path.Combine(".", item.Dir, item.FileNameBase + ".mp3"));
+                else
+                    Playlist.Add(item.Song.FilePath);
             }
             if(path == null)
                 path = Global.AppSettings["DownloadFolder"] + "\\default.m3u";
