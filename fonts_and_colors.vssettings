@@ -61,7 +61,7 @@
 							<Item Name="XML Doc Comment" Foreground="0x00808080" Background="0x02000000" BoldFont="No"/>
 							<Item Name="XML Doc Tag" Foreground="0x00808080" Background="0x02000000" BoldFont="No"/>
 							<Item Name="Preprocessor Keyword" Foreground="0x0076D02F" Background="0x02000000" BoldFont="No"/>
-							<Item Name="User Types" Foreground="0x00F4CA92" Background="0x01000001" BoldFont="No"/>
+							<Item Name="User Types" Foreground="0x00D1B03D" Background="0x01000001" BoldFont="No"/>
 							<Item Name="XML Doc Attribute" Foreground="0x00C0C0C0" Background="0x02000000" BoldFont="No"/>
 							<Item Name="XML Comment" Foreground="0x00808080" Background="0x02000000" BoldFont="No"/>
 							<Item Name="String(C# @ Verbatim)" Foreground="0x0076D02F" Background="0x02000000" BoldFont="No"/>
