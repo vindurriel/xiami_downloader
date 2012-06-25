@@ -1,0 +1,75 @@
+<UserSettings>
+	<ApplicationIdentity version="11.0"/>
+	<ToolsOptions>
+		<ToolsOptionsCategory name="Environment" RegisteredName="Environment"/>
+	</ToolsOptions>
+	<Category name="Environment_Group" RegisteredName="Environment_Group">
+		<Category name="Environment_FontsAndColors" Category="{1EDA5DD4-927A-43a7-810E-7FD247D0DA1D}" Package="{DA9FB551-C724-11d0-AE1F-00A0C90FFFC3}" RegisteredName="Environment_FontsAndColors" PackageName="Visual Studio Environment Package">
+			<PropertyValue name="Version">2</PropertyValue>
+			<FontsAndColors Version="2.0">
+				<Categories>
+					<Category GUID="{58E96763-1D3B-4E05-B6BA-FF7115FD0B7B}" FontName="Droid Sans Mono" FontSize="10" CharSet="1" FontIsDefault="No">
+						<Items>
+							<Item Name="Plain Text" Foreground="0x005A5A5A" Background="0x00F2EFEF" BoldFont="No"/>
+						</Items>
+					</Category>
+					<Category GUID="{6BB65C5A-2F31-4BDE-9F48-8A38DC0C63E7}" FontName="新宋体" FontSize="9" CharSet="134" FontIsDefault="No">
+						<Items/>
+					</Category>
+					<Category GUID="{75A05685-00A8-4DED-BAE5-E7A50BFA929A}" FontName="Droid Sans Mono" FontSize="10" CharSet="1" FontIsDefault="No">
+						<Items>
+							<Item Name="Comment" Foreground="0x009E7E87" Background="0x01000001" BoldFont="No"/>
+							<Item Name="Identifier" Foreground="0x00000000" Background="0x01000001" BoldFont="No"/>
+							<Item Name="Keyword" Foreground="0x005B5B5B" Background="0x01000001" BoldFont="No"/>
+							<Item Name="Preprocessor Keyword" Foreground="0x00800080" Background="0x01000001" BoldFont="No"/>
+							<Item Name="String" Foreground="0x00800080" Background="0x01000001" BoldFont="No"/>
+							<Item Name="outlining.collapsehintadornment" Foreground="0x00808080" Background="0x00FAF7F6" BoldFont="No"/>
+							<Item Name="Line Number" Foreground="0x00988172" Background="0x01000001" BoldFont="No"/>
+							<Item Name="XML Doc Comment" Foreground="0x00800080" Background="0x01000001" BoldFont="No"/>
+							<Item Name="XML Doc Tag" Foreground="0x00800080" Background="0x01000001" BoldFont="No"/>
+							<Item Name="VBScript Keyword" Foreground="0x00616161" Background="0x01000001" BoldFont="No"/>
+						</Items>
+					</Category>
+					<Category GUID="{B36B0228-DBAD-4DB0-B9C7-2AD3E572010F}" FontName="Microsoft YaHei" FontSize="9" CharSet="1" FontIsDefault="No">
+						<Items>
+							<Item Name="Different content" Foreground="0x000014E5" Background="0x00FFFFFF" BoldFont="No"/>
+							<Item Name="Identical content" Foreground="0x00000000" Background="0x00FFFFFF" BoldFont="No"/>
+							<Item Name="Source Only" Foreground="0x00000000" Background="0x00FFFFFF" BoldFont="No"/>
+							<Item Name="Target Only" Foreground="0x00000000" Background="0x00FFFFFF" BoldFont="No"/>
+							<Item Name="Not Downloaded" Foreground="0x006D6D6D" Background="0x00FFFFFF" BoldFont="No"/>
+							<Item Name="Even Row Items" Foreground="0x00000000" Background="0x00FFFFFF" BoldFont="No"/>
+							<Item Name="Odd Row Items" Foreground="0x00000000" Background="0x00FFFFFF" BoldFont="No"/>
+						</Items>
+					</Category>
+					<Category GUID="{E0187991-B458-4F7E-8CA9-42C9A573B56C}" FontName="Droid Sans Mono" FontSize="10" CharSet="1" FontIsDefault="No">
+						<Items>
+							<Item Name="Keyword" Foreground="0x005B5B5B" Background="0x01000001" BoldFont="No"/>
+							<Item Name="Comment" Foreground="0x009E7E87" Background="0x01000001" BoldFont="No"/>
+							<Item Name="Identifier" Foreground="0x00000000" Background="0x01000001" BoldFont="No"/>
+							<Item Name="String" Foreground="0x00800080" Background="0x01000001" BoldFont="No"/>
+							<Item Name="XML Doc Comment" Foreground="0x00800080" Background="0x01000001" BoldFont="No"/>
+							<Item Name="XML Doc Tag" Foreground="0x00800080" Background="0x01000001" BoldFont="No"/>
+							<Item Name="Preprocessor Keyword" Foreground="0x00800080" Background="0x01000001" BoldFont="No"/>
+							<Item Name="User Types" Foreground="0x00DB6D00" Background="0x01000001" BoldFont="No"/>
+							<Item Name="XML Doc Attribute" Foreground="0x00800080" Background="0x01000001" BoldFont="No"/>
+							<Item Name="XML Comment" Foreground="0x00000080" Background="0x01000001" BoldFont="No"/>
+							<Item Name="String(C# @ Verbatim)" Foreground="0x00800080" Background="0x01000001" BoldFont="No"/>
+							<Item Name="User Types(Value types)" Foreground="0x00CC7A00" Background="0x01000001" BoldFont="No"/>
+							<Item Name="User Types(Interfaces)" Foreground="0x002E9645" Background="0x01000001" BoldFont="No"/>
+							<Item Name="User Types(Delegates)" Foreground="0x00000000" Background="0x01000001" BoldFont="No"/>
+							<Item Name="User Types(Enums)" Foreground="0x00CC7A00" Background="0x01000001" BoldFont="No"/>
+							<Item Name="User Types(Type parameters)" Foreground="0x00CC7A00" Background="0x01000001" BoldFont="No"/>
+							<Item Name="XAML Comment" Foreground="0x00000080" Background="0x01000001" BoldFont="No"/>
+						</Items>
+					</Category>
+					<Category GUID="{EE1BE240-4E81-4BEB-8EEA-54322B6B1BF5}" FontName="新宋体" FontSize="9" CharSet="134" FontIsDefault="No">
+						<Items/>
+					</Category>
+					<Category GUID="{FF349800-EA43-46C1-8C98-878E78F46501}" FontName="Droid Sans Mono" FontSize="10" CharSet="1" FontIsDefault="No">
+						<Items/>
+					</Category>
+				</Categories>
+			</FontsAndColors>
+		</Category>
+	</Category>
+</UserSettings>
