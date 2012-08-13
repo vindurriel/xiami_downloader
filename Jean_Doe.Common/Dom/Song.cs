@@ -81,8 +81,6 @@ namespace Jean_Doe.Common
         [XmlIgnore]
         public string Logo { get { return UrlArt; } set { UrlArt = value; } }
         [XmlIgnore]
-        public EnumXiamiType Type { get { return EnumXiamiType.song; } }
-        [XmlIgnore]
         public string Name { get; set; }
         private string artistName;
         [XmlIgnore]
@@ -106,6 +104,11 @@ namespace Jean_Doe.Common
                     artistName = value;
             }
         }
+		[XmlIgnore]
+		public string Type
+		{
+			get { return "song"; }
+		}
         [XmlIgnore]
         public string FeaturingArtists { get; set; }
         [XmlIgnore]

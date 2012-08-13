@@ -61,12 +61,13 @@
     <Compile Include="Dom\Collection.cs" />
     <Compile Include="Dom\MusicFactory.cs" />
     <Compile Include="Dom\MusicHelper.cs" />
+    <Compile Include="DoubanUrl.cs" />
     <Compile Include="DownloadHelper.cs" />
     <Compile Include="DynamicJsonConverter.cs" />
     <Compile Include="EnumSearchType.cs" />
-    <Compile Include="EnumXiamiType.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Dom\IMusic.cs" />
+    <Compile Include="ISearchProvider.cs" />
     <Compile Include="NetAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunProgramHelper.cs" />
@@ -76,16 +77,12 @@
     <Compile Include="PersistHelper.cs" />
     <Compile Include="StringHelper.cs" />
     <Compile Include="UIHelper.cs" />
-    <Compile Include="XiamiUrl.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Jean_Doe.MusicInfo\Jean_Doe.MusicInfo.csproj">
       <Project>{7BE8780C-F5EB-40CC-977A-DAECF99A1C34}</Project>
       <Name>Jean_Doe.MusicInfo</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

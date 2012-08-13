@@ -15,21 +15,21 @@ namespace Jean_Doe.MusicControl
             var o = ((container as ContentPresenter).Parent as DataGridCell).DataContext as MusicViewModel;
             if(o == null) return null;
             DataTemplate  res = null;
-            switch(o.Type)
+            switch(o.GetType().Name.ToLower())
             {
-                case Jean_Doe.Common.EnumXiamiType.album:
-                    res = AlbumTemplate;
-                    break;
-                case Jean_Doe.Common.EnumXiamiType.artist:
-                    res = ArtistTemplate;
-                    break;
-                case Jean_Doe.Common.EnumXiamiType.collect:
-                    res = CollectionTemplate;
-                    break;
-                case Jean_Doe.Common.EnumXiamiType.song:
-                    res = SongTemplate;
-                    break;
-                default:
+				case "album":
+					res = AlbumTemplate;
+					break;
+				case "artist":
+					res = ArtistTemplate;
+					break;
+				case "collect":
+					res = CollectionTemplate;
+					break;
+				case "song":
+					res = SongTemplate;
+					break;
+				default:
                     break;
             }
             return res;

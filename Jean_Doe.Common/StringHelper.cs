@@ -143,17 +143,5 @@ namespace Jean_Doe.Common
             }
             return a10.Replace('+', ' ');
         }
-        public static string gbk2utf8(this string raw)
-        {
-            var gbk = Encoding.GetEncoding(936);
-            var bytes = gbk.GetBytes(raw);
-            return Encoding.UTF8.GetString(bytes);
-        }
-        public static string utf82gbk(this string raw)
-        {
-            var gbk = Encoding.GetEncoding(936);
-            var bytes = Encoding.UTF8.GetBytes(raw);
-            return gbk.GetString(bytes);
-        }
     }
 }

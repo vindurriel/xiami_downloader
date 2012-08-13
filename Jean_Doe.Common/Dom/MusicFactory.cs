@@ -8,21 +8,21 @@ namespace Jean_Doe.Common
 {
     public class MusicFactory
     {
-        public static IMusic CreateFromJson(dynamic obj, EnumXiamiType type)
+        public static IMusic CreateFromJson(dynamic obj, string type)
         {
             IMusic res = null;
             switch(type)
             {
-                case EnumXiamiType.album:
+                case "album":
                     res = new Album();
                     break;
-                case EnumXiamiType.artist:
+                case "artist":
                     res = new Artist();
                     break;
-                case EnumXiamiType.collect:
+                case "collect":
                     res = new Collection();
                     break;
-                case EnumXiamiType.song:
+                case "song":
                     res = new Song();
                     break;
                 default:

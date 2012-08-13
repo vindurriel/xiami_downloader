@@ -6,7 +6,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Web.Script.Serialization;
-sealed class DynamicJsonConverter : JavaScriptConverter
+public sealed class DynamicJsonConverter : JavaScriptConverter
 {
     public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
     {

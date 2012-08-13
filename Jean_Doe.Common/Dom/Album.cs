@@ -20,10 +20,6 @@ public class Album : IMusic
         get;
         set;
     }
-    public EnumXiamiType Type
-    {
-        get { return EnumXiamiType.album; }
-    }
     public List<Song> Songs = new List<Song>();
     public void CreateFromJson(dynamic obj)
     {
@@ -35,9 +31,15 @@ public class Album : IMusic
         {
             foreach (var item in obj.songs)
             {
-                var song = MusicFactory.CreateFromJson(obj, EnumXiamiType.song);
+                var song = MusicFactory.CreateFromJson(obj, "song");
                 if (song != null) Songs.Add(song);
             }
         }
     }
+
+
+	public string Type
+	{
+		get { return "album"; }
+	}
 }

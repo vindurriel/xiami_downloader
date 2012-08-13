@@ -173,6 +173,10 @@
       <Project>{7be8780c-f5eb-40cc-977a-daecf99a1c34}</Project>
       <Name>Jean_Doe.MusicInfo</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Xiami\Xiami.csproj">
+      <Project>{53d8ff5c-7e02-4dc9-a36f-82861b63f5e4}</Project>
+      <Name>Xiami</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\arrow.png" />

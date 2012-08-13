@@ -2,8 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:common="clr-namespace:Jean_Doe.Common;assembly=Jean_Doe.Common"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:common="clr-namespace:Jean_Doe.Common;assembly=Jean_Doe.Common" 
+             xmlns:xiami="clr-namespace:Xiami;assembly=Xiami" 
              xmlns:local="clr-namespace:Jean_Doe.MusicControl"
              mc:Ignorable="d">
     <UserControl.Resources>
@@ -13,11 +14,11 @@
                 <ResourceDictionary>
                     <common:EnumSearchType x:Key="enumkey">key</common:EnumSearchType>
                     <common:EnumSearchType x:Key="enumurl">url</common:EnumSearchType>
-                    <common:EnumXiamiType x:Key="song">song</common:EnumXiamiType>
-                    <common:EnumXiamiType x:Key="artist">artist</common:EnumXiamiType>
-                    <common:EnumXiamiType x:Key="album">album</common:EnumXiamiType>
-                    <common:EnumXiamiType x:Key="collect">collect</common:EnumXiamiType>
-                    <common:EnumXiamiType x:Key="any">any</common:EnumXiamiType>
+                    <xiami:EnumXiamiType x:Key="song">song</xiami:EnumXiamiType>
+                    <xiami:EnumXiamiType x:Key="artist">artist</xiami:EnumXiamiType>
+                    <xiami:EnumXiamiType x:Key="album">album</xiami:EnumXiamiType>
+                    <xiami:EnumXiamiType x:Key="collect">collect</xiami:EnumXiamiType>
+                    <xiami:EnumXiamiType x:Key="any">any</xiami:EnumXiamiType>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
