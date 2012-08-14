@@ -1,0 +1,243 @@
+﻿using Jean_Doe.Common;
+using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+namespace Xiami
+{
+    public static class XiamiNetAccess
+    {
+        static object lck = new object();
+        public static void CancelAsync()
+        {
+            Task.Run(() =>
+            {
+                lock (lck)
+                {
+                    foreach (var token in cancelTokens)
+                    {
+                        if (token == null || token.IsCancellationRequested) continue;
+                        token.Cancel(true);
+                    }
+                }
+            });
+        }
+        static List<CancellationTokenSource> cancelTokens = new List<CancellationTokenSource>();
+        
+        public async static Task<string> GetUrlLrc(string songId)
+        {
+            var json = await NetAccess.DownloadStringAsync(XiamiUrl.UrlSong(songId));
+            if (json == null) return null;
+            try
+            {
+                return json.ToDynamicObject().lyric as string;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        public async static Task<double> GetPlayTimes(string songId)
+        {
+            double res = 0;
+            var json = await NetAccess.DownloadStringAsync(XiamiUrl.UrlSong(songId));
+            if (json == null) return 0;
+            try
+            {
+                var str = json.ToDynamicObject().year_play as string;
+                double.TryParse(str, out res);
+            }
+            catch { }
+            return res;
+        }
+        static Dictionary<string, int> TrackNoCache = new Dictionary<string, int>();
+        static object l = new object();
+        public async static Task<int> GetTrackNo(string songId, string albumId)
+        {
+            if (TrackNoCache.ContainsKey(songId)) return TrackNoCache[songId];
+            var json = await NetAccess.DownloadStringAsync(XiamiUrl.UrlAlbum(albumId));
+            if (json == null) return 0;
+            try
+            {
+                var songs = json.ToDynamicObject().album.songs;
+                int i = 1;
+                foreach (var song in songs)
+                {
+                    lock (l)
+                    {
+                        TrackNoCache[song.song_id.ToString()] = i;
+                    }
+                    i++;
+                }
+                return TrackNoCache[songId];
+            }
+            catch { return 0; }
+        }
+        public async static Task<SearchResult> Search(string keyword, int page, string type ="song")
+        {
+            string url = XiamiUrl.UrlSearch(keyword, page, type);
+            string json = await NetAccess.DownloadStringAsync(url);
+            /////////////
+            if (json == null) return null;
+            dynamic obj = json.ToDynamicObject();
+            if (obj == null) return null;
+            var data = obj.data as IList<dynamic>;
+            if (data == null) return null;
+            var items = new List<IMusic>();
+            foreach (dynamic x in data)
+            {
+                items.Add(MusicFactory.CreateFromJson(x, type));
+            }
+            var res = new SearchResult
+           {
+               Items = items,
+               Keyword = keyword,
+               Page = page,
+               SearchType = EnumSearchType.key
+           };
+            return res;
+        }
+        public async static Task<SearchResult> SearchByUrl(string url)
+        {
+            var patterns = new List<Regex>{
+                new Regex(@"(album|artist|song)/(\d+)"),//album,artist,song
+                new Regex(@"show(collect)/id/(\d+)"),//collection
+            };
+            string strType = null, id = null;
+            bool IsPatternRecognized = false;
+            foreach (var pattern in patterns)
+            {
+                var j = pattern.Match(url);
+                if (j.Success)
+                {
+                    strType = j.Groups[1].Value;
+                    id = j.Groups[2].Value;
+                    IsPatternRecognized = true;
+                    break;
+                }
+            }
+            if (!IsPatternRecognized)
+                return null;
+            string type = "song";
+            var res = await GetSongsOfType(id, type);
+            res.SearchType = EnumSearchType.url;
+            res.Keyword = url;
+            return res;
+        }
+        public async static Task<SearchResult> GetSongsOfType(string id, string type)
+        {
+            string url = XiamiUrl.UrlPlaylistByIdAndType(id, type);
+            if (type == "artist")
+            {
+                url = XiamiUrl.UrlArtistTopSong(id);
+            }
+            var json = await NetAccess.DownloadStringAsync(url);
+            ///////////////////////////////////////////////////////
+            if (json == null) return null;
+			List<IMusic> items = new List<IMusic>();
+			switch(type)
+			{
+				case "album":
+					items = GetSongsOfAlbum(json);
+					break;
+				case "artist":
+					items = GetSongsOfArtist(json);
+					break;
+				case "collect":
+					items = GetSongsOfCollect(json);
+					break;
+				case "song":
+					var song = await GetSong(id);
+					if(song != null)
+						items.Add(song);
+					break;
+				case "any":
+					break;
+				default:
+					break;
+			}
+            var res = new SearchResult
+            {
+                Items = items,
+                Keyword = id,
+                SearchType = EnumSearchType.type,
+                Page = 1,
+            };
+            return res;
+        }
+        static List<IMusic> GetSongsOfArtist(string json)
+        {
+            var items = new List<IMusic>();
+            try
+            {
+                var obj = json.ToDynamicObject().songs;
+                foreach (var x in obj)
+                {
+                    items.Add(MusicFactory.CreateFromJson(x, "song"));
+                }
+            }
+            catch { }
+            {
+            }
+            return items;
+        }
+        static List<IMusic> GetSongsOfCollect(string json)
+        {
+            var items = new List<IMusic>();
+            try
+            {
+                var obj = json.ToDynamicObject().collect.songs;
+                foreach (var x in obj)
+                {
+                    items.Add(MusicFactory.CreateFromJson(x, "song"));
+                }
+            }
+            catch { }
+            {
+            }
+            return items;
+        }
+        static List<IMusic> GetSongsOfAlbum(string json)
+        {
+            var items = new List<IMusic>();
+            try
+            {
+                dynamic obj = json.ToDynamicObject();
+                var album_name = obj.album.title;
+                foreach (var x in obj.album.songs)
+                {
+                    Song a = MusicFactory.CreateFromJson(x, "song");
+                    a.AlbumName = album_name;
+                    items.Add(a);
+                }
+            }
+            catch { }
+            return items;
+        }
+        async static Task<Song> GetSong(string id)
+        {
+            var url = XiamiUrl.UrlPlaylistByIdAndType(id, "song");
+            Song song = null;
+            try
+            {
+				var json = await NetAccess.DownloadStringAsync(url);
+                ////////
+                if (json == null) return null;
+                var obj = json.ToDynamicObject().song;
+                song = MusicFactory.CreateFromJson(obj, "song");
+            }
+            catch { }
+            return song;
+        }
+        public async static Task<Album> GetAlbum(string id)
+        {
+            var url = XiamiUrl.UrlPlaylistByIdAndType(id, "album");
+            var json = await NetAccess.DownloadStringAsync(url);
+            if (json == null) return null;
+            var obj = json.ToDynamicObject().album;
+            var Album = MusicFactory.CreateFromJson(obj, "album");
+            return Album;
+        }
+    }
+}
