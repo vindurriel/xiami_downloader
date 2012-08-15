@@ -46,7 +46,7 @@ namespace Jean_Doe.Common
                 var x = await client.GetAsync(url, tcs.Token);
                 res = await x.Content.ReadAsStringAsync();
             }
-            catch (OperationCanceledException e)
+            catch (Exception e)
             {
 
             }
