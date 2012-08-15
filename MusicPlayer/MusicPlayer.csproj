@@ -119,10 +119,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Douban\Douban.csproj">
-      <Project>{e03a453a-9464-4360-91a7-1ec1c1d7404c}</Project>
-      <Name>Douban</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Jean_Doe.Common\Jean_Doe.Common.csproj">
       <Project>{16BFCCC4-6A14-41C7-A16A-66A744E4D004}</Project>
       <Name>Jean_Doe.Common</Name>
@@ -138,10 +134,6 @@
     <ProjectReference Include="..\Jean_Doe.MusicInfo\Jean_Doe.MusicInfo.csproj">
       <Project>{7BE8780C-F5EB-40CC-977A-DAECF99A1C34}</Project>
       <Name>Jean_Doe.MusicInfo</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Xiami\Xiami.csproj">
-      <Project>{53d8ff5c-7e02-4dc9-a36f-82861b63f5e4}</Project>
-      <Name>Xiami</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

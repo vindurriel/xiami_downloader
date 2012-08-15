@@ -7,7 +7,6 @@ using System.Windows.Controls;
 using Artwork.MessageBus;
 using Artwork.MessageBus.Interfaces;
 using Jean_Doe.Common;
-using Xiami;
 
 namespace Jean_Doe.MusicControl
 {
@@ -53,7 +52,7 @@ namespace Jean_Doe.MusicControl
                     var bw1 = new BackgroundWorker();
                     bw1.DoWork += async (a, b) =>
                         {
-                            var times = await XiamiNetAccess.GetPlayTimes(item.Id);
+                            var times = await NetAccess.GetPlayTimes(item.Id);
                             if (times != 0)
                                 UIHelper.RunOnUI(() =>
                                 {
@@ -69,7 +68,7 @@ namespace Jean_Doe.MusicControl
                     var bw2 = new BackgroundWorker();
                     bw2.DoWork += async (a, b) =>
                     {
-						var trackNo = await XiamiNetAccess.GetTrackNo(item.Id, item.AlbumId);
+                        var trackNo = await NetAccess.GetTrackNo(item.Id, item.AlbumId);
                         if (trackNo != 0)
                             UIHelper.RunOnUI(() =>
                             {

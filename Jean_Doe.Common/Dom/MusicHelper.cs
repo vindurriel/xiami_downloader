@@ -4,7 +4,7 @@ internal static class MusicHelper
 {
     public static void LoadMusicInfoFromJson(IMusic m, dynamic obj)
     {
-        var type = m.GetType().Name.ToLower().ToString();
+        var type = m.Type.ToString();
         m.Name = (Get(obj, type, "name") as string);
         m.Id = Get(obj, type, "id");
         m.Logo = (Get(obj, type, "logo") as string).EscapeUrl();

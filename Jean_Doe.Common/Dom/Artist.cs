@@ -18,13 +18,13 @@ public class Artist : IMusic
         set;
     }
     public int AlbumCount { get; set; }
+    public EnumXiamiType Type
+    {
+        get { return EnumXiamiType.artist; }
+    }
     public void CreateFromJson(dynamic obj)
     {
         MusicHelper.LoadMusicInfoFromJson(this, obj);
         AlbumCount = (MusicHelper.Get(obj, "albums", "count") as string).ToInt();
     }
-	public string Type
-	{
-		get { return "artist"; }
-	}
 }

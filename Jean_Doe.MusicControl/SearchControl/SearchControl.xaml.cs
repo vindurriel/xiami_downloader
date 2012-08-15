@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 using Artwork.MessageBus;
 using Artwork.MessageBus.Interfaces;
 using Jean_Doe.Common;
-using Xiami;
+
 namespace Jean_Doe.MusicControl
 {
     /// <summary>
@@ -56,7 +56,7 @@ namespace Jean_Doe.MusicControl
             hs.Load();
         }
 
-		private EnumXiamiType musicType;
+        private EnumXiamiType musicType;
 
         public EnumXiamiType MusicType
         {
@@ -102,7 +102,7 @@ namespace Jean_Doe.MusicControl
             if(key.Contains(@"www.xiami.com"))
                 await SearchManager.SearchByUrl(key);
             else
-                await SearchManager.Search(key, MusicType.ToString());
+                await SearchManager.Search(key, MusicType);
         }
         public void Handle(MsgSearchStateChanged message)
         {

@@ -4,7 +4,6 @@ using Jean_Doe.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
-using Xiami;
 namespace Jean_Doe.MusicControl
 {
     public class MusicViewModelList : ObservableCollection<MusicViewModel>
@@ -36,18 +35,18 @@ namespace Jean_Doe.MusicControl
             MusicViewModel s = null;
             switch(music.Type)
             {
-				case "album":
-					s = new AlbumViewModel(music as Album);
-					break;
-				case "artist":
-					s = new ArtistViewModel(music as Artist);
-					break;
-				case "collect":
-					s = new CollectViewModel(music as Collection);
-					break;
-				case "song":
-					s = new SongViewModel(music as Song);
-					break;
+                case EnumXiamiType.album:
+                    s = new AlbumViewModel(music as Album);
+                    break;
+                case EnumXiamiType.artist:
+                    s = new ArtistViewModel(music as Artist);
+                    break;
+                case EnumXiamiType.collect:
+                    s = new CollectViewModel(music as Collection);
+                    break;
+                case EnumXiamiType.song:
+                    s = new SongViewModel(music as Song);
+                    break;
                 default:
                     s = new MusicViewModel(music as Song);
                     break;

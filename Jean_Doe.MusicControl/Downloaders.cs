@@ -9,7 +9,6 @@ using Artwork.MessageBus.Interfaces;
 using Jean_Doe.Common;
 using Jean_Doe.MusicControl;
 using Jean_Doe.Downloader;
-using Xiami;
 namespace Jean_Doe.MusicControl
 {
     public sealed class DownloaderMp3 : Downloader.Downloader
@@ -75,7 +74,7 @@ namespace Jean_Doe.MusicControl
                 return;
             if (string.IsNullOrEmpty(item.UrlLrc))
             {
-                item.UrlLrc = await XiamiNetAccess.GetUrlLrc(item.Id);
+                item.UrlLrc = await NetAccess.GetUrlLrc(item.Id);
             }
             Info.Url = item.UrlLrc;
             if (string.IsNullOrEmpty(Info.Url))

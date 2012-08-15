@@ -10,7 +10,6 @@ using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using Artwork.MessageBus;
 using Jean_Doe.Common;
-using Xiami;
 namespace Jean_Doe.MusicControl
 {
     /// <summary>
@@ -137,7 +136,7 @@ namespace Jean_Doe.MusicControl
             var t = (sender as Hyperlink).DataContext as IHasAlbum;
             if(t == null) return;
             var id = t.AlbumId;
-            await SearchManager.GetSongOfType(t.AlbumId, "album");
+            await SearchManager.GetSongOfType(t.AlbumId, EnumXiamiType.album);
         }
 
         void fitToContent()
@@ -153,13 +152,13 @@ namespace Jean_Doe.MusicControl
         {
             var t = (sender as Hyperlink).DataContext as IHasArtist;
             if(t == null) return;
-            await SearchManager.GetSongOfType(t.ArtistId, "artist");
+            await SearchManager.GetSongOfType(t.ArtistId, EnumXiamiType.artist);
         }
         protected virtual async void link_collection(object sender, RoutedEventArgs e)
         {
             var t = (sender as Hyperlink).DataContext as IHasCollection;
             if(t == null) return;
-            await SearchManager.GetSongOfType(t.CollectionId, "collect");
+            await SearchManager.GetSongOfType(t.CollectionId, EnumXiamiType.collect);
         }
 
         protected virtual void go_song(object sender, RoutedEventArgs e)

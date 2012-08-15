@@ -20,13 +20,14 @@ public class Collection : IMusic
         get;
         set;
     }
+    public EnumXiamiType Type
+    {
+        get { return EnumXiamiType.collect; }
+    }
+
     public void CreateFromJson(dynamic obj)
     {
         MusicHelper.LoadMusicInfoFromJson(this, obj);
 
     }
-	public string Type
-	{
-		get { return "collect"; }
-	}
 }
