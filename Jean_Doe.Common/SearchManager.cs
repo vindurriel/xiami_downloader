@@ -8,6 +8,7 @@ using Artwork.MessageBus.Interfaces;
 using System.Threading;
 using System.Windows.Controls;
 using System.Collections;
+using System.Text.RegularExpressions;
 namespace Jean_Doe.Common
 {
     public class SearchManager
@@ -19,7 +20,7 @@ namespace Jean_Doe.Common
             sr = sr ?? SearchResult.Empty;
             MessageBus.Instance.Publish(new MsgSearchStateChanged { State = state, SearchResult = sr });
         }
-        public static async Task GetSongOfType(string id, EnumXiamiType type)
+        public static async Task GetSongOfType(string id, EnumMusicType type)
         {
             if (string.IsNullOrEmpty(id)) return;
             state = EnumSearchState.Started;
@@ -32,7 +33,7 @@ namespace Jean_Doe.Common
             notifyState();
         }
 
-        public static async Task SearchAll(string key)
+        public static async Task SearchXiamiAll(string key)
         {
             if (string.IsNullOrEmpty(key)) return;
             state = EnumSearchState.Started;
@@ -51,7 +52,7 @@ namespace Jean_Doe.Common
                     if (data == null) continue;
                     foreach (dynamic x in data)
                     {
-                        items.Add(MusicFactory.CreateFromJson(x, (EnumXiamiType)Enum.Parse(typeof(EnumXiamiType), type)));
+                        items.Add(MusicFactory.CreateFromJson(x, (EnumMusicType)Enum.Parse(typeof(EnumMusicType), type)));
                     }
                 }
                 var sr = new SearchResult
@@ -66,12 +67,30 @@ namespace Jean_Doe.Common
             state = EnumSearchState.Finished;
             notifyState();
         }
-        public static async Task Search(string key, EnumXiamiType type = EnumXiamiType.song)
+		public static async Task Search(string input)
+		{
+			if(string.IsNullOrEmpty(input)) return;
+			var re_xiami=new Regex(@"xiami\.com");
+			var re_douban=new Regex(@"douban\.com");
+			if(re_xiami.IsMatch(input))
+				await SearchByXiamiUrl(input);
+			else if(re_douban.IsMatch(input))
+				await SearchByDoubanUrl(input);
+			else
+				await SearchXiami(input);
+		}  
+		public static async Task SearchByDoubanUrl(string key) 
+		{
+			return;
+		}
+        public static async Task SearchXiami(string key)
         {
             if (string.IsNullOrEmpty(key)) return;
-            if (type == EnumXiamiType.any)
+			EnumMusicType type=EnumMusicType.song;
+			Enum.TryParse(Global.AppSettings["SearchResultType"],out type);
+            if (type == EnumMusicType.any)
             {
-                await SearchAll(key);
+                await SearchXiamiAll(key);
                 return;
             }
             state = EnumSearchState.Started;
@@ -100,7 +119,7 @@ namespace Jean_Doe.Common
             state = EnumSearchState.Finished;
             notifyState();
         }
-        public static async Task SearchByUrl(string url)
+        public static async Task SearchByXiamiUrl(string url)
         {
             if (string.IsNullOrEmpty(url)) return;
             state = EnumSearchState.Started;

@@ -40,7 +40,7 @@ namespace Jean_Doe.MusicControl
                 .OfType<ComboBoxItem>()
                 .FirstOrDefault(x => x.Tag != null && x.Tag.ToString() == type.ToString());
             if(sel != null) combo_search_type.SelectedItem = sel;
-            var xtype = EnumXiamiType.song;
+            var xtype = EnumMusicType.song;
             Enum.TryParse(Global.AppSettings["SearchResultType"], out xtype);
             sel = combo_xiami_type.Items
                 .OfType<ComboBoxItem>()
@@ -56,9 +56,9 @@ namespace Jean_Doe.MusicControl
             hs.Load();
         }
 
-        private EnumXiamiType musicType;
+        private EnumMusicType musicType;
 
-        public EnumXiamiType MusicType
+        public EnumMusicType MusicType
         {
             get { return musicType; }
             set { musicType = value; }
@@ -99,10 +99,7 @@ namespace Jean_Doe.MusicControl
         async Task search()
         {
             var key = hs.Text.Trim();
-            if(key.Contains(@"www.xiami.com"))
-                await SearchManager.SearchByUrl(key);
-            else
-                await SearchManager.Search(key, MusicType);
+			await SearchManager.Search(key);
         }
         public void Handle(MsgSearchStateChanged message)
         {
@@ -127,8 +124,8 @@ namespace Jean_Doe.MusicControl
         private void combo_xiami_type_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
             var x = (combo_xiami_type.SelectedItem as ComboBoxItem).Tag;
-            if(x is EnumXiamiType)
-                MusicType = (EnumXiamiType)x;
+            if(x is EnumMusicType)
+                MusicType = (EnumMusicType)x;
             Global.AppSettings["SearchResultType"] = MusicType.ToString();
         }
 

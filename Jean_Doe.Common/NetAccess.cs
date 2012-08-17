@@ -111,7 +111,7 @@ namespace Jean_Doe.Common
             }
             catch { return 0; }
         }
-        public async static Task<SearchResult> Search(string keyword, int page, EnumXiamiType type = EnumXiamiType.song)
+        public async static Task<SearchResult> Search(string keyword, int page, EnumMusicType type = EnumMusicType.song)
         {
             string url = XiamiUrl.UrlSearch(keyword, page, type);
             string json = await DownloadStringAsync(url);
@@ -156,17 +156,17 @@ namespace Jean_Doe.Common
             }
             if (!IsPatternRecognized)
                 return null;
-            EnumXiamiType type = EnumXiamiType.song;
-            Enum.TryParse<EnumXiamiType>(strType, out type);
+            EnumMusicType type = EnumMusicType.song;
+            Enum.TryParse<EnumMusicType>(strType, out type);
             var res = await GetSongsOfType(id, type);
             res.SearchType = EnumSearchType.url;
             res.Keyword = url;
             return res;
         }
-        public async static Task<SearchResult> GetSongsOfType(string id, EnumXiamiType type)
+        public async static Task<SearchResult> GetSongsOfType(string id, EnumMusicType type)
         {
             string url = XiamiUrl.UrlPlaylistByIdAndType(id, type);
-            if (type == EnumXiamiType.artist)
+            if (type == EnumMusicType.artist)
             {
                 url = XiamiUrl.UrlArtistTopSong(id);
             }
@@ -176,21 +176,21 @@ namespace Jean_Doe.Common
             List<IMusic> items = new List<IMusic>();
             switch (type)
             {
-                case EnumXiamiType.album:
+                case EnumMusicType.album:
                     items = GetSongsOfAlbum(json);
                     break;
-                case EnumXiamiType.artist:
+                case EnumMusicType.artist:
                     items = GetSongsOfArtist(json);
                     break;
-                case EnumXiamiType.collect:
+                case EnumMusicType.collect:
                     items = GetSongsOfCollect(json);
                     break;
-                case EnumXiamiType.song:
+                case EnumMusicType.song:
                     var song = await GetSong(id);
                     if (song != null)
                         items.Add(song);
                     break;
-                case EnumXiamiType.any:
+                case EnumMusicType.any:
                     break;
                 default:
                     break;
@@ -212,7 +212,7 @@ namespace Jean_Doe.Common
                 var obj = json.ToDynamicObject().songs;
                 foreach (var x in obj)
                 {
-                    items.Add(MusicFactory.CreateFromJson(x, EnumXiamiType.song));
+                    items.Add(MusicFactory.CreateFromJson(x, EnumMusicType.song));
                 }
             }
             catch { }
@@ -228,7 +228,7 @@ namespace Jean_Doe.Common
                 var obj = json.ToDynamicObject().collect.songs;
                 foreach (var x in obj)
                 {
-                    items.Add(MusicFactory.CreateFromJson(x, EnumXiamiType.song));
+                    items.Add(MusicFactory.CreateFromJson(x, EnumMusicType.song));
                 }
             }
             catch { }
@@ -245,7 +245,7 @@ namespace Jean_Doe.Common
                 var album_name = obj.album.title;
                 foreach (var x in obj.album.songs)
                 {
-                    Song a = MusicFactory.CreateFromJson(x, EnumXiamiType.song);
+                    Song a = MusicFactory.CreateFromJson(x, EnumMusicType.song);
                     a.AlbumName = album_name;
                     items.Add(a);
                 }
@@ -255,7 +255,7 @@ namespace Jean_Doe.Common
         }
         async static Task<Song> GetSong(string id)
         {
-            var url = XiamiUrl.UrlPlaylistByIdAndType(id, EnumXiamiType.song);
+            var url = XiamiUrl.UrlPlaylistByIdAndType(id, EnumMusicType.song);
             Song song = null;
             try
             {
@@ -263,18 +263,18 @@ namespace Jean_Doe.Common
                 ////////
                 if (json == null) return null;
                 var obj = json.ToDynamicObject().song;
-                song = MusicFactory.CreateFromJson(obj, EnumXiamiType.song);
+                song = MusicFactory.CreateFromJson(obj, EnumMusicType.song);
             }
             catch { }
             return song;
         }
         public async static Task<Album> GetAlbum(string id)
         {
-            var url = XiamiUrl.UrlPlaylistByIdAndType(id, EnumXiamiType.album);
+            var url = XiamiUrl.UrlPlaylistByIdAndType(id, EnumMusicType.album);
             var json = await DownloadStringAsync(url);
             if (json == null) return null;
             var obj = json.ToDynamicObject().album;
-            var Album = MusicFactory.CreateFromJson(obj, EnumXiamiType.album);
+            var Album = MusicFactory.CreateFromJson(obj, EnumMusicType.album);
             return Album;
         }
         public static dynamic ToDynamicObject(this string json)

@@ -114,7 +114,8 @@ namespace MusicPlayer
             if(Left < 0) Left = 0;
             if(Top < 0) Top = 0;
             //load last active page
-            Page = int.Parse(Global.AppSettings["ActivePage"]);
+			var lastPage = int.Parse(Global.AppSettings["ActivePage"]);
+            Page = lastPage==1? 3 :lastPage;
             //enable magnet 
             SetEnableMagnet(Global.AppSettings["EnableMagnet"]);
             //set skin color
@@ -127,7 +128,6 @@ namespace MusicPlayer
             list_download.Load();
             list_complete.SavePath = "complete.xml";
             list_complete.Load();
-
         }
 
         void SetEnableMagnet(string on)

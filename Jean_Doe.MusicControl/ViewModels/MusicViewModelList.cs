@@ -35,16 +35,16 @@ namespace Jean_Doe.MusicControl
             MusicViewModel s = null;
             switch(music.Type)
             {
-                case EnumXiamiType.album:
+                case EnumMusicType.album:
                     s = new AlbumViewModel(music as Album);
                     break;
-                case EnumXiamiType.artist:
+                case EnumMusicType.artist:
                     s = new ArtistViewModel(music as Artist);
                     break;
-                case EnumXiamiType.collect:
+                case EnumMusicType.collect:
                     s = new CollectViewModel(music as Collection);
                     break;
-                case EnumXiamiType.song:
+                case EnumMusicType.song:
                     s = new SongViewModel(music as Song);
                     break;
                 default:

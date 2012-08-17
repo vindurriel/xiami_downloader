@@ -20,9 +20,9 @@ public class Collection : IMusic
         get;
         set;
     }
-    public EnumXiamiType Type
+    public EnumMusicType Type
     {
-        get { return EnumXiamiType.collect; }
+        get { return EnumMusicType.collect; }
     }
 
     public void CreateFromJson(dynamic obj)

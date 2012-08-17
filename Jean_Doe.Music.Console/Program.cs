@@ -17,11 +17,6 @@ namespace Jean_Doe.Music.Console
         static void Main(string[] args)
         {
         }
-        static async void getlrc()
-        {
-            var lrc = await NetAccess.GetUrlLrc("2080986");
-            print(lrc);
-        }
         private static void old()
         {
             var s1 = new Song { Name = "titla?dfe<>", ArtistName = "afe", AlbumName = "sfef3", AlbumId = "1231", Id = "122" };

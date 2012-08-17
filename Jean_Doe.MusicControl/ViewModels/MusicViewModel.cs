@@ -26,6 +26,6 @@ namespace Jean_Doe.MusicControl
         public virtual string Name { get { return music.Name; } }
         public virtual string Id { get { return music.Id; } }
         public virtual string Logo { get { return music.Logo; } }
-        public virtual EnumXiamiType Type { get { return music.Type; } }
+        public virtual EnumMusicType Type { get { return music.Type; } }
     }
 }

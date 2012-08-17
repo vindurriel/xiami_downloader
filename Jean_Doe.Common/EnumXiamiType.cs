@@ -1,6 +1,6 @@
 ﻿namespace Jean_Doe.Common
 {
-    public enum EnumXiamiType
+    public enum EnumMusicType
     {
         album = 1,
         artist = 2,

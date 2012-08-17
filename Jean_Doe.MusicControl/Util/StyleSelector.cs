@@ -17,16 +17,16 @@ namespace Jean_Doe.MusicControl
             DataTemplate  res = null;
             switch(o.Type)
             {
-                case Jean_Doe.Common.EnumXiamiType.album:
+                case Jean_Doe.Common.EnumMusicType.album:
                     res = AlbumTemplate;
                     break;
-                case Jean_Doe.Common.EnumXiamiType.artist:
+                case Jean_Doe.Common.EnumMusicType.artist:
                     res = ArtistTemplate;
                     break;
-                case Jean_Doe.Common.EnumXiamiType.collect:
+                case Jean_Doe.Common.EnumMusicType.collect:
                     res = CollectionTemplate;
                     break;
-                case Jean_Doe.Common.EnumXiamiType.song:
+                case Jean_Doe.Common.EnumMusicType.song:
                     res = SongTemplate;
                     break;
                 default:

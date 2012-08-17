@@ -13,11 +13,11 @@
                 <ResourceDictionary>
                     <common:EnumSearchType x:Key="enumkey">key</common:EnumSearchType>
                     <common:EnumSearchType x:Key="enumurl">url</common:EnumSearchType>
-                    <common:EnumXiamiType x:Key="song">song</common:EnumXiamiType>
-                    <common:EnumXiamiType x:Key="artist">artist</common:EnumXiamiType>
-                    <common:EnumXiamiType x:Key="album">album</common:EnumXiamiType>
-                    <common:EnumXiamiType x:Key="collect">collect</common:EnumXiamiType>
-                    <common:EnumXiamiType x:Key="any">any</common:EnumXiamiType>
+                    <common:EnumMusicType x:Key="song">song</common:EnumMusicType>
+                    <common:EnumMusicType x:Key="artist">artist</common:EnumMusicType>
+                    <common:EnumMusicType x:Key="album">album</common:EnumMusicType>
+                    <common:EnumMusicType x:Key="collect">collect</common:EnumMusicType>
+                    <common:EnumMusicType x:Key="any">any</common:EnumMusicType>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

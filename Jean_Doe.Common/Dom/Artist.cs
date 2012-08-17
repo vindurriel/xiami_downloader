@@ -18,9 +18,9 @@ public class Artist : IMusic
         set;
     }
     public int AlbumCount { get; set; }
-    public EnumXiamiType Type
+    public EnumMusicType Type
     {
-        get { return EnumXiamiType.artist; }
+        get { return EnumMusicType.artist; }
     }
     public void CreateFromJson(dynamic obj)
     {

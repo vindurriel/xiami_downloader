@@ -4,6 +4,6 @@ public interface IMusic
     string Logo { get; set; }
     string Id { get; set; }
     string Name { get; set; }
-    EnumXiamiType Type { get; }
+    EnumMusicType Type { get; }
     void CreateFromJson(dynamic obj);
 }
