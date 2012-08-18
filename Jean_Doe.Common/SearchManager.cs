@@ -32,7 +32,30 @@ namespace Jean_Doe.Common
             state = EnumSearchState.Finished;
             notifyState();
         }
-
+        public static async Task Search(string input)
+        {
+            if (string.IsNullOrEmpty(input)) return;
+            state = EnumSearchState.Started;
+            notifyState();
+            var re_xiami = new Regex(@"xiami\.com");
+            var re_douban = new Regex(@"douban\.com");
+            ISearchProvider provider;
+            if (re_xiami.IsMatch(input))
+                provider = new XiamiSearchProvider();
+            else if (re_douban.IsMatch(input))
+                provider = new DoubanSearchProvider();
+            else
+                provider = new XiamiSearchProvider();
+            state = EnumSearchState.Working;
+            var sr=await provider.Search(input);
+            if (sr != null && state != EnumSearchState.Cancelling)
+            {
+                MessageBus.Instance.Publish(sr);
+                notifyState(sr);
+            }
+            state = EnumSearchState.Finished;
+            notifyState();
+        }  
         public static async Task SearchXiamiAll(string key)
         {
             if (string.IsNullOrEmpty(key)) return;
@@ -67,18 +90,7 @@ namespace Jean_Doe.Common
             state = EnumSearchState.Finished;
             notifyState();
         }
-		public static async Task Search(string input)
-		{
-			if(string.IsNullOrEmpty(input)) return;
-			var re_xiami=new Regex(@"xiami\.com");
-			var re_douban=new Regex(@"douban\.com");
-			if(re_xiami.IsMatch(input))
-				await SearchByXiamiUrl(input);
-			else if(re_douban.IsMatch(input))
-				await SearchByDoubanUrl(input);
-			else
-				await SearchXiami(input);
-		}  
+		
 		public static async Task SearchByDoubanUrl(string key) 
 		{
 			return;

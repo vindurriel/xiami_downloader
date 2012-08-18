@@ -115,13 +115,13 @@ namespace Jean_Doe.Common
         public void CreateFromJson(dynamic obj)
         {
             MusicHelper.LoadMusicInfoFromJson(this, obj);
-            ArtistId = MusicHelper.Get(obj, "artist", "id");
-            ArtistName = MusicHelper.Get(obj, "artist", "name");
-            AlbumId = MusicHelper.Get(obj, "album", "id");
-            AlbumName = MusicHelper.Get(obj, "album", "name");
-            UrlMp3 = (MusicHelper.Get(obj, "song", "location") as string).EscapeUrl();
-            UrlLrc = (MusicHelper.Get(obj, "song", "lrc") as string).EscapeUrl();
-            Logo = MusicHelper.Get(obj, "album", "logo");
+            ArtistId = MusicHelper.Get(obj, "artist_id");
+            ArtistName = MusicHelper.Get(obj, "artist_name");
+            AlbumId = MusicHelper.Get(obj, "album_id");
+            AlbumName = MusicHelper.Get(obj, "album_name");
+            UrlMp3 = (MusicHelper.Get(obj, "song_location") as string).EscapeUrl();
+            UrlLrc = (MusicHelper.Get(obj, "song_lrc") as string).EscapeUrl();
+            Logo = MusicHelper.Get(obj, "album_logo");
         }
     }
     [XmlRoot("Songs")]

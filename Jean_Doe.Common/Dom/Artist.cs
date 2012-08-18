@@ -25,6 +25,6 @@ public class Artist : IMusic
     public void CreateFromJson(dynamic obj)
     {
         MusicHelper.LoadMusicInfoFromJson(this, obj);
-        AlbumCount = (MusicHelper.Get(obj, "albums", "count") as string).ToInt();
+        AlbumCount = (MusicHelper.Get(obj, "albums_count") as string).ToInt();
     }
 }

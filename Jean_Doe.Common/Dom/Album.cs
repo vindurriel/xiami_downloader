@@ -28,8 +28,8 @@ public class Album : IMusic
     public void CreateFromJson(dynamic obj)
     {
         MusicHelper.LoadMusicInfoFromJson(this, obj);
-        ArtistId = MusicHelper.Get(obj, "artist", "id");
-        ArtistName = MusicHelper.Get(obj, "artist", "name");
+        ArtistId = MusicHelper.Get(obj, "artist_id");
+        ArtistName = MusicHelper.Get(obj, "artist_name");
         if(obj.ContainsKey("songs"))
         if (obj.songs != null)
         {
