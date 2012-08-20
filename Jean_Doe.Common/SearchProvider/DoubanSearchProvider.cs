@@ -6,7 +6,7 @@ public class DoubanSearchProvider : ISearchProvider
 {
     static readonly Regex re_url = new Regex(@"site\.douban\.com");
     static readonly Regex re_json = new Regex(@"PlaylistWidget\.findOrCreate\((\d+)\),\n.*?song_records\s*=([^;]+?);");
-    static readonly Regex re_artist = new Regex("music.douban.com/search/([^\"]+?)\"");
+    static readonly Regex re_artist = new Regex("\"site_title\":\\s*\"([^\"]+?)\"");
     public async Task<SearchResult> Search(string key)
     {
         var res = new SearchResult
@@ -32,13 +32,16 @@ public class DoubanSearchProvider : ISearchProvider
             {
                 var s = new Song
                 {
-                    Id = MusicHelper.Get(obj, "id") as string,
+                    Id = "d"+MusicHelper.Get(obj, "id"),
+					AlbumName=artistName,
                     ArtistName=artistName,
                     Name = MusicHelper.Get(obj, "name") as string,
                     UrlMp3 = (MusicHelper.Get(obj, "rawUrl") as string).Replace("\\/","/"),
                     Logo = MusicHelper.Get(obj, "cover") as string,
+					WriteId3=false,
                 };
-                s.UrlLrc = DoubanUrl.LyricUrl(listId, s.Id);
+				s.UrlLrc=DoubanUrl.LyricUrl(listId, s.Id.Substring(1));
+				
                 res.Items.Add(s);
             }
         }

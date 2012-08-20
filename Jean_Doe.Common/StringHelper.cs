@@ -51,7 +51,7 @@ namespace Jean_Doe.Common
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        public static string EscapeUrl(this string s)
+        public static string EscapeUrl(string s)
         {
             if (string.IsNullOrEmpty(s))
                 return s;

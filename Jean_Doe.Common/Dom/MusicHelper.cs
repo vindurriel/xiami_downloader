@@ -5,30 +5,32 @@ internal static class MusicHelper
     public static void LoadMusicInfoFromJson(IMusic m, dynamic obj)
     {
         var type = m.Type.ToString();
-        m.Name = (Get(obj, type + "_name") as string);
-        m.Id = Get(obj, type + "_id");
-        m.Logo = (Get(obj, type + "_logo") as string).EscapeUrl();
+        m.Name = Get(obj, type+"_name","name");
+		m.Id = Get(obj, type + "_id", "id");
+        m.Logo =StringHelper.EscapeUrl(Get(obj,type + "_logo","logo"));
     }
-    public static string Get(dynamic obj, string prop)
+    public static string Get(dynamic obj, string prop,string fallback=null)
     {
-        string res = null;
+        object res = null;
         if (obj is DynamicJsonObject)
         {
             res = obj[prop];
+			if(res == null && fallback != null)
+				res = obj[fallback];
         }
         else
         {
             var dict = obj as IDictionary<string, object>;
             if (dict.ContainsKey(prop))
             {
-                res = dict[prop] as string;
+				res = dict[prop];
             }
-            else if (dict.ContainsKey(prop))
+			else if(fallback!=null && dict.ContainsKey(fallback))
             {
-                res = dict[prop] as string;
+				res = dict[fallback];
             }
         }
 
-        return res;
+        return res as string;
     }
 }

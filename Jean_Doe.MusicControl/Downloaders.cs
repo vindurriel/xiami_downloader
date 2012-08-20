@@ -9,6 +9,7 @@ using Artwork.MessageBus.Interfaces;
 using Jean_Doe.Common;
 using Jean_Doe.MusicControl;
 using Jean_Doe.Downloader;
+using System.Text.RegularExpressions;
 namespace Jean_Doe.MusicControl
 {
     public sealed class DownloaderMp3 : Downloader.Downloader
@@ -32,16 +33,19 @@ namespace Jean_Doe.MusicControl
             try
             {
                 File.Copy(Info.FileName, mp3, true);
-                var id3 = new MusicInfo.MusicInfo(mp3)
-                {
-                    Album = item.AlbumName,
-                    Artist = item.ArtistName,
-                    Title = item.Name,
-                    Id = item.Id,
-                };
-                if (item.TrackNo > 0)
-                    id3.TrackNo = item.TrackNo.ToString();
-                id3.Commit();
+				if(item.Song.WriteId3)
+				{
+					var id3 = new MusicInfo.MusicInfo(mp3)
+					{
+						Album = item.AlbumName,
+						Artist = item.ArtistName,
+						Title = item.Name,
+						Id = item.Id,
+					};
+					if(item.TrackNo > 0)
+						id3.TrackNo = item.TrackNo.ToString();
+					id3.Commit();
+				}
                 item.HasMp3 = true;
             }
             catch (Exception e)
@@ -94,7 +98,11 @@ namespace Jean_Doe.MusicControl
             var lrc = Path.Combine(folder, song.FileNameBase + ".lrc");
             try
             {
-                File.Copy(Info.FileName, lrc, true);
+				var txt = File.ReadAllText(Info.FileName);
+				var m = Regex.Match(txt, "\"msg\":\"([^\"]+?)\"");
+				if(m.Success)
+					txt = m.Groups[1].Value;
+				File.WriteAllText(lrc, txt,Encoding.UTF8);
                 song.HasLrc = true;
             }
             catch (Exception e)

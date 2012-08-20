@@ -15,7 +15,7 @@ namespace Jean_Doe.Common
     {
         static EnumSearchState state = EnumSearchState.Finished;
         public static EnumSearchState State { get { return state; } }
-        static void notifyState(SearchResult sr = null)
+        public static void notifyState(SearchResult sr = null)
         {
             sr = sr ?? SearchResult.Empty;
             MessageBus.Instance.Publish(new MsgSearchStateChanged { State = state, SearchResult = sr });
@@ -23,26 +23,17 @@ namespace Jean_Doe.Common
         public static async Task GetSongOfType(string id, EnumMusicType type)
         {
             if (string.IsNullOrEmpty(id)) return;
-            state = EnumSearchState.Started;
-            notifyState();
-            state = EnumSearchState.Working;
-            var sr = await NetAccess.GetSongsOfType(id, type);
-            /////////////
-            notifyState(sr);
-            state = EnumSearchState.Finished;
-            notifyState();
+			var key=string.Format("http://www.xiami.com/type/{0}/id/{1}",type.ToString(),id);
+			await Search(key);
         }
         public static async Task Search(string input)
         {
             if (string.IsNullOrEmpty(input)) return;
             state = EnumSearchState.Started;
             notifyState();
-            var re_xiami = new Regex(@"xiami\.com");
-            var re_douban = new Regex(@"douban\.com");
+            var re_douban = new Regex(@"douban\.(?:com|fm)");
             ISearchProvider provider;
-            if (re_xiami.IsMatch(input))
-                provider = new XiamiSearchProvider();
-            else if (re_douban.IsMatch(input))
+            if (re_douban.IsMatch(input))
                 provider = new DoubanSearchProvider();
             else
                 provider = new XiamiSearchProvider();
@@ -56,111 +47,7 @@ namespace Jean_Doe.Common
             state = EnumSearchState.Finished;
             notifyState();
         }  
-        public static async Task SearchXiamiAll(string key)
-        {
-            if (string.IsNullOrEmpty(key)) return;
-            state = EnumSearchState.Started;
-            notifyState();
-            state = EnumSearchState.Working;
-            string url = XiamiUrl.UrlSearchAll(key);
-            string json = await NetAccess.DownloadStringAsync(url);
-            /////////////
-            dynamic obj = json.ToDynamicObject();
-            if (obj != null)
-            {
-                var items = new List<IMusic>();
-                foreach (var type in new string[] { "song", "album", "artist", "collect" })
-                {
-                    var data = obj[type + "s"] as ArrayList;
-                    if (data == null) continue;
-                    foreach (dynamic x in data)
-                    {
-                        items.Add(MusicFactory.CreateFromJson(x, (EnumMusicType)Enum.Parse(typeof(EnumMusicType), type)));
-                    }
-                }
-                var sr = new SearchResult
-                {
-                    Items = items,
-                    Keyword = key,
-                    Page = -1,
-                    SearchType = EnumSearchType.key
-                };
-                notifyState(sr);
-            }
-            state = EnumSearchState.Finished;
-            notifyState();
-        }
-		
-		public static async Task SearchByDoubanUrl(string key) 
-		{
-			return;
-		}
-        public static async Task SearchXiami(string key)
-        {
-            if (string.IsNullOrEmpty(key)) return;
-			EnumMusicType type=EnumMusicType.song;
-			Enum.TryParse(Global.AppSettings["SearchResultType"],out type);
-            if (type == EnumMusicType.any)
-            {
-                await SearchXiamiAll(key);
-                return;
-            }
-            state = EnumSearchState.Started;
-            notifyState();
-            int page = 1;
-            while (true)
-            {
-                SearchResult sr = await NetAccess.Search(key, page, type);
-                /////////////////////////////////////////
-                if (sr == null || state == EnumSearchState.Cancelling)
-                {
-                    break;
-                }
-                if (state == EnumSearchState.Started)
-                {
-                    state = EnumSearchState.Working;
-                    MessageBus.Instance.Publish(sr);
-                }
-                if (sr.Count == 0)
-                {
-                    break;
-                }
-                notifyState(sr);
-                page++;
-            }
-            state = EnumSearchState.Finished;
-            notifyState();
-        }
-        public static async Task SearchByXiamiUrl(string url)
-        {
-            if (string.IsNullOrEmpty(url)) return;
-            state = EnumSearchState.Started;
-            notifyState();
-            state = EnumSearchState.Working;
-            var sr = await NetAccess.SearchByUrl(url);
-            if (sr != null && state != EnumSearchState.Cancelling)
-            {
-                MessageBus.Instance.Publish(sr);
-                notifyState(sr);
-            }
-            state = EnumSearchState.Finished;
-            notifyState();
-        }
-        //public static async Task SearchByType(string id, EnumXiamiType type)
-        //{
-        //    state = EnumSearchState.Started;
-        //    notifyState();
-        //    state = EnumSearchState.Working;
-        //    var sr = await NetAccess.SearchByType(id, type);
-        //    if(state == EnumSearchState.Cancelling)
-        //    {
-        //        return;
-        //    }
-        //    MessageBus.Instance.Publish(sr);
-        //    notifyState(sr);
-        //    state = EnumSearchState.Finished;
-        //    notifyState();
-        //}
+
         public static void Cancel()
         {
             NetAccess.CancelAsync();

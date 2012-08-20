@@ -82,6 +82,8 @@ namespace Jean_Doe.Common
         public string Logo { get { return UrlArt; } set { UrlArt = value; } }
         [XmlIgnore]
         public EnumMusicType Type { get { return EnumMusicType.song; } }
+		[XmlIgnore]
+		public bool WriteId3 { get; set; }
         [XmlIgnore]
         public string Name { get; set; }
         private string artistName;
@@ -116,12 +118,12 @@ namespace Jean_Doe.Common
         {
             MusicHelper.LoadMusicInfoFromJson(this, obj);
             ArtistId = MusicHelper.Get(obj, "artist_id");
-            ArtistName = MusicHelper.Get(obj, "artist_name");
+            ArtistName = MusicHelper.Get(obj, "artist_name","name");
             AlbumId = MusicHelper.Get(obj, "album_id");
-            AlbumName = MusicHelper.Get(obj, "album_name");
-            UrlMp3 = (MusicHelper.Get(obj, "song_location") as string).EscapeUrl();
-            UrlLrc = (MusicHelper.Get(obj, "song_lrc") as string).EscapeUrl();
-            Logo = MusicHelper.Get(obj, "album_logo");
+			AlbumName = MusicHelper.Get(obj, "album_name", "name");
+			UrlMp3 = StringHelper.EscapeUrl(MusicHelper.Get(obj, "location", "song_location"));
+			UrlLrc = StringHelper.EscapeUrl(MusicHelper.Get(obj, "lyric", "song_lyric"));
+			WriteId3 = true;
         }
     }
     [XmlRoot("Songs")]
