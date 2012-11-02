@@ -164,11 +164,11 @@ namespace Jean_Doe.MusicControl
                 return HasMp3  && HasArt;
             }
         }
-        public bool AllDone
+        public bool Done
         {
             get
             {
-                return HasMp3 && HasArt && HasLrc;
+				return HasMp3;
             }
         }
     }

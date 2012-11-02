@@ -49,7 +49,7 @@ namespace Jean_Doe.MusicControl
         public void Handle(MsgDownloadStateChanged message)
         {
             var item = message.Item as SongViewModel;
-            if (item != null && item.AllDone)
+            if (item != null && item.Done)
                 Insert(0, item);
         }
     }

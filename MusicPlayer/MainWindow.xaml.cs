@@ -197,16 +197,16 @@ namespace MusicPlayer
         }
         void btn_download_start_Click(object sender, RoutedEventArgs e)
         {
-            DownloadManager.Instance.Start(list_download.SelectedItems.Select(x => x.Id).ToList());
+            DownloadManager.Instance.StartByTag(list_download.SelectedItems.Select(x => x.Id).ToList());
         }
 
         void btn_cancel_Click(object sender, RoutedEventArgs e)
         {
-            DownloadManager.Instance.Stop(list_download.SelectedItems.Select(x => x.Id).ToList());
+            DownloadManager.Instance.StopByTag(list_download.SelectedItems.Select(x => x.Id).ToList());
         }
         void btn_remove_Click(object sender, RoutedEventArgs e)
         {
-            DownloadManager.Instance.Remove(list_download.SelectedItems.Select(x => x.Id).ToList());
+            DownloadManager.Instance.RemoveByTag(list_download.SelectedItems.Select(x => x.Id).ToList());
             var list = list_download.SelectedItems.ToList();
             foreach(var item in list)
             {
@@ -252,7 +252,7 @@ namespace MusicPlayer
             var list = list_download;
             if(!list.SelectedItems.Any())
                 return;
-            DownloadManager.Instance.Stop(list_download.SelectedItems.Select(x => x.Id).ToList());
+            DownloadManager.Instance.StopByTag(list_download.SelectedItems.Select(x => x.Id).ToList());
             foreach(var item in list.SelectedItems)
             {
                 item.HasMp3 = true; item.HasLrc = true; item.HasArt = true;

@@ -36,82 +36,20 @@ namespace Jean_Doe.MusicControl
         public override void Load()
         {
             base.Load();
-            PrepareDownload(Items.OfType<SongViewModel>());
+			foreach(var item in Items.OfType<SongViewModel>())
+			{
+				item.PrepareDownload();
+			}
         }
         public override void Add(SongViewModel song)
         {
             base.Add(song);
-            PrepareDownload(song);
+			song.PrepareDownload();
         }
         public  void AddAndStart(SongViewModel song)
         {
-            base.Add(song);
-            PrepareDownload(song);
-            DownloadManager.Instance.Start(new List<string> { song.Id });
-        }
-        public static void PrepareDownload(IEnumerable<SongViewModel> list)
-        {
-            foreach(var item in list)
-            {
-                PrepareDownload(item);
-            }
-        }
-        public static void PrepareDownload(SongViewModel item)
-        {
-            var nameBase = System.IO.Path.Combine(Global.BasePath, "cache", item.Id);
-            if(!item.HasMp3)
-            {
-                var mp3 = nameBase + ".mp3";
-                var d = new DownloaderMp3
-                {
-                    Info = new DownloaderInfo
-                    {
-                        Id = "mp3" + item.Id,
-                        FileName = mp3,
-                        Entity = item,
-                        Tag = item.Id,
-                    }
-                };
-                DownloadManager.Instance.Add(d);
-            }
-            if(!item.HasLrc)
-            {
-                var lrc = nameBase + ".lrc";
-                var d = new DownloaderLrc
-                {
-                    Info = new DownloaderInfo
-                    {
-                        Id = "lrc" + item.Id,
-                        FileName = lrc,
-                        Tag = item.Id,
-                        Entity = item
-                    }
-                };
-                DownloadManager.Instance.Add(d);
-            }
-            if(!item.HasArt)
-            {
-                var art = System.IO.Path.Combine(
-                    Global.BasePath, "cache",
-                    item.AlbumId + ".art");
-                var d = new DownloaderArt
-                {
-                    Info = new DownloaderInfo
-                    {
-                        Id = "art" + item.AlbumId,
-                        FileName = art,
-                        Entity = item,
-                        Tag = item.Id,
-                    }
-                };
-                var first = DownloadManager.Instance.GetDownloader(d.Info.Id) as DownloaderArt;
-                if(first == null)
-                    DownloadManager.Instance.Add(d);
-                else
-                {
-                    first.ArtDownloaded += d.HandleDownloaded;
-                }
-            }
+			Add(song);
+            DownloadManager.Instance.StartByTag(new List<string> { song.Id });
         }
         public void Handle(MsgDownloadProgressChanged message)
         {
@@ -127,7 +65,7 @@ namespace Jean_Doe.MusicControl
         {
             var item = message.Item as SongViewModel;
             if(item == null) return;
-            if(item.AllDone)
+            if(item.Done)
             {
                 Remove(item);
                 return;

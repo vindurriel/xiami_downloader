@@ -6,8 +6,10 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Threading;
+using System.Diagnostics;
 namespace Jean_Doe.Downloader
 {
+	[DebuggerDisplay("Id={Id}")]
     public class Downloader
     {
         public virtual bool CanDownload { get { return true; } }
@@ -28,7 +30,13 @@ namespace Jean_Doe.Downloader
                 NotifyState();
             }
         }
-
+		public void NotifyError(Exception e)
+		{
+			state = EnumDownloadState.Error;
+			e.Source += string.Format(" downloader id:{0}", Info.Id);
+			Logger.Error(e);
+			NotifyState(e.Message);
+		}
         public void NotifyState(string s = null)
         {
             MessageBus.Instance.Publish(new MsgDownloadStateChanged { Id = Info.Tag, State = State, Message = s,Item=Info.Entity });
@@ -46,7 +54,7 @@ namespace Jean_Doe.Downloader
                 response = await WebRequest.CreateHttp(url).GetResponseAsync();
                 size = response.ContentLength;
             }
-            catch (Exception e) { NotifyState(e.Message); }
+			catch(Exception e) { throw e; }
             finally
             {
                 if (response != null)
@@ -57,43 +65,41 @@ namespace Jean_Doe.Downloader
         }
         public async virtual Task Download()
         {
-            if (!Uri.IsWellFormedUriString(Info.Url, UriKind.RelativeOrAbsolute))
-            {
-                State = EnumDownloadState.Error;
-                NotifyState(string.Format("\"{0}\" of \"{1}\" is not a valid url",Info.Url,Info.Id));
-                return;
-            }
-            var dir = Path.GetDirectoryName(Info.FileName);
-            if (!Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
-            long contentLength = DownloadManager.Instance.GetContentLength(Info.Url);
-            if (contentLength == -1)
-            {
-                contentLength = await this.getContentLength(Info.Url);
-                ///////////////////////////
-                DownloadManager.Instance.SetContentLength(Info.Url, contentLength);
-            }
-            start = 0;
-            if (File.Exists(Info.FileName))
-            {
-                var x = new FileInfo(Info.FileName);
-                start = x.Length;
-            }
-            //already downloaded
-            if (start == contentLength)
-            {
-                curBytes = totalBytes = start;
-                OnDownloaded();
-                return;
-            }
-
-            var request = WebRequest.CreateHttp(Info.Url);
-            request.Credentials = CredentialCache.DefaultCredentials;
-            if (start > 0)
-                request.AddRange(start);
-            HttpWebResponse response = null;
             try
             {
+				if(Info.Url == null || !Uri.IsWellFormedUriString(Info.Url, UriKind.RelativeOrAbsolute))
+				{
+					throw new Exception(string.Format("\'{0}\' is not a valid url", Info.Url));
+				}
+				var dir = Path.GetDirectoryName(Info.FileName);
+				if(!Directory.Exists(dir))
+					Directory.CreateDirectory(dir);
+				long contentLength = DownloadManager.Instance.GetContentLength(Info.Url);
+				if(contentLength == -1)
+				{
+					contentLength = await this.getContentLength(Info.Url);
+					///////////////////////////
+					DownloadManager.Instance.SetContentLength(Info.Url, contentLength);
+				}
+				start = 0;
+				if(File.Exists(Info.FileName))
+				{
+					var x = new FileInfo(Info.FileName);
+					start = x.Length;
+				}
+				//already downloaded
+				if(start == contentLength)
+				{
+					curBytes = totalBytes = start;
+					OnDownloaded();
+					return;
+				}
+
+				var request = WebRequest.CreateHttp(Info.Url);
+				request.Credentials = CredentialCache.DefaultCredentials;
+				if(start > 0)
+					request.AddRange(start);
+				HttpWebResponse response = null;
                 response = await request.GetResponseAsync() as HttpWebResponse;
                 if (response.StatusCode != HttpStatusCode.PartialContent || response.ContentLength == -1)
                 {
@@ -123,7 +129,6 @@ namespace Jean_Doe.Downloader
                             file.Write(buffer, 0, readCount);
                         }
                         OnProgressChanged();
-
                     }
                     while (readCount > 0);
                     this.OnDownloaded();
@@ -131,41 +136,36 @@ namespace Jean_Doe.Downloader
             }
             catch (Exception e)
             {
-                NotifyState(e.Message);
-            }
-            finally
-            {
-                if (response != null)
-                    response.Close();
+                NotifyError(e);
             }
         }
         public virtual void Process()
         {
-            State = EnumDownloadState.Processing;
         }
         protected virtual void OnProgressChanged()
         {
         }
-        protected virtual void OnDownloaded()
-        {
+		protected virtual void OnDownloaded()
+		{
 
-            while (!CanProcess)
-            {
-                if (canceled) break;
-                Thread.Sleep(500);
-            }
-            if (canceled)
-                State = EnumDownloadState.Cancel;
-            else
-            {
-                Process();
-                State = EnumDownloadState.Success;
-            }
-        }
+			while(!CanProcess)
+			{
+				if(canceled) break;
+				Thread.Sleep(500);
+			}
+			if(canceled)
+			{
+				State = EnumDownloadState.Cancel;
+				return;
+			}
+			State = EnumDownloadState.Processing;
+			Process();
+			State = EnumDownloadState.Success;
+		}
 
         public void StopDownload()
         {
-            if (state == EnumDownloadState.Success)
+            if (state >= EnumDownloadState.Processing)
                 return;
             canceled = true;
             State = EnumDownloadState.Cancel;
@@ -176,10 +176,7 @@ namespace Jean_Doe.Downloader
             canceled = false;
             new Thread(new ThreadStart(async () => { await Download(); })).Start();
         }
-        public void BeginWait()
-        {
-            State = EnumDownloadState.Waiting;
-        }
+       
         public int Percent
         {
             get

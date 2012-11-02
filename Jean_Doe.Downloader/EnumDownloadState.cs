@@ -5,9 +5,9 @@
         StandBy,
         Waiting,
         Downloading,
-        Processing,
         Cancel,
+		Error,
+		Processing,
         Success,
-        Error,
     }
 }

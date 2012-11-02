@@ -31,10 +31,8 @@ internal static class MusicHelper
 					res = dict[prop];
 					break;
 				}
-				res = obj[prop];
 			}
         }
-
         return string.Format("{0}",res);
     }
 }

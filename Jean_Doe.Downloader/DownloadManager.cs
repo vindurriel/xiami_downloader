@@ -12,9 +12,6 @@ namespace Jean_Doe.Downloader
     {
         #region properties
         int maxThread = 100;
-        public int Count { get { return pool.Count; } }
-        public int DownloadingCount { get { return pool.Values.Count(x => x.State == EnumDownloadState.Downloading); } }
-        public int WaitingCount { get { return pool.Values.Count(x => x.State == EnumDownloadState.Waiting); } }
         readonly Dictionary<string, Downloader> pool = new Dictionary<string, Downloader>();
         readonly Dictionary<string, List<string>> tags = new Dictionary<string, List<string>>();
         readonly Dictionary<string, long> contentLengthOfUrl = new Dictionary<string, long>();
@@ -23,7 +20,7 @@ namespace Jean_Doe.Downloader
         private DownloadManager()
         {
             SetMaxConnection(maxThread);
-            dt.Tick += (s, e) => spinWait();
+            dt.Tick += (s, e) => pick();
         }
         static DownloadManager inst;
         public static DownloadManager Instance { get { if(inst == null) inst = new DownloadManager(); return inst; } }
@@ -52,13 +49,42 @@ namespace Jean_Doe.Downloader
                     contentLengthOfUrl.Add(url, length);
             }
         }
-        #region downloader control
+        #region private control methods
         void stop(string id)
         {
             if(!pool.ContainsKey(id)) return;
             pool[id].StopDownload();
         }
-        public void Stop(List<string> taglist)
+		void start(string id)
+		{
+			if(!pool.ContainsKey(id)) return;
+			var d = pool[id];
+			if(d.State == EnumDownloadState.Downloading || d.State == EnumDownloadState.Processing) return;
+			pool[id].State = EnumDownloadState.Waiting;
+		}
+		void remove(string id)
+		{
+			if(!pool.ContainsKey(id)) return;
+			var d = pool[id];
+			d.StopDownload();
+			pool.Remove(id);
+		}
+		#endregion
+		#region public control methods
+		public void StartByTag(List<string> taglist)
+		{
+			startSpin();
+			foreach(var tag in taglist)
+			{
+				if(!tags.ContainsKey(tag))
+					continue;
+				foreach(var id in tags[tag])
+				{
+					start(id);
+				}
+			}
+		}
+        public void StopByTag(List<string> taglist)
         {
             foreach(var tag in taglist)
             {
@@ -70,59 +96,32 @@ namespace Jean_Doe.Downloader
                 }
             }
         }
-        void start(string id)
-        {
-            if(!pool.ContainsKey(id)) return;
-            var d = pool[id];
-            if(d.State == EnumDownloadState.Downloading || d.State == EnumDownloadState.Processing) return;
-            pool[id].BeginWait();
-        }
-        public Downloader GetDownloader(string id)
+		public void Add(Downloader downloader)
+		{
+			if(downloader.Info != null && pool.ContainsKey(downloader.Info.Id))
+				return;
+			pool.Add(downloader.Info.Id, downloader);
+			if(downloader.Info.Tag != null)
+			{
+				if(!tags.ContainsKey(downloader.Info.Tag))
+					tags.Add(downloader.Info.Tag, new List<string>());
+				tags[downloader.Info.Tag].Add(downloader.Info.Id);
+			}
+		}
+		public void RemoveByTag(List<string> taglist)
+		{
+			foreach(var tag in taglist)
+			{
+				if(!tags.ContainsKey(tag)) continue;
+				foreach(var id in tags[tag])
+				{
+					remove(id);
+				}
+				tags.Remove(tag);
+			}
+		}
+        public Downloader GetById(string id)
         { return pool.Values.FirstOrDefault(x => x.Id == id); }
-        public void Start(List<string> taglist)
-        {
-            startSpin();
-            foreach(var tag in taglist)
-            {
-                if(!tags.ContainsKey(tag))
-                    continue;
-                foreach(var id in tags[tag])
-                {
-                    start(id);
-                }
-            }
-        }
-
-        void remove(string id)
-        {
-            if(!pool.ContainsKey(id)) return;
-            pool[id].StopDownload();
-            pool.Remove(id);
-        }
-        public void Remove(List<string> taglist)
-        {
-            foreach(var tag in taglist)
-            {
-                if(!tags.ContainsKey(tag)) continue;
-                foreach(var id in tags[tag])
-                {
-                    remove(id);
-                }
-                tags.Remove(tag);
-            }
-        }
-        public void Add(Downloader downloader)
-        {
-            if(downloader.Info != null && pool.ContainsKey(downloader.Info.Id))
-                return;
-            pool.Add(downloader.Info.Id, downloader);
-            if(downloader.Info.Tag != null)
-            {
-                if(!tags.ContainsKey(downloader.Info.Tag))
-                    tags.Add(downloader.Info.Tag, new List<string>());
-                tags[downloader.Info.Tag].Add(downloader.Info.Id);
-            }
-        }
         #endregion
         #region concurrency management
         void startSpin()
@@ -142,23 +141,37 @@ namespace Jean_Doe.Downloader
 
             }
         }
-        void spinWait()
+		//pick next item to download
+		bool isPicking;
+        void pick()
         {
-            var a = Count;
-            while(WaitingCount > 0 && DownloadingCount < maxThread)
-            {
-                var first = pool.Values.FirstOrDefault(x =>
-                    x.State == EnumDownloadState.Waiting
-                    && x.CanDownload
-                    );
-                if(first == null) return;
-                var downloader = first;
-                downloader.StartDownload();
-            }
-            if(WaitingCount == 0 && DownloadingCount == 0)
-            {
-                endSpin();
-            }
+			if(isPicking)
+				return;
+			isPicking = true;
+			var downloadingCount=pool.Count(x=>x.Value.State==EnumDownloadState.Downloading);
+			List<Downloader> waiters=pool.Values
+				.Where(x=>x.State==EnumDownloadState.Waiting && x.CanDownload)
+				.OrderByDescending(x=>x.Info.Priority)
+				.ToList();
+			if(downloadingCount == 0 && waiters.Count == 0)
+			{
+				endSpin();
+			}
+			while(downloadingCount<=maxThread)
+			{
+				if(waiters.Count==0)
+					break;
+				var d=waiters[0];
+				waiters.RemoveAt(0);
+				downloadingCount++;
+				d.StartDownload();
+			}
+			var completeList = pool.Values.Where(x => x.State >= EnumDownloadState.Processing).ToList();
+			foreach(var item in completeList)
+			{
+				remove(item.Info.Id);
+			}
+			isPicking = false;
         }
         #endregion
     }
