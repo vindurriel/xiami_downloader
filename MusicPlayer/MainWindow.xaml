@@ -89,7 +89,7 @@
     <Grid>
         <Border x:Name="border"
                 Background="{DynamicResource darkBrush}"
-                BorderBrush="Black"
+                BorderBrush="{DynamicResource skinBrush}"
                 BorderThickness="1.5">
         </Border>
         <Grid  Margin="5">

@@ -67,6 +67,7 @@ namespace Jean_Doe.MusicInfo
 			{
 				var picture = (Bitmap)Bitmap.FromFile(value);
 				id3Helper.SetCover(picture);
+                picture.Dispose();
 			}
 		}
 	}

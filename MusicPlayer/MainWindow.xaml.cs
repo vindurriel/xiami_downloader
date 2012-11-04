@@ -145,7 +145,7 @@ namespace MusicPlayer
         }
         void OnRimChanged(EnumRim rim)
         {
-            var t = new Thickness(0);
+            var t = new Thickness(1.5);
             var width = 2;
             switch(rim)
             {
@@ -164,7 +164,7 @@ namespace MusicPlayer
                 default:
                     break;
             }
-            //border.BorderThickness = t;
+            border.BorderThickness = t;
         }
         void SetColorSkin(string s)
         {
@@ -290,7 +290,7 @@ namespace MusicPlayer
         {
             UIHelper.RunOnUI(new Action(() =>
             {
-                //statusBar.Text = status;
+                statusBar.Text = status;
             }));
         }
 
@@ -329,7 +329,7 @@ namespace MusicPlayer
         }
         public void Handle(string message)
         {
-            //SetStatus(message);
+            SetStatus(message);
         }
         public void Handle(MsgChangeWindowState message)
         {

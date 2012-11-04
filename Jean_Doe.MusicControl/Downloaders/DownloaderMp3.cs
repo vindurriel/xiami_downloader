@@ -34,28 +34,29 @@ namespace Jean_Doe.MusicControl
             base.Process();
             try
             {
-				var item = Info.Entity as SongViewModel;
-				if(item == null) 
-					throw new Exception("item is null");
-				var folder = Path.Combine(Global.AppSettings["DownloadFolder"], item.Dir);
-				if(folder != null && !Directory.Exists(folder))
-					Directory.CreateDirectory(folder);
-				var mp3 = Path.Combine(folder, item.FileNameBase + ".mp3");
+                var item = Info.Entity as SongViewModel;
+                if (item == null)
+                    throw new Exception("item is null");
+                var folder = Path.Combine(Global.AppSettings["DownloadFolder"], item.Dir);
+                if (folder != null && !Directory.Exists(folder))
+                    Directory.CreateDirectory(folder);
+                var mp3 = Path.Combine(folder, item.FileNameBase + ".mp3");
                 File.Copy(Info.FileName, mp3, true);
-				if(item.Song.WriteId3)
-				{
-					var id3 = new MusicInfo.MusicInfo(mp3)
-					{
-						Album = item.AlbumName,
-						Artist = item.ArtistName,
-						Title = item.Name,
-						Id = item.Id,
-						Cover = item.ImageSource
-					};
-					if(item.TrackNo > 0)
-						id3.TrackNo = item.TrackNo.ToString();
-					id3.Commit();
-				}
+                var id3 = TagLib.File.Create(mp3);
+                id3.Tag.Clear();
+                id3.Tag.Album = item.AlbumName;
+                id3.Tag.Performers = new string[] { item.ArtistName };
+                id3.Tag.AlbumArtists = new string[]{item.ArtistName};
+                id3.Tag.Title = item.Name;
+                id3.Tag.Comment = item.Id;
+                if (item.TrackNo > 0)
+                    id3.Tag.Track = (uint)item.TrackNo;
+                if (item.ImageSource != null)
+                {
+                    var pic=new TagLib.Picture(item.ImageSource);
+                    id3.Tag.Pictures = new TagLib.IPicture[] { pic };
+                }
+                id3.Save();
                 item.HasMp3 = true;
             }
             catch (Exception e)

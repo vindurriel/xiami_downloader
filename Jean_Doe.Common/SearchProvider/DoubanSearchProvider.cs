@@ -35,9 +35,9 @@ public class DoubanSearchProvider : ISearchProvider
                     Id = "d"+MusicHelper.Get(obj, "id"),
 					AlbumName=artistName,
                     ArtistName=artistName,
-                    Name = MusicHelper.Get(obj, "name") as string,
+                    Name = MusicHelper.Get(obj, "name"),
                     UrlMp3 = (MusicHelper.Get(obj, "rawUrl") as string).Replace("\\/","/"),
-                    Logo = MusicHelper.Get(obj, "cover") as string,
+                    Logo = MusicHelper.Get(obj, "cover"),
 					WriteId3=false,
                 };
 				s.UrlLrc=DoubanUrl.LyricUrl(listId, s.Id.Substring(1));

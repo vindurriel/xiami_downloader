@@ -153,24 +153,27 @@ namespace Jean_Doe.Downloader
 				.Where(x=>x.State==EnumDownloadState.Waiting && x.CanDownload)
 				.OrderByDescending(x=>x.Info.Priority)
 				.ToList();
-			if(downloadingCount == 0 && waiters.Count == 0)
-			{
-				endSpin();
-			}
-			while(downloadingCount<=maxThread)
-			{
-				if(waiters.Count==0)
-					break;
-				var d=waiters[0];
-				waiters.RemoveAt(0);
-				downloadingCount++;
-				d.StartDownload();
-			}
+            if (waiters.Count > 0)
+            {
+                while (downloadingCount < maxThread)
+                {
+                    if (waiters.Count == 0)
+                        break;
+                    var d = waiters[0];
+                    waiters.RemoveAt(0);
+                    downloadingCount++;
+                    d.StartDownload();
+                }
+            }
 			var completeList = pool.Values.Where(x => x.State >= EnumDownloadState.Processing).ToList();
 			foreach(var item in completeList)
 			{
 				remove(item.Info.Id);
 			}
+            if (downloadingCount == 0 && waiters.Count == 0)
+            {
+                endSpin();
+            }
 			isPicking = false;
         }
         #endregion

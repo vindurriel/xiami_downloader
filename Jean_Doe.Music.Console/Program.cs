@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Serialization;
 using Jean_Doe.Common;
+using TagLib;
 namespace Jean_Doe.Music.Console
 {
     class Program
@@ -16,6 +17,9 @@ namespace Jean_Doe.Music.Console
         }
         static void Main(string[] args)
         {
+            var f = TagLib.File.Create("d:\\a.mp3");
+            f.Tag.Album = "alicia album";
+            f.Save();
         }
         private static void old()
         {

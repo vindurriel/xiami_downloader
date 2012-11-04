@@ -82,12 +82,6 @@
     <Compile Include="UIHelper.cs" />
     <Compile Include="XiamiUrl.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Jean_Doe.MusicInfo\Jean_Doe.MusicInfo.csproj">
-      <Project>{7BE8780C-F5EB-40CC-977A-DAECF99A1C34}</Project>
-      <Name>Jean_Doe.MusicInfo</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

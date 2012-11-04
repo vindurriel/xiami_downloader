@@ -39,6 +39,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="taglib-sharp">
+      <HintPath>..\Jean_Doe.Reference\taglib-sharp.dll</HintPath>
+    </Reference>
     <Reference Include="UltraID3Lib">
       <HintPath>..\ReferenceLibrary\UltraID3Lib.dll</HintPath>
     </Reference>

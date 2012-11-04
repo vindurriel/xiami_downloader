@@ -30,8 +30,7 @@ namespace Jean_Doe.MusicControl
 				Info.Url = item.UrlLrc;
 				if(string.IsNullOrEmpty(Info.Url))
 				{
-					State = EnumDownloadState.Error;
-					return;
+					throw new Exception("no lyrics");
 				}
 			}
 			catch(Exception e)

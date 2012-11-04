@@ -53,6 +53,10 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="taglib-sharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Jean_Doe.Reference\taglib-sharp.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -172,10 +176,6 @@
     <ProjectReference Include="..\Jean_Doe.Downloader\Jean_Doe.Downloader.csproj">
       <Project>{1596e7b4-b8b9-42f7-b4ba-f7a4f16d67e5}</Project>
       <Name>Jean_Doe.Downloader</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Jean_Doe.MusicInfo\Jean_Doe.MusicInfo.csproj">
-      <Project>{7be8780c-f5eb-40cc-977a-daecf99a1c34}</Project>
-      <Name>Jean_Doe.MusicInfo</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

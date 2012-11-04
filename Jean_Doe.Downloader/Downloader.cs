@@ -124,7 +124,7 @@ namespace Jean_Doe.Downloader
                             break;
                         }
                         curBytes += readCount;
-                        using (var file = File.Open(Info.FileName, FileMode.Append, FileAccess.Write))
+                        using (var file = File.Open(Info.FileName, FileMode.Append,FileAccess.Write,FileShare.None))
                         {
                             file.Write(buffer, 0, readCount);
                         }

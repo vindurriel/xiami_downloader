@@ -58,6 +58,7 @@ namespace Jean_Doe.Common
             try
             {
                 s = Uri.EscapeUriString(s);
+                s=s.Replace("/./","/");
             }
             catch
             {
