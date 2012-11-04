@@ -149,10 +149,19 @@ namespace Jean_Doe.Downloader
 				return;
 			isPicking = true;
 			var downloadingCount=pool.Count(x=>x.Value.State==EnumDownloadState.Downloading);
-			List<Downloader> waiters=pool.Values
-				.Where(x=>x.State==EnumDownloadState.Waiting && x.CanDownload)
-				.OrderByDescending(x=>x.Info.Priority)
-				.ToList();
+            int priority=0;
+            if (downloadingCount > 0)
+            {
+                priority = pool.Select(x => x.Value).
+                    Where(x => x.State == EnumDownloadState.Downloading)
+                    .Min(x => x.Info.Priority);
+            }
+            List<Downloader> waiters = pool.Values
+                .Where(x => x.State == EnumDownloadState.Waiting 
+                    && x.CanDownload
+                    && x.Info.Priority>=priority)
+                .OrderByDescending(x => x.Info.Priority)
+                .ToList();
             if (waiters.Count > 0)
             {
                 while (downloadingCount < maxThread)

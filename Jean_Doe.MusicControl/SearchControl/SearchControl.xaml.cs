@@ -87,13 +87,20 @@ namespace Jean_Doe.MusicControl
 
         async void btn_search_Click(object sender, RoutedEventArgs e)
         {
-            if(SearchManager.State == EnumSearchState.Finished)
+            try
             {
-                await search();
+                if (SearchManager.State == EnumSearchState.Finished)
+                {
+                    await search();
+                }
+                else
+                {
+                    SearchManager.Cancel();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                SearchManager.Cancel();
+                Jean_Doe.Downloader.Logger.Error(ex);
             }
         }
         async Task search()
