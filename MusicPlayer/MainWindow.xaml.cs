@@ -124,9 +124,9 @@ namespace MusicPlayer
 
         private void loadSongLists()
         {
+            list_complete.SavePath = "complete.xml";
             list_download.SavePath = "download.xml";
             list_download.Load();
-            list_complete.SavePath = "complete.xml";
             list_complete.Load();
         }
 

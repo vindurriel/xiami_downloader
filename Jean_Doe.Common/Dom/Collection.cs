@@ -1,7 +1,6 @@
 ﻿using Jean_Doe.Common;
 public class Collection : IMusic
 {
-    string logo;
     public string Logo
     {
         get;

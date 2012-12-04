@@ -8,27 +8,19 @@ namespace Jean_Doe.MusicControl
 {
     public class MusicViewModelList : ObservableCollection<MusicViewModel>
     {
-        public void AddItems(IEnumerable<IMusic> list,bool now=false)
+        public void AddItems(IEnumerable<IMusic> list)
         {
-            if(now)
+            int count = list.Count();
+            if (count == 0) return;
+            int s = 1000 / count;
+            Task.Run(new System.Action(() =>
             {
-                foreach(var item in list)
+                foreach (IMusic music in list)
                 {
-                    addItem(item);
+                    addItem(music);
+                    Thread.Sleep(s);
                 }
-            }
-            else {
-                Task.Run(new System.Action(() =>
-                {
-                    var stack = new Stack<IMusic>(list.Reverse());
-                    while(stack.Count > 0)
-                    {
-                        var music = stack.Pop();
-                        addItem(music);
-                        Thread.Sleep(200);
-                    }
-                }));
-            }
+            }));
         }
         void addItem(IMusic music)
         {
@@ -65,12 +57,19 @@ namespace Jean_Doe.MusicControl
             songs.AddRange(this.OfType<SongViewModel>().Select(x => x.Song));
             PersistHelper.Save(songs, SavePath);
         }
-        public void Load()
+        public async Task Load()
         {
-            var songs = PersistHelper.Load<Songs>(SavePath);
-            if(songs == null) return;
-            Clear();
-            AddItems(songs,now:true);
+            Songs songs = null;
+            var t= Task.Run(new System.Action(() =>
+            {
+                songs = PersistHelper.Load<Songs>(SavePath);
+            }));
+            t.Wait();
+            if (songs == null) 
+                return;
+            if(Count>0)
+                Clear();
+            AddItems(songs);
         }
     }
 }

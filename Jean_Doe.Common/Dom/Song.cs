@@ -112,7 +112,6 @@ namespace Jean_Doe.Common
         public string FeaturingArtists { get; set; }
         [XmlIgnore]
         public string AlbumName { get; set; }
-        private string lyrics;
         #endregion
         public void CreateFromJson(dynamic obj)
         {
