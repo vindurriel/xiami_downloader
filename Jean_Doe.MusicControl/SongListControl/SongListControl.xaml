@@ -95,7 +95,7 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Grid x:Name='grid'>
+                    <Grid x:Name='grid' Grid.ColumnSpan="10">
                         <Rectangle Width="{Binding ElementName=mp3Indicator,Path=ActualWidth}"
                                 HorizontalAlignment="Left">
                             <Rectangle.RenderTransform>
@@ -105,10 +105,10 @@
                         <Rectangle ToolTip='Mp3下载' x:Name="mp3Indicator"
                                 Opacity='{Binding HasMp3,Converter={StaticResource bool2opa}}' />
                     </Grid>
-                    <Rectangle Grid.Column="1" ToolTip='封面下载'
+                    <!--<Rectangle Grid.Column="1" ToolTip='封面下载'
                             Opacity='{Binding HasArt,Converter={StaticResource bool2opa}}' />
                     <Rectangle Grid.Column="2" ToolTip='歌词下载'
-                            Opacity='{Binding HasLrc,Converter={StaticResource bool2opa}}' />
+                            Opacity='{Binding HasLrc,Converter={StaticResource bool2opa}}' />-->
                 </Grid>
             </Grid>
         </DataTemplate>
