@@ -42,10 +42,10 @@ namespace Jean_Doe.MusicControl
         }
         public void Remove(SongViewModel song)
         {
-            UIHelper.RunOnUI(new Action(() =>
+            UIHelper.RunOnUI(() =>
             {
                 items.Remove(song);
-            }));
+            });
         }
         public SongViewModel GetItemById(string id)
         {

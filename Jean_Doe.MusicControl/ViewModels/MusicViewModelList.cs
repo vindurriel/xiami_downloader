@@ -60,11 +60,10 @@ namespace Jean_Doe.MusicControl
         public async Task Load()
         {
             Songs songs = null;
-            var t= Task.Run(new System.Action(() =>
+            await Task.Run(() =>
             {
                 songs = PersistHelper.Load<Songs>(SavePath);
-            }));
-            t.Wait();
+            });
             if (songs == null) 
                 return;
             if(Count>0)

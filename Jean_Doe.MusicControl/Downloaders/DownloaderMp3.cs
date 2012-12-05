@@ -21,14 +21,7 @@ namespace Jean_Doe.MusicControl
             Info.Url = (Info.Entity as SongViewModel).UrlMp3;
             await base.Download();
         }
-        //public override bool CanProcess
-        //{
-        //    get
-        //    {
-        //        var song = Info.Entity as SongViewModel;
-        //        return song != null && song.HasArt;
-        //    }
-        //}
+       
         public override void Process()
         {
             base.Process();

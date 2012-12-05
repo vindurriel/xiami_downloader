@@ -32,23 +32,22 @@ namespace Jean_Doe.MusicControl
                 Header = "状态",
                 SortMemberPath = "Status"
             });
+            Items.CollectionChanged+=Items_CollectionChanged;
         }
-        public override void Load()
+
+        void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            base.Load();
-			foreach(var item in Items.OfType<SongViewModel>())
-			{
-				item.PrepareDownload();
-			}
-        }
-        public override void Add(SongViewModel song)
-        {
-            base.Add(song);
-			song.PrepareDownload();
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add) {
+                foreach (var item in e.NewItems.OfType<SongViewModel>())
+                {
+                    item.PrepareDownload();
+                }
+            }
         }
         public  void AddAndStart(SongViewModel song)
         {
 			Add(song);
+            song.PrepareDownload();
             DownloadManager.Instance.StartByTag(new List<string> { song.Id });
         }
         public void Handle(MsgDownloadProgressChanged message)

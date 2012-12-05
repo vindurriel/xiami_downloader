@@ -83,10 +83,10 @@ namespace Jean_Doe.MusicControl
             : base(song)
         {
             this.song = song;
-            if(HasArt)
-            {
+            //if(HasArt)
+            //{
                 ImageSource = System.IO.Path.Combine(Global.BasePath, "cache", AlbumId + ".art");
-            }
+            //}
         }
         #region 试听
         private WebBrowser playContent;

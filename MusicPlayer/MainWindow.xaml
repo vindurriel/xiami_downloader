@@ -17,6 +17,9 @@
                         FontFamily="Segoe UI Light;造字工房悦黑体验版纤细体"
                         Title="虾米下载">
     <controls:ResizeWindow.Resources>
+        <Style x:Key="ActionBarStyle" TargetType="StackPanel">
+            <!--<Setter Property="Background" Value="Black"/>-->
+        </Style>
         <Storyboard x:Key="SlideIn">
             <ThicknessAnimation Duration="0:0:.2"
                                 Storyboard.TargetProperty="Margin"
@@ -229,6 +232,7 @@
                         </Grid.RowDefinitions>
                         <controls:DownloadSongListControl x:Name="list_download" />
                         <StackPanel  Grid.Row="1"
+                                     Style="{StaticResource ActionBarStyle}"
                                      Visibility="{Binding SelectCount, ElementName=list_download,Converter={StaticResource int2vis}}"
                                      Orientation="Horizontal">
                             <Button Click="btn_download_start_Click"
@@ -251,6 +255,7 @@
                         </Grid.RowDefinitions>
                         <controls:CompleteSongListControl x:Name="list_complete" />
                         <StackPanel  Grid.Row="1"
+                                     Style="{StaticResource ActionBarStyle}"
                                      Visibility="{Binding SelectCount, ElementName=list_complete,Converter={StaticResource int2vis}}"
                                      Orientation="Horizontal">
                             <Button x:Name="btn_save_playlist"
