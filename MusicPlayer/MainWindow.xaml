@@ -17,9 +17,40 @@
                         FontFamily="Segoe UI Light;造字工房悦黑体验版纤细体"
                         Title="虾米下载">
     <controls:ResizeWindow.Resources>
-        <Style x:Key="ActionBarStyle" TargetType="StackPanel">
-            <!--<Setter Property="Background" Value="Black"/>-->
+        <Style x:Key="ActionBarStyle" TargetType="Grid">
+            <Setter Property="Background" Value="{StaticResource selectBrush}"/>
         </Style>
+        <ControlTemplate x:Key="charmBarTemplate" TargetType="{x:Type Expander}">
+            <Grid Width="0" x:Name="wrapper" Style="{StaticResource ActionBarStyle}">
+                <ContentPresenter x:Name="ExpanderContent" ContentSource="Content"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsExpanded" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation EasingFunction="{StaticResource easeFunc}"
+                                                                Storyboard.TargetName="wrapper"
+                                                                Storyboard.TargetProperty="Width"
+                                                                To="120"
+                                                                Duration="0:0:0.2" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation EasingFunction="{StaticResource easeFunc}" 
+                                                            Storyboard.TargetName="wrapper"
+                                                                Storyboard.TargetProperty="Width"
+                                                                To="0"
+                                                                Duration="0:0:0.2" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
         <Storyboard x:Key="SlideIn">
             <ThicknessAnimation Duration="0:0:.2"
                                 Storyboard.TargetProperty="Margin"
@@ -88,6 +119,7 @@
             </Setter>
         </Style>
         <controls:IntToVisibilityConverter x:Key="int2vis" />
+        <controls:IntToBoolConverter x:Key="int2bool" />
     </controls:ResizeWindow.Resources>
     <Grid>
         <Border x:Name="border"
@@ -232,7 +264,6 @@
                         </Grid.RowDefinitions>
                         <controls:DownloadSongListControl x:Name="list_download" />
                         <StackPanel  Grid.Row="1"
-                                     Style="{StaticResource ActionBarStyle}"
                                      Visibility="{Binding SelectCount, ElementName=list_download,Converter={StaticResource int2vis}}"
                                      Orientation="Horizontal">
                             <Button Click="btn_download_start_Click"
@@ -249,24 +280,28 @@
                     <Grid x:Name="page3"
                           Opacity="0"
                           IsHitTestVisible="false">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
                         <controls:CompleteSongListControl x:Name="list_complete" />
-                        <StackPanel  Grid.Row="1"
-                                     Style="{StaticResource ActionBarStyle}"
-                                     Visibility="{Binding SelectCount, ElementName=list_complete,Converter={StaticResource int2vis}}"
-                                     Orientation="Horizontal">
-                            <Button x:Name="btn_save_playlist"
+                        <Expander IsExpanded="{Binding SelectCount,ElementName=list_complete,Converter={StaticResource int2bool}}"  Template="{StaticResource charmBarTemplate}" Grid.Column="1">
+                            <StackPanel VerticalAlignment="Center" >
+                                <StackPanel.Resources>
+                                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                        <Setter Property="Margin" Value="5,10"/>
+                                        <Setter Property="Height" Value="60"/>
+                                    </Style>
+                                </StackPanel.Resources>
+                                <Button x:Name="btn_save_playlist"
                                     Content="存为播放列表"
                                     Click="btn_save_playlist_Click" />
-                            <Button Click="btn_play_Click"
-                                    Content="播放"
-                                    Height="30" />
-                            <Button Click="btn_remove_complete_Click"
+                                <Button Click="btn_play_Click"
+                                    Content="播放" />
+                                <Button Click="btn_remove_complete_Click"
                                     Content="删除" />
-                        </StackPanel>
+                            </StackPanel>
+                        </Expander>
                     </Grid>
                     <Grid x:Name="page4"
                           Opacity="0"
