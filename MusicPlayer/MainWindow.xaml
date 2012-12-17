@@ -17,16 +17,12 @@
                         FontFamily="Segoe UI Light;造字工房悦黑体验版纤细体"
                         Title="虾米下载" BorderWidth="5">
     <controls:ResizeWindow.Resources>
-        <ControlTemplate x:Key="ActionBarTemplate" TargetType="{x:Type Expander}">
-            <Grid >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid x:Name="blank" Height="60" />
-                <Grid Grid.Row="1" Background="{DynamicResource skinBrush}">
-                    <ContentPresenter   x:Name="ExpanderContent"  ContentSource="Content"/>
-                </Grid>
+        <Style x:Key="ActionBarStyle" TargetType="Grid">
+            <Setter Property="Background" Value="{StaticResource selectBrush}"/>
+        </Style>
+        <ControlTemplate x:Key="charmBarTemplate" TargetType="{x:Type Expander}">
+            <Grid Width="0" x:Name="wrapper" Style="{StaticResource ActionBarStyle}">
+                <ContentPresenter x:Name="ExpanderContent" ContentSource="Content"/>
             </Grid>
             <ControlTemplate.Triggers>
                 <Trigger Property="IsExpanded" Value="True">
@@ -34,33 +30,27 @@
                         <BeginStoryboard>
                             <Storyboard>
                                 <DoubleAnimation EasingFunction="{StaticResource easeFunc}"
-                                                                 Storyboard.TargetName="blank"
-                                                                 Storyboard.TargetProperty="Height"
-                                                                 To="0"
-                                                                 Duration="0:0:0.2" />
+                                                                Storyboard.TargetName="wrapper"
+                                                                Storyboard.TargetProperty="Width"
+                                                                To="120"
+                                                                Duration="0:0:0.2" />
                             </Storyboard>
                         </BeginStoryboard>
                     </Trigger.EnterActions>
                     <Trigger.ExitActions>
                         <BeginStoryboard>
                             <Storyboard>
-                                <DoubleAnimation Storyboard.TargetName="blank"
-                                                  EasingFunction="{StaticResource easeFunc}"
-                                                                 Storyboard.TargetProperty="Height"
-                                                                 To="60"
-                                                                 Duration="0:0:0.2" />
+                                <DoubleAnimation EasingFunction="{StaticResource easeFunc}" 
+                                                            Storyboard.TargetName="wrapper"
+                                                                Storyboard.TargetProperty="Width"
+                                                                To="0"
+                                                                Duration="0:0:0.2" />
                             </Storyboard>
                         </BeginStoryboard>
                     </Trigger.ExitActions>
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
-        <Style x:Key="ActionBarStyle" TargetType="{x:Type Expander}">
-            <Setter Property="Background" Value="{DynamicResource skinBrush}"/>
-            <Setter Property="Margin" Value="-10,0"/>
-            <Setter Property="Height" Value="60"/>
-            <Setter Property="VerticalAlignment" Value="Bottom"/>
-        </Style>
         <Storyboard x:Key="SlideIn">
             <ThicknessAnimation Duration="0:0:.2"
                                 Storyboard.TargetProperty="Margin"
@@ -268,9 +258,10 @@
                           IsHitTestVisible="false">
 
                         <controls:DownloadSongListControl x:Name="list_download" />
-                        <Expander  Style="{StaticResource ActionBarStyle}"   Template="{StaticResource ActionBarTemplate}" IsExpanded="{Binding SelectCount, Converter={StaticResource int2bool}, ElementName=list_download}" >
-                            <StackPanel Orientation="Horizontal"  >
-                                <Button Click="btn_download_start_Click"
+                        <StackPanel  Grid.Row="1"
+                                     Visibility="{Binding SelectCount, ElementName=list_download,Converter={StaticResource int2vis}}"
+                                     Orientation="Horizontal">
+                            <Button Click="btn_download_start_Click"
                                     Content="开始" />
                                 <Button Click="btn_cancel_Click"
                                     Content="暂停" />
@@ -285,14 +276,24 @@
                     <Grid x:Name="page3"
                           Opacity="0"
                           IsHitTestVisible="false">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
                         <controls:CompleteSongListControl x:Name="list_complete" />
-                        <Expander  Style="{StaticResource ActionBarStyle}"   Template="{StaticResource ActionBarTemplate}" IsExpanded="{Binding SelectCount, Converter={StaticResource int2bool}, ElementName=list_complete}" >
-                            <StackPanel Orientation="Horizontal" >
+                        <Expander IsExpanded="{Binding SelectCount,ElementName=list_complete,Converter={StaticResource int2bool}}"  Template="{StaticResource charmBarTemplate}" Grid.Column="1">
+                            <StackPanel VerticalAlignment="Center" >
+                                <StackPanel.Resources>
+                                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                        <Setter Property="Margin" Value="5,10"/>
+                                        <Setter Property="Height" Value="60"/>
+                                    </Style>
+                                </StackPanel.Resources>
                                 <Button x:Name="btn_save_playlist"
                                     Content="存为播放列表"
                                     Click="btn_save_playlist_Click" />
                                 <Button Click="btn_play_Click"
-                                    Content="播放"/>
+                                    Content="播放" />
                                 <Button Click="btn_remove_complete_Click"
                                     Content="删除" />
                             </StackPanel>
