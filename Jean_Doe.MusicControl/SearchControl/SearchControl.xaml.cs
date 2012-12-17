@@ -36,13 +36,10 @@ namespace Jean_Doe.MusicControl
         {
             var type = EnumSearchType.key;
             Enum.TryParse(Global.AppSettings["SearchType"], out type);
-            var sel = combo_search_type.Items
-                .OfType<ComboBoxItem>()
-                .FirstOrDefault(x => x.Tag != null && x.Tag.ToString() == type.ToString());
-            if(sel != null) combo_search_type.SelectedItem = sel;
+         
             var xtype = EnumMusicType.song;
             Enum.TryParse(Global.AppSettings["SearchResultType"], out xtype);
-            sel = combo_xiami_type.Items
+            var sel = combo_xiami_type.Items
                 .OfType<ComboBoxItem>()
                 .FirstOrDefault(x => x.Tag != null && x.Tag.ToString() == xtype.ToString());
             if(sel != null) combo_xiami_type.SelectedItem = sel;
@@ -136,12 +133,6 @@ namespace Jean_Doe.MusicControl
             Global.AppSettings["SearchResultType"] = MusicType.ToString();
         }
 
-        private void combo_search_type_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
-        {
-            var x = (combo_search_type.SelectedItem as ComboBoxItem).Tag;
-            if(x is EnumSearchType)
-                SearchType = (EnumSearchType)x;
-            Global.AppSettings["SearchType"] = SearchType.ToString();
-        }
+      
     }
 }

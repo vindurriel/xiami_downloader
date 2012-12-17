@@ -45,18 +45,7 @@ namespace MusicPlayer
             set
             {
                 page = value;
-                if(page == 1)
-                {
-                    head1.IsChecked = true;
-                    expander1.IsExpanded = true;
-                }
-                else
-                {
-                    head1.IsChecked = false;
-                    expander1.IsExpanded = false;
-                }
-
-                for(int i = 2; i < pageCount + 1; i++)
+                for(int i = 1; i < pageCount + 1; i++)
                 {
                     var header = FindName("head" + i.ToString()) as ToggleButton;
                     header.IsChecked = i == page;
@@ -90,13 +79,10 @@ namespace MusicPlayer
             MouseLeftButtonDown += (s, e) => { DragMove(); };
         }
 
-        ToggleButton head1;
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             //tag control events
-            head1 = expander1.Template.FindName("ExpanderButton", expander1) as ToggleButton;
-            head1.Click += (s, a) => Page = 1;
-            for(int i = 2; i < pageCount + 1; i++)
+            for(int i = 1; i < pageCount + 1; i++)
             {
                 var header = FindName("head" + i.ToString()) as ToggleButton;
                 if(header != null)
@@ -229,6 +215,10 @@ namespace MusicPlayer
         {
             var arg = SavePlaylist();
             RunProgramHelper.RunProgram(arg, "");
+        }
+        void btn_save_config_Click(object sender, RoutedEventArgs e)
+        {
+            configPage.SaveConfig();
         }
         void btn_save_playlist_Click(object sender, RoutedEventArgs e)
         {

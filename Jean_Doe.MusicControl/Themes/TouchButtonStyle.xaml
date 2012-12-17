@@ -61,18 +61,18 @@
                                     BorderBrush="{DynamicResource BorderBrush}" />
                             <Grid x:Name="OverRect"
                                   Opacity="0">
-                                <Border Background="{DynamicResource skinBrush}" />
+                                <Border Background="{TemplateBinding Foreground}" />
                                 <Border Background="#3fff" />
                             </Grid>
                             <Grid x:Name="PressRect"
                                   Opacity="0">
                                 <Border  Background="{DynamicResource skinBrush}" />
                             </Grid>
-                            <Grid Margin="{TemplateBinding Padding}">
-                                <ContentPresenter x:Name="contentControl1"
+                            <Grid Margin="{TemplateBinding Padding}" >
+                                <ContentControl Foreground="White"
                                                   Content="{TemplateBinding Content}"
-                                                  HorizontalAlignment="Center"
-                                                  VerticalAlignment="Center" />
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                             </Grid>
                         </Grid>
                     </Grid>

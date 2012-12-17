@@ -5,6 +5,15 @@
              xmlns:controls="http://jean.doe/controls"
              FontFamily="Segoe UI Light;造字工房悦黑体验版纤细体"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/ScrollBarStyle.xaml" />
+                <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/TouchButtonStyle.xaml" />
+                <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/ComboBoxStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid x:Name="root">
         <Grid.Resources>
             <sys:Double x:Key="lineHeight">30</sys:Double>
@@ -34,31 +43,6 @@
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <!--dirty popup-->
-        <Border x:Name="pop"
-                Grid.Row="1"
-                Grid.ColumnSpan="3"
-                Margin="-10,0"
-                Background="{DynamicResource selectBrush}">
-            <DockPanel>
-                <Button x:Name="btn_save"
-                        Content="保存"
-                        VerticalContentAlignment="Center"
-                        MinWidth="80"
-                        Padding="5,2"
-                        Margin="5,0"
-                        MinHeight="{StaticResource lineHeight}"
-                        DockPanel.Dock="Right" />
-                <TextBlock  HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Foreground="White"
-                            Text="有未保存的修改" />
-            </DockPanel>
-        </Border>
         <!--labels-->
         <StackPanel Margin="0,0,30,0">
             <StackPanel.Resources>

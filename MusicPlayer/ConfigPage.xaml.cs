@@ -26,7 +26,6 @@ namespace MusicPlayer
         public ConfigPage()
         {
             InitializeComponent();
-            btn_save.Click += (s, e) => SaveConfig();
             Loaded += (s, e) => LoadConfig();
             pop_skin.LostFocus += pop_skin_LostFocus;
         }
@@ -43,17 +42,19 @@ namespace MusicPlayer
         {
             IsDirty = true;
         }
-        private bool isDirty;
+
 
         public bool IsDirty
         {
-            get { return isDirty; }
-            set
-            {
-                isDirty = value;
-                pop.Opacity = IsDirty ? 1 : 0;
-            }
+            get { return (bool)GetValue(IsDirtyProperty); }
+            set { SetValue(IsDirtyProperty, value); }
         }
+
+        // Using a DependencyProperty as the backing store for IsDirty.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsDirtyProperty =
+            DependencyProperty.Register("IsDirty", typeof(bool), typeof(ConfigPage), new PropertyMetadata(false));
+
+
 
         void LoadConfig()
         {
@@ -94,7 +95,7 @@ namespace MusicPlayer
             IsDirty = false;
         }
 
-        void SaveConfig()
+        public void SaveConfig()
         {
             foreach(var item in map)
             {

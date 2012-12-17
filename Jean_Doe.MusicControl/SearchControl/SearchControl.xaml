@@ -10,6 +10,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/TouchButtonStyle.xaml" />
+                <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/ComboBoxStyle.xaml" />
                 <ResourceDictionary>
                     <common:EnumSearchType x:Key="enumkey">key</common:EnumSearchType>
                     <common:EnumSearchType x:Key="enumurl">url</common:EnumSearchType>
@@ -35,57 +36,21 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <!--search options-->
-            <ToggleButton Margin="1"
-                          Focusable="False"
-                          x:Name="toggle_option"
-                          ToolTip="搜索选项"></ToggleButton>
-            <Popup AllowsTransparency="True"
-                   IsOpen="{Binding IsChecked,ElementName=toggle_option}"
-                   StaysOpen="False"
-                   PopupAnimation="Slide"
-                   PlacementTarget="{Binding ElementName=toggle_option}"
-                   Placement="Bottom">
-                <Grid Background="#333333">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <TextBlock Text="搜索方式"
-                               VerticalAlignment="Center"
-                               Foreground="#bbbbbb" />
-                    <TextBlock Text="结果类型"
-                               VerticalAlignment="Center"
-                               Foreground="#bbbbbb"
-                               Grid.Row="1" />
-                    <ComboBox x:Name="combo_search_type"
-                              Grid.Column="1"
-                              SelectionChanged="combo_search_type_SelectionChanged_1">
-                        <ComboBoxItem Content="关键词"
-                                      Tag="{StaticResource enumkey}" />
-                        <ComboBoxItem  Content="网址"
-                                       Tag="{StaticResource enumurl}" />
-                    </ComboBox>
-                    <ComboBox x:Name="combo_xiami_type"
-                              Grid.Column="1"
-                              Grid.Row="1"
+            <ComboBox x:Name="combo_xiami_type"
                               SelectionChanged="combo_xiami_type_SelectionChanged_1">
-                        <ComboBoxItem Content="所有"
+                <ComboBoxItem Content="所有"
                                       Tag="{StaticResource any}" />
-                        <ComboBoxItem Content="歌曲"
+                <ComboBoxItem Content="歌曲"
                                       Tag="{StaticResource song}" />
-                        <ComboBoxItem  Content="艺术家"
+                <ComboBoxItem  Content="艺术家"
                                        Tag="{StaticResource artist}" />
-                        <ComboBoxItem  Content="专辑"
+                <ComboBoxItem  Content="专辑"
                                        Tag="{StaticResource album}" />
-                        <ComboBoxItem  Content="精选集"
+                <ComboBoxItem  Content="精选集"
                                        Tag="{StaticResource collect}" />
-                    </ComboBox>
-                </Grid>
-            </Popup>
+            </ComboBox>
+          
+           
             <!--search box-->
             <local:HistorySearch  x:Name="hs"
                                   Grid.Column="1"

@@ -17,12 +17,18 @@
                         FontFamily="Segoe UI Light;造字工房悦黑体验版纤细体"
                         Title="虾米下载" BorderWidth="5">
     <controls:ResizeWindow.Resources>
-        <Style x:Key="ActionBarStyle" TargetType="Grid">
-            <Setter Property="Background" Value="{StaticResource selectBrush}"/>
+        <Style x:Key="ActionBarStyle" TargetType="Expander">
+            <Setter Property="Template" Value="{DynamicResource charmBarTemplate}"/>
+        </Style>
+        <Style x:Key="charmBarButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Margin" Value="5,10"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="Foreground" Value="{DynamicResource selectBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource selectBrush}"/>
         </Style>
         <ControlTemplate x:Key="charmBarTemplate" TargetType="{x:Type Expander}">
-            <Grid Width="0" x:Name="wrapper" Style="{StaticResource ActionBarStyle}">
-                <ContentPresenter x:Name="ExpanderContent" ContentSource="Content"/>
+            <Grid Width="0" x:Name="wrapper" Background="{TemplateBinding Background}">
+                <ContentPresenter VerticalAlignment="Center" x:Name="ExpanderContent" ContentSource="Content"/>
             </Grid>
             <ControlTemplate.Triggers>
                 <Trigger Property="IsExpanded" Value="True">
@@ -138,8 +144,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <!--navigation-->
-            <controls:TitleBar
-                               x:Name="titleBar"
+            <controls:TitleBar x:Name="titleBar"
                                Margin="0" Title="" />
             <DockPanel LastChildFill="False"
                        x:Name="navi"
@@ -151,78 +156,10 @@
                            Foreground="White"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center" />
-                <Expander x:Name="expander1"
-                          ExpandDirection="Right">
-                    <Expander.Header>
-                        <TextBlock Text="{Binding ItemsCount, ElementName=list_search, StringFormat=搜索 (\{0\})}">
-                            <TextBlock.Style>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="Padding"
-                                    Value="5" />
-                                    <Setter Property="Margin"
-                                    Value="5,0" />
-                                    <Setter Property="Foreground"
-                                    Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}, Mode=FindAncestor}}" />
-                                    <Setter Property="FontWeight"
-                                    Value="{Binding FontWeight, RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}, Mode=FindAncestor}}" />
-                                    <Setter Property="FontSize"
-                                    Value="15" />
-                                </Style>
-                            </TextBlock.Style></TextBlock>
-                    </Expander.Header>
-                    <Expander.Template>
-                        <ControlTemplate TargetType="{x:Type Expander}">
-                            <DockPanel>
-                                <ToggleButton x:Name="ExpanderButton"
-                                              Style="{StaticResource toggleStyle}"
-                                              Content="{TemplateBinding Header}" />
-                                <!--IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"-->
-                                <ContentPresenter x:Name="ExpanderContent"
-                                                  DockPanel.Dock="Right"
-                                                  ContentSource="Content">
-                                    <ContentPresenter.LayoutTransform>
-                                        <ScaleTransform ScaleX="0" />
-                                    </ContentPresenter.LayoutTransform>
-                                </ContentPresenter>
-                            </DockPanel>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsExpanded"
-                                         Value="True">
-                                    <Trigger.EnterActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation EasingFunction="{StaticResource easeFunc}"
-                                                                 Storyboard.TargetName="ExpanderContent"
-                                                                 Storyboard.TargetProperty="(FrameworkElement.LayoutTransform).(ScaleTransform.ScaleX)"
-                                                                 To="1"
-                                                                 Duration="0:0:0.2" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </Trigger.EnterActions>
-                                    <Trigger.ExitActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <DoubleAnimation Storyboard.TargetName="ExpanderContent"
-                                                                 Storyboard.TargetProperty="(FrameworkElement.LayoutTransform).(ScaleTransform.ScaleX)"
-                                                                 To="0"
-                                                                 Duration="0:0:0.2" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </Trigger.ExitActions>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Expander.Template>
-                    <DockPanel>
-                        <Rectangle Fill="{DynamicResource skinBrush}"
-                                   HorizontalAlignment="Stretch"
-                                   DockPanel.Dock="Bottom"
-                                   Height="2"
-                                   Margin="-5,0,5,0" />
-                        <controls:SearchControl Margin="5"
-                                                x:Name="searchKeywordControl" />
-                    </DockPanel>
-                </Expander>
+                <ToggleButton x:Name="head1"
+                              Style="{StaticResource toggleStyle}">
+                    <TextBlock Text="{Binding ItemsCount, ElementName=list_search, StringFormat=搜索 (\{0\})}" />
+                </ToggleButton>
                 <ToggleButton x:Name="head2"
                               Style="{StaticResource toggleStyle}">
                     <TextBlock Text="{Binding ItemsCount, ElementName=list_download, StringFormat=下载 (\{0\})}" />
@@ -243,34 +180,49 @@
                     <Grid x:Name="page1"
                           Opacity="0"
                           IsHitTestVisible="false">
-                        <DockPanel/>
-                        <controls:SearchSongListControl x:Name="list_search" />
-                        <Expander  Style="{StaticResource ActionBarStyle}"   Template="{StaticResource ActionBarTemplate}" IsExpanded="{Binding SelectCount, Converter={StaticResource int2bool}, ElementName=list_search}" >
-                            <StackPanel Orientation="Horizontal" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <controls:SearchControl    x:Name="searchKeywordControl" />
+                            <controls:SearchSongListControl x:Name="list_search" />
+                        </StackPanel>
+                        <Expander Grid.Column="1" Style="{StaticResource ActionBarStyle}"    IsExpanded="{Binding SelectCount, Converter={StaticResource int2bool}, ElementName=list_search}" >
+                            <StackPanel  >
                                 <Button Click="btn_download_add_Click"
-                                    Content="下载"
-                                    Height="30" />
+                                     Style="{StaticResource charmBarButton}"
+                                    Content="下载" />
                             </StackPanel>
                         </Expander>
                     </Grid>
                     <Grid x:Name="page2"
                           Opacity="0"
                           IsHitTestVisible="false">
-
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
                         <controls:DownloadSongListControl x:Name="list_download" />
-                        <StackPanel  Grid.Row="1"
-                                     Visibility="{Binding SelectCount, ElementName=list_download,Converter={StaticResource int2vis}}"
-                                     Orientation="Horizontal">
-                            <Button Click="btn_download_start_Click"
+                        <Expander  Grid.Column="1" Style="{StaticResource ActionBarStyle}"   
+                                     IsExpanded="{Binding SelectCount, ElementName=list_download,Converter={StaticResource int2bool}}"
+                                    >
+                            <StackPanel>
+                                <Button Click="btn_download_start_Click"
+                                     Style="{StaticResource charmBarButton}"
                                     Content="开始" />
-                            <Button Click="btn_cancel_Click"
+                                <Button Click="btn_cancel_Click"
+                                     Style="{StaticResource charmBarButton}"
                                     Content="暂停" />
-                            <Button Click="btn_remove_Click"
+                                <Button Click="btn_remove_Click"
+                                     Style="{StaticResource charmBarButton}"
                                     Content="删除" />
-                            <Button x:Name="btn_complete"
+                                <Button x:Name="btn_complete"
+                                     Style="{StaticResource charmBarButton}"
                                     Content="完成"
                                     Click="btn_complete_Click" />
-                        </StackPanel>
+                            </StackPanel>
+                        </Expander>
                     </Grid>
                     <Grid x:Name="page3"
                           Opacity="0"
@@ -280,20 +232,17 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <controls:CompleteSongListControl x:Name="list_complete" />
-                        <Expander IsExpanded="{Binding SelectCount,ElementName=list_complete,Converter={StaticResource int2bool}}"  Template="{StaticResource charmBarTemplate}" Grid.Column="1">
-                            <StackPanel VerticalAlignment="Center" >
-                                <StackPanel.Resources>
-                                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                        <Setter Property="Margin" Value="5,10"/>
-                                        <Setter Property="Height" Value="60"/>
-                                    </Style>
-                                </StackPanel.Resources>
+                        <Expander IsExpanded="{Binding SelectCount,ElementName=list_complete,Converter={StaticResource int2bool}}"  Style="{StaticResource ActionBarStyle}"     Grid.Column="1">
+                            <StackPanel   >
                                 <Button x:Name="btn_save_playlist"
+                                     Style="{StaticResource charmBarButton}"
                                     Content="存为播放列表"
                                     Click="btn_save_playlist_Click" />
                                 <Button Click="btn_play_Click"
+                                     Style="{StaticResource charmBarButton}"
                                     Content="播放" />
                                 <Button Click="btn_remove_complete_Click"
+                                     Style="{StaticResource charmBarButton}"
                                     Content="删除" />
                             </StackPanel>
                         </Expander>
@@ -301,7 +250,19 @@
                     <Grid x:Name="page4"
                           Opacity="0"
                           IsHitTestVisible="false">
-                        <my:ConfigPage />
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <my:ConfigPage x:Name="configPage"/>
+                        <Expander IsExpanded="{Binding IsDirty,ElementName=configPage}"  Style="{StaticResource ActionBarStyle}"     Grid.Column="1">
+                            <StackPanel VerticalAlignment="Center" >
+                                <Button x:Name="btn_save_config"
+                                    Content="保存"
+                                     Style="{StaticResource charmBarButton}"
+                                    Click="btn_save_config_Click" />
+                            </StackPanel>
+                        </Expander>
                     </Grid>
                 </Grid>
             </Border>
