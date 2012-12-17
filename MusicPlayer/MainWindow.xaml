@@ -130,7 +130,7 @@
         <Border x:Name="border"
                 BorderBrush="{DynamicResource skinBrush}"
                 Background="{DynamicResource darkBrush}"
-                BorderThickness="2"/> 
+                BorderThickness="2"/>
         <Grid   >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -263,15 +263,14 @@
                                      Orientation="Horizontal">
                             <Button Click="btn_download_start_Click"
                                     Content="开始" />
-                                <Button Click="btn_cancel_Click"
+                            <Button Click="btn_cancel_Click"
                                     Content="暂停" />
-                                <Button Click="btn_remove_Click"
+                            <Button Click="btn_remove_Click"
                                     Content="删除" />
-                                <Button x:Name="btn_complete"
+                            <Button x:Name="btn_complete"
                                     Content="完成"
                                     Click="btn_complete_Click" />
-                            </StackPanel>
-                        </Expander>
+                        </StackPanel>
                     </Grid>
                     <Grid x:Name="page3"
                           Opacity="0"
