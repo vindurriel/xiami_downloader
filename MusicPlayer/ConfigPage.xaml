@@ -42,6 +42,7 @@
         <Border x:Name="pop"
                 Grid.Row="1"
                 Grid.ColumnSpan="3"
+                Margin="-10,0"
                 Background="{DynamicResource selectBrush}">
             <DockPanel>
                 <Button x:Name="btn_save"

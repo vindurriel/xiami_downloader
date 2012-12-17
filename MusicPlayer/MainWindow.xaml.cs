@@ -290,7 +290,7 @@ namespace MusicPlayer
         {
             UIHelper.RunOnUI(new Action(() =>
             {
-                statusBar.Text = status;
+                //statusBar.Text = status;
             }));
         }
 

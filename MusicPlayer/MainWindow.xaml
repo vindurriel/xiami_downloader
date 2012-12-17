@@ -1,9 +1,10 @@
-﻿<controls:ResizeWindow  x:Class="MusicPlayer.MainWindow"
+﻿<controls:ResizeWindow
                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                         xmlns:my="clr-namespace:MusicPlayer"
                         xmlns:controls="http://jean.doe/controls"
                         xmlns:common="clr-namespace:Jean_Doe.Common;assembly=Jean_Doe.Common"
+                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"  x:Class="MusicPlayer.MainWindow"
                         WindowStyle="None"
                         Background="#01ffffff"
                         Foreground="{DynamicResource lightBrush}"
@@ -13,9 +14,8 @@
                         FontSize="15"
                         ResizeMode="CanResizeWithGrip"
                         x:Name="me"
-                        BorderWidth="5"
                         FontFamily="Segoe UI Light;造字工房悦黑体验版纤细体"
-                        Title="虾米下载">
+                        Title="虾米下载" BorderWidth="5">
     <controls:ResizeWindow.Resources>
         <Style x:Key="ActionBarStyle" TargetType="Grid">
             <Setter Property="Background" Value="{StaticResource selectBrush}"/>
@@ -54,9 +54,9 @@
         <Storyboard x:Key="SlideIn">
             <ThicknessAnimation Duration="0:0:.2"
                                 Storyboard.TargetProperty="Margin"
-                                From="-20,0,20,0"
+                                From="30,0,-30,0"
                                 To="0"
-                                DecelerationRatio=".7" />
+                                EasingFunction="{StaticResource easeFunc}" />
             <DoubleAnimation Duration="0:0:.1"
                              Storyboard.TargetProperty="Opacity"
                              From="0"
@@ -71,12 +71,17 @@
                              Storyboard.TargetProperty="Opacity"
                              From="1"
                              To="0" />
+            <ThicknessAnimation Duration="0:0:.2"
+                                Storyboard.TargetProperty="Margin"
+                                To="-30,0,30,0"
+                                From="0"
+                                EasingFunction="{StaticResource easeFunc}" />
             <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="IsHitTestVisible">
                 <DiscreteBooleanKeyFrame KeyTime="0"
                                          Value="False" />
             </BooleanAnimationUsingKeyFrames>
         </Storyboard>
-        <Style TargetType="Button"
+        <Style TargetType="{x:Type Button}"
                BasedOn="{StaticResource {x:Type Button}}">
             <Setter Property="MinWidth"
                     Value="80" />
@@ -89,13 +94,6 @@
         </Style>
         <Style x:Key="{x:Type ResizeGrip}"
                TargetType="{x:Type ResizeGrip}">
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver"
-                         Value="true">
-                    <Setter Property="Foreground"
-                            Value="{DynamicResource skinBrush}" />
-                </Trigger>
-            </Style.Triggers>
             <Setter Property="OverridesDefaultStyle"
                     Value="true" />
             <Setter Property="Foreground"
@@ -111,35 +109,41 @@
                                 Height="16">
                             <Viewbox>
                                 <Path Fill="{TemplateBinding Foreground}"
-                                      Data="M 4 0 L 4 4 L 0 4 z"></Path>
+                                      Data="M 4 0 L 4 4 L 0 4 z"/>
                             </Viewbox>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver"
+                         Value="true">
+                    <Setter Property="Foreground"
+                            Value="{DynamicResource skinBrush}" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
         <controls:IntToVisibilityConverter x:Key="int2vis" />
         <controls:IntToBoolConverter x:Key="int2bool" />
     </controls:ResizeWindow.Resources>
     <Grid>
         <Border x:Name="border"
-                Background="{DynamicResource darkBrush}"
                 BorderBrush="{DynamicResource skinBrush}"
-                BorderThickness="1.5">
-        </Border>
-        <Grid  Margin="5">
+                Background="{DynamicResource darkBrush}"
+                BorderThickness="2"/>
+        <Grid   >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <!--navigation-->
-            <controls:TitleBar Title=""
+            <controls:TitleBar
                                x:Name="titleBar"
-                               Margin="0,-5,-5,0" />
+                               Margin="0" Title="" />
             <DockPanel LastChildFill="False"
                        x:Name="navi"
-                       Margin="0">
+                       Margin="2,2,0,0">
                 <TextBlock Text="虾米下载"
                            Width="100"
                            Visibility="Collapsed"
@@ -150,21 +154,21 @@
                 <Expander x:Name="expander1"
                           ExpandDirection="Right">
                     <Expander.Header>
-                        <TextBlock Text="{Binding ItemsCount,ElementName=list_search,StringFormat=搜索 ({0})}">
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock">
-                            <Setter Property="Padding"
+                        <TextBlock Text="{Binding ItemsCount, ElementName=list_search, StringFormat=搜索 (\{0\})}">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Padding"
                                     Value="5" />
-                            <Setter Property="Margin"
+                                    <Setter Property="Margin"
                                     Value="5,0" />
-                            <Setter Property="Foreground"
-                                    Value="{Binding Foreground,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ToggleButton}}" />
-                            <Setter Property="FontWeight"
-                                    Value="{Binding FontWeight,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ToggleButton}}" />
-                            <Setter Property="FontSize"
+                                    <Setter Property="Foreground"
+                                    Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}, Mode=FindAncestor}}" />
+                                    <Setter Property="FontWeight"
+                                    Value="{Binding FontWeight, RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}, Mode=FindAncestor}}" />
+                                    <Setter Property="FontSize"
                                     Value="15" />
-                            </Style>
-                        </TextBlock.Style></TextBlock>
+                                </Style>
+                            </TextBlock.Style></TextBlock>
                     </Expander.Header>
                     <Expander.Template>
                         <ControlTemplate TargetType="{x:Type Expander}">
@@ -189,7 +193,7 @@
                                             <Storyboard>
                                                 <DoubleAnimation EasingFunction="{StaticResource easeFunc}"
                                                                  Storyboard.TargetName="ExpanderContent"
-                                                                 Storyboard.TargetProperty="(ContentPresenter.LayoutTransform).(ScaleTransform.ScaleX)"
+                                                                 Storyboard.TargetProperty="(FrameworkElement.LayoutTransform).(ScaleTransform.ScaleX)"
                                                                  To="1"
                                                                  Duration="0:0:0.2" />
                                             </Storyboard>
@@ -199,7 +203,7 @@
                                         <BeginStoryboard>
                                             <Storyboard>
                                                 <DoubleAnimation Storyboard.TargetName="ExpanderContent"
-                                                                 Storyboard.TargetProperty="(ContentPresenter.LayoutTransform).(ScaleTransform.ScaleX)"
+                                                                 Storyboard.TargetProperty="(FrameworkElement.LayoutTransform).(ScaleTransform.ScaleX)"
                                                                  To="0"
                                                                  Duration="0:0:0.2" />
                                             </Storyboard>
@@ -221,11 +225,11 @@
                 </Expander>
                 <ToggleButton x:Name="head2"
                               Style="{StaticResource toggleStyle}">
-                    <TextBlock Text="{Binding ItemsCount,ElementName=list_download,StringFormat=下载 ({0})}" />
+                    <TextBlock Text="{Binding ItemsCount, ElementName=list_download, StringFormat=下载 (\{0\})}" />
                 </ToggleButton>
                 <ToggleButton x:Name="head3"
                               Style="{StaticResource toggleStyle}">
-                    <TextBlock Text="{Binding ItemsCount,ElementName=list_complete,StringFormat=完成 ({0})}" />
+                    <TextBlock Text="{Binding ItemsCount, ElementName=list_complete, StringFormat=完成 (\{0\})}" />
                 </ToggleButton>
                 <ToggleButton x:Name="head4"
                               Style="{StaticResource toggleStyle}">
@@ -235,33 +239,24 @@
             <!--contents-->
             <Border Grid.Row="1"
                     Background="Transparent">
-                <Grid x:Name="content">
+                <Grid x:Name="content" Margin="10,0">
                     <Grid x:Name="page1"
                           Opacity="0"
                           IsHitTestVisible="false">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <DockPanel></DockPanel>
-                        <controls:SearchSongListControl Grid.Row="1"
-                                                        x:Name="list_search" />
-                        <StackPanel  Grid.Row="2"
-                                     Visibility="{Binding SelectCount, ElementName=list_search,Converter={StaticResource int2vis}}"
-                                     Orientation="Horizontal">
-                            <Button Click="btn_download_add_Click"
+                        <DockPanel/>
+                        <controls:SearchSongListControl x:Name="list_search" />
+                        <Expander  Style="{StaticResource ActionBarStyle}"   Template="{StaticResource ActionBarTemplate}" IsExpanded="{Binding SelectCount, Converter={StaticResource int2bool}, ElementName=list_search}" >
+                            <StackPanel Orientation="Horizontal" >
+                                <Button Click="btn_download_add_Click"
                                     Content="下载"
                                     Height="30" />
-                        </StackPanel>
+                            </StackPanel>
+                        </Expander>
                     </Grid>
                     <Grid x:Name="page2"
                           Opacity="0"
                           IsHitTestVisible="false">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
+
                         <controls:DownloadSongListControl x:Name="list_download" />
                         <StackPanel  Grid.Row="1"
                                      Visibility="{Binding SelectCount, ElementName=list_download,Converter={StaticResource int2vis}}"
@@ -310,15 +305,19 @@
                     </Grid>
                 </Grid>
             </Border>
-            <controls:ProgressBar ItemWidth="5"
-                                  x:Name="busyIndicator"
+
+            <Grid Height="15" Grid.Row="2" Background="{DynamicResource skinBrush}">
+                <TextBlock x:Name="statusBar"
+                       HorizontalAlignment="Center"
+                           Foreground="White"/>
+                <controls:ProgressBar x:Name="busyIndicator"
+                                  Foreground="White"
                                   Margin="0"
-                                  Grid.Row="2"
-                                  IsIndeterminate="False"
+                                  VerticalAlignment="Center"
                                   HorizontalAlignment="Stretch"
-                                  DockPanel.Dock="Bottom" />
-            <TextBlock x:Name="statusBar"
-                       Grid.Row="2" />
+                                   IsIndeterminate="False" ItemWidth="5" />
+            </Grid>
+
         </Grid>
     </Grid>
 </controls:ResizeWindow>
