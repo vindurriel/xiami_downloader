@@ -35,7 +35,7 @@
                                     <Setter Property="Height"
                                             Value="{Binding ItemWidth,RelativeSource={RelativeSource AncestorType=local:ProgressBar}}" />
                                     <Setter Property="Fill"
-                                            Value="{DynamicResource skinBrush}" />
+                                            Value="{Binding Foreground,ElementName=me}" />
                                     <Setter Property="CacheMode"
                                             Value="BitmapCache" />
                                     <Setter Property="IsHitTestVisible"
