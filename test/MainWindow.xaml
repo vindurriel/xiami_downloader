@@ -1,0 +1,10 @@
+﻿<Window xmlns:c="http://jean.doe/controls"  x:Class="test.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        
+        Title="MainWindow" Height="350" Width="525">
+    
+    <Grid>
+        <c:ToggleSwitch Width="100" Height="50"  OnColor="Red" OffColor="Gray" IsOn="true"  SkinColor="Black" />
+    </Grid>
+</Window>

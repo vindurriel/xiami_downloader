@@ -1,0 +1,86 @@
+﻿<UserControl x:Class="Jean_Doe.MusicControl.ToggleSwitch"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:SkinColor="Black"
+             d:OnColor="Red"
+             d:OffColor="Red"
+             x:Name="me">
+    <UserControl.Resources>
+        <Style x:Key="toggleStyle" TargetType="ToggleButton">
+            <Style.Triggers>
+
+            </Style.Triggers>
+        </Style>
+        <QuadraticEase EasingMode="EaseInOut" x:Key="easeFunc"/>
+        <ControlTemplate x:Key="toggleTemplate"  TargetType="ToggleButton">
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation EasingFunction="{StaticResource easeFunc}"  Duration="0:0:.2" Storyboard.TargetName="part_over_bg" Storyboard.TargetProperty="Opacity"
+                                                   To="1"/>
+                                <DoubleAnimation EasingFunction="{StaticResource easeFunc}"  Duration="0:0:.2" Storyboard.TargetName="part_over_bd" Storyboard.TargetProperty="Opacity"
+                                                   To="1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation EasingFunction="{StaticResource easeFunc}"  Duration="0:0:.2" Storyboard.TargetName="part_over_bg" Storyboard.TargetProperty="Opacity"
+                                                   To="0"/>
+                                <DoubleAnimation EasingFunction="{StaticResource easeFunc}"  Duration="0:0:.2" Storyboard.TargetName="part_over_bd" Storyboard.TargetProperty="Opacity"
+                                                   To="0"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="true">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ThicknessAnimation EasingFunction="{StaticResource easeFunc}"  Duration="0:0:.2" Storyboard.TargetName="part_toggle" Storyboard.TargetProperty="Margin"
+                                                   To="80,0,0,0"/>
+                                <DoubleAnimation EasingFunction="{StaticResource easeFunc}"  Duration="0:0:.2" Storyboard.TargetName="part_on_bg" Storyboard.TargetProperty="Opacity"
+                                                   To="1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ThicknessAnimation EasingFunction="{StaticResource easeFunc}"  Duration="0:0:.2" Storyboard.TargetName="part_toggle" Storyboard.TargetProperty="Margin"
+                                                    To="0"/>
+                                <DoubleAnimation EasingFunction="{StaticResource easeFunc}"  Duration="0:0:.2" Storyboard.TargetName="part_on_bg" Storyboard.TargetProperty="Opacity"
+                                                   To="0"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </ControlTemplate.Triggers>
+            <Viewbox SnapsToDevicePixels="True">
+                <Grid  x:Name="part_clipper"  Width="120" Height="40">
+                    <Grid.Clip>
+                        <RectangleGeometry Rect="0,0,120,40"/>
+                    </Grid.Clip>
+                    <Border  Opacity=".5" BorderBrush="{TemplateBinding Background}" BorderThickness="3"/>
+                    <Grid Margin="8">
+                        <Border x:Name="part_off_bg" Opacity="0.5" Background="{TemplateBinding Background}" />
+                        <Border x:Name="part_on_bg" Background="{TemplateBinding Foreground}" Opacity="0" />
+                        <Border x:Name="part_over_bd" Background="#33ffffff"    Opacity="0"/>
+                    </Grid>
+                    <Border HorizontalAlignment="Left" x:Name="part_toggle" Background="{TemplateBinding Background}" Width="40">
+                        <Border x:Name="part_over_bg" Background="#33ffffff" Opacity="0"/>
+                    </Border>
+                </Grid>
+            </Viewbox>
+        </ControlTemplate>
+    </UserControl.Resources>
+    <Grid>
+        <ToggleButton Foreground="{Binding SkinColor,ElementName=me}" Background="{Binding BgColor,ElementName=me}"  x:Name="toggle" IsChecked="{Binding IsOn,ElementName=me,Mode=OneWay}" Template="{StaticResource toggleTemplate}"/>
+    </Grid>
+</UserControl>

@@ -37,6 +37,21 @@
                 <Setter Property="Height"
                         Value="{StaticResource lineHeight}" />
             </Style>
+            <Style TargetType="controls:ToggleSwitch">
+                <EventSetter Event="IsOnChanged"  Handler="toggle_changed"/>
+                <Setter Property="Margin"
+                        Value="{StaticResource lineMargin}" />
+                <Setter Property="Height"
+                        Value="{StaticResource lineHeight}" />
+                <Setter Property="OnColor"
+                        Value="{DynamicResource skinBrush}" />
+                <Setter Property="OffColor"
+                        Value="{DynamicResource selectBrush}" />
+                <Setter Property="SkinColor"
+                        Value="{DynamicResource skinBrush}" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Left" />
+            </Style>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -122,12 +137,7 @@
                 <ComboBoxItem Content="仅艺术家"
                               Tag="%ArtistName" />
             </ComboBox>
-            <ComboBox x:Name="combo_enablemagnet">
-                <ComboBoxItem Content="启用"
-                              Tag="1" />
-                <ComboBoxItem Content="停用"
-                              Tag="0" />
-            </ComboBox>
+            <controls:ToggleSwitch x:Name="toggle_enablemagnet"/>
             <Button Width="auto"
                     x:Name="btn_skin"
                     HorizontalAlignment="Left"
@@ -154,12 +164,7 @@
                                           x:Name="color_colorskin"></controls:ColorPicker>
                 </Grid>
             </Popup>
-            <ComboBox x:Name="combo_showdetails">
-                <ComboBoxItem Content="显示"
-                              Tag="1" />
-                <ComboBoxItem Content="隐藏"
-                              Tag="0" />
-            </ComboBox>
+            <controls:ToggleSwitch x:Name="toggle_showdetails"/>
         </StackPanel>
     </Grid>
 </UserControl>

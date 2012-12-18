@@ -62,6 +62,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\ToggleSwitch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SearchControl\SearchControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -107,6 +111,9 @@
     <Compile Include="ColorPicker\ColorUtils.cs" />
     <Compile Include="ColorPicker\HsvControl.cs" />
     <Compile Include="ColorPicker\SpectrumSlider.cs" />
+    <Compile Include="Controls\ToggleSwitch.xaml.cs">
+      <DependentUpon>ToggleSwitch.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Downloaders\DownloaderLrc.cs" />
     <Compile Include="Downloaders\DownloaderMp3.cs" />
     <Compile Include="Util\AfterDownloadManager.cs" />

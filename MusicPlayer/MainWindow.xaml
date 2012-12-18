@@ -267,12 +267,12 @@
                 </Grid>
             </Border>
 
-            <Grid Height="15" Grid.Row="2" Background="{DynamicResource skinBrush}">
+            <Grid Height="15" Grid.Row="2" >
                 <TextBlock x:Name="statusBar"
                        HorizontalAlignment="Center"
                            Foreground="White"/>
                 <controls:ProgressBar x:Name="busyIndicator"
-                                  Foreground="White"
+                                  Foreground="{DynamicResource skinBrush}"
                                   Margin="0"
                                   VerticalAlignment="Center"
                                   HorizontalAlignment="Stretch"

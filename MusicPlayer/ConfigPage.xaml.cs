@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Jean_Doe.Common;
+using Jean_Doe.MusicControl;
 //using System.Windows.Forms;
 namespace MusicPlayer
 {
@@ -18,10 +19,10 @@ namespace MusicPlayer
                 {"DownloadFolder", EnumConfigControlType.label},
                 {"FolderPattern", EnumConfigControlType.combo},
                 {"SongnamePattern", EnumConfigControlType.combo},
-                {"EnableMagnet", EnumConfigControlType.combo},
+                {"EnableMagnet", EnumConfigControlType.toggle},
                 {"MaxConnection", EnumConfigControlType.combo},
                 {"ColorSkin", EnumConfigControlType.color},
-                {"ShowDetails", EnumConfigControlType.combo},
+                {"ShowDetails", EnumConfigControlType.toggle},
             };
         public ConfigPage()
         {
@@ -75,9 +76,9 @@ namespace MusicPlayer
                         ComboSelect(x as ComboBox, value);
                         break;
                     case EnumConfigControlType.toggle:
-                        var tg = x as CheckBox;
+                        var tg = x as ToggleSwitch;
                         if(tg != null)
-                            tg.IsChecked = value == "1";
+                            tg.IsOn = value == "1";
                         break;
                     case EnumConfigControlType.color:
                         var cp = x as ColorPicker.ColorPicker;
@@ -116,9 +117,9 @@ namespace MusicPlayer
                             value = (comboBox.SelectedItem as ComboBoxItem).Tag.ToString();
                         break;
                     case EnumConfigControlType.toggle:
-                        var tg = x as CheckBox;
+                        var tg = x as ToggleSwitch;
                         if(tg != null)
-                            value = tg.IsChecked == true ? "1" : "0";
+                            value = tg.IsOn == true ? "1" : "0";
                         break;
                     case EnumConfigControlType.color:
                         var cp = x as ColorPicker.ColorPicker;
