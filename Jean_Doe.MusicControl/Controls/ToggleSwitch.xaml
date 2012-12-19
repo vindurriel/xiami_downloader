@@ -3,10 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:SkinColor="Black"
-             d:OnColor="Red"
-             d:OffColor="Red"
              x:Name="me">
     <UserControl.Resources>
         <Style x:Key="toggleStyle" TargetType="ToggleButton">
@@ -44,7 +40,7 @@
                         <BeginStoryboard>
                             <Storyboard>
                                 <ThicknessAnimation EasingFunction="{StaticResource easeFunc}"  Duration="0:0:.2" Storyboard.TargetName="part_toggle" Storyboard.TargetProperty="Margin"
-                                                   To="80,0,0,0"/>
+                                                   To="95,0,0,0"/>
                                 <DoubleAnimation EasingFunction="{StaticResource easeFunc}"  Duration="0:0:.2" Storyboard.TargetName="part_on_bg" Storyboard.TargetProperty="Opacity"
                                                    To="1"/>
                             </Storyboard>
@@ -67,20 +63,24 @@
                     <Grid.Clip>
                         <RectangleGeometry Rect="0,0,120,40"/>
                     </Grid.Clip>
-                    <Border  Opacity=".5" BorderBrush="{TemplateBinding Background}" BorderThickness="3"/>
-                    <Grid Margin="8">
-                        <Border x:Name="part_off_bg" Opacity="0.5" Background="{TemplateBinding Background}" />
+                    <Border   Opacity=".5" BorderBrush="{TemplateBinding Background}" BorderThickness="2">
+                    
+                    </Border>
+                    <Grid Margin="6">
+                        <Border x:Name="part_off_bg" Opacity=".3" Background="{TemplateBinding Background}" />
                         <Border x:Name="part_on_bg" Background="{TemplateBinding Foreground}" Opacity="0" />
                         <Border x:Name="part_over_bd" Background="#33ffffff"    Opacity="0"/>
                     </Grid>
-                    <Border HorizontalAlignment="Left" x:Name="part_toggle" Background="{TemplateBinding Background}" Width="40">
-                        <Border x:Name="part_over_bg" Background="#33ffffff" Opacity="0"/>
+                    <Border Padding="0">
+                        <Border HorizontalAlignment="Left" x:Name="part_toggle" Background="{TemplateBinding Background}" Width="25">
+                            <Border x:Name="part_over_bg" Background="#33ffffff" Opacity="0"/>
+                        </Border>
                     </Border>
                 </Grid>
             </Viewbox>
         </ControlTemplate>
     </UserControl.Resources>
-    <Grid>
+    <Grid Background="Transparent">
         <ToggleButton Foreground="{Binding SkinColor,ElementName=me}" Background="{Binding BgColor,ElementName=me}"  x:Name="toggle" IsChecked="{Binding IsOn,ElementName=me,Mode=OneWay}" Template="{StaticResource toggleTemplate}"/>
     </Grid>
 </UserControl>

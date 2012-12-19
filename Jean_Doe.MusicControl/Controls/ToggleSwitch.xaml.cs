@@ -33,7 +33,7 @@ namespace Jean_Doe.MusicControl
         public static readonly RoutedEvent IsOnChangedEvent = EventManager.RegisterRoutedEvent(
             "IsOnChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(ToggleSwitch));
 
-        
+
         public ToggleSwitch()
         {
             InitializeComponent();

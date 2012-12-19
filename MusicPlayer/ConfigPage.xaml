@@ -50,13 +50,12 @@
                 <Setter Property="SkinColor"
                         Value="{DynamicResource skinBrush}" />
                 <Setter Property="HorizontalAlignment"
-                        Value="Left" />
+                        Value="Right" />
             </Style>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <!--labels-->
         <StackPanel Margin="0,0,30,0">
@@ -69,7 +68,7 @@
                     <Setter Property="Height"
                             Value="{StaticResource lineHeight}" />
                     <Setter Property="HorizontalAlignment"
-                            Value="Right" />
+                            Value="Left" />
                     <Setter Property="VerticalAlignment"
                             Value="Center" />
                 </Style>
@@ -140,7 +139,7 @@
             <controls:ToggleSwitch x:Name="toggle_enablemagnet"/>
             <Button Width="auto"
                     x:Name="btn_skin"
-                    HorizontalAlignment="Left"
+                    HorizontalAlignment="Right"
                     MinWidth="0"
                     Click="btn_skin_click"
                     Padding="2"
