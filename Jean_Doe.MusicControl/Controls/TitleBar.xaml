@@ -10,6 +10,18 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/TouchButtonStyle.xaml" />
                 <ResourceDictionary>
+                    <Style x:Key="StyleWindowButton"
+           BasedOn="{StaticResource {x:Type Button}}"
+           TargetType="Button">
+                        <Setter Property="Width"
+                Value="70" />
+                        <Setter Property="Height"
+                Value="50" />
+                        <Setter Property="Background"
+                Value="Transparent" />
+                        <Setter Property="Foreground"
+                Value="{DynamicResource skinBrush}" />
+                    </Style>
                     <DropShadowEffect x:Key="shadow"
                                       Color="Black"
                                       BlurRadius="3"
@@ -17,9 +29,9 @@
                                       ShadowDepth="0" />
                     <Style TargetType="Image">
                         <Setter Property="Width"
-                                Value="10" />
+                                Value="15" />
                         <Setter Property="Height"
-                                Value="10" />
+                                Value="15" />
                         <Setter Property="Stretch"
                                 Value="UniformToFill" />
                     </Style>
@@ -27,31 +39,31 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Background="#01000000">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <DockPanel Grid.Column="1">
+    <Viewbox >
+        <Grid Height="50">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
             <Button x:Name="min"
                     Style="{DynamicResource StyleWindowButton}"
                     Click="BtnMinimizeClick">
                 <Image Source="/Jean_Doe.MusicControl;component/Resources/min.png"  
                        Effect="{StaticResource shadow}"></Image>
             </Button>
-            <Button x:Name="max"
+            <Button x:Name="max" Grid.Column="1"
                     Style="{DynamicResource StyleWindowButton}"
                     Click="BtnMaximizeClick">
                 <Image Source="/Jean_Doe.MusicControl;component/Resources/max.png"
                        Effect="{StaticResource shadow}"></Image>
             </Button>
-            <Button x:Name="close"
-                    Width="50"
+            <Button x:Name="close" Grid.Column="2"
                     Style="{DynamicResource StyleWindowButton}"
                     Click="BtnCloseClick">
                 <Image Source="/Jean_Doe.MusicControl;component/Resources/close.png"
                        Effect="{StaticResource shadow}"></Image>
             </Button>
-        </DockPanel>
-    </Grid>
+        </Grid>
+    </Viewbox>
 </UserControl>

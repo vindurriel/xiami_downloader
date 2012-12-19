@@ -136,7 +136,7 @@
         <Border x:Name="border"
                 BorderBrush="{DynamicResource skinBrush}"
                 Background="{DynamicResource darkBrush}"
-                BorderThickness="2"/>
+                BorderThickness="0"/>
         <Grid   >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -144,35 +144,64 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <!--navigation-->
-            <controls:TitleBar x:Name="titleBar"
-                               Margin="0" Title="" />
-            <DockPanel LastChildFill="False"
-                       x:Name="navi"
-                       Margin="2,2,0,0">
-                <TextBlock Text="虾米下载"
+            <Grid  x:Name="navi" Height="50"
+                       Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <DockPanel LastChildFill="False">
+                    <DockPanel.Resources>
+                        <Style TargetType="Image">
+                            <Setter Property="Width" Value="25"/>
+                            <Setter Property="DockPanel.Dock" Value="Left"/>
+                        </Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Padding" Value="2"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="FontSize" Value="15"/>
+                        </Style>
+                    </DockPanel.Resources>
+                    <TextBlock Text="虾米下载"
                            Width="100"
                            Visibility="Collapsed"
                            FontSize="20"
                            Foreground="White"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center" />
-                <ToggleButton x:Name="head1"
+                    <ToggleButton x:Name="head1"
                               Style="{StaticResource toggleStyle}">
-                    <TextBlock Text="{Binding ItemsCount, ElementName=list_search, StringFormat=搜索 (\{0\})}" />
-                </ToggleButton>
-                <ToggleButton x:Name="head2"
+                        <DockPanel>
+                            <Image Source="Resources/search1.png"  />
+                            <TextBlock Text="{Binding ItemsCount, ElementName=list_search, StringFormat=\{0\}}" />
+                        </DockPanel>
+                    </ToggleButton>
+                    <ToggleButton x:Name="head2"
                               Style="{StaticResource toggleStyle}">
-                    <TextBlock Text="{Binding ItemsCount, ElementName=list_download, StringFormat=下载 (\{0\})}" />
-                </ToggleButton>
-                <ToggleButton x:Name="head3"
+                        <DockPanel>
+                            <Image Source="Resources/downloading.png"  />
+                            <TextBlock Text="{Binding ItemsCount, ElementName=list_download, StringFormat= \{0\}}" />
+                        </DockPanel>
+                    </ToggleButton>
+                    <ToggleButton x:Name="head3"
                               Style="{StaticResource toggleStyle}">
-                    <TextBlock Text="{Binding ItemsCount, ElementName=list_complete, StringFormat=完成 (\{0\})}" />
-                </ToggleButton>
-                <ToggleButton x:Name="head4"
+                        <DockPanel>
+                            <Image Source="Resources/music_record.png" />
+                            <TextBlock Text="{Binding ItemsCount, ElementName=list_complete, StringFormat=\{0\}}" />
+                        </DockPanel>
+                    </ToggleButton>
+                    <ToggleButton x:Name="head4"
                               Style="{StaticResource toggleStyle}">
-                    <TextBlock Text="配置" />
-                </ToggleButton>
-            </DockPanel>
+                        <DockPanel>
+                            <Image Source="Resources/settings.png" />
+                        </DockPanel>
+                        <!--<TextBlock Text="配置" />-->
+                    </ToggleButton>
+
+                </DockPanel>
+                <controls:TitleBar   Grid.Column="1" x:Name="titleBar" VerticalAlignment="Stretch"
+                                 Margin="0,0,0,0" />
+            </Grid>
             <!--contents-->
             <Border Grid.Row="1"
                     Background="Transparent">
@@ -184,10 +213,10 @@
                             <ColumnDefinition/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel>
-                            <controls:SearchControl    x:Name="searchKeywordControl" />
+                        <DockPanel>
+                            <controls:SearchControl DockPanel.Dock="Top"    x:Name="searchKeywordControl" />
                             <controls:SearchSongListControl x:Name="list_search" />
-                        </StackPanel>
+                        </DockPanel>
                         <Expander Grid.Column="1" Style="{StaticResource ActionBarStyle}"    IsExpanded="{Binding SelectCount, Converter={StaticResource int2bool}, ElementName=list_search}" >
                             <StackPanel  >
                                 <Button Click="btn_download_add_Click"
@@ -233,7 +262,8 @@
                         </Grid.ColumnDefinitions>
                         <controls:CompleteSongListControl x:Name="list_complete" />
                         <Expander IsExpanded="{Binding SelectCount,ElementName=list_complete,Converter={StaticResource int2bool}}"  Style="{StaticResource ActionBarStyle}"     Grid.Column="1">
-                            <StackPanel   >
+
+                            <StackPanel>
                                 <Button x:Name="btn_save_playlist"
                                      Style="{StaticResource charmBarButton}"
                                     Content="存为播放列表"
@@ -254,7 +284,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <my:ConfigPage x:Name="configPage"/>
+                        <my:ConfigPage x:Name="configPage"  />
                         <Expander IsExpanded="{Binding IsDirty,ElementName=configPage}"  Style="{StaticResource ActionBarStyle}"     Grid.Column="1">
                             <StackPanel VerticalAlignment="Center" >
                                 <Button x:Name="btn_save_config"

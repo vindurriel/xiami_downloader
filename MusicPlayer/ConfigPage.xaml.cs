@@ -28,16 +28,24 @@ namespace MusicPlayer
         {
             InitializeComponent();
             Loaded += (s, e) => LoadConfig();
-            pop_skin.LostFocus += pop_skin_LostFocus;
+            pop_skin.Opened += pop_skin_Opened;
         }
-        Color colorSkin;
-        void pop_skin_LostFocus(object sender, RoutedEventArgs e)
+
+        void pop_skin_Opened(object sender, EventArgs e)
         {
-            if(color_colorskin.SelectedColor != colorSkin)
-                IsDirty = true;
+            color_colorskin.SelectedColorChanged -= color_colorskin_SelectedColorChanged;
+            color_colorskin.SelectedColorChanged += color_colorskin_SelectedColorChanged;
+
+        }
+
+        void color_colorskin_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color> e)
+        {
+            if(color_colorskin.SelectedColor!=colorSkin)
+            IsDirty = true;
             colorSkin = color_colorskin.SelectedColor;
         }
 
+        Color colorSkin;
 
         void combo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -85,7 +93,8 @@ namespace MusicPlayer
                         if(cp != null)
                             try
                             {
-                                cp.SelectedColor = (Color)ColorConverter.ConvertFromString(value);
+                                var c = (Color)ColorConverter.ConvertFromString(value);
+                                cp.SelectedColor = c;
                             }
                             catch { }
                         break;

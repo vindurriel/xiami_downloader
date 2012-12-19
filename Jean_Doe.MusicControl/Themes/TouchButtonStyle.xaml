@@ -18,7 +18,7 @@
     </LinearGradientBrush>
     <Style TargetType="Button">
         <Setter Property="Foreground"
-                Value="White" />
+                Value="#33ffffff" />
         <Setter Property="Background"
                 Value="{DynamicResource skinBrush}" />
         <Setter Property="Template">
@@ -79,16 +79,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
-    <Style x:Key="StyleWindowButton"
-           BasedOn="{StaticResource {x:Type Button}}"
-           TargetType="Button">
-        <Setter Property="Width"
-                Value="30" />
-        <Setter Property="Background"
-                Value="Transparent" />
-        <Setter Property="Padding"
-                Value="2,5,2,5" />
     </Style>
     <Style x:Key="StyleSearchButton"
            BasedOn="{StaticResource {x:Type Button}}"

@@ -131,7 +131,7 @@ namespace MusicPlayer
         }
         void OnRimChanged(EnumRim rim)
         {
-            var t = new Thickness(1.5);
+            var t = new Thickness(0);
             var width = 2;
             switch(rim)
             {
