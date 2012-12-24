@@ -72,6 +72,7 @@
     <Compile Include="SearchProvider\DoubanSearchProvider.cs" />
     <Compile Include="SearchProvider\ISearchProvider.cs" />
     <Compile Include="SearchProvider\XiamiSearchProvider.cs" />
+    <Compile Include="SearchProvider\BaiduSearchProvider.cs" />
     <Compile Include="SearchResult.cs" />
     <Compile Include="Dom\Song.cs" />
     <Compile Include="PersistHelper.cs" />

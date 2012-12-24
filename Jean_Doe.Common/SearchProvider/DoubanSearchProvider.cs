@@ -7,6 +7,11 @@ public class DoubanSearchProvider : ISearchProvider
     static readonly Regex re_url = new Regex(@"site\.douban\.com");
     static readonly Regex re_json = new Regex(@"PlaylistWidget\.findOrCreate\((\d+)\),\n.*?song_records\s*=([^;]+?);");
     static readonly Regex re_artist = new Regex("\"site_title\":\\s*\"([^\"]+?)\"");
+
+    public  Regex Pattern
+    {
+        get { return new Regex(@"douban\.(?:com|fm)"); }
+    }
     public async Task<SearchResult> Search(string key)
     {
         var res = new SearchResult

@@ -6,6 +6,10 @@ using System;
 using System.Text.RegularExpressions;
 public class XiamiSearchProvider : ISearchProvider
 {
+    public  Regex Pattern
+    {
+        get { return new Regex(@"xiami\.com"); }
+    }
 	public async Task<SearchResult> Search(string key)
 	{
 		if(string.IsNullOrEmpty(key))

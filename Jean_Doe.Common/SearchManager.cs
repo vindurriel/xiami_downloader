@@ -20,6 +20,7 @@ namespace Jean_Doe.Common
             sr = sr ?? SearchResult.Empty;
             MessageBus.Instance.Publish(new MsgSearchStateChanged { State = state, SearchResult = sr });
         }
+     
         public static async Task GetSongOfType(string id, EnumMusicType type)
         {
             if (string.IsNullOrEmpty(id)) return;
@@ -31,11 +32,22 @@ namespace Jean_Doe.Common
             if (string.IsNullOrEmpty(input)) return;
             state = EnumSearchState.Started;
             notifyState();
-            var re_douban = new Regex(@"douban\.(?:com|fm)");
-            ISearchProvider provider;
-            if (re_douban.IsMatch(input))
-                provider = new DoubanSearchProvider();
-            else
+            ISearchProvider provider=null;
+            var re_source=new Regex(@"(from:\s*(\w+))");
+            var m = re_source.Match(input);
+            if (m.Success) {
+                var type=m.Groups[2].Value.ToLower();
+                switch (type)
+                {
+                    case "baidu": provider = new BaiduSearchProvider(); break;
+                    case "xiami": provider = new XiamiSearchProvider(); break;
+                    case "douban": provider = new DoubanSearchProvider(); break;
+                    default:
+                        break;
+                }
+                input = re_source.Replace(input, "");
+            }
+            if (provider == null)
                 provider = new XiamiSearchProvider();
             state = EnumSearchState.Working;
             var sr=await provider.Search(input);
