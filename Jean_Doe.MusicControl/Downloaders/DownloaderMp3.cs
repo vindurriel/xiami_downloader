@@ -35,21 +35,23 @@ namespace Jean_Doe.MusicControl
                     Directory.CreateDirectory(folder);
                 var mp3 = Path.Combine(folder, item.FileNameBase + ".mp3");
                 File.Copy(Info.FileName, mp3, true);
-                var id3 = TagLib.File.Create(mp3);
-                id3.Tag.Clear();
-                id3.Tag.Album = item.AlbumName;
-                id3.Tag.Performers = new string[] { item.ArtistName };
-                id3.Tag.AlbumArtists = new string[]{item.ArtistName};
-                id3.Tag.Title = item.Name;
-                id3.Tag.Comment = item.Id;
-                if (item.TrackNo > 0)
-                    id3.Tag.Track = (uint)item.TrackNo;
-                if (item.ImageSource != null)
-                {
-                    var pic=new TagLib.Picture(item.ImageSource);
-                    id3.Tag.Pictures = new TagLib.IPicture[] { pic };
+                if (item.Song.WriteId3) {
+                    var id3 = TagLib.File.Create(mp3);
+                    id3.Tag.Clear();
+                    id3.Tag.Album = item.AlbumName;
+                    id3.Tag.Performers = new string[] { item.ArtistName };
+                    id3.Tag.AlbumArtists = new string[] { item.ArtistName };
+                    id3.Tag.Title = item.Name;
+                    id3.Tag.Comment = item.Id;
+                    if (item.TrackNo > 0)
+                        id3.Tag.Track = (uint)item.TrackNo;
+                    if (item.ImageSource != null)
+                    {
+                        var pic = new TagLib.Picture(item.ImageSource);
+                        id3.Tag.Pictures = new TagLib.IPicture[] { pic };
+                    }
+                    id3.Save();
                 }
-                id3.Save();
                 item.HasMp3 = true;
             }
             catch (Exception e)
