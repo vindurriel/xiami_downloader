@@ -10,6 +10,11 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/TouchButtonStyle.xaml" />
                 <ResourceDictionary>
+                    <Style x:Key="glyph" TargetType="TextBlock">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
+                        <Setter Property="FontSize" Value="25"/>
+                    </Style>
                     <Style x:Key="StyleWindowButton"
            BasedOn="{StaticResource {x:Type Button}}"
            TargetType="Button">
@@ -20,7 +25,7 @@
                         <Setter Property="Background"
                 Value="Transparent" />
                         <Setter Property="Foreground"
-                Value="{DynamicResource skinBrush}" />
+                Value="{DynamicResource skinBrush}" /> 
                     </Style>
                     <DropShadowEffect x:Key="shadow"
                                       Color="Black"
@@ -49,20 +54,20 @@
             <Button x:Name="min"
                     Style="{DynamicResource StyleWindowButton}"
                     Click="BtnMinimizeClick">
-                <Image Source="/Jean_Doe.MusicControl;component/Resources/min.png"  
-                       Effect="{StaticResource shadow}"></Image>
+                <TextBlock Text="&#xE0A1;" Style="{StaticResource glyph}"/>
+                <!--<Image Source="/Jean_Doe.MusicControl;component/Resources/min.png"  
+                       Effect="{StaticResource shadow}"></Image>-->
             </Button>
             <Button x:Name="max" Grid.Column="1"
                     Style="{DynamicResource StyleWindowButton}"
                     Click="BtnMaximizeClick">
-                <Image Source="/Jean_Doe.MusicControl;component/Resources/max.png"
-                       Effect="{StaticResource shadow}"></Image>
+                <TextBlock Text="&#xE0a0;" Style="{StaticResource glyph}"/>
+
             </Button>
             <Button x:Name="close" Grid.Column="2"
                     Style="{DynamicResource StyleWindowButton}"
                     Click="BtnCloseClick">
-                <Image Source="/Jean_Doe.MusicControl;component/Resources/close.png"
-                       Effect="{StaticResource shadow}"></Image>
+                <TextBlock Text="&#xe0e1;" Style="{StaticResource glyph}"/>
             </Button>
         </Grid>
     </Viewbox>

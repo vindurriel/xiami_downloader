@@ -44,7 +44,12 @@ namespace Jean_Doe.MusicControl
         {
             UIHelper.RunOnUI(() =>
             {
-                items.Remove(song);
+                var ui=dataGrid.ItemContainerGenerator.ContainerFromItem(song);
+                var storyboard=this.FindResource("FadeOut") as Storyboard;
+                Storyboard.SetTarget(storyboard,ui);
+                storyboard.Completed += (s, e) =>
+                    items.Remove(song);
+                storyboard.Begin();
             });
         }
         public SongViewModel GetItemById(string id)

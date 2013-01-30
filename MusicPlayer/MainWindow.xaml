@@ -14,17 +14,29 @@
                         FontSize="15"
                         ResizeMode="CanResizeWithGrip"
                         x:Name="me"
+                     MinHeight="480"
+                    SizeToContent="Manual"
+                         MinWidth="640"
                         FontFamily="Segoe UI Light;造字工房悦黑体验版纤细体"
                         Title="虾米下载" BorderWidth="5">
     <controls:ResizeWindow.Resources>
+        <Storyboard x:Key="Maximize">
+            <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetProperty="Left" />
+            <DoubleAnimation  Duration="0:0:0.2" Storyboard.TargetProperty="Top"  />
+            <DoubleAnimation  Duration="0:0:0.2" Storyboard.TargetProperty="Width" />
+            <DoubleAnimation  Duration="0:0:0.2" Storyboard.TargetProperty="Height"  />
+        </Storyboard>
         <Style x:Key="ActionBarStyle" TargetType="Expander">
+            <Setter Property="Background" Value="Black"/>
             <Setter Property="Template" Value="{DynamicResource charmBarTemplate}"/>
         </Style>
         <Style x:Key="charmBarButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="Margin" Value="5,10"/>
+            <Setter Property="Margin" Value="0,8"/>
+            <Setter Property="Padding" Value="20,0,0,0"/>
             <Setter Property="Height" Value="60"/>
             <Setter Property="Foreground" Value="{DynamicResource selectBrush}"/>
-            <Setter Property="Background" Value="{DynamicResource selectBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
         </Style>
         <ControlTemplate x:Key="charmBarTemplate" TargetType="{x:Type Expander}">
             <Grid Width="0" x:Name="wrapper" Background="{TemplateBinding Background}">
@@ -38,7 +50,7 @@
                                 <DoubleAnimation EasingFunction="{StaticResource easeFunc}"
                                                                 Storyboard.TargetName="wrapper"
                                                                 Storyboard.TargetProperty="Width"
-                                                                To="120"
+                                                                To="150"
                                                                 Duration="0:0:0.2" />
                             </Storyboard>
                         </BeginStoryboard>
@@ -57,10 +69,25 @@
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
-        <Storyboard x:Key="SlideIn">
+        <Storyboard x:Key="SlideInRight">
             <ThicknessAnimation Duration="0:0:.2"
                                 Storyboard.TargetProperty="Margin"
                                 From="30,0,-30,0"
+                                To="0"
+                                EasingFunction="{StaticResource easeFunc}" />
+            <DoubleAnimation Duration="0:0:.1"
+                             Storyboard.TargetProperty="Opacity"
+                             From="0"
+                             To="1" />
+            <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="IsHitTestVisible">
+                <DiscreteBooleanKeyFrame KeyTime="0"
+                                         Value="True" />
+            </BooleanAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="SlideInLeft">
+            <ThicknessAnimation Duration="0:0:.2"
+                                Storyboard.TargetProperty="Margin"
+                                From="-30,0,30,0"
                                 To="0"
                                 EasingFunction="{StaticResource easeFunc}" />
             <DoubleAnimation Duration="0:0:.1"
@@ -77,15 +104,16 @@
                              Storyboard.TargetProperty="Opacity"
                              From="1"
                              To="0" />
-            <ThicknessAnimation Duration="0:0:.2"
-                                Storyboard.TargetProperty="Margin"
-                                To="-30,0,30,0"
-                                From="0"
-                                EasingFunction="{StaticResource easeFunc}" />
             <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="IsHitTestVisible">
                 <DiscreteBooleanKeyFrame KeyTime="0"
                                          Value="False" />
             </BooleanAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="anim_show_more" Storyboard.TargetName="navi">
+            <DoubleAnimation Storyboard.TargetProperty="Height" Duration="0:0:0.2" To="80" EasingFunction="{StaticResource easeFunc}"/>
+        </Storyboard>
+        <Storyboard x:Key="anim_hide_more" Storyboard.TargetName="navi">
+            <DoubleAnimation Storyboard.TargetProperty="Height" Duration="0:0:0.2" To="50" EasingFunction="{StaticResource easeFunc}"/>
         </Storyboard>
         <Style TargetType="{x:Type Button}"
                BasedOn="{StaticResource {x:Type Button}}">
@@ -133,74 +161,105 @@
         <controls:IntToBoolConverter x:Key="int2bool" />
     </controls:ResizeWindow.Resources>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
         <Border x:Name="border"
                 BorderBrush="{DynamicResource skinBrush}"
                 Background="{DynamicResource darkBrush}"
                 BorderThickness="0"/>
-        <Grid   >
+       
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <!--navigation-->
-            <Grid  x:Name="navi" Height="50"
+            <Grid  x:Name="navi" Width="800" HorizontalAlignment="Left"
+                   Height="50"
                        Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
-                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <DockPanel LastChildFill="False">
-                    <DockPanel.Resources>
-                        <Style TargetType="Image">
-                            <Setter Property="Width" Value="25"/>
-                            <Setter Property="DockPanel.Dock" Value="Left"/>
-                        </Style>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Padding" Value="2"/>
-                            <Setter Property="HorizontalAlignment" Value="Center"/>
-                            <Setter Property="FontSize" Value="15"/>
-                        </Style>
-                    </DockPanel.Resources>
-                    <TextBlock Text="虾米下载"
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="Image">
+                        <Setter Property="Width" Value="20"/>
+                        <Setter Property="Height" Value="20"/>
+                        <Setter Property="DockPanel.Dock" Value="Left"/>
+                    </Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Padding" Value="2"/>
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Setter Property="FontSize" Value="15"/>
+                    </Style>
+                    <Style TargetType="TextBlock" x:Key="glyph">
+                        <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Setter Property="FontSize" Value="20"/>
+                    </Style>
+                </Grid.Resources>
+                <TextBlock Text="虾米下载"
                            Width="100"
                            Visibility="Collapsed"
                            FontSize="20"
                            Foreground="White"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center" />
-                    <ToggleButton x:Name="head1"
+                <ToggleButton x:Name="head1"
                               Style="{StaticResource toggleStyle}">
-                        <DockPanel>
-                            <Image Source="Resources/search1.png"  />
-                            <TextBlock Text="{Binding ItemsCount, ElementName=list_search, StringFormat=\{0\}}" />
-                        </DockPanel>
-                    </ToggleButton>
-                    <ToggleButton x:Name="head2"
+                    <DockPanel>
+                        <TextBlock Text="&#xE11a;" Style="{StaticResource glyph}"/>
+                        <TextBlock Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_search}" Text="{Binding ItemsCount, ElementName=list_search, StringFormat=\{0\}}" />
+                    </DockPanel>
+                </ToggleButton>
+                <TextBlock Text="搜索"  Grid.Row="1"/>
+                <ToggleButton x:Name="head2"
+                                  Grid.Column="1"
                               Style="{StaticResource toggleStyle}">
-                        <DockPanel>
-                            <Image Source="Resources/downloading.png"  />
-                            <TextBlock Text="{Binding ItemsCount, ElementName=list_download, StringFormat= \{0\}}" />
-                        </DockPanel>
-                    </ToggleButton>
-                    <ToggleButton x:Name="head3"
-                              Style="{StaticResource toggleStyle}">
-                        <DockPanel>
-                            <Image Source="Resources/music_record.png" />
-                            <TextBlock Text="{Binding ItemsCount, ElementName=list_complete, StringFormat=\{0\}}" />
-                        </DockPanel>
-                    </ToggleButton>
-                    <ToggleButton x:Name="head4"
-                              Style="{StaticResource toggleStyle}">
-                        <DockPanel>
-                            <Image Source="Resources/settings.png" />
-                        </DockPanel>
-                        <!--<TextBlock Text="配置" />-->
-                    </ToggleButton>
+                    <DockPanel>
+                        <TextBlock Text="&#xE118;" Style="{StaticResource glyph}"/>
+                        <TextBlock Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_download}" Text="{Binding ItemsCount, ElementName=list_download, StringFormat= \{0\}}" />
+                    </DockPanel>
+                </ToggleButton>
+                <TextBlock Text="下载中"  Grid.Row="1" Grid.Column="1"/>
 
-                </DockPanel>
-                <controls:TitleBar   Grid.Column="1" x:Name="titleBar" VerticalAlignment="Stretch"
-                                 Margin="0,0,0,0" />
+                <ToggleButton x:Name="head3"
+                                    Grid.Column="2"
+                              Style="{StaticResource toggleStyle}">
+                    <DockPanel>
+                        <TextBlock Text="&#xE0a5;" Style="{StaticResource glyph}"/>
+                        <TextBlock Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_complete}" Text="{Binding  Path=ItemsCount, ElementName=list_complete, StringFormat=\{0\}}" />
+                    </DockPanel>
+                </ToggleButton>
+                <TextBlock Text="已下载"  Grid.Row="1" Grid.Column="2"/>
+                <ToggleButton x:Name="head4" 
+                                    Grid.Column="3"
+                              Style="{StaticResource toggleStyle}">
+                    <DockPanel>
+                        <TextBlock Text="&#xE115;" Style="{StaticResource glyph}"/>
+                    </DockPanel>
+                    <!--<TextBlock Text="配置" />-->
+                </ToggleButton>
+                <TextBlock  Grid.Row="1" Grid.Column="3" Text="配置"/>
+                <ToggleButton x:Name="more"
+                                    Grid.Column="4"
+                                  Click="btn_more_Click"
+                              Style="{StaticResource toggleStyle}">
+                    <DockPanel>
+                        <TextBlock Text="&#xE0C2;" FontFamily="Segoe Ui Symbol"/>
+                    </DockPanel>
+                </ToggleButton>
             </Grid>
             <!--contents-->
             <Border Grid.Row="1"
@@ -217,13 +276,6 @@
                             <controls:SearchControl DockPanel.Dock="Top"    x:Name="searchKeywordControl" />
                             <controls:SearchSongListControl x:Name="list_search" />
                         </DockPanel>
-                        <Expander Grid.Column="1" Style="{StaticResource ActionBarStyle}"    IsExpanded="{Binding SelectCount, Converter={StaticResource int2bool}, ElementName=list_search}" >
-                            <StackPanel  >
-                                <Button Click="btn_download_add_Click"
-                                     Style="{StaticResource charmBarButton}"
-                                    Content="下载" />
-                            </StackPanel>
-                        </Expander>
                     </Grid>
                     <Grid x:Name="page2"
                           Opacity="0"
@@ -233,25 +285,6 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
                         <controls:DownloadSongListControl x:Name="list_download" />
-                        <Expander  Grid.Column="1" Style="{StaticResource ActionBarStyle}"   
-                                     IsExpanded="{Binding SelectCount, ElementName=list_download,Converter={StaticResource int2bool}}"
-                                    >
-                            <StackPanel>
-                                <Button Click="btn_download_start_Click"
-                                     Style="{StaticResource charmBarButton}"
-                                    Content="开始" />
-                                <Button Click="btn_cancel_Click"
-                                     Style="{StaticResource charmBarButton}"
-                                    Content="暂停" />
-                                <Button Click="btn_remove_Click"
-                                     Style="{StaticResource charmBarButton}"
-                                    Content="删除" />
-                                <Button x:Name="btn_complete"
-                                     Style="{StaticResource charmBarButton}"
-                                    Content="完成"
-                                    Click="btn_complete_Click" />
-                            </StackPanel>
-                        </Expander>
                     </Grid>
                     <Grid x:Name="page3"
                           Opacity="0"
@@ -261,21 +294,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <controls:CompleteSongListControl x:Name="list_complete" />
-                        <Expander IsExpanded="{Binding SelectCount,ElementName=list_complete,Converter={StaticResource int2bool}}"  Style="{StaticResource ActionBarStyle}"     Grid.Column="1">
-
-                            <StackPanel>
-                                <Button x:Name="btn_save_playlist"
-                                     Style="{StaticResource charmBarButton}"
-                                    Content="存为播放列表"
-                                    Click="btn_save_playlist_Click" />
-                                <Button Click="btn_play_Click"
-                                     Style="{StaticResource charmBarButton}"
-                                    Content="播放" />
-                                <Button Click="btn_remove_complete_Click"
-                                     Style="{StaticResource charmBarButton}"
-                                    Content="删除" />
-                            </StackPanel>
-                        </Expander>
+                        
                     </Grid>
                     <Grid x:Name="page4"
                           Opacity="0"
@@ -285,14 +304,6 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <my:ConfigPage x:Name="configPage"  />
-                        <Expander IsExpanded="{Binding IsDirty,ElementName=configPage}"  Style="{StaticResource ActionBarStyle}"     Grid.Column="1">
-                            <StackPanel VerticalAlignment="Center" >
-                                <Button x:Name="btn_save_config"
-                                    Content="保存"
-                                     Style="{StaticResource charmBarButton}"
-                                    Click="btn_save_config_Click" />
-                            </StackPanel>
-                        </Expander>
                     </Grid>
                 </Grid>
             </Border>
@@ -308,7 +319,12 @@
                                   HorizontalAlignment="Stretch"
                                    IsIndeterminate="False" ItemWidth="5" />
             </Grid>
-
         </Grid>
+        <Expander x:Name="charmBar" Grid.RowSpan="3" HorizontalAlignment="Right" Style="{StaticResource ActionBarStyle}">
+            <StackPanel x:Name="charmBarItemWrapper">
+            </StackPanel>
+        </Expander>
+        <controls:TitleBar    HorizontalAlignment="Right" VerticalAlignment="Top" Width="150" x:Name="titleBar" 
+                                 Margin="0,0,0,0" />
     </Grid>
 </controls:ResizeWindow>

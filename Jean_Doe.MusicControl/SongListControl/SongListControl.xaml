@@ -9,6 +9,10 @@
         <my:BoolToOpacityConverter x:Key='bool2opa' />
         <my:BoolToVisibilityConverter x:Key="bool2vis" />
         <my:DivideConverter x:Key="divconv" />
+        <Storyboard x:Key="FadeOut">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="1"
+                                            To="0" />
+        </Storyboard>
         <Style x:Key="linkStyle" TargetType="{x:Type Hyperlink}">
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
@@ -220,7 +224,7 @@
                         <EventTrigger RoutedEvent="FrameworkElement.Unloaded">
                             <BeginStoryboard>
                                 <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="1"
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" From="1"
                                             To="0" />
                                 </Storyboard>
                             </BeginStoryboard>

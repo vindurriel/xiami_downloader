@@ -9,6 +9,7 @@
                 <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/TouchButtonStyle.xaml" />
                 <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/ComboBoxStyle.xaml" />
                 <ResourceDictionary>
+                    
                     <Color x:Key="skinColor">Red</Color>
                     <SolidColorBrush x:Key="selectBrush"
                                      Color="#a555" />
@@ -36,7 +37,7 @@
                                       Color="#00ffffff" />
                     </LinearGradientBrush>
                     <QuadraticEase x:Key="easeFunc"
-                                   EasingMode="EaseInOut" />
+                                   EasingMode="EaseOut" />
                     <Style TargetType="ToggleButton"
                            x:Key="toggleStyle">
                         <Style.Triggers>

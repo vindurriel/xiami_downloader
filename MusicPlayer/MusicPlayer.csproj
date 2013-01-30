@@ -53,6 +53,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Jean_Doe.Reference\Artwork.Bus.dll</HintPath>
     </Reference>
+    <Reference Include="NAudio">
+      <HintPath>..\ReferenceLibrary\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio.WindowsMediaFormat">
+      <HintPath>..\ReferenceLibrary\NAudio.WindowsMediaFormat.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -77,6 +83,7 @@
     <Compile Include="ConfigPage.xaml.cs">
       <DependentUpon>ConfigPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Mp3Player.cs" />
     <Compile Include="WindowManager.cs" />
     <Page Include="ConfigPage.xaml">
       <SubType>Designer</SubType>
@@ -150,6 +157,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\downloading.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\time.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
