@@ -252,14 +252,15 @@
             <DataGrid.ColumnHeaderStyle>
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
-                    <Setter Property="Background" Value="#555" />
+                    <Setter Property="Background" Value="Transparent" />
                     <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
                     <Setter Property="BorderBrush" Value="#888" />
-                    <Setter Property="BorderThickness" Value="0,0,1,0" />
+                    <Setter Property="BorderThickness" Value="0,0,0,0" />
                     <Setter Property="Margin" Value="0,0,0,10" />
-                    <Setter Property="Padding" Value="2,0" />
+                    <Setter Property="Padding" Value="10,2" />
                     <Setter Property="HorizontalContentAlignment" Value="Left" />
-                    <Style.Triggers>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Style.Triggers> 
                         <Trigger Property="IsMouseOver" Value="true">
                             <Setter Property="Background" Value="#888" />
                             <Setter Property="Foreground" Value="White" />

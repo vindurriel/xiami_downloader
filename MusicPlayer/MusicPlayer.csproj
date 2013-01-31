@@ -80,6 +80,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CharmBarEntity.cs" />
     <Compile Include="ConfigPage.xaml.cs">
       <DependentUpon>ConfigPage.xaml</DependentUpon>
     </Compile>
@@ -157,9 +158,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\downloading.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\time.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

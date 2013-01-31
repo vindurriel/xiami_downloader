@@ -16,6 +16,7 @@ using Jean_Doe.Common;
 using Jean_Doe.Downloader;
 using Jean_Doe.MusicControl;
 using System.Windows.Data;
+using System.Collections.ObjectModel;
 namespace MusicPlayer
 {
     /// <summary>
@@ -35,30 +36,11 @@ namespace MusicPlayer
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
         #endregion
-        internal class CharmBarEntity
-        {
-            private Binding b = new Binding();
-
-            public Binding Binding
-            {
-                get { return b; }
-                set { b = value; }
-            }
-            public List<CharmAction> Actions = new List<CharmAction>();
-        }
-        internal class CharmAction
-        {
-            public string Label { get; set; }
-            public Action<object, RoutedEventArgs> Action { get; set; }
-            public CharmAction(string l, Action<object, RoutedEventArgs> a)
-            {
-                Label = l;
-                Action = a;
-            }
-        }
         readonly int pageCount = 4;
         FrameworkElement lastPage;
         List<CharmBarEntity> charms = new List<CharmBarEntity>();
+        SongListControl currentListControl = null;
+        List<SongListControl> listControls;
         private int page;
         public int Page
         {
@@ -77,16 +59,24 @@ namespace MusicPlayer
                 if (content != null)
                     showPage(content, isLeft);
                 if (page == 0) return;
-                charmBar.SetBinding(Expander.IsExpandedProperty, charms[page].Binding);
-                charmBarItemWrapper.Children.Clear();
-                var style=FindResource("charmBarButton") as Style;
-                foreach (var item in charms[page].Actions)
-	            {
-                    var btn = new Button() { Content = item.Label };
-                    btn.Click += new RoutedEventHandler(item.Action);
-                    btn.Style = style;
-                    charmBarItemWrapper.Children.Add(btn);
-	            }      
+                var binding = charms[page].Binding;
+                charmBar.SetBinding(Expander.IsExpandedProperty, binding);
+                var notifySource = binding.Source as INotifyPropertyChanged;
+                if (notifySource != null)
+                    notifySource.PropertyChanged += contentControl_PropertyChanged;
+                charmBarItemWrapper.ItemsSource = charms[page].Actions;
+            }
+        }
+
+        void contentControl_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "SelectCount")
+            {
+                var selectCount = (sender as SongListControl).SelectCount;
+                foreach (var item in charmBarItemWrapper.Items.OfType<CharmAction>())
+                {
+                    item.Validate(selectCount, item);
+                }
             }
         }
         void showPage(FrameworkElement content, bool isLeft = true)
@@ -112,49 +102,57 @@ namespace MusicPlayer
             Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing;
             MouseLeftButtonDown += (s, e) => { DragMove(); };
-            MouseDoubleClick += (s, e) =>
-            {
-                MessageBus.Instance.Publish(new MsgChangeWindowState { State = EnumChangeWindowState.Maximized });
-            };
         }
         void initCharms()
         {
+            listControls = new List<SongListControl>{
+                null,
+                list_search,
+                list_download,
+                list_complete,
+                null
+            };
             var int2bool = FindResource("int2bool") as IntToBoolConverter;
             charms.Add(new CharmBarEntity());
             charms.Add(new CharmBarEntity
             {
-                
+
                 Binding = new Binding("SelectCount") { Converter = int2bool, Source = list_search },
-                Actions = new List<CharmAction> 
+                Actions = new ObservableCollection<CharmAction> 
                 { 
                     new CharmAction("下载",this.btn_download_add_Click),
+                    new CharmAction("取消选择",this.btn_cancel_selection_Click),
                 },
             });
             charms.Add(new CharmBarEntity
             {
                 Binding = new Binding("SelectCount") { Converter = int2bool, Source = list_download },
-                Actions = new List<CharmAction> 
+                Actions = new ObservableCollection<CharmAction> 
                 { 
                     new CharmAction("开始",this.btn_download_start_Click),
                     new CharmAction("暂停",this.btn_cancel_Click),
                     new CharmAction("删除",this.btn_remove_Click),
                     new CharmAction("完成",this.btn_complete_Click),
+                    new CharmAction("取消选择",this.btn_cancel_selection_Click),
                 },
             });
             charms.Add(new CharmBarEntity
             {
                 Binding = new Binding("SelectCount") { Converter = int2bool, Source = list_complete },
-                Actions = new List<CharmAction> 
+                Actions = new ObservableCollection<CharmAction> 
                 { 
                     new CharmAction("存为播放列表",this.btn_save_playlist_Click),
-                    new CharmAction("播放",this.btn_play_Click),
+                    new CharmAction("播放/暂停",this.btn_play_Click,(s,me)=>{
+                        me.IsActive = ((int)s) <= 1;
+                    }),
                     new CharmAction("删除",this.btn_remove_complete_Click),
+                    new CharmAction("取消选择",this.btn_cancel_selection_Click),
                 },
             });
             charms.Add(new CharmBarEntity
             {
                 Binding = new Binding("IsDirty") { Source = configPage },
-                Actions = new List<CharmAction> 
+                Actions = new ObservableCollection<CharmAction> 
                 { 
                     new CharmAction("保存",this.btn_save_config_Click),
                 },
@@ -387,9 +385,11 @@ namespace MusicPlayer
             }));
         }
 
-        private void btn_config_Click(object sender, RoutedEventArgs e)
+        private void btn_cancel_selection_Click(object sender, RoutedEventArgs e)
         {
-
+            var currentListControl = listControls[page];
+            if (currentListControl == null) return;
+            currentListControl.UnselectAll();
         }
 
         public void Handle(MsgSearchStateChanged message)
@@ -456,6 +456,14 @@ namespace MusicPlayer
                 busyIndicator.StartSpin();
             else
                 busyIndicator.StopSpin();
+        }
+
+
+        private void charmBarAct(object sender, RoutedEventArgs e)
+        {
+            var sel = charmBarItemWrapper.SelectedItem as CharmAction;
+            if (sel != null && sel.IsActive)
+                sel.Action(sel, null);
         }
     }
 }

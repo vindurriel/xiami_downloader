@@ -93,6 +93,10 @@ namespace Jean_Doe.MusicControl
             dataGrid.SelectionChanged += dataGrid_SelectionChanged;
             HandleShowDetails(Global.AppSettings["ShowDetails"]);
         }
+        public void UnselectAll()
+        {
+            dataGrid.UnselectAll();
+        }
         void HandleShowDetails(string show)
         {
             if(show == "1")

@@ -10,9 +10,8 @@ namespace MusicPlayer
     public class Mp3Player
     {
         static IWavePlayer waveOutDevice = new WaveOut();
-        static WaveStream mainOutputStream;
         public static string FilePath { get; set; }
-        static bool IsPlaying { get { return waveOutDevice != null && waveOutDevice.PlaybackState == PlaybackState.Playing; } }
+        public static bool IsPlaying { get { return waveOutDevice != null && waveOutDevice.PlaybackState == PlaybackState.Playing; } }
         static Mp3Player()
         {
         }

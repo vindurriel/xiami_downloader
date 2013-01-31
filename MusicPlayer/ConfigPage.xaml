@@ -50,7 +50,7 @@
                         Value="Left" />
             </Style>
         </Grid.Resources>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="44,13,0,0">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0">
             <StackPanel>
                 <StackPanel.Resources>
                     <Style TargetType="TextBlock">
@@ -67,7 +67,7 @@
                         <Setter Property="Margin"
                             Value="{StaticResource lineMargin}" />
                         <Setter Property="Padding"
-                            Value="0,10,0,0" />
+                            Value="0,00,0,0" />
                         <Setter Property="Foreground"
                             Value="{DynamicResource skinBrush}" />
                         <Setter Property="FontSize"

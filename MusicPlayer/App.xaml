@@ -48,7 +48,7 @@
                             </Trigger>
                         </Style.Triggers>
                         <Setter Property="Padding"
-                                Value="45,10" />
+                                Value="10,10" />
                         <Setter Property="Margin"
                                 Value="0" />
                         <Setter Property="Foreground"
@@ -139,8 +139,7 @@
                                                   Opacity="0">
                                                 <Border  Background="{DynamicResource skinBrush}"
                                                          CornerRadius="{Binding CornerRadius,ElementName=round}"
-                                                         Height="2"
-                                                         VerticalAlignment="Bottom" />
+                                                         VerticalAlignment="Stretch" />
                                             </Grid>
                                             <Grid Margin="{TemplateBinding Padding}">
                                                 <ContentPresenter x:Name="content"

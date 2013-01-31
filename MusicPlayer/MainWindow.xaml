@@ -20,6 +20,7 @@
                         FontFamily="Segoe UI Light;造字工房悦黑体验版纤细体"
                         Title="虾米下载" BorderWidth="5">
     <controls:ResizeWindow.Resources>
+        <controls:BoolToVisibilityConverter x:Key="bool2vis" />
         <Storyboard x:Key="Maximize">
             <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetProperty="Left" />
             <DoubleAnimation  Duration="0:0:0.2" Storyboard.TargetProperty="Top"  />
@@ -166,20 +167,19 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Border x:Name="border"
-                BorderBrush="{DynamicResource skinBrush}"
+                BorderBrush="Black"
                 Background="{DynamicResource darkBrush}"
-                BorderThickness="0"/>
+                BorderThickness="2"/>
        
-        <Grid>
+        <Grid Margin="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <!--navigation-->
-            <Grid  x:Name="navi" Width="800" HorizontalAlignment="Left"
-                   Height="50"
-                       Margin="0">
+            <Grid  x:Name="navi" Width="700" HorizontalAlignment="Left"
+                   Height="50"  >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
@@ -188,16 +188,7 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="30"/>
-                </Grid.RowDefinitions>
                 <Grid.Resources>
-                    <Style TargetType="Image">
-                        <Setter Property="Width" Value="20"/>
-                        <Setter Property="Height" Value="20"/>
-                        <Setter Property="DockPanel.Dock" Value="Left"/>
-                    </Style>
                     <Style TargetType="TextBlock">
                         <Setter Property="Padding" Value="2"/>
                         <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -208,50 +199,57 @@
                         <Setter Property="HorizontalAlignment" Value="Center"/>
                         <Setter Property="FontSize" Value="20"/>
                     </Style>
+                    <Style TargetType="TextBlock" x:Key="hint">
+                        <Setter Property="Margin" Value="5,10,5,0"/>
+                        <Setter Property="HorizontalAlignment" Value="Center"/>
+                        <Setter Property="FontSize" Value="15"/>
+                    </Style>
                 </Grid.Resources>
-                <TextBlock Text="虾米下载"
-                           Width="100"
-                           Visibility="Collapsed"
-                           FontSize="20"
-                           Foreground="White"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center" />
                 <ToggleButton x:Name="head1"
                               Style="{StaticResource toggleStyle}">
-                    <DockPanel>
-                        <TextBlock Text="&#xE11a;" Style="{StaticResource glyph}"/>
-                        <TextBlock Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_search}" Text="{Binding ItemsCount, ElementName=list_search, StringFormat=\{0\}}" />
-                    </DockPanel>
+                    <StackPanel>
+                        <DockPanel HorizontalAlignment="Center">
+                            <TextBlock Text="&#xE11a;" Style="{StaticResource glyph}"/>
+                            <TextBlock Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_search}" Text="{Binding ItemsCount, ElementName=list_search, StringFormat=\{0\}}" />
+                        </DockPanel>
+                        <TextBlock Text="搜索"  Style="{StaticResource hint}" />
+                    </StackPanel>
+                    
                 </ToggleButton>
-                <TextBlock Text="搜索"  Grid.Row="1"/>
                 <ToggleButton x:Name="head2"
                                   Grid.Column="1"
                               Style="{StaticResource toggleStyle}">
-                    <DockPanel>
-                        <TextBlock Text="&#xE118;" Style="{StaticResource glyph}"/>
-                        <TextBlock Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_download}" Text="{Binding ItemsCount, ElementName=list_download, StringFormat= \{0\}}" />
-                    </DockPanel>
+                    <StackPanel>
+                        <DockPanel HorizontalAlignment="Center">
+                            <TextBlock Text="&#xE118;" Style="{StaticResource glyph}"/>
+                            <TextBlock Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_download}" Text="{Binding ItemsCount, ElementName=list_download, StringFormat= \{0\}}" />
+                        </DockPanel>
+                        <TextBlock Text="下载中"   Style="{StaticResource hint}"/>
+                    </StackPanel>
                 </ToggleButton>
-                <TextBlock Text="下载中"  Grid.Row="1" Grid.Column="1"/>
 
                 <ToggleButton x:Name="head3"
                                     Grid.Column="2"
                               Style="{StaticResource toggleStyle}">
-                    <DockPanel>
-                        <TextBlock Text="&#xE0a5;" Style="{StaticResource glyph}"/>
-                        <TextBlock Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_complete}" Text="{Binding  Path=ItemsCount, ElementName=list_complete, StringFormat=\{0\}}" />
-                    </DockPanel>
+                    <StackPanel Orientation="Vertical" Width="80">
+                        <DockPanel HorizontalAlignment="Center">
+                            <TextBlock Text="&#xE0A5;" Style="{StaticResource glyph}"/>
+                            <TextBlock Visibility="{Binding ItemsCount, Converter={StaticResource int2vis}, ElementName=list_complete}" Text="{Binding ItemsCount, ElementName=list_complete, StringFormat=\{0\}}" />
+                        </DockPanel>
+                        <TextBlock Text="已下载"  Style="{StaticResource hint}" HorizontalAlignment="Center"/>
+                    </StackPanel>
                 </ToggleButton>
-                <TextBlock Text="已下载"  Grid.Row="1" Grid.Column="2"/>
                 <ToggleButton x:Name="head4" 
                                     Grid.Column="3"
                               Style="{StaticResource toggleStyle}">
-                    <DockPanel>
-                        <TextBlock Text="&#xE115;" Style="{StaticResource glyph}"/>
-                    </DockPanel>
+                    <StackPanel Orientation="Vertical">
+                        <DockPanel HorizontalAlignment="Center">
+                            <TextBlock Text="&#xE115;" Style="{StaticResource glyph}"/>
+                        </DockPanel>
+                        <TextBlock Text="配置" Style="{StaticResource hint}"/>
+                    </StackPanel>
                     <!--<TextBlock Text="配置" />-->
                 </ToggleButton>
-                <TextBlock  Grid.Row="1" Grid.Column="3" Text="配置"/>
                 <ToggleButton x:Name="more"
                                     Grid.Column="4"
                                   Click="btn_more_Click"
@@ -261,10 +259,11 @@
                     </DockPanel>
                 </ToggleButton>
             </Grid>
+            <Rectangle Fill="{DynamicResource skinBrush}" Height="2" VerticalAlignment="Bottom"/>
             <!--contents-->
             <Border Grid.Row="1"
                     Background="Transparent">
-                <Grid x:Name="content" Margin="10,0">
+                <Grid x:Name="content" Margin="40,30">
                     <Grid x:Name="page1"
                           Opacity="0"
                           IsHitTestVisible="false">
@@ -320,11 +319,57 @@
                                    IsIndeterminate="False" ItemWidth="5" />
             </Grid>
         </Grid>
-        <Expander x:Name="charmBar" Grid.RowSpan="3" HorizontalAlignment="Right" Style="{StaticResource ActionBarStyle}">
-            <StackPanel x:Name="charmBarItemWrapper">
-            </StackPanel>
+        <Expander x:Name="charmBar" Grid.RowSpan="3" HorizontalAlignment="Right" Margin="2" Style="{StaticResource ActionBarStyle}">
+            <ListView    BorderThickness="0" Background="Transparent" x:Name="charmBarItemWrapper" SelectionMode="Single">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Margin" Value="0,20"/>
+                        <Setter Property="Padding" Value="20,10,0,10"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <EventSetter Event="MouseLeftButtonUp" Handler="charmBarAct"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border Name="Border" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                                        <Border.Background>
+                                            <SolidColorBrush x:Name="BorderBg" Color="Black"/>
+                                        </Border.Background>
+                                        <ContentPresenter/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Trigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard Storyboard.TargetName="BorderBg">
+                                                        <ColorAnimation Storyboard.TargetProperty="Color" Duration="0:0:0.2" To="#333"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.EnterActions>
+                                            <Trigger.ExitActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard Storyboard.TargetName="BorderBg">
+                                                        <ColorAnimation Storyboard.TargetProperty="Color"  Duration="0:0:0.2" To="Black"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.ExitActions>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <TextBlock Foreground="Gray"  Text="{Binding Label}"/>
+                            <TextBlock Foreground="White"  Visibility="{Binding IsActive,Converter={StaticResource bool2vis}}" Text="{Binding Label}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </Expander>
-        <controls:TitleBar    HorizontalAlignment="Right" VerticalAlignment="Top" Width="150" x:Name="titleBar" 
-                                 Margin="0,0,0,0" />
+        <controls:TitleBar  HorizontalAlignment="Right" VerticalAlignment="Top" Width="150" x:Name="titleBar" 
+                                 Margin="2" />
     </Grid>
 </controls:ResizeWindow>
