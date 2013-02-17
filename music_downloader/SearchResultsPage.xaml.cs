@@ -37,6 +37,8 @@ namespace music_downloader
         protected override async void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
             var queryText = navigationParameter as String;
+            this.DefaultViewModel["QueryText"] = '\u201c' + queryText + '\u201d';
+            this.DefaultViewModel["Results"] = results;
             await Common.SearchManager.Search(queryText);
            
 
@@ -51,12 +53,10 @@ namespace music_downloader
 
             var filterList = new List<Filter>();
             filterList.Add(new Filter("All", 0, true));
-
-            // 通过视图模型沟通结果
-            this.DefaultViewModel["Results"] = results;
-            this.DefaultViewModel["QueryText"] = '\u201c' + queryText + '\u201d';
             this.DefaultViewModel["Filters"] = filterList;
             this.DefaultViewModel["ShowFilters"] = filterList.Count > 1;
+            // 通过视图模型沟通结果
+           
         }
 
         /// <summary>

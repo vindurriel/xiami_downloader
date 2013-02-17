@@ -142,6 +142,7 @@ namespace MusicPlayer
                 Actions = new ObservableCollection<CharmAction> 
                 { 
                     new CharmAction("存为播放列表",this.btn_save_playlist_Click),
+                    new CharmAction("复制文件到剪贴板",this.btn_copy_Click),
                     new CharmAction("播放/暂停",this.btn_play_Click,(s,me)=>{
                         me.IsActive = ((int)s) <= 1;
                     }),
@@ -337,6 +338,19 @@ namespace MusicPlayer
             {
                 SavePlaylist(win.FileName);
             }
+        }
+        void btn_copy_Click(object sender, RoutedEventArgs e)
+        {
+            var files = new System.Collections.Specialized.StringCollection();
+            foreach (var item in list_complete.SelectedItems)
+            {
+                if (string.IsNullOrEmpty(item.Song.FilePath))
+                    files.Add(System.IO.Path.Combine(".", item.Dir, item.FileNameBase + ".mp3"));
+                else
+                    files.Add(item.Song.FilePath);
+            }
+            if(files.Count>0)
+                Clipboard.SetFileDropList(files);
         }
         void btn_complete_Click(object sender, RoutedEventArgs e)
         {
