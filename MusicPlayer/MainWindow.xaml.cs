@@ -101,7 +101,8 @@ namespace MusicPlayer
             loadSongLists();
             Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing;
-            MouseLeftButtonDown += (s, e) => { DragMove(); };
+            this.MouseLeftButtonDown += (s, e) => this.DragMove();
+            new MusicSliderConnector(slider);
         }
         void initCharms()
         {
@@ -145,7 +146,7 @@ namespace MusicPlayer
                     new CharmAction("复制文件到剪贴板",this.btn_copy_Click),
                     new CharmAction("播放/暂停",this.btn_play_Click,(s,me)=>{
                         me.IsActive = ((int)s) <= 1;
-                    }),
+                    }),                   
                     new CharmAction("删除",this.btn_remove_complete_Click),
                     new CharmAction("取消选择",this.btn_cancel_selection_Click),
                 },
@@ -349,7 +350,7 @@ namespace MusicPlayer
                 else
                     files.Add(item.Song.FilePath);
             }
-            if(files.Count>0)
+            if (files.Count > 0)
                 Clipboard.SetFileDropList(files);
         }
         void btn_complete_Click(object sender, RoutedEventArgs e)

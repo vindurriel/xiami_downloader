@@ -259,7 +259,6 @@
                     </DockPanel>
                 </ToggleButton>
             </Grid>
-            <Rectangle Fill="{DynamicResource skinBrush}" Height="2" VerticalAlignment="Bottom"/>
             <!--contents-->
             <Border Grid.Row="1"
                     Background="Transparent">
@@ -306,7 +305,7 @@
                     </Grid>
                 </Grid>
             </Border>
-
+            <Slider Foreground="{DynamicResource skinBrush}" Grid.Row="1" x:Name="slider" Margin="0,-10,0,0" VerticalAlignment="Top"/>
             <Grid Height="15" Grid.Row="2" >
                 <TextBlock x:Name="statusBar"
                        HorizontalAlignment="Center"
