@@ -101,7 +101,6 @@ namespace MusicPlayer
             loadSongLists();
             Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing;
-            this.MouseLeftButtonDown += (s, e) => this.DragMove();
             new MusicSliderConnector(slider);
         }
         void initCharms()
