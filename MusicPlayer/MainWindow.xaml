@@ -320,7 +320,7 @@
             </Grid>
         </Grid>
         <Expander x:Name="charmBar" Grid.RowSpan="3" HorizontalAlignment="Right" Margin="2" Style="{StaticResource ActionBarStyle}">
-            <ListView    BorderThickness="0" Background="Transparent" x:Name="charmBarItemWrapper" SelectionMode="Single">
+            <ListView  ScrollViewer.HorizontalScrollBarVisibility="Hidden"  BorderThickness="0" Background="Transparent" x:Name="charmBarItemWrapper" SelectionMode="Single">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
                         <Setter Property="Margin" Value="0,20"/>
