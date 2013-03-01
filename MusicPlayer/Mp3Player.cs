@@ -33,6 +33,10 @@ namespace MusicPlayer
 
         static void timer_Tick(object sender, EventArgs e)
         {
+            if (waveStream.Length<=waveStream.Position)
+            {
+                CurrentTime = TimeSpan.Zero;
+            }
             if (TimeChanged != null && waveStream!=null)
                 TimeChanged(null, new TimeChangedEventArgs { Total = TimeSpan.Zero, Current = waveStream.CurrentTime });
         }
