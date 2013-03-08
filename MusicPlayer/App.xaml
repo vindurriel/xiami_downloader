@@ -12,9 +12,9 @@
                 <ResourceDictionary>
                     <Color x:Key="skinColor">Red</Color>
                     <SolidColorBrush x:Key="selectBrush"
-                                     Color="#a555" />
+                                     Color="#222" />
                     <SolidColorBrush x:Key="darkBrush"
-                                     Color="#333333" />
+                                     Color="#333" />
                     <SolidColorBrush x:Key="lightBrush"
                                      Color="#aaa" />
                     <SolidColorBrush  x:Key='skinBrush' Color="{DynamicResource skinColor}" />
@@ -124,7 +124,7 @@
                                                 x:Name="round" />
                                         <Grid>
                                             <Grid x:Name="NormalRect">
-                                                <Border Background="{StaticResource darkBrush}"
+                                                <Border Background="Black"
                                                         CornerRadius="{Binding CornerRadius,ElementName=round}"
                                                         BorderThickness="0" />
                                             </Grid>
@@ -137,7 +137,7 @@
                                             </Grid>
                                             <Grid x:Name="PressRect"
                                                   Opacity="0">
-                                                <Border  Background="{DynamicResource skinBrush}"
+                                                <Border  Background="{StaticResource darkBrush}"
                                                          CornerRadius="{Binding CornerRadius,ElementName=round}"
                                                          VerticalAlignment="Stretch" />
                                             </Grid>

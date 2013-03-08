@@ -22,7 +22,7 @@
                         <Setter Property="Background"
                 Value="Transparent" />
                         <Setter Property="Foreground"
-                Value="{DynamicResource skinBrush}" /> 
+                Value="{DynamicResource darkBrush}" /> 
                     </Style>
                     <DropShadowEffect x:Key="shadow"
                                       Color="Black"

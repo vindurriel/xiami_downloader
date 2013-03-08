@@ -15,7 +15,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
     <Style x:Key="SliderThumbStyle" TargetType="{x:Type Thumb}">
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="OverridesDefaultStyle" Value="true"/>
@@ -28,10 +27,6 @@
                         <Ellipse 
                           Width="10" Height="10"
                          Fill="{TemplateBinding Background}"
-                          StrokeThickness="0" />
-                        <Ellipse 
-                          Width="10" Height="10"
-                         Fill="#77ffffff"
                           StrokeThickness="0" />
                         <Canvas>
                             <Ellipse Canvas.Left="-15" Canvas.Top="-15" 
@@ -90,17 +85,16 @@
       Height="2"
       Grid.Row="1"
       Background="{TemplateBinding Background}"
-                Opacity="0.3"
       BorderThickness="0" />
             <Track Grid.Row="1" Name="PART_Track">
                 <Track.DecreaseRepeatButton>
                     <RepeatButton 
           Style="{StaticResource SliderButtonStyle}" 
-                        Background="{TemplateBinding Background}"
+                        Background="{TemplateBinding Foreground}"
           Command="Slider.DecreaseLarge" />
                 </Track.DecreaseRepeatButton>
                 <Track.Thumb>
-                    <Thumb Background="{TemplateBinding Background}" Foreground="{TemplateBinding Foreground}" Style="{StaticResource SliderThumbStyle}" />
+                    <Thumb Background="{TemplateBinding Foreground}"  Style="{StaticResource SliderThumbStyle}" />
                 </Track.Thumb>
                 <Track.IncreaseRepeatButton>
                     <RepeatButton  
