@@ -19,23 +19,26 @@
     <Style x:Key="SliderThumbStyle" TargetType="{x:Type Thumb}">
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="OverridesDefaultStyle" Value="true"/>
-        <Setter Property="Height" Value="20"/>
-        <Setter Property="Width" Value="20"/>
+        <Setter Property="Height" Value="10"/>
+        <Setter Property="Width" Value="10"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
                     <Grid>
-                        <Rectangle Fill="{TemplateBinding Foreground}" Height="2"/>
                         <Ellipse 
                           Width="10" Height="10"
-                         Fill="{TemplateBinding Foreground}"
+                         Fill="{TemplateBinding Background}"
+                          StrokeThickness="0" />
+                        <Ellipse 
+                          Width="10" Height="10"
+                         Fill="#77ffffff"
                           StrokeThickness="0" />
                         <Canvas>
-                            <Ellipse Canvas.Left="-10" Canvas.Top="-10" 
+                            <Ellipse Canvas.Left="-15" Canvas.Top="-15" 
                           Width="40" Height="40"
                             Opacity="0"
                           Name="Ellipse" 
-                         Fill="{TemplateBinding Foreground}"
+                         Fill="{TemplateBinding Background}"
                           StrokeThickness="0" />
                         </Canvas>
                       
@@ -86,18 +89,18 @@
       CornerRadius="0" 
       Height="2"
       Grid.Row="1"
-      Background="{TemplateBinding Foreground}"
-                Opacity="0.5"
+      Background="{TemplateBinding Background}"
+                Opacity="0.3"
       BorderThickness="0" />
             <Track Grid.Row="1" Name="PART_Track">
                 <Track.DecreaseRepeatButton>
                     <RepeatButton 
           Style="{StaticResource SliderButtonStyle}" 
-                        Background="{TemplateBinding Foreground}"
+                        Background="{TemplateBinding Background}"
           Command="Slider.DecreaseLarge" />
                 </Track.DecreaseRepeatButton>
                 <Track.Thumb>
-                    <Thumb Style="{StaticResource SliderThumbStyle}" />
+                    <Thumb Background="{TemplateBinding Background}" Foreground="{TemplateBinding Foreground}" Style="{StaticResource SliderThumbStyle}" />
                 </Track.Thumb>
                 <Track.IncreaseRepeatButton>
                     <RepeatButton  

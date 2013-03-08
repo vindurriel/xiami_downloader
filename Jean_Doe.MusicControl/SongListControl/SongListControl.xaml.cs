@@ -79,7 +79,7 @@ namespace Jean_Doe.MusicControl
                 return dataGrid.SelectedItems.OfType<SongViewModel>();
             }
         }
-
+        public DataGrid DataGrid { get { return this.dataGrid; } }
         public SongListControl()
         {
             var a = new Image();

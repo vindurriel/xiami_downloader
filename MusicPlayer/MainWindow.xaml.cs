@@ -294,7 +294,7 @@ namespace MusicPlayer
         int lastPageNum = 0;
         void btn_more_Click(object sender, RoutedEventArgs e)
         {
-
+            var more = sender as ToggleButton;
             if (more.IsChecked == true)
             {
                 lastPageNum = Page;
@@ -306,6 +306,10 @@ namespace MusicPlayer
             }
             var anim = FindResource(more.IsChecked == true ? "anim_show_more" : "anim_hide_more") as Storyboard;
             anim.Begin();
+        }
+        void btn_move_MouseDown(object sender, RoutedEventArgs e)
+        {
+            this.DragMove();
         }
         void btn_play_Click(object sender, RoutedEventArgs e)
         {

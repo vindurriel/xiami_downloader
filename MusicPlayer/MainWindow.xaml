@@ -170,7 +170,7 @@
                 BorderBrush="Black"
                 Background="{DynamicResource darkBrush}"
                 BorderThickness="2"/>
-       
+
         <Grid Margin="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -178,15 +178,15 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <!--navigation-->
-            <Grid  x:Name="navi" Width="700" HorizontalAlignment="Left"
+            <Grid  x:Name="navi"   HorizontalAlignment="Stretch"
                    Height="50"  >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.Resources>
                     <Style TargetType="TextBlock">
@@ -214,7 +214,7 @@
                         </DockPanel>
                         <TextBlock Text="搜索"  Style="{StaticResource hint}" />
                     </StackPanel>
-                    
+
                 </ToggleButton>
                 <ToggleButton x:Name="head2"
                                   Grid.Column="1"
@@ -250,14 +250,23 @@
                     </StackPanel>
                     <!--<TextBlock Text="配置" />-->
                 </ToggleButton>
-                <ToggleButton x:Name="more"
-                                    Grid.Column="4"
-                                  Click="btn_more_Click"
-                              Style="{StaticResource toggleStyle}">
-                    <DockPanel>
-                        <TextBlock Text="&#xE0C2;" FontFamily="Segoe Ui Symbol"/>
-                    </DockPanel>
-                </ToggleButton>
+                <Grid  Grid.Column="4" >
+                    <Grid Background="{DynamicResource skinBrush}" MouseLeftButtonDown="btn_move_MouseDown">
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter  Property="Opacity" Value="1"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="False">
+                                        <Setter  Property="Opacity" Value="0"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                    </Grid>
+                </Grid>
+               
             </Grid>
             <!--contents-->
             <Border Grid.Row="1"
@@ -292,7 +301,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <controls:CompleteSongListControl x:Name="list_complete" />
-                        
+
                     </Grid>
                     <Grid x:Name="page4"
                           Opacity="0"
@@ -305,7 +314,7 @@
                     </Grid>
                 </Grid>
             </Border>
-            <Slider Foreground="{DynamicResource skinBrush}" Grid.Row="1" x:Name="slider" Margin="0,-10,0,0" VerticalAlignment="Top"/>
+            <Slider Foreground="White" Background="{DynamicResource skinBrush}" Grid.Row="1" x:Name="slider" Margin="0,-10,0,0" VerticalAlignment="Top"/>
             <Grid Height="15" Grid.Row="2" >
                 <TextBlock x:Name="statusBar"
                        HorizontalAlignment="Center"
@@ -368,7 +377,6 @@
                 </ListView.ItemTemplate>
             </ListView>
         </Expander>
-        <controls:TitleBar  HorizontalAlignment="Right" VerticalAlignment="Top" Width="150" x:Name="titleBar" 
-                                 Margin="2" />
+        <controls:TitleBar FontSize="20" HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top"  Width="150" Height="50" x:Name="titleBar"  />
     </Grid>
 </controls:ResizeWindow>

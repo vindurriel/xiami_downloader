@@ -58,7 +58,7 @@
                         <Setter Property="FontFamily"
                                 Value="Segoe UI Light;造字工房悦黑体验版纤细体" />
                         <Setter Property="MinWidth"
-                                Value="80" />
+                                Value="100" />
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="ToggleButton">
