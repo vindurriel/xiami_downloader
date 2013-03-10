@@ -10,8 +10,7 @@
         <my:BoolToVisibilityConverter x:Key="bool2vis" />
         <my:DivideConverter x:Key="divconv" />
         <Storyboard x:Key="FadeOut">
-            <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="1"
-                                            To="0" />
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="1" To="0" />
         </Storyboard>
         <Style x:Key="linkStyle" TargetType="{x:Type Hyperlink}">
             <Style.Triggers>
@@ -26,9 +25,8 @@
         <Style TargetType="TextBlock" x:Key="label_base">
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontSize" Value="15" />
             <Setter Property="FontFamily" Value="Segoe UI Light" />
-            <Setter Property="Margin" Value="0" />
             <Setter Property="TextTrimming" Value="WordEllipsis" />
         </Style>
         <Style TargetType="TextBlock" x:Key="tag_base" BasedOn="{StaticResource label_base}">
@@ -46,27 +44,10 @@
             </Style.Triggers>
         </Style>
         <DataTemplate x:Key="imageTemplate">
-            <Grid Background="{DynamicResource selectBrush}" MouseLeftButtonUp="btn_open_click" Margin="5">
+            <Grid  Margin="5">
                 <Image TargetUpdated="Image_SourceUpdated_1" Width="60" Height="60" Margin="0"
                         Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
                         Stretch="Uniform"></Image>
-                <!--<Grid
-                    Background="#01ffffff"
-                    Visibility="{Binding TrackNo,
-                                 Converter={StaticResource int2vis}}">
-                    <Border
-                        BorderBrush="{DynamicResource skinBrush}"
-                        BorderThickness="5" />
-                    <Path
-                        Data="M 25 0 L 25 25 L 0 25 Z"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Bottom"
-                        Cursor="Hand"
-                        Width="25"
-                        Height="25"
-                        Fill="{DynamicResource skinBrush}" />
-
-                </Grid>-->
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="trackNoTemplate">
@@ -170,10 +151,6 @@
         </DataTemplate>
         <DataTemplate x:Key="SongTemplate">
             <Grid Margin="5">
-                <!--<Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>-->
                 <DockPanel>
                     <TextBlock Style="{StaticResource label_base}">
                     <Hyperlink Style="{StaticResource linkStyle}" Click='go_song'>
@@ -187,20 +164,143 @@
                 </DockPanel>
             </Grid>
         </DataTemplate>
+        <DataTemplate x:Key="downloadingTemplate">
+            <Grid Width="220" Height="70">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Image TargetUpdated="Image_SourceUpdated_1" Width="60" Height="60"  
+                       VerticalAlignment="Top"
+                        Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
+                        Stretch="Uniform"/>
+                <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10,0">
+                    <TextBlock Text="{Binding Name}" FontSize="18" Style="{StaticResource label_base}"/>
+                    <TextBlock Style="{StaticResource label_base}"  Text="{Binding ArtistName}" />
+                    <Grid  MinWidth="100">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height='Auto' />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{Binding Status}" Opacity="0.5"  Style="{StaticResource label_base}" />
+                        <!--下载状态-->
+                        <Grid Grid.Row="1">
+                            <Grid.Resources>
+                                <Style TargetType='Rectangle'>
+                                    <Setter Property='MinWidth' Value='80' />
+                                    <Setter Property='Height' Value='5' />
+                                    <Setter Property='Margin' Value='0,0,3,0' />
+                                    <Setter Property='Fill' Value='{DynamicResource lightBrush}' />
+                                </Style>
+                            </Grid.Resources>
+                            <Grid>
+                                <Rectangle Width="{Binding  ElementName=mp3Indicator,Path=ActualWidth}"
+                                HorizontalAlignment="Left">
+                                    <Rectangle.RenderTransform>
+                                        <ScaleTransform ScaleX="{Binding Percent}" />
+                                    </Rectangle.RenderTransform>
+                                </Rectangle>
+                                <Rectangle ToolTip='Mp3下载' x:Name="mp3Indicator"
+                                Opacity='{Binding HasMp3,Converter={StaticResource bool2opa}}' />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="completeTemplate">
+            <Grid Width="220" Height="70">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Image TargetUpdated="Image_SourceUpdated_1" Width="60" Height="60"  
+                        Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
+                        Stretch="Uniform" VerticalAlignment="Top"/>
+                <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10,0">
+                    <TextBlock Text="{Binding Name}" FontSize="18"  Style="{DynamicResource label_base}"/>
+                    <TextBlock Style="{StaticResource label_base}"   Text="{Binding ArtistName}" />
+                    <TextBlock Style="{StaticResource label_base}"   Opacity="0.5" Text="{Binding Type}" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
         <SolidColorBrush Color='{DynamicResource skinColor}' Opacity="0.2" x:Key='skinBrushFade' />
         <my:MyStyleSelector x:Key="styleSelector" AlbumTemplate="{StaticResource AlbumTemplate}"
                 ArtistTemplate="{StaticResource ArtistTemplate}" SongTemplate="{StaticResource SongTemplate}"
                 CollectionTemplate="{StaticResource CollectionTemplate}" />
     </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <DataGrid Grid.Row="2" Visibility="{Binding Path=ItemsCount, ElementName=me,Converter={StaticResource int2vis}}"
+        <ListView ItemTemplate="{StaticResource completeTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            BorderThickness="0" 
+            Background="Transparent" 
+            x:Name="listView" Foreground="White" SelectionMode="Multiple" >
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="Margin" Value="5"/>
+                    <Setter Property="Padding" Value="15"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                <Grid>
+                                    <Rectangle x:Name="normal" Fill="Transparent"/>
+                                    <Rectangle x:Name="mouseover" Opacity="0" Fill="#3fff"/>
+                                    <Rectangle x:Name="pressed" Opacity="0" Fill="{DynamicResource skinBrush}"/>
+                                    <ContentPresenter Margin="{TemplateBinding Padding}"/>
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup x:Name="CommonStates">
+                                            <VisualState x:Name="Normal"/>
+                                            <VisualState x:Name="MouseOver">
+                                                <Storyboard>
+                                                    <DoubleAnimation 
+                                                        Storyboard.TargetName="mouseover" 
+                                                        Storyboard.TargetProperty="Opacity" 
+                                                        Duration="0:0:0.2" To="1"/>
+                                                </Storyboard>
+                                            </VisualState>
+                                            <VisualState x:Name="Disabled"/>
+                                        </VisualStateGroup>
+                                        <VisualStateGroup x:Name="SelectionStates">
+                                            <VisualState x:Name="Selected">
+                                                <Storyboard>
+                                                    <DoubleAnimation 
+                                                        Storyboard.TargetName="pressed" 
+                                                        Storyboard.TargetProperty="Opacity" 
+                                                        Duration="0:0:0.2" To="1"/>
+                                                </Storyboard>
+                                            </VisualState>
+                                            <VisualState x:Name="SelectedUnfocused">
+                                                <Storyboard>
+                                                    <DoubleAnimation 
+                                                        Storyboard.TargetName="pressed" 
+                                                        Storyboard.TargetProperty="Opacity" 
+                                                        Duration="0:0:0.2" To="1"/>
+                                                </Storyboard>
+                                            </VisualState>
+                                            <VisualState x:Name="Unselected"/>
+                                        </VisualStateGroup>
+                                        <VisualStateGroup x:Name="FocusStates">
+                                            <VisualState x:Name="Focused"/>
+                                        </VisualStateGroup>
+                                        <VisualStateGroup x:Name="ValidationStates">
+                                            <VisualState x:Name="InvalidFocused"/>
+                                            <VisualState x:Name="InvalidUnfocused"/>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel   HorizontalAlignment="Left" Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
+        <!--<DataGrid  Visibility="{Binding Path=ItemsCount, ElementName=me,Converter={StaticResource int2vis}}"
                 ScrollViewer.CanContentScroll="False"
-                  HeadersVisibility="Column" BorderThickness="0" Background="Transparent" GridLinesVisibility="None"
+                  HeadersVisibility="None" BorderThickness="0" Background="Transparent" GridLinesVisibility="None"
                 VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
                 ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                 SelectionUnit="FullRow" CanUserAddRows="False" x:Name="dataGrid" AutoGenerateColumns="false">
@@ -232,8 +332,8 @@
                     </Style.Triggers>
                     <EventSetter Event="MouseLeftButtonDown" Handler="btn_select_click" />
                     <Setter Property="Background" Value="Transparent" />
-                    <Setter Property="Margin" Value="0,0,0,10" />
-                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                    <Setter Property="Margin" Value="0,15" />
+                    <Setter Property="BorderThickness" Value="0,0,0,0" />
                     <Setter Property="BorderBrush" Value="#555" />
                 </Style>
             </DataGrid.RowStyle>
@@ -260,7 +360,7 @@
                     <Setter Property="Padding" Value="10,2" />
                     <Setter Property="HorizontalContentAlignment" Value="Left" />
                     <Setter Property="VerticalContentAlignment" Value="Center"/>
-                    <Style.Triggers> 
+                    <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
                             <Setter Property="Background" Value="#888" />
                             <Setter Property="Foreground" Value="White" />
@@ -296,6 +396,6 @@
                 <DataGridTemplateColumn SortMemberPath="AlbumName" IsReadOnly='True' Header="专辑" x:Name="col_album"
                         Width="Auto" CellTemplate="{StaticResource AlbumTemplate}" />
             </DataGrid.Columns>
-        </DataGrid>
+        </DataGrid>-->
     </Grid>
 </UserControl>

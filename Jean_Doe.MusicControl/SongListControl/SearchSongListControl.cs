@@ -23,7 +23,7 @@ namespace Jean_Doe.MusicControl
                 SortDirection=ListSortDirection.Ascending,
                 SortMemberPath = "PlayTimes",
             };
-            dataGrid.Columns.Add(col);
+            //dataGrid.Columns.Add(col);
             Items.CollectionChanged += Items_CollectionChanged;
         }
         private double maxPlayTimes = 1;

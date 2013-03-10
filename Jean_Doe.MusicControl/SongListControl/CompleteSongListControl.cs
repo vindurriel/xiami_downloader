@@ -17,13 +17,13 @@ namespace Jean_Doe.MusicControl
         public CompleteSongListControl()
         {
             MessageBus.Instance.Subscribe(this);
-            dataGrid.Columns.Add(new DataGridTemplateColumn
-            {
-                Header = "完成日期",
-                CellTemplate = dataGrid.FindResource("dateTemplate") as DataTemplate,
-                SortMemberPath = "Date",
-                SortDirection = System.ComponentModel.ListSortDirection.Ascending,
-            });
+            //dataGrid.Columns.Add(new DataGridTemplateColumn
+            //{
+            //    Header = "完成日期",
+            //    CellTemplate = dataGrid.FindResource("dateTemplate") as DataTemplate,
+            //    SortMemberPath = "Date",
+            //    SortDirection = System.ComponentModel.ListSortDirection.Ascending,
+            //});
             Items.CollectionChanged += Items_CollectionChanged;
         }
 

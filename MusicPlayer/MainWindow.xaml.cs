@@ -64,7 +64,7 @@ namespace MusicPlayer
                 var notifySource = binding.Source as INotifyPropertyChanged;
                 if (notifySource != null)
                     notifySource.PropertyChanged += contentControl_PropertyChanged;
-                charmBarItemWrapper.ItemsSource = charms[page].Actions;
+                charmBar.ItemsSource = charms[page].Actions;
             }
         }
 
@@ -73,10 +73,7 @@ namespace MusicPlayer
             if (e.PropertyName == "SelectCount")
             {
                 var selectCount = (sender as SongListControl).SelectCount;
-                foreach (var item in charmBarItemWrapper.Items.OfType<CharmAction>())
-                {
-                    item.Validate(selectCount, item);
-                }
+                charmBar.Validate(selectCount);
             }
         }
         void showPage(FrameworkElement content, bool isLeft = true)
@@ -102,6 +99,7 @@ namespace MusicPlayer
             Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing;
             new MusicSliderConnector(slider);
+            slider.Visibility = Visibility.Collapsed;
         }
         void initCharms()
         {
@@ -116,7 +114,6 @@ namespace MusicPlayer
             charms.Add(new CharmBarEntity());
             charms.Add(new CharmBarEntity
             {
-
                 Binding = new Binding("SelectCount") { Converter = int2bool, Source = list_search },
                 Actions = new ObservableCollection<CharmAction> 
                 { 
@@ -313,6 +310,7 @@ namespace MusicPlayer
         }
         void btn_play_Click(object sender, RoutedEventArgs e)
         {
+            slider.Visibility = Visibility.Visible;
             foreach (var item in list_complete.SelectedItems)
             {
                 if (!item.HasMp3) continue;
@@ -474,14 +472,6 @@ namespace MusicPlayer
                 busyIndicator.StartSpin();
             else
                 busyIndicator.StopSpin();
-        }
-
-
-        private void charmBarAct(object sender, RoutedEventArgs e)
-        {
-            var sel = charmBarItemWrapper.SelectedItem as CharmAction;
-            if (sel != null && sel.IsActive)
-                sel.Action(sel, null);
         }
     }
 }

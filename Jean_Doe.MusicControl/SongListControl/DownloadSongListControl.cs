@@ -18,6 +18,8 @@ namespace Jean_Doe.MusicControl
     {
         public DownloadSongListControl()
         {
+            listView.ItemTemplate = this.Resources["downloadingTemplate"] as DataTemplate;
+
             //dataGrid.Columns.Insert(0, new DataGridTemplateColumn
             //{
             //    CellTemplate = dataGrid.FindResource("imageTemplate") as DataTemplate,
@@ -25,13 +27,14 @@ namespace Jean_Doe.MusicControl
             //    CanUserResize=false,
             //    CanUserReorder=false
             //});
-            dataGrid.Columns.Add(new DataGridTemplateColumn
-            {
-                CellTemplate = dataGrid.FindResource("statusTemplate") as DataTemplate,
-                Width = DataGridLength.SizeToCells,
-                Header = "状态",
-                SortMemberPath = "Status"
-            });
+
+            //dataGrid.Columns.Add(new DataGridTemplateColumn
+            //{
+            //    CellTemplate = dataGrid.FindResource("statusTemplate") as DataTemplate,
+            //    Width = DataGridLength.SizeToCells,
+            //    Header = "状态",
+            //    SortMemberPath = "Status"
+            //});
             Items.CollectionChanged+=Items_CollectionChanged;
         }
 

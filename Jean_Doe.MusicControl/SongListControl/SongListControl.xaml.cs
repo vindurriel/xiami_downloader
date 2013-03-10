@@ -44,7 +44,7 @@ namespace Jean_Doe.MusicControl
         {
             UIHelper.RunOnUI(() =>
             {
-                var ui=dataGrid.ItemContainerGenerator.ContainerFromItem(song);
+                var ui=listView.ItemContainerGenerator.ContainerFromItem(song);
                 var storyboard=this.FindResource("FadeOut") as Storyboard;
                 Storyboard.SetTarget(storyboard,ui);
                 storyboard.Completed += (s, e) =>
@@ -76,38 +76,38 @@ namespace Jean_Doe.MusicControl
         {
             get
             {
-                return dataGrid.SelectedItems.OfType<SongViewModel>();
+                return listView.SelectedItems.OfType<SongViewModel>();
             }
         }
-        public DataGrid DataGrid { get { return this.dataGrid; } }
+        //public DataGrid DataGrid { get { return this.dataGrid; } }
         public SongListControl()
         {
             var a = new Image();
             InitializeComponent();
             Global.ListenToEvent("ShowDetails", HandleShowDetails);
-            col_album.Visibility = Visibility.Collapsed;
+            //col_album.Visibility = Visibility.Collapsed;
             MessageBus.Instance.Subscribe(this);
             items = new MusicViewModelList();
             items.CollectionChanged += items_CollectionChanged;
-            dataGrid.ItemsSource = items;
-            dataGrid.SelectionChanged += dataGrid_SelectionChanged;
+            listView.ItemsSource = items;
+            listView.SelectionChanged += dataGrid_SelectionChanged;
             HandleShowDetails(Global.AppSettings["ShowDetails"]);
         }
         public void UnselectAll()
         {
-            dataGrid.UnselectAll();
+            listView.UnselectAll();
         }
         void HandleShowDetails(string show)
         {
             if(show == "1")
             {
-                col_artist.Visibility = Visibility.Visible;
-                col_album.Visibility = Visibility.Visible;
+                //col_artist.Visibility = Visibility.Visible;
+                //col_album.Visibility = Visibility.Visible;
             }
             else
             {
-                col_album.Visibility = Visibility.Collapsed;
-                col_artist.Visibility = Visibility.Collapsed;
+                //col_album.Visibility = Visibility.Collapsed;
+                //col_artist.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -133,12 +133,6 @@ namespace Jean_Doe.MusicControl
             e.Handled = true;
             s.Open();
         }
-        protected virtual void btn_select_click(object sender, RoutedEventArgs e)
-        {
-             var row=sender as DataGridRow;
-             if(row == null) return;
-             row.IsSelected = !row.IsSelected;
-        }
 
         protected virtual async void link_album(object sender, RoutedEventArgs e)
         {
@@ -146,15 +140,6 @@ namespace Jean_Doe.MusicControl
             if(t == null) return;
             var id = t.AlbumId;
             await SearchManager.GetSongOfType(t.AlbumId, EnumMusicType.album);
-        }
-
-        void fitToContent()
-        {
-            foreach(DataGridColumn column in dataGrid.Columns)
-            {
-                //if you want to size ur column as per the cell content
-                column.Width = DataGridLength.SizeToCells;
-            }
         }
 
         protected virtual async void link_artist(object sender, RoutedEventArgs e)
@@ -212,11 +197,11 @@ namespace Jean_Doe.MusicControl
         }
         private void select_all_Click(object sender, RoutedEventArgs e)
         {
-            dataGrid.SelectAll();
+            listView.SelectAll();
         }
         private void unselect_all_Click(object sender, RoutedEventArgs e)
         {
-            dataGrid.UnselectAll();
+            listView.UnselectAll();
         }
 
         private void btn_play_Click(object sender, RoutedEventArgs e)

@@ -80,6 +80,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ActionBar.xaml.cs">
+      <DependentUpon>ActionBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CharmBarEntity.cs" />
     <Compile Include="ConfigPage.xaml.cs">
       <DependentUpon>ConfigPage.xaml</DependentUpon>
@@ -87,6 +90,10 @@
     <Compile Include="Mp3Player.cs" />
     <Compile Include="MusicSliderConnector.cs" />
     <Compile Include="WindowManager.cs" />
+    <Page Include="ActionBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ConfigPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -107,6 +114,10 @@
     <Page Include="Slider.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ToggleButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

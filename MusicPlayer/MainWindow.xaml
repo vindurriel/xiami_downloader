@@ -1,5 +1,4 @@
-﻿<controls:ResizeWindow
-                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<controls:ResizeWindow xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                         xmlns:my="clr-namespace:MusicPlayer"
                         xmlns:controls="http://jean.doe/controls"
@@ -14,8 +13,8 @@
                         FontSize="15"
                         ResizeMode="CanResizeWithGrip"
                         x:Name="me"
-                     MinHeight="480"
-                    SizeToContent="Manual"
+                        MinHeight="480"
+                        SizeToContent="Manual"
                          MinWidth="640"
                         FontFamily="Segoe UI Light;造字工房悦黑体验版纤细体"
                         Title="虾米下载" BorderWidth="5">
@@ -27,49 +26,6 @@
             <DoubleAnimation  Duration="0:0:0.2" Storyboard.TargetProperty="Width" />
             <DoubleAnimation  Duration="0:0:0.2" Storyboard.TargetProperty="Height"  />
         </Storyboard>
-        <Style x:Key="ActionBarStyle" TargetType="Expander">
-            <Setter Property="Background" Value="{DynamicResource selectBrush}"/>
-            <Setter Property="Template" Value="{DynamicResource charmBarTemplate}"/>
-        </Style>
-        <Style x:Key="charmBarButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="Margin" Value="0,8"/>
-            <Setter Property="Padding" Value="20,0,0,0"/>
-            <Setter Property="Height" Value="60"/>
-            <Setter Property="Foreground" Value="{DynamicResource selectBrush}"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-        </Style>
-        <ControlTemplate x:Key="charmBarTemplate" TargetType="{x:Type Expander}">
-            <Grid Width="0" x:Name="wrapper" Background="{TemplateBinding Background}">
-                <ContentPresenter VerticalAlignment="Center" x:Name="ExpanderContent" ContentSource="Content"/>
-            </Grid>
-            <ControlTemplate.Triggers>
-                <Trigger Property="IsExpanded" Value="True">
-                    <Trigger.EnterActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation EasingFunction="{StaticResource easeFunc}"
-                                                                Storyboard.TargetName="wrapper"
-                                                                Storyboard.TargetProperty="Width"
-                                                                To="150"
-                                                                Duration="0:0:0.2" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </Trigger.EnterActions>
-                    <Trigger.ExitActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation EasingFunction="{StaticResource easeFunc}" 
-                                                            Storyboard.TargetName="wrapper"
-                                                                Storyboard.TargetProperty="Width"
-                                                                To="0"
-                                                                Duration="0:0:0.2" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </Trigger.ExitActions>
-                </Trigger>
-            </ControlTemplate.Triggers>
-        </ControlTemplate>
         <Storyboard x:Key="SlideInRight">
             <ThicknessAnimation Duration="0:0:.2"
                                 Storyboard.TargetProperty="Margin"
@@ -170,7 +126,6 @@
                 BorderBrush="Black"
                 Background="{DynamicResource darkBrush}"
                 BorderThickness="2"/>
-
         <Grid Margin="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -268,13 +223,15 @@
                 </Grid>
                
             </Grid>
-            <!--contents-->
-            <Border Grid.Row="1"
-                    Background="Transparent">
-                <Grid x:Name="content" Margin="40,30">
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid x:Name="content" Margin="30,30,30,0">
                     <Grid x:Name="page1"
-                          Opacity="0"
-                          IsHitTestVisible="false">
+                		Opacity="0"
+                		IsHitTestVisible="false">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition Width="auto"/>
@@ -285,8 +242,8 @@
                         </DockPanel>
                     </Grid>
                     <Grid x:Name="page2"
-                          Opacity="0"
-                          IsHitTestVisible="false">
+                		Opacity="0"
+                		IsHitTestVisible="false">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition Width="auto"/>
@@ -294,8 +251,8 @@
                         <controls:DownloadSongListControl x:Name="list_download" />
                     </Grid>
                     <Grid x:Name="page3"
-                          Opacity="0"
-                          IsHitTestVisible="false">
+                		Opacity="0"
+                		IsHitTestVisible="false">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
@@ -304,8 +261,8 @@
 
                     </Grid>
                     <Grid x:Name="page4"
-                          Opacity="0"
-                          IsHitTestVisible="false">
+                		Opacity="0"
+                		IsHitTestVisible="false">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
@@ -313,7 +270,8 @@
                         <my:ConfigPage x:Name="configPage"  />
                     </Grid>
                 </Grid>
-            </Border>
+            </Grid>
+            <!--contents-->
             <Slider  Background="{DynamicResource darkBrush}"  Foreground="{DynamicResource skinBrush}" Grid.Row="1" x:Name="slider" Margin="2,-10,0,0" VerticalAlignment="Top"/>
             <Grid Height="15" Grid.Row="2" >
                 <TextBlock x:Name="statusBar"
@@ -327,56 +285,7 @@
                                    IsIndeterminate="False" ItemWidth="5" />
             </Grid>
         </Grid>
-        <Expander x:Name="charmBar" Grid.RowSpan="3" HorizontalAlignment="Right" Margin="1" Style="{StaticResource ActionBarStyle}">
-            <ListView  ScrollViewer.HorizontalScrollBarVisibility="Hidden"  BorderThickness="0" Background="Transparent" x:Name="charmBarItemWrapper" SelectionMode="Single">
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="Margin" Value="0,20"/>
-                        <Setter Property="Padding" Value="20,10,0,10"/>
-                        <Setter Property="Foreground" Value="White"/>
-                        <EventSetter Event="MouseLeftButtonUp" Handler="charmBarAct"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="ListBoxItem">
-                                    <Border Name="Border" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
-                                        <Border.Background>
-                                            <SolidColorBrush x:Name="BorderBg" Color="#00000000"/>
-                                        </Border.Background>
-                                        <ContentPresenter/>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Trigger.EnterActions>
-                                                <BeginStoryboard>
-                                                    <Storyboard Storyboard.TargetName="BorderBg">
-                                                        <ColorAnimation Storyboard.TargetProperty="Color" Duration="0:0:0.2" To="#333"/>
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </Trigger.EnterActions>
-                                            <Trigger.ExitActions>
-                                                <BeginStoryboard>
-                                                    <Storyboard Storyboard.TargetName="BorderBg">
-                                                        <ColorAnimation Storyboard.TargetProperty="Color"  Duration="0:0:0.2" To="#00000000"/>
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </Trigger.ExitActions>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </ListView.ItemContainerStyle>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <TextBlock Foreground="Gray"  Text="{Binding Label}"/>
-                            <TextBlock Foreground="White"  Visibility="{Binding IsActive,Converter={StaticResource bool2vis}}" Text="{Binding Label}"/>
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </Expander>
+        <my:ActionBar MaxLength="200" Grid.Row="2" x:Name="charmBar" Background="Black" VerticalAlignment="Bottom"/>
         <controls:TitleBar FontSize="20" HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top"  Width="150" Height="50" x:Name="titleBar"  />
     </Grid>
 </controls:ResizeWindow>
