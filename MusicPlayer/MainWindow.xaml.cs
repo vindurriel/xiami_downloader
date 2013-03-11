@@ -22,25 +22,15 @@ namespace MusicPlayer
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : INotifyPropertyChanged,
+    public partial class MainWindow:
         IHandle<MsgSearchStateChanged>,
         IHandle<string>,
         IHandle<MsgChangeWindowState>,
         IHandle<MsgSetBusy>
     {
-        #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-        void Notify(string prop)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
-        }
-        #endregion
         readonly int pageCount = 4;
         FrameworkElement lastPage;
         List<CharmBarEntity> charms = new List<CharmBarEntity>();
-        SongListControl currentListControl = null;
-        List<SongListControl> listControls;
         private int page;
         public int Page
         {
@@ -58,13 +48,8 @@ namespace MusicPlayer
                 var content = FindName("page" + page.ToString()) as FrameworkElement;
                 if (content != null)
                     showPage(content, isLeft);
-                if (page == 0) return;
-                var binding = charms[page].Binding;
-                charmBar.SetBinding(Expander.IsExpandedProperty, binding);
-                var notifySource = binding.Source as INotifyPropertyChanged;
-                if (notifySource != null)
-                    notifySource.PropertyChanged += contentControl_PropertyChanged;
-                charmBar.ItemsSource = charms[page].Actions;
+                ActionBarService.ContextName = page.ToString();
+                ActionBarService.Refresh();
             }
         }
 
@@ -73,7 +58,7 @@ namespace MusicPlayer
             if (e.PropertyName == "SelectCount")
             {
                 var selectCount = (sender as SongListControl).SelectCount;
-                charmBar.Validate(selectCount);
+                ActionBarService.Refresh();
             }
         }
         void showPage(FrameworkElement content, bool isLeft = true)
@@ -100,61 +85,24 @@ namespace MusicPlayer
             Closing += MainWindow_Closing;
             new MusicSliderConnector(slider);
             slider.Visibility = Visibility.Collapsed;
+            ActionBarService.SetActionBar(this.charmBar);
+            Artwork.DataBus.DataBus.Set("list_download", list_download);
+            Artwork.DataBus.DataBus.Set("slider", slider);
         }
         void initCharms()
         {
-            listControls = new List<SongListControl>{
-                null,
-                list_search,
-                list_download,
-                list_complete,
-                null
-            };
             var int2bool = FindResource("int2bool") as IntToBoolConverter;
-            charms.Add(new CharmBarEntity());
-            charms.Add(new CharmBarEntity
-            {
-                Binding = new Binding("SelectCount") { Converter = int2bool, Source = list_search },
-                Actions = new ObservableCollection<CharmAction> 
-                { 
-                    new CharmAction("下载",this.btn_download_add_Click),
-                    new CharmAction("取消选择",this.btn_cancel_selection_Click),
-                },
-            });
-            charms.Add(new CharmBarEntity
-            {
-                Binding = new Binding("SelectCount") { Converter = int2bool, Source = list_download },
-                Actions = new ObservableCollection<CharmAction> 
-                { 
-                    new CharmAction("开始",this.btn_download_start_Click),
-                    new CharmAction("暂停",this.btn_cancel_Click),
-                    new CharmAction("删除",this.btn_remove_Click),
-                    new CharmAction("完成",this.btn_complete_Click),
-                    new CharmAction("取消选择",this.btn_cancel_selection_Click),
-                },
-            });
-            charms.Add(new CharmBarEntity
-            {
-                Binding = new Binding("SelectCount") { Converter = int2bool, Source = list_complete },
-                Actions = new ObservableCollection<CharmAction> 
-                { 
-                    new CharmAction("存为播放列表",this.btn_save_playlist_Click),
-                    new CharmAction("复制文件到剪贴板",this.btn_copy_Click),
-                    new CharmAction("播放/暂停",this.btn_play_Click,(s,me)=>{
-                        me.IsActive = ((int)s) <= 1;
-                    }),                   
-                    new CharmAction("删除",this.btn_remove_complete_Click),
-                    new CharmAction("取消选择",this.btn_cancel_selection_Click),
-                },
-            });
-            charms.Add(new CharmBarEntity
-            {
-                Binding = new Binding("IsDirty") { Source = configPage },
-                Actions = new ObservableCollection<CharmAction> 
-                { 
-                    new CharmAction("保存",this.btn_save_config_Click),
-                },
-            });
+            ActionBarService.RegisterContext("1", list_search);
+            ActionBarService.RegisterContext("2", list_download);
+            ActionBarService.RegisterContext("3", list_complete);
+            ActionBarService.RegisterContext("4", configPage);
+            list_search.PropertyChanged += this.contentControl_PropertyChanged;
+            list_download.PropertyChanged += this.contentControl_PropertyChanged;
+            list_complete.PropertyChanged += this.contentControl_PropertyChanged;
+            this.configPage.PropertyChanged += (s, e) => {
+                if (e.PropertyName == "IsDirty")
+                    ActionBarService.Refresh();
+            };
         }
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -249,45 +197,11 @@ namespace MusicPlayer
             Global.AppSettings["WindowPos"] = new Rect(Left, Top, ActualWidth, ActualHeight).ToString();
             Global.SaveSettings();
         }
-        void btn_download_add_Click(object sender, RoutedEventArgs e)
-        {
-            var list = list_search.SelectedItems.ToList();
-            foreach (var item in list)
-            {
-                list_download.AddAndStart(item);
-                list_search.Remove(item);
-            }
-            //Page = 2;
-        }
-        void btn_download_start_Click(object sender, RoutedEventArgs e)
-        {
-            DownloadManager.Instance.StartByTag(list_download.SelectedItems.Select(x => x.Id).ToList());
-        }
-
-        void btn_cancel_Click(object sender, RoutedEventArgs e)
-        {
-            DownloadManager.Instance.StopByTag(list_download.SelectedItems.Select(x => x.Id).ToList());
-        }
-        void btn_remove_Click(object sender, RoutedEventArgs e)
-        {
-            DownloadManager.Instance.RemoveByTag(list_download.SelectedItems.Select(x => x.Id).ToList());
-            var list = list_download.SelectedItems.ToList();
-            foreach (var item in list)
-            {
-                list_download.Remove(item);
-            }
-        }
-        void btn_remove_complete_Click(object sender, RoutedEventArgs e)
-        {
-            var list = list_complete.SelectedItems.ToList();
-            foreach (var item in list)
-            {
-                list_complete.Remove(item);
-            }
-        }
+       
+        
+     
 
 
-        List<string> Playlist = new List<string>();
         int lastPageNum = 0;
         void btn_more_Click(object sender, RoutedEventArgs e)
         {
@@ -308,90 +222,9 @@ namespace MusicPlayer
         {
             this.DragMove();
         }
-        void btn_play_Click(object sender, RoutedEventArgs e)
-        {
-            slider.Visibility = Visibility.Visible;
-            foreach (var item in list_complete.SelectedItems)
-            {
-                if (!item.HasMp3) continue;
-                if (!string.IsNullOrEmpty(item.Song.FilePath))
-                {
-                    Mp3Player.PlayPause(item.Song.FilePath);
-                }
-            }
-        }
-        void btn_save_config_Click(object sender, RoutedEventArgs e)
-        {
-            configPage.SaveConfig();
-        }
-        void btn_save_playlist_Click(object sender, RoutedEventArgs e)
-        {
-            var list = list_complete;
-            if (!list.SelectedItems.Any())
-                return;
-            var win = new System.Windows.Forms.SaveFileDialog
-            {
-                InitialDirectory = Global.AppSettings["DownloadFolder"],
-                Filter = "播放列表文件 (*.m3u)|*.m3u",
-                OverwritePrompt = true,
-                Title = "存为播放列表"
-            };
-            if (win.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                SavePlaylist(win.FileName);
-            }
-        }
-        void btn_copy_Click(object sender, RoutedEventArgs e)
-        {
-            var files = new System.Collections.Specialized.StringCollection();
-            foreach (var item in list_complete.SelectedItems)
-            {
-                if (string.IsNullOrEmpty(item.Song.FilePath))
-                    files.Add(System.IO.Path.Combine(".", item.Dir, item.FileNameBase + ".mp3"));
-                else
-                    files.Add(item.Song.FilePath);
-            }
-            if (files.Count > 0)
-                Clipboard.SetFileDropList(files);
-        }
-        void btn_complete_Click(object sender, RoutedEventArgs e)
-        {
-            var list = list_download;
-            if (!list.SelectedItems.Any())
-                return;
-            DownloadManager.Instance.StopByTag(list_download.SelectedItems.Select(x => x.Id).ToList());
-            foreach (var item in list.SelectedItems)
-            {
-                item.HasMp3 = true; item.HasLrc = true; item.HasArt = true;
-                MessageBus.Instance.Publish(new MsgDownloadStateChanged
-                {
-                    Id = item.Id,
-                    Item = item,
-                });
-            }
-            Page = 3;
-        }
-
-        string SavePlaylist(string path = null)
-        {
-            var list = list_complete;
-            if (!list.SelectedItems.Any())
-                return null;
-            Playlist.Clear();
-            foreach (var item in list.SelectedItems)
-            {
-                if (!item.HasMp3) continue;
-                Playlist.Add(string.Format("#EXTINF:{0}", item.Id));
-                if (string.IsNullOrEmpty(item.Song.FilePath))
-                    Playlist.Add(System.IO.Path.Combine(".", item.Dir, item.FileNameBase + ".mp3"));
-                else
-                    Playlist.Add(item.Song.FilePath);
-            }
-            if (path == null)
-                path = Global.AppSettings["DownloadFolder"] + "\\default.m3u";
-            File.WriteAllLines(path, Playlist, Encoding.UTF8);
-            return path;
-        }
+        
+       
+        
 
         void SetStatus(string status)
         {
@@ -401,12 +234,7 @@ namespace MusicPlayer
             }));
         }
 
-        private void btn_cancel_selection_Click(object sender, RoutedEventArgs e)
-        {
-            var currentListControl = listControls[page];
-            if (currentListControl == null) return;
-            currentListControl.UnselectAll();
-        }
+       
 
         public void Handle(MsgSearchStateChanged message)
         {

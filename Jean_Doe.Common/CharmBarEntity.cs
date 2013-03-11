@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-
-namespace MusicPlayer
+namespace Jean_Doe.Common
 {
 
-    internal class CharmBarEntity
+    public class CharmBarEntity
     {
         private Binding b = new Binding();
 
@@ -22,7 +17,7 @@ namespace MusicPlayer
         }
         public ObservableCollection<CharmAction> Actions = new ObservableCollection<CharmAction>();
     }
-    internal class CharmAction : INotifyPropertyChanged
+    public class CharmAction : INotifyPropertyChanged
     {
         private string label;
 
@@ -32,14 +27,14 @@ namespace MusicPlayer
             set { label = value; Notify("Label"); }
         }
 
-        public Action<object, RoutedEventArgs> Action { get; set; }
+        public Action<object, System.Windows.RoutedEventArgs> Action { get; set; }
         public CharmAction(string l, Action<object, RoutedEventArgs> a)
         {
             Label = l;
             Action = a;
-            Validate = (s,e) => { };
+            Validate = (s) => { return (s is bool) && (bool)s; };
         }
-        public CharmAction(string l, Action<object, RoutedEventArgs> a,Action<object,CharmAction> v)
+        public CharmAction(string l, Action<object, RoutedEventArgs> a, Func<object,bool> v)
         {
             Label = l;
             Action = a;
@@ -53,7 +48,7 @@ namespace MusicPlayer
             set { isActive = value; Notify("IsActive"); }
         }
 
-        public Action<object,CharmAction> Validate { get; set; }
+        public Func<object,bool> Validate { get; set; }
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

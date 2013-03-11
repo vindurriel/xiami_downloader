@@ -53,12 +53,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Jean_Doe.Reference\Artwork.Bus.dll</HintPath>
     </Reference>
-    <Reference Include="NAudio">
-      <HintPath>..\ReferenceLibrary\NAudio.dll</HintPath>
-    </Reference>
-    <Reference Include="NAudio.WindowsMediaFormat">
-      <HintPath>..\ReferenceLibrary\NAudio.WindowsMediaFormat.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -83,11 +77,9 @@
     <Compile Include="ActionBar.xaml.cs">
       <DependentUpon>ActionBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CharmBarEntity.cs" />
     <Compile Include="ConfigPage.xaml.cs">
       <DependentUpon>ConfigPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Mp3Player.cs" />
     <Compile Include="MusicSliderConnector.cs" />
     <Compile Include="WindowManager.cs" />
     <Page Include="ActionBar.xaml">

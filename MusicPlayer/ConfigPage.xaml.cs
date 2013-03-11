@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using Jean_Doe.Common;
 using Jean_Doe.MusicControl;
+using System.ComponentModel;
 //using System.Windows.Forms;
 namespace MusicPlayer
 {
@@ -12,8 +13,16 @@ namespace MusicPlayer
     /// <summary>
     /// Interaction logic for ConfigWindow.xaml
     /// </summary>
-    public partial class ConfigPage
+    public partial class ConfigPage : IActionProvider, INotifyPropertyChanged
     {
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void Notify(string prop)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+        #endregion
         static readonly Dictionary<string, EnumConfigControlType> map = new Dictionary<string, EnumConfigControlType>
          {
                 {"DownloadFolder", EnumConfigControlType.label},
@@ -29,6 +38,7 @@ namespace MusicPlayer
             InitializeComponent();
             Loaded += (s, e) => LoadConfig();
             pop_skin.Opened += pop_skin_Opened;
+            actions.Add(new CharmAction("保存", this.btn_save_config_Click, (s) => { return (s as ConfigPage).IsDirty; }));
         }
 
         void pop_skin_Opened(object sender, EventArgs e)
@@ -40,8 +50,8 @@ namespace MusicPlayer
 
         void color_colorskin_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color> e)
         {
-            if(color_colorskin.SelectedColor!=colorSkin)
-            IsDirty = true;
+            if (color_colorskin.SelectedColor != colorSkin)
+                IsDirty = true;
             colorSkin = color_colorskin.SelectedColor;
         }
 
@@ -52,45 +62,45 @@ namespace MusicPlayer
             IsDirty = true;
         }
 
-
+        void btn_save_config_Click(object sender, RoutedEventArgs e)
+        {
+            SaveConfig();
+        }
+        bool isDirty;
         public bool IsDirty
         {
-            get { return (bool)GetValue(IsDirtyProperty); }
-            set { SetValue(IsDirtyProperty, value); }
+            get { return isDirty; }
+            set { isDirty = value; Notify("IsDirty"); }
         }
 
-        // Using a DependencyProperty as the backing store for IsDirty.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IsDirtyProperty =
-            DependencyProperty.Register("IsDirty", typeof(bool), typeof(ConfigPage), new PropertyMetadata(false));
-
-
+       
 
         void LoadConfig()
         {
-            foreach(var item in map)
+            foreach (var item in map)
             {
                 var key = item.Key; var prefix = item.Value;
-                if(!Global.AppSettings.ContainsKey(key)) continue;
+                if (!Global.AppSettings.ContainsKey(key)) continue;
                 var value = Global.AppSettings[key];
                 var x = FindName(prefix.ToString() + "_" + key.ToLower()) as FrameworkElement;
-                if(x == null) continue;
-                switch(prefix)
+                if (x == null) continue;
+                switch (prefix)
                 {
                     case EnumConfigControlType.label:
                         var tb = x as TextBlock;
-                        if(tb != null) tb.Text = value;
+                        if (tb != null) tb.Text = value;
                         break;
                     case EnumConfigControlType.combo:
                         ComboSelect(x as ComboBox, value);
                         break;
                     case EnumConfigControlType.toggle:
                         var tg = x as ToggleSwitch;
-                        if(tg != null)
+                        if (tg != null)
                             tg.IsOn = value == "1";
                         break;
                     case EnumConfigControlType.color:
                         var cp = x as ColorPicker.ColorPicker;
-                        if(cp != null)
+                        if (cp != null)
                             try
                             {
                                 var c = (Color)ColorConverter.ConvertFromString(value);
@@ -107,38 +117,38 @@ namespace MusicPlayer
 
         public void SaveConfig()
         {
-            foreach(var item in map)
+            foreach (var item in map)
             {
                 var key = item.Key; var prefix = item.Value;
-                if(!Global.AppSettings.ContainsKey(key)) continue;
+                if (!Global.AppSettings.ContainsKey(key)) continue;
                 string value = null;
                 var x = FindName(prefix.ToString() + "_" + key.ToLower()) as FrameworkElement;
-                if(x == null) continue;
-                switch(prefix)
+                if (x == null) continue;
+                switch (prefix)
                 {
                     case EnumConfigControlType.label:
                         var textBlock = x as TextBlock;
-                        if(textBlock != null) value = textBlock.Text;
+                        if (textBlock != null) value = textBlock.Text;
                         break;
                     case EnumConfigControlType.combo:
                         var comboBox = x as ComboBox;
-                        if(comboBox != null)
+                        if (comboBox != null)
                             value = (comboBox.SelectedItem as ComboBoxItem).Tag.ToString();
                         break;
                     case EnumConfigControlType.toggle:
                         var tg = x as ToggleSwitch;
-                        if(tg != null)
+                        if (tg != null)
                             value = tg.IsOn == true ? "1" : "0";
                         break;
                     case EnumConfigControlType.color:
                         var cp = x as ColorPicker.ColorPicker;
-                        if(cp != null)
+                        if (cp != null)
                             value = cp.SelectedColor.ToString();
                         break;
                     default:
                         break;
                 }
-                if(value != null && value != Global.AppSettings[key])
+                if (value != null && value != Global.AppSettings[key])
                 {
                     Global.AppSettings[key] = value;
                 }
@@ -154,7 +164,7 @@ namespace MusicPlayer
                                  SelectedPath = label_downloadfolder.Text
                              };
             var res = dialog.ShowDialog();
-            if(res == System.Windows.Forms.DialogResult.OK)
+            if (res == System.Windows.Forms.DialogResult.OK)
             {
                 label_downloadfolder.Text = dialog.SelectedPath;
             }
@@ -162,16 +172,16 @@ namespace MusicPlayer
         private static void ComboSelect(ComboBox c, string s)
         {
             bool selected = false;
-            foreach(ComboBoxItem item in c.Items)
+            foreach (ComboBoxItem item in c.Items)
             {
-                if(item.Tag.ToString() == s)
+                if (item.Tag.ToString() == s)
                 {
                     c.SelectedItem = item;
                     selected = true;
                     break;
                 }
             }
-            if(!selected && c.Items.Count > 0)
+            if (!selected && c.Items.Count > 0)
                 c.SelectedIndex = 0;
         }
         void toggle_changed(object sender, RoutedEventArgs e)
@@ -181,9 +191,15 @@ namespace MusicPlayer
 
         private void btn_skin_click(object sender, RoutedEventArgs e)
         {
-            if(pop_skin.IsOpen) return;
+            if (pop_skin.IsOpen) return;
             pop_skin.IsOpen = true;
             colorSkin = color_colorskin.SelectedColor;
+        }
+        List<CharmAction> actions = new List<CharmAction>();
+
+        public IEnumerable<CharmAction> ProvideActions()
+        {
+            return actions;
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using NAudio;
 using NAudio.Wave;
 using System.Windows.Threading;
-namespace MusicPlayer
+namespace Jean_Doe.Common
 {
     public class Mp3Player
     {

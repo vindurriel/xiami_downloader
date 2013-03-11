@@ -7,10 +7,11 @@ using System.Windows.Controls;
 using Artwork.MessageBus;
 using Artwork.MessageBus.Interfaces;
 using Jean_Doe.Common;
+using System.Collections.Generic;
 
 namespace Jean_Doe.MusicControl
 {
-    public class SearchSongListControl : SongListControl,
+    public class SearchSongListControl : SongListControl, IActionProvider,
         IHandle<MsgSearchStateChanged>
     {
         public SearchSongListControl()
@@ -20,11 +21,11 @@ namespace Jean_Doe.MusicControl
             {
                 CellTemplate = FindResource("PlayTimesTemplate") as DataTemplate,
                 Header = "播放次数",
-                SortDirection=ListSortDirection.Ascending,
+                SortDirection = ListSortDirection.Ascending,
                 SortMemberPath = "PlayTimes",
             };
-            //dataGrid.Columns.Add(col);
             Items.CollectionChanged += Items_CollectionChanged;
+
         }
         private double maxPlayTimes = 1;
 
@@ -35,6 +36,17 @@ namespace Jean_Doe.MusicControl
             {
                 maxPlayTimes = value;
                 Notify("MaxPlayTimes");
+            }
+        }
+        void btn_download_add_Click(object sender, RoutedEventArgs e)
+        {
+            var list = SelectedSongs.ToList();
+            var list_download = Artwork.DataBus.DataBus.Get("list_download") as DownloadSongListControl;
+            foreach (var item in list)
+            {
+
+                list_download.AddAndStart(item);
+                Remove(item);
             }
         }
         object lck = new object();
@@ -95,7 +107,19 @@ namespace Jean_Doe.MusicControl
                     break;
             }
         }
+
+        public System.Collections.Generic.IEnumerable<CharmAction> ProvideActions()
+        {
+            return new List<CharmAction> { 
+               new CharmAction("下载",this.btn_download_add_Click,(s)=>{
+                   return (s as SongListControl).SelectedSongs.Count()>0;
+               }),
+               new CharmAction("查看专辑歌曲",link_album,IsType<IHasAlbum>),
+               new CharmAction("该精选集歌曲",link_collection,IsType<IHasCollection>),
+               new CharmAction("查看歌手歌曲",link_artist,IsType<IHasArtist>),
+               new CharmAction("取消选择", btn_cancel_selection_Click,defaultActionValidate),
+            };
+        }
+       
     }
-
-
 }

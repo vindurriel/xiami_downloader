@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Jean_Doe.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,7 +40,7 @@ namespace MusicPlayer
             Mp3Player.CurrentTime = TimeSpan.FromSeconds(e.NewValue);
         }
 
-        void Mp3Player_TimeChanged(object sender, MusicPlayer.Mp3Player.TimeChangedEventArgs e)
+        void Mp3Player_TimeChanged(object sender,  Mp3Player.TimeChangedEventArgs e)
         {
             if (e.IsNewSong)
                 _slider.Maximum = e.Total.TotalSeconds;

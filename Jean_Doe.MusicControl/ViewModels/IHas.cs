@@ -6,17 +6,18 @@ using System.Threading.Tasks;
 
 namespace Jean_Doe.MusicControl
 {
-    interface IHasArtist
+    public interface IHasMusicPart { }
+    public interface IHasArtist:IHasMusicPart
     {
         string ArtistId { get; }
         string ArtistName { get; }
     }
-    interface IHasAlbum
+    public interface IHasAlbum : IHasMusicPart
     {
         string AlbumId { get; }
         string AlbumName { get; }
     }
-    interface IHasCollection
+    public interface IHasCollection : IHasMusicPart
     {
         string CollectionId { get; }
         string CollectionName { get; }

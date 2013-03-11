@@ -38,6 +38,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Jean_Doe.Reference\Artwork.Bus.dll</HintPath>
     </Reference>
+    <Reference Include="NAudio, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ReferenceLibrary\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -53,6 +58,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionBarService.cs" />
+    <Compile Include="CharmBarEntity.cs" />
     <Compile Include="Dom\Artist.cs" />
     <Compile Include="Dom\Album.cs" />
     <Compile Include="Dom\Collection.cs" />
@@ -65,6 +72,7 @@
     <Compile Include="EnumXiamiType.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Dom\IMusic.cs" />
+    <Compile Include="Mp3Player.cs" />
     <Compile Include="NetAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunProgramHelper.cs" />

@@ -12,7 +12,7 @@ using System.Windows.Controls;
 using System.Windows;
 namespace Jean_Doe.MusicControl
 {
-    public class DownloadSongListControl : SongListControl,
+    public class DownloadSongListControl : SongListControl,IActionProvider,
         IHandle<MsgDownloadProgressChanged>,
         IHandle<MsgDownloadStateChanged>
     {
@@ -103,6 +103,55 @@ namespace Jean_Doe.MusicControl
             {
                 item.Status = msg;
             }));
+        }
+
+        public IEnumerable<CharmAction> ProvideActions()
+        {
+            return new List<CharmAction> 
+                { 
+                    new CharmAction("开始",this.btn_download_start_Click,defaultActionValidate),
+                    new CharmAction("暂停",this.btn_cancel_Click,defaultActionValidate),
+                    new CharmAction("删除",this.btn_remove_Click,defaultActionValidate),
+                    new CharmAction("完成",this.btn_complete_Click,defaultActionValidate),
+                    new CharmAction("查看专辑歌曲",link_album,IsType<IHasAlbum>),
+                    new CharmAction("查看歌手歌曲",link_artist,IsType<IHasArtist>),
+                    new CharmAction("取消选择",this.btn_cancel_selection_Click,defaultActionValidate),
+                };
+        }
+
+        void btn_download_start_Click(object sender, RoutedEventArgs e)
+        {
+            DownloadManager.Instance.StartByTag(SelectedSongs.Select(x => x.Id).ToList());
+        }
+
+        void btn_cancel_Click(object sender, RoutedEventArgs e)
+        {
+            DownloadManager.Instance.StopByTag(SelectedSongs.Select(x => x.Id).ToList());
+        }
+        void btn_remove_Click(object sender, RoutedEventArgs e)
+        {
+            DownloadManager.Instance.RemoveByTag(SelectedSongs.Select(x => x.Id).ToList());
+            var list = SelectedSongs.ToList();
+            foreach (var item in list)
+            {
+                Remove(item);
+            }
+        }
+
+        void btn_complete_Click(object sender, RoutedEventArgs e)
+        {
+            if (!SelectedSongs.Any())
+                return;
+            DownloadManager.Instance.StopByTag(SelectedSongs.Select(x => x.Id).ToList());
+            foreach (var item in SelectedSongs)
+            {
+                item.HasMp3 = true; item.HasLrc = true; item.HasArt = true;
+                MessageBus.Instance.Publish(new MsgDownloadStateChanged
+                {
+                    Id = item.Id,
+                    Item = item,
+                });
+            }
         }
     }
 }

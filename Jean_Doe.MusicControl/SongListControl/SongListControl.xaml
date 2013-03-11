@@ -214,6 +214,9 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
+                <Image   Width="60" Height="60"  
+                        Source="/Jean_Doe.MusicControl;component/Resources/nocover.png"
+                        Stretch="Uniform" VerticalAlignment="Top"/>
                 <Image TargetUpdated="Image_SourceUpdated_1" Width="60" Height="60"  
                         Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
                         Stretch="Uniform" VerticalAlignment="Top"/>
@@ -236,15 +239,54 @@
             x:Name="listView" Foreground="White" SelectionMode="Multiple" >
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
+                    <Style.Triggers>
+                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0" EasingFunction="{StaticResource easeFunc}"
+                                            To="1" />
+                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"   Duration="0:0:0.2"   EasingFunction="{StaticResource easeFunc}"
+                                            To="1" />
+                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)" Duration="0:0:0.2"   EasingFunction="{StaticResource easeFunc}"
+                                            To="1" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="FrameworkElement.Unloaded">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="1"
+                                            To="0" />
+                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"   Duration="0:0:0.2"   EasingFunction="{StaticResource easeFunc}"
+                                            To="0" />
+                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)" Duration="0:0:0.2"   EasingFunction="{StaticResource easeFunc}"
+                                            To="0" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Style.Triggers>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="0" ScaleY="0"/>
+                            </TransformGroup>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="RenderTransformOrigin" Value=".5,.5"/>
                     <Setter Property="Margin" Value="5"/>
                     <Setter Property="Padding" Value="15"/>
+                    
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListViewItem}">
                                 <Grid>
                                     <Rectangle x:Name="normal" Fill="Transparent"/>
-                                    <Rectangle x:Name="mouseover" Opacity="0" Fill="#3fff"/>
-                                    <Rectangle x:Name="pressed" Opacity="0" Fill="{DynamicResource skinBrush}"/>
+                                    <Rectangle x:Name="mouseover" Opacity="0" StrokeThickness="4" Stroke="{DynamicResource lightBrush}"/>
+                                    <Grid x:Name="pressed" Opacity="0">
+                                        <Border BorderThickness="4" BorderBrush="{DynamicResource skinBrush}"/>
+                                        <TextBlock Text="&#x25E5;" FontFamily="Segoe UI Symbol" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-15,0,0" FontSize="45" Foreground="{DynamicResource skinBrush}"/>
+                                        <TextBlock Text="&#xE001;" FontFamily="Segoe UI Symbol" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="15" Foreground="White"/>
+                                    </Grid>
                                     <ContentPresenter Margin="{TemplateBinding Padding}"/>
                                     <VisualStateManager.VisualStateGroups>
                                         <VisualStateGroup x:Name="CommonStates">

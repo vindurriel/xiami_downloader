@@ -72,11 +72,18 @@ namespace Jean_Doe.MusicControl
         public int ItemsCount { get { return itemsCount; } set { itemsCount = value; Notify("ItemsCount"); } }
         private int selectCount;
         public int SelectCount { get { return selectCount; } set { selectCount = value; Notify("SelectCount"); } }
-        public IEnumerable<SongViewModel> SelectedItems
+        public IEnumerable<SongViewModel> SelectedSongs
         {
             get
             {
                 return listView.SelectedItems.OfType<SongViewModel>();
+            }
+        }
+        public IEnumerable<MusicViewModel> SelectedItems
+        {
+            get
+            {
+                return listView.SelectedItems.OfType<MusicViewModel>();
             }
         }
         //public DataGrid DataGrid { get { return this.dataGrid; } }
@@ -92,6 +99,7 @@ namespace Jean_Doe.MusicControl
             listView.ItemsSource = items;
             listView.SelectionChanged += dataGrid_SelectionChanged;
             HandleShowDetails(Global.AppSettings["ShowDetails"]);
+
         }
         public void UnselectAll()
         {
@@ -136,7 +144,7 @@ namespace Jean_Doe.MusicControl
 
         protected virtual async void link_album(object sender, RoutedEventArgs e)
         {
-            var t = (sender as Hyperlink).DataContext as IHasAlbum;
+            var t = listView.SelectedItems.OfType<IHasAlbum>().FirstOrDefault();
             if(t == null) return;
             var id = t.AlbumId;
             await SearchManager.GetSongOfType(t.AlbumId, EnumMusicType.album);
@@ -144,13 +152,14 @@ namespace Jean_Doe.MusicControl
 
         protected virtual async void link_artist(object sender, RoutedEventArgs e)
         {
-            var t = (sender as Hyperlink).DataContext as IHasArtist;
+            var t = listView.SelectedItems.OfType<IHasArtist>().FirstOrDefault();
+
             if(t == null) return;
             await SearchManager.GetSongOfType(t.ArtistId, EnumMusicType.artist);
         }
         protected virtual async void link_collection(object sender, RoutedEventArgs e)
         {
-            var t = (sender as Hyperlink).DataContext as IHasCollection;
+            var t = listView.SelectedItems.OfType<IHasCollection>().FirstOrDefault();
             if(t == null) return;
             await SearchManager.GetSongOfType(t.CollectionId, EnumMusicType.collect);
         }
@@ -192,7 +201,7 @@ namespace Jean_Doe.MusicControl
         {
             UIHelper.RunOnUI(new Action(() =>
           {
-              SelectCount = SelectedItems.Count();
+              SelectCount = listView.SelectedItems.Count;
           }));
         }
         private void select_all_Click(object sender, RoutedEventArgs e)
@@ -250,6 +259,20 @@ namespace Jean_Doe.MusicControl
             var sb = new Storyboard();
             sb.Children.Add(da);
             sb.Begin();
+        }
+        protected List<CharmAction> actions = new List<CharmAction>();
+        protected void btn_cancel_selection_Click(object sender, RoutedEventArgs e)
+        {
+            UnselectAll();
+        }
+        protected bool defaultActionValidate(object s)
+        {
+            return (s as SongListControl).SelectedSongs.Any();
+        }
+        protected bool IsType<TInterface>(object source) where TInterface : IHasMusicPart
+        {
+            var s = (source as SongListControl);
+            return s.SelectedItems.Count(x => x is TInterface) == 1;
         }
     }
 }
