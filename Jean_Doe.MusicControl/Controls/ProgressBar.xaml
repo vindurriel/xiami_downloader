@@ -36,8 +36,6 @@
                                             Value="{Binding ItemWidth,RelativeSource={RelativeSource AncestorType=local:ProgressBar}}" />
                                     <Setter Property="Fill"
                                             Value="{Binding Foreground,ElementName=me}" />
-                                    <Setter Property="CacheMode"
-                                            Value="BitmapCache" />
                                     <Setter Property="IsHitTestVisible"
                                             Value="False" />
                                 </Style>

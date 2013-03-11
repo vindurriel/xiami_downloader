@@ -237,7 +237,7 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
                         <DockPanel>
-                            <controls:SearchControl DockPanel.Dock="Top"    x:Name="searchKeywordControl" />
+                            <controls:SearchControl Margin="5" DockPanel.Dock="Top"    x:Name="searchKeywordControl" />
                             <controls:SearchSongListControl x:Name="list_search" />
                         </DockPanel>
                     </Grid>

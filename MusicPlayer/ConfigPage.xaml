@@ -167,8 +167,6 @@
                                           x:Name="color_colorskin"></controls:ColorPicker>
                     </Border>
                 </Popup>
-                <TextBlock Text="列表中显示专辑和艺术家信息" />
-                <controls:ToggleSwitch x:Name="toggle_showdetails"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>

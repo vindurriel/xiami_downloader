@@ -45,7 +45,7 @@
                                             <ColumnDefinition />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <ContentPresenter HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}" />
+                                        <ContentPresenter HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}}" />
                                         <FrameworkElement Grid.Column="1"
                                                           Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
                                     </Grid>
@@ -68,7 +68,7 @@
         <Setter Property="Foreground"
                 Value="#bbbbbb" />
         <Setter Property="Background"
-                Value="#333333" />
+                Value="#444444" />
         <Setter Property="Margin"
                 Value="0" />
         <Setter Property="MinWidth"

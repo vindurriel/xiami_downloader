@@ -223,7 +223,8 @@
                 <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10,0">
                     <TextBlock Text="{Binding Name}" FontSize="18"  Style="{DynamicResource label_base}"/>
                     <TextBlock Style="{StaticResource label_base}"   Text="{Binding ArtistName}" />
-                    <TextBlock Style="{StaticResource label_base}"   Opacity="0.5" Text="{Binding Type}" />
+                    <TextBlock Style="{StaticResource label_base}"   Text="{Binding Type}" />
+                    <!--<TextBlock Text="{Binding Date, StringFormat={}{0:yyyy/MM/dd HH:mm:ss}}" Style="{StaticResource label_base}" />-->
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -233,14 +234,55 @@
                 CollectionTemplate="{StaticResource CollectionTemplate}" />
     </UserControl.Resources>
     <Grid>
-        <ListView ItemTemplate="{StaticResource completeTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <DockPanel Margin="5,10"  Height="24" LastChildFill="False" Visibility="{Binding ItemsCount,ElementName=me,Converter={StaticResource int2vis}}">
+            <ComboBox  x:Name="combo_sort">
+                <ComboBoxItem Tag="Default_Asc" IsSelected="True">无排序</ComboBoxItem>
+                <ComboBoxItem Tag="Date_Dsc">最近下载</ComboBoxItem>
+                <ComboBoxItem Tag="Date_Asc">最早下载</ComboBoxItem>
+                <ComboBoxItem Tag="Name_Asc">名称升序</ComboBoxItem>
+                <ComboBoxItem Tag="Name_Dsc">名称降序</ComboBoxItem>
+            </ComboBox>
+            <Grid Margin="0,0" >
+                <TextBox   Foreground="White"  BorderThickness="0" Width="200" x:Name="input_filter" Background="#555"/>
+                <TextBlock VerticalAlignment="Center" Margin="3" x:Name="mask_filter" Text="输入字符以过滤"  IsHitTestVisible="False" Foreground="{DynamicResource lightBrush}"  />
+            </Grid>
+            <Button Height="24" Content="&#xE16E;" Margin="1,0" MinWidth="0"  Width="70" x:Name="btn_filter" FontFamily="Segoe UI Symbol"/>
+        </DockPanel>
+        <TextBlock FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource label_base}" Margin="10,10,0,0" Grid.Row="1">列表为空</TextBlock>
+        <ListView Grid.Row="1" ItemTemplate="{StaticResource completeTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
             BorderThickness="0" 
             Background="Transparent" 
-            x:Name="listView" Foreground="White" SelectionMode="Multiple" >
+                  ItemsSource="{Binding}"
+            x:Name="listView" Foreground="White" SelectionMode="Extended" >
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Style.Triggers>
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown"> 
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"   Duration="0:0:0.1"   EasingFunction="{StaticResource easeFunc}"
+                                            To="0.95" />
+                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"   Duration="0:0:0.1"   EasingFunction="{StaticResource easeFunc}"
+                                           To="0.95" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeftButtonUp">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"   Duration="0:0:0.1"   EasingFunction="{StaticResource easeFunc}"
+                                           To="1" />
+                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"   Duration="0:0:0.1"   EasingFunction="{StaticResource easeFunc}"
+                                           To="1" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
                         <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                            
                             <BeginStoryboard>
                                 <Storyboard>
                                     <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0" EasingFunction="{StaticResource easeFunc}"
@@ -280,7 +322,7 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListViewItem}">
                                 <Grid>
-                                    <Rectangle x:Name="normal" Fill="Transparent"/>
+                                    <Rectangle x:Name="normal"  Fill="#444"/>
                                     <Rectangle x:Name="mouseover" Opacity="0" StrokeThickness="4" Stroke="{DynamicResource lightBrush}"/>
                                     <Grid x:Name="pressed" Opacity="0">
                                         <Border BorderThickness="4" BorderBrush="{DynamicResource skinBrush}"/>
