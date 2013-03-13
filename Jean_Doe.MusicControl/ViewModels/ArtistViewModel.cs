@@ -14,8 +14,8 @@ namespace Jean_Doe.MusicControl
             artist = a;
         }
         public string TypeColor { get { return "#78a674"; } }
-        public string ArtistName { get { return artist.Name; } }
-
+        public string ArtistName { get { return artist.AlbumCount; } }
+        public string AlbumName { get { return artist.Description; } }
         public string ArtistId
         {
             get { return artist.Id; }

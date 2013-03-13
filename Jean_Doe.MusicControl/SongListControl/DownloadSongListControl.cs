@@ -109,13 +109,13 @@ namespace Jean_Doe.MusicControl
         {
             return new List<CharmAction> 
                 { 
+                    new CharmAction("取消选择",this.btn_cancel_selection_Click,defaultActionValidate),
                     new CharmAction("开始",this.btn_download_start_Click,defaultActionValidate),
                     new CharmAction("暂停",this.btn_cancel_Click,defaultActionValidate),
                     new CharmAction("删除",this.btn_remove_Click,defaultActionValidate),
                     new CharmAction("完成",this.btn_complete_Click,defaultActionValidate),
                     new CharmAction("查看专辑歌曲",link_album,IsType<IHasAlbum>),
                     new CharmAction("查看歌手歌曲",link_artist,IsType<IHasArtist>),
-                    new CharmAction("取消选择",this.btn_cancel_selection_Click,defaultActionValidate),
                 };
         }
 

@@ -297,7 +297,7 @@ namespace Jean_Doe.MusicControl
         }
         protected bool defaultActionValidate(object s)
         {
-            return (s as SongListControl).SelectedSongs.Any();
+            return (s as SongListControl).SelectedItems.Any();
         }
         protected bool IsType<TInterface>(object source) where TInterface : IHasMusicPart
         {

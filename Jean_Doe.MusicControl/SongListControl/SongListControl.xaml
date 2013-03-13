@@ -261,26 +261,6 @@
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Style.Triggers>
-                        <!--<EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"   Duration="0:0:0.1"   EasingFunction="{StaticResource easeFunc}"
-                                            To="0.95" />
-                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"   Duration="0:0:0.1"   EasingFunction="{StaticResource easeFunc}"
-                                           To="0.95" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                        <EventTrigger RoutedEvent="MouseLeftButtonUp">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"   Duration="0:0:0.1"   EasingFunction="{StaticResource easeFunc}"
-                                           To="1" />
-                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"   Duration="0:0:0.1"   EasingFunction="{StaticResource easeFunc}"
-                                           To="1" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>-->
                         <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                             <BeginStoryboard>
                                 <Storyboard>
@@ -373,14 +353,6 @@
                                                         Storyboard.TargetName="root"
                                                         Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"   Duration="0" 
                                                         To="0.95" />
-                                                </Storyboard>
-                                            </VisualState>
-                                            <VisualState x:Name="SelectedUnfocused">
-                                                <Storyboard>
-                                                    <DoubleAnimation 
-                                                        Storyboard.TargetName="pressed" 
-                                                        Storyboard.TargetProperty="Opacity" 
-                                                        Duration="0:0:0.2" To="1"/>
                                                 </Storyboard>
                                             </VisualState>
                                             <VisualState x:Name="Unselected"/>

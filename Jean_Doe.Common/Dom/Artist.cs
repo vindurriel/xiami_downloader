@@ -17,7 +17,7 @@ public class Artist : IMusic
         get;
         set;
     }
-    public int AlbumCount { get; set; }
+    public string AlbumCount { get; set; }
     public EnumMusicType Type
     {
         get { return EnumMusicType.artist; }
@@ -25,6 +25,11 @@ public class Artist : IMusic
     public void CreateFromJson(dynamic obj)
     {
         MusicHelper.LoadMusicInfoFromJson(this, obj);
-        AlbumCount = (MusicHelper.Get(obj, "albums_count","count") as string).ToInt();
+        Description = MusicHelper.Get(obj, "count_likes");
+        if(!string.IsNullOrEmpty(Description))
+            Description+="位粉丝";
+        AlbumCount = MusicHelper.Get(obj, "albums_count", "count");
+        if (!string.IsNullOrEmpty(AlbumCount))
+            AlbumCount += "张专辑";
     }
 }

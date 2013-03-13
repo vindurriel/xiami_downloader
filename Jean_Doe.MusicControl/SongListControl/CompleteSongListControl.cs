@@ -57,6 +57,7 @@ namespace Jean_Doe.MusicControl
         {
             return new List<CharmAction> 
                 {   
+                    new CharmAction("取消选择",this.btn_cancel_selection_Click,defaultActionValidate),
                     new CharmAction("播放/暂停",this.btn_play_Click,(s)=>{
                         return (s as CompleteSongListControl).SelectCount == 1;
                     }),    
@@ -65,7 +66,6 @@ namespace Jean_Doe.MusicControl
                     new CharmAction("存为播放列表",this.btn_save_playlist_Click,defaultActionValidate),
                     new CharmAction("复制文件到剪贴板",this.btn_copy_Click,defaultActionValidate),
                     new CharmAction("删除",this.btn_remove_complete_Click,defaultActionValidate),
-                    new CharmAction("取消选择",this.btn_cancel_selection_Click,defaultActionValidate),
                 };
         }
 

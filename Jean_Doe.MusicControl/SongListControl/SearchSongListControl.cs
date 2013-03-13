@@ -111,6 +111,7 @@ namespace Jean_Doe.MusicControl
         public System.Collections.Generic.IEnumerable<CharmAction> ProvideActions()
         {
             return new List<CharmAction> { 
+               new CharmAction("取消选择", btn_cancel_selection_Click,defaultActionValidate),
                new CharmAction("下载",this.btn_download_add_Click,(s)=>{
                    return (s as SongListControl).SelectedSongs.Count()>0;
                }),
@@ -119,7 +120,6 @@ namespace Jean_Doe.MusicControl
                new CharmAction("查看艺术家的相似艺人",link_similar_artist,IsType<IHasArtist>),
                new CharmAction("查看艺术家的歌曲",link_artist,IsType<IHasArtist>),
                new CharmAction("查看艺术家的专辑",link_artist_album,IsType<IHasArtist>),
-               new CharmAction("取消选择", btn_cancel_selection_Click,defaultActionValidate),
             };
         }
        
