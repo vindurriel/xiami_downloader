@@ -19,14 +19,18 @@ public class XiamiSearchProvider : ISearchProvider
 		else
 			return await SearchByKey(key);
 	}
-	static async Task<SearchResult> SearchByType(EnumMusicType type, string id)
+	static async Task<SearchResult> SearchByType(EnumSearchType type, string id)
 	{
-		string url = XiamiUrl.UrlPlaylistByIdAndType(id, type);
-		if(type == EnumMusicType.artist)
-		{
-			url = XiamiUrl.UrlArtistTopSong(id);
-		}
-		var json = await NetAccess.DownloadStringAsync(url);
+        string url = "";
+        if (type == EnumSearchType.artist || type == EnumSearchType.artist_song)
+            url = XiamiUrl.UrlArtistTopSong(id);
+        else if (type == EnumSearchType.artist_similar)
+            url = XiamiUrl.UrlArtistSimilars(id);
+        else if (type == EnumSearchType.artist_album)
+            url = XiamiUrl.UrlArtistAlbums(id);
+        else
+            url = XiamiUrl.UrlPlaylistByIdAndType(id, type.ToString());
+        var json = await NetAccess.DownloadStringAsync(url);
 		///////////////////////////////////////////////////////
 		if(json == null) return null;
 		List<IMusic> items = new List<IMusic>();
@@ -34,20 +38,29 @@ public class XiamiSearchProvider : ISearchProvider
         var newKey = "";
 		switch(type)
 		{
-			case EnumMusicType.album:
+            case EnumSearchType.album:
+            case EnumSearchType.album_song:
                 searchType = EnumSearchType.album_song;
                 items = GetSongsOfAlbum(json, out newKey);
 				break;
-			case EnumMusicType.artist:
+            case EnumSearchType.artist:
+            case EnumSearchType.artist_song:
                 searchType = EnumSearchType.artist_song;
 				items = GetSongsOfArtist(json,out newKey);
 				break;
-			case EnumMusicType.collect:
+            case EnumSearchType.collect:
+            case EnumSearchType.collection_song:
                 searchType = EnumSearchType.collection_song;
                 items = GetSongsOfCollect(json, out newKey);
 				break;
-			case EnumMusicType.any:
-				break;
+            case EnumSearchType.artist_similar:
+                searchType = EnumSearchType.artist_similar;
+                items = GetSimilarsOfArtist(json, out newKey);
+                break;
+            case EnumSearchType.artist_album:
+                searchType = EnumSearchType.artist_album;
+                items = GetAlbumsOfArtist(json, out newKey);
+                break;
 			default:
 				break;
 		}
@@ -157,14 +170,41 @@ public class XiamiSearchProvider : ISearchProvider
 		}
 		if(!IsPatternRecognized)
 			return null;
-		EnumMusicType type = EnumMusicType.song;
-		Enum.TryParse<EnumMusicType>(strType, out type);
         var t=EnumSearchType.song;
 		Enum.TryParse<EnumSearchType>(strType, out t);
-		var res = await SearchByType(type, id);
+		var res = await SearchByType(t, id);
 		return res;
 	}
-
+    static List<IMusic> GetSimilarsOfArtist(string json, out string musicName)
+    {
+        var items = new List<IMusic>();
+        musicName = "";
+        try
+        {
+            var obj = json.ToDynamicObject().artists;
+            foreach (var x in obj)
+            {
+                items.Add(MusicFactory.CreateFromJson(x, EnumMusicType.artist));
+            }
+        }
+        catch { }
+        return items;
+    }
+    static List<IMusic> GetAlbumsOfArtist(string json, out string musicName)
+    {
+        var items = new List<IMusic>();
+        musicName = "";
+        try
+        {
+            var obj = json.ToDynamicObject().albums;
+            foreach (var x in obj)
+            {
+                items.Add(MusicFactory.CreateFromJson(x, EnumMusicType.album));
+            }
+        }
+        catch { }
+        return items;
+    }
 	static List<IMusic> GetSongsOfArtist(string json,out string musicName)
 	{
 		var items = new List<IMusic>();
@@ -232,13 +272,13 @@ public class XiamiSearchProvider : ISearchProvider
     //    catch { }
     //    return song;
     //}
-	public async static Task<Album> GetAlbum(string id)
-	{
-		var url = XiamiUrl.UrlPlaylistByIdAndType(id, EnumMusicType.album);
-		var json = await NetAccess.DownloadStringAsync(url);
-		if(json == null) return null;
-		var obj = json.ToDynamicObject().album;
-		var Album = MusicFactory.CreateFromJson(obj, EnumMusicType.album);
-		return Album;
-	}
+    //public async static Task<Album> GetAlbum(string id)
+    //{
+    //    var url = XiamiUrl.UrlPlaylistByIdAndType(id, EnumMusicType.album.ToString());
+    //    var json = await NetAccess.DownloadStringAsync(url);
+    //    if(json == null) return null;
+    //    var obj = json.ToDynamicObject().album;
+    //    var Album = MusicFactory.CreateFromJson(obj, EnumMusicType.album);
+    //    return Album;
+    //}
 }

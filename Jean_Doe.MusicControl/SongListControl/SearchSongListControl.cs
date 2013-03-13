@@ -116,7 +116,9 @@ namespace Jean_Doe.MusicControl
                }),
                new CharmAction("查看专辑的歌曲",link_album,IsType<IHasAlbum>),
                new CharmAction("查看精选集的歌曲",link_collection,IsType<IHasCollection>),
+               new CharmAction("查看艺术家的相似艺人",link_similar_artist,IsType<IHasArtist>),
                new CharmAction("查看艺术家的歌曲",link_artist,IsType<IHasArtist>),
+               new CharmAction("查看艺术家的专辑",link_artist_album,IsType<IHasArtist>),
                new CharmAction("取消选择", btn_cancel_selection_Click,defaultActionValidate),
             };
         }

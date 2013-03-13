@@ -261,7 +261,7 @@
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Style.Triggers>
-                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                        <!--<EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
                             <BeginStoryboard>
                                 <Storyboard>
                                     <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"   Duration="0:0:0.1"   EasingFunction="{StaticResource easeFunc}"
@@ -280,9 +280,8 @@
                                            To="1" />
                                 </Storyboard>
                             </BeginStoryboard>
-                        </EventTrigger>
+                        </EventTrigger>-->
                         <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-
                             <BeginStoryboard>
                                 <Storyboard>
                                     <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0" EasingFunction="{StaticResource easeFunc}"
@@ -320,11 +319,16 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                <Grid Background="Black">
+                                <Grid Background="Black" x:Name="root" RenderTransformOrigin=".5,.5">
+                                    <Grid.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                        </TransformGroup>
+                                    </Grid.RenderTransform>
                                     <Rectangle x:Name="normal"  Fill="#444" />
                                     <Rectangle x:Name="mouseover" Opacity="0" StrokeThickness="4" Stroke="{Binding TypeColor}"/>
                                     <Grid x:Name="pressed" Opacity="0">
-                                        <Border BorderThickness="4" BorderBrush="{Binding TypeColor}"/>
+                                        <Border BorderThickness="4" BorderBrush="{Binding TypeColor}" />
                                         <TextBlock Text="&#x25E5;" FontFamily="Segoe UI Symbol" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-15,0,0" FontSize="45" Foreground="{Binding TypeColor}"/>
                                         <TextBlock Text="&#xE001;"  FontFamily="Segoe UI Symbol" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="15" Foreground="White"/>
                                     </Grid>
@@ -351,12 +355,24 @@
                                             <VisualState x:Name="Disabled"/>
                                         </VisualStateGroup>
                                         <VisualStateGroup x:Name="SelectionStates">
+                                            <VisualStateGroup.Transitions>
+                                                <VisualTransition To="Unselected" GeneratedDuration="0:0:0.1" />
+                                                <VisualTransition To="Selected" GeneratedDuration="0:0:0.1"/>
+                                            </VisualStateGroup.Transitions>
                                             <VisualState x:Name="Selected">
                                                 <Storyboard>
                                                     <DoubleAnimation 
                                                         Storyboard.TargetName="pressed" 
                                                         Storyboard.TargetProperty="Opacity" 
                                                         Duration="0:0:0.2" To="1"/>
+                                                    <DoubleAnimation 
+                                                        Storyboard.TargetName="root"
+                                                        Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"   Duration="0"  
+                                                        To="0.95" />
+                                                    <DoubleAnimation 
+                                                        Storyboard.TargetName="root"
+                                                        Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"   Duration="0" 
+                                                        To="0.95" />
                                                 </Storyboard>
                                             </VisualState>
                                             <VisualState x:Name="SelectedUnfocused">

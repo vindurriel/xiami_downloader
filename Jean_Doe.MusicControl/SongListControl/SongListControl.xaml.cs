@@ -163,7 +163,7 @@ namespace Jean_Doe.MusicControl
             var t = listView.SelectedItems.OfType<IHasAlbum>().FirstOrDefault();
             if (t == null) return;
             var id = t.AlbumId;
-            await SearchManager.GetSongOfType(t.AlbumId, EnumMusicType.album);
+            await SearchManager.GetMusic(t.AlbumId, EnumSearchType.album);
         }
 
         protected virtual async void link_artist(object sender, RoutedEventArgs e)
@@ -171,13 +171,27 @@ namespace Jean_Doe.MusicControl
             var t = listView.SelectedItems.OfType<IHasArtist>().FirstOrDefault();
 
             if (t == null) return;
-            await SearchManager.GetSongOfType(t.ArtistId, EnumMusicType.artist);
+            await SearchManager.GetMusic(t.ArtistId, EnumSearchType.artist_song);
+        }
+        protected virtual async void link_similar_artist(object sender, RoutedEventArgs e)
+        {
+            var t = listView.SelectedItems.OfType<IHasArtist>().FirstOrDefault();
+
+            if (t == null) return;
+            await SearchManager.GetMusic(t.ArtistId, EnumSearchType.artist_similar);
+        }
+        protected virtual async void link_artist_album(object sender, RoutedEventArgs e)
+        {
+            var t = listView.SelectedItems.OfType<IHasArtist>().FirstOrDefault();
+
+            if (t == null) return;
+            await SearchManager.GetMusic(t.ArtistId, EnumSearchType.artist_album);
         }
         protected virtual async void link_collection(object sender, RoutedEventArgs e)
         {
             var t = listView.SelectedItems.OfType<IHasCollection>().FirstOrDefault();
             if (t == null) return;
-            await SearchManager.GetSongOfType(t.CollectionId, EnumMusicType.collect);
+            await SearchManager.GetMusic(t.CollectionId,EnumSearchType.collection_song);
         }
 
         protected virtual void go_song(object sender, RoutedEventArgs e)

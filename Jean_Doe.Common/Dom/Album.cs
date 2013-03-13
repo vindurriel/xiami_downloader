@@ -27,6 +27,7 @@ public class Album : IMusic
     public void CreateFromJson(dynamic obj)
     {
         MusicHelper.LoadMusicInfoFromJson(this, obj);
+        Description = MusicHelper.Get(obj, "gmt_publish");
         ArtistId = MusicHelper.Get(obj, "artist_id");
         ArtistName = MusicHelper.Get(obj, "artist_name");
     }

@@ -238,7 +238,7 @@
                         </Grid.ColumnDefinitions>
                         <DockPanel>
                             <controls:SearchControl Margin="5,10"  DockPanel.Dock="Top"  x:Name="searchKeywordControl" />
-                            <TextBlock Text="" x:Name="text_search"  DockPanel.Dock="Top" Margin="5" FontSize="20" Visibility="Collapsed" />
+                            <TextBlock Text="" x:Name="text_search" Foreground="{DynamicResource skinBrush}" DockPanel.Dock="Top" Margin="5" FontSize="20" Visibility="Collapsed" />
                                 <controls:SearchSongListControl x:Name="list_search" />
                         </DockPanel>
                     </Grid>

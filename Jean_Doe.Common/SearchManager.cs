@@ -21,7 +21,7 @@ namespace Jean_Doe.Common
             MessageBus.Instance.Publish(new MsgSearchStateChanged { State = state, SearchResult = sr });
         }
      
-        public static async Task GetSongOfType(string id, EnumMusicType type)
+        public static async Task GetMusic(string id, EnumSearchType type)
         {
             if (string.IsNullOrEmpty(id)) return;
 			var key=string.Format("http://www.xiami.com/type/{0}/id/{1}",type.ToString(),id);

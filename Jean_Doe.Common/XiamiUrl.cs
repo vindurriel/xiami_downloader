@@ -32,11 +32,24 @@ namespace Jean_Doe.Common
         readonly static string fmtUrlSearchWithKeyAndPage = "http://www.xiami.com/app/nineteen/search/key/{0}/page/{1}";
         public readonly static string url_song = "http://www.xiami.com/app/iphone/song/id/{id}";
         readonly static string url_type_id = "http://www.xiami.com/app/android/{type}/id/{id}";
-        public static string UrlPlaylistByIdAndType(string id, EnumMusicType type)
+        public static string UrlPlaylistByIdAndType(string id, string type)
         {
             return url_type_id.WithParams(new Dictionary<string, string>{
                 {"id",id},
-                {"type",type.ToString()}
+                {"type",type}
+            });
+        }
+        public static string UrlArtistSimilars(string id)
+        {
+            return url_artsit_similars.WithParams(new Dictionary<string, string>{
+                {"id",id},
+            });
+        }
+        public static string UrlArtistAlbums(string id)
+        {
+            return url_artist_albums.WithParams(new Dictionary<string, string>{
+                {"id",id},
+                {"page","1"},
             });
         }
         public static string GoSong(string id)

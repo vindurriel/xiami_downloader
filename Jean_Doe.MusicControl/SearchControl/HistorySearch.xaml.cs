@@ -90,6 +90,9 @@ namespace Jean_Doe.MusicControl
         public void Handle(SearchResult message)
         {
             if (message == null) return;
+            int a;
+            if(int.TryParse(message.Keyword,out a))
+                return;
             UIHelper.RunOnUI(new Action(() =>
             {
                 this.Upsert(message.Keyword, message.Count);

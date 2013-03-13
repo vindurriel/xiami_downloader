@@ -258,7 +258,7 @@ namespace MusicPlayer
                     res = "艺术家";
                     break;
                 case EnumSearchType.artist_album:
-                    res = "艺术家";
+                    res = "艺术家的专辑";
                     break;
                 case EnumSearchType.album_song:
                     res = "专辑";
@@ -266,9 +266,16 @@ namespace MusicPlayer
                 case EnumSearchType.collection_song:
                     res = "精选集";
                     break;
+                case EnumSearchType.artist_similar:
+                    res = "相似艺术家";
+                    break;
                 default:
                     break;
             }
+            if (t == EnumSearchType.artist_similar)
+                return res;
+            if (t == EnumSearchType.artist_album)
+                return res;
             res += "\"" + key + "\"";
             if (t >= EnumSearchType.artist_song)
                 res += "的歌曲搜索结果";
