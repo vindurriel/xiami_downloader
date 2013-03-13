@@ -14,7 +14,7 @@ namespace Jean_Doe.MusicControl
         {
             collect = a;
         }
-
+        public string TypeColor { get { return "#588ae4"; } }
         public string CollectionId
         {
             get { return collect.Id; }

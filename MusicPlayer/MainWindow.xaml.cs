@@ -22,7 +22,7 @@ namespace MusicPlayer
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow:
+    public partial class MainWindow :
         IHandle<MsgSearchStateChanged>,
         IHandle<string>,
         IHandle<MsgChangeWindowState>,
@@ -99,7 +99,8 @@ namespace MusicPlayer
             list_search.PropertyChanged += this.contentControl_PropertyChanged;
             list_download.PropertyChanged += this.contentControl_PropertyChanged;
             list_complete.PropertyChanged += this.contentControl_PropertyChanged;
-            this.configPage.PropertyChanged += (s, e) => {
+            this.configPage.PropertyChanged += (s, e) =>
+            {
                 if (e.PropertyName == "IsDirty")
                     ActionBarService.Refresh();
             };
@@ -197,9 +198,9 @@ namespace MusicPlayer
             Global.AppSettings["WindowPos"] = new Rect(Left, Top, ActualWidth, ActualHeight).ToString();
             Global.SaveSettings();
         }
-       
-        
-     
+
+
+
 
 
         int lastPageNum = 0;
@@ -222,19 +223,59 @@ namespace MusicPlayer
         {
             this.DragMove();
         }
-        
-       
-        
 
-        void SetStatus(string status)
+
+
+
+        void setSearchTitle(string status)
         {
-            UIHelper.RunOnUI(new Action(() =>
+            UIHelper.RunOnUI(() =>
             {
+                text_search.Visibility = string.IsNullOrEmpty(status) ? Visibility.Collapsed : Visibility.Visible;
+                text_search.Text = status;
                 //statusBar.Text = status;
-            }));
+            });
         }
 
-       
+        string getSearchResultDisplay(EnumSearchType t, string key)
+        {
+            var res = "所有";
+            switch (t)
+            {
+                case EnumSearchType.song:
+                    res = "歌曲";
+                    break;
+                case EnumSearchType.artist:
+                    res = "艺术家";
+                    break;
+                case EnumSearchType.album:
+                    res = "专辑";
+                    break;
+                case EnumSearchType.collect:
+                    res = "精选集";
+                    break;
+                case EnumSearchType.artist_song:
+                    res = "艺术家";
+                    break;
+                case EnumSearchType.artist_album:
+                    res = "艺术家";
+                    break;
+                case EnumSearchType.album_song:
+                    res = "专辑";
+                    break;
+                case EnumSearchType.collection_song:
+                    res = "精选集";
+                    break;
+                default:
+                    break;
+            }
+            res += "\"" + key + "\"";
+            if (t >= EnumSearchType.artist_song)
+                res += "的歌曲搜索结果";
+            else
+                res += "的搜索结果";
+            return res;
+        }
 
         public void Handle(MsgSearchStateChanged message)
         {
@@ -246,14 +287,17 @@ namespace MusicPlayer
                         Page = 1;
                         busyIndicator.StartSpin();
                     }));
-                    SetStatus("开始搜索");
+                    //setSearchTitle("开始搜索");
                     break;
                 case EnumSearchState.Working:
                     if (message.SearchResult == null) return;
-                    SetStatus(string.Format("正在获取第{0}页", message.SearchResult.Page));
+                    var key = message.SearchResult.Keyword;
+                    var t = getSearchResultDisplay(message.SearchResult.SearchType, key);
+                    setSearchTitle(t);
+                    //setSearchTitle(string.Format("正在获取第{0}页", message.SearchResult.Page));
                     break;
                 case EnumSearchState.Finished:
-                    SetStatus("搜索完成");
+                    //setSearchTitle("搜索完成");
                     UIHelper.RunOnUI(new Action(() =>
                     {
                         Page = 1;
@@ -266,7 +310,7 @@ namespace MusicPlayer
         }
         public void Handle(string message)
         {
-            SetStatus(message);
+            setSearchTitle(message);
         }
         public void Handle(MsgChangeWindowState message)
         {

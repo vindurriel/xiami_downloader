@@ -13,6 +13,7 @@ namespace Jean_Doe.MusicControl
             album = a;
         }
         public string AlbumName { get { return album.Name; } }
+        public string TypeColor { get { return "#c3b775"; } }
 
         public string AlbumId
         {

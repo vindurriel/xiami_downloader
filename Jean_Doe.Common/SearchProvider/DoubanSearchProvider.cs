@@ -18,7 +18,7 @@ public class DoubanSearchProvider : ISearchProvider
         {
             Items = new List<IMusic>(),
             Keyword = key,
-            SearchType = EnumSearchType.url,
+            SearchType = EnumSearchType.all,
             Page = 1,
         };
         if (string.IsNullOrEmpty(key) || !re_url.IsMatch(key)) return res;

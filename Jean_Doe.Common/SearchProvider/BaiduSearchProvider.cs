@@ -17,7 +17,7 @@ public class BaiduSearchProvider : ISearchProvider
         {
             Items = new List<IMusic>(),
             Keyword = key,
-            SearchType = EnumSearchType.url,
+            SearchType = EnumSearchType.all,
             Page = 1,
         };
         var url = string.Format(search_url, Uri.EscapeDataString(key));

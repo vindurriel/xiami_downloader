@@ -120,6 +120,7 @@ namespace Jean_Doe.MusicControl
         }
         #endregion
         Song song;
+        public string TypeColor { get { return "#d20101"; } }
         public Song Song
         {
             get

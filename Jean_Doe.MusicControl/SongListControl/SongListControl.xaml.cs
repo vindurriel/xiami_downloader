@@ -46,6 +46,7 @@ namespace Jean_Doe.MusicControl
             UIHelper.RunOnUI(() =>
             {
                 var ui = listView.ItemContainerGenerator.ContainerFromItem(song);
+                if (ui == null) return;
                 var storyboard = this.FindResource("FadeOut") as Storyboard;
                 Storyboard.SetTarget(storyboard, ui);
                 storyboard.Completed += (s, e) =>

@@ -34,9 +34,6 @@ namespace Jean_Doe.MusicControl
         }
         void SearchControl_Loaded(object sender, RoutedEventArgs e)
         {
-            var type = EnumSearchType.key;
-            Enum.TryParse(Global.AppSettings["SearchType"], out type);
-         
             var xtype = EnumMusicType.song;
             Enum.TryParse(Global.AppSettings["SearchResultType"], out xtype);
             var sel = combo_xiami_type.Items
@@ -48,7 +45,6 @@ namespace Jean_Doe.MusicControl
         void refresh()
         {
             if(hs == null) return;
-            hs.SearchType = SearchType;
             hs.SavePath = SavePath;
             hs.Load();
         }

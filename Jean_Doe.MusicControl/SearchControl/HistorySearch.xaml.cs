@@ -17,7 +17,6 @@ namespace Jean_Doe.MusicControl
     /// </summary>
     public partial class HistorySearch : ComboBox, IHandle<SearchResult>
     {
-        public EnumSearchType SearchType { get; set; }
         ObservableCollection<HistorySearchItem> HistoryItems = new ObservableCollection<HistorySearchItem>();
         public void Load()
         {
@@ -90,7 +89,7 @@ namespace Jean_Doe.MusicControl
 
         public void Handle(SearchResult message)
         {
-            if (message == null || message.SearchType != SearchType) return;
+            if (message == null) return;
             UIHelper.RunOnUI(new Action(() =>
             {
                 this.Upsert(message.Keyword, message.Count);

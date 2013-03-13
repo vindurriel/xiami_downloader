@@ -102,6 +102,7 @@
                                 <Border  Background="{DynamicResource darkBrush}"
                                                          CornerRadius="{Binding CornerRadius,ElementName=round}"
                                                          VerticalAlignment="Stretch" />
+                                <Rectangle Height="4" VerticalAlignment="Top" Fill="{DynamicResource skinBrush}"/>
                             </Grid>
                             <Grid Margin="{TemplateBinding Padding}">
                                 <ContentPresenter x:Name="content"

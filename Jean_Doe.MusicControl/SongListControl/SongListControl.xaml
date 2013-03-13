@@ -209,7 +209,7 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="completeTemplate">
-            <Grid Width="220" Height="70">
+            <Grid Width="220" Height="70" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
@@ -223,7 +223,7 @@
                 <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10,0">
                     <TextBlock Text="{Binding Name}" FontSize="18"  Style="{DynamicResource label_base}"/>
                     <TextBlock Style="{StaticResource label_base}"   Text="{Binding ArtistName}" />
-                    <TextBlock Style="{StaticResource label_base}"   Text="{Binding Type}" />
+                    <TextBlock Style="{StaticResource label_base}"   Text="{Binding AlbumName}" />
                     <!--<TextBlock Text="{Binding Date, StringFormat={}{0:yyyy/MM/dd HH:mm:ss}}" Style="{StaticResource label_base}" />-->
                 </StackPanel>
             </Grid>
@@ -261,7 +261,7 @@
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Style.Triggers>
-                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown"> 
+                        <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
                             <BeginStoryboard>
                                 <Storyboard>
                                     <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"   Duration="0:0:0.1"   EasingFunction="{StaticResource easeFunc}"
@@ -282,7 +282,7 @@
                             </BeginStoryboard>
                         </EventTrigger>
                         <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                            
+
                             <BeginStoryboard>
                                 <Storyboard>
                                     <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0" EasingFunction="{StaticResource easeFunc}"
@@ -317,18 +317,25 @@
                     <Setter Property="RenderTransformOrigin" Value=".5,.5"/>
                     <Setter Property="Margin" Value="5"/>
                     <Setter Property="Padding" Value="15"/>
-                    
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                <Grid>
-                                    <Rectangle x:Name="normal"  Fill="#444"/>
-                                    <Rectangle x:Name="mouseover" Opacity="0" StrokeThickness="4" Stroke="{DynamicResource lightBrush}"/>
+                                <Grid Background="Black">
+                                    <Rectangle x:Name="normal"  Fill="#444" />
+                                    <Rectangle x:Name="mouseover" Opacity="0" StrokeThickness="4" Stroke="{Binding TypeColor}"/>
                                     <Grid x:Name="pressed" Opacity="0">
-                                        <Border BorderThickness="4" BorderBrush="{DynamicResource skinBrush}"/>
-                                        <TextBlock Text="&#x25E5;" FontFamily="Segoe UI Symbol" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-15,0,0" FontSize="45" Foreground="{DynamicResource skinBrush}"/>
-                                        <TextBlock Text="&#xE001;" FontFamily="Segoe UI Symbol" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="15" Foreground="White"/>
+                                        <Border BorderThickness="4" BorderBrush="{Binding TypeColor}"/>
+                                        <TextBlock Text="&#x25E5;" FontFamily="Segoe UI Symbol" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-15,0,0" FontSize="45" Foreground="{Binding TypeColor}"/>
+                                        <TextBlock Text="&#xE001;"  FontFamily="Segoe UI Symbol" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="15" Foreground="White"/>
                                     </Grid>
+                                    <TextBlock  Text="{Binding Type}"
+                                                Margin="5,0,0,5"
+                                        Foreground="White"  
+                                        FontFamily="Segoe UI Light" 
+                                        Opacity="1" 
+                                        HorizontalAlignment="Left" VerticalAlignment="Bottom" 
+                                        FontSize="13"
+                                        />
                                     <ContentPresenter Margin="{TemplateBinding Padding}"/>
                                     <VisualStateManager.VisualStateGroups>
                                         <VisualStateGroup x:Name="CommonStates">

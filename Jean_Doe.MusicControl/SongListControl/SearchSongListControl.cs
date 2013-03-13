@@ -114,9 +114,9 @@ namespace Jean_Doe.MusicControl
                new CharmAction("下载",this.btn_download_add_Click,(s)=>{
                    return (s as SongListControl).SelectedSongs.Count()>0;
                }),
-               new CharmAction("查看专辑歌曲",link_album,IsType<IHasAlbum>),
-               new CharmAction("该精选集歌曲",link_collection,IsType<IHasCollection>),
-               new CharmAction("查看歌手歌曲",link_artist,IsType<IHasArtist>),
+               new CharmAction("查看专辑的歌曲",link_album,IsType<IHasAlbum>),
+               new CharmAction("查看精选集的歌曲",link_collection,IsType<IHasCollection>),
+               new CharmAction("查看艺术家的歌曲",link_artist,IsType<IHasArtist>),
                new CharmAction("取消选择", btn_cancel_selection_Click,defaultActionValidate),
             };
         }
