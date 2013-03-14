@@ -293,18 +293,17 @@ namespace MusicPlayer
                     {
                         Page = 1;
                         busyIndicator.StartSpin();
+                        setSearchTitle("");
                     }));
-                    //setSearchTitle("开始搜索");
                     break;
                 case EnumSearchState.Working:
                     if (message.SearchResult == null) return;
                     var key = message.SearchResult.Keyword;
                     var t = getSearchResultDisplay(message.SearchResult.SearchType, key);
                     setSearchTitle(t);
-                    //setSearchTitle(string.Format("正在获取第{0}页", message.SearchResult.Page));
                     break;
+                case EnumSearchState.Cancelling:
                 case EnumSearchState.Finished:
-                    //setSearchTitle("搜索完成");
                     UIHelper.RunOnUI(new Action(() =>
                     {
                         Page = 1;

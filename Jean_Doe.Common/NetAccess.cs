@@ -26,12 +26,13 @@ namespace Jean_Doe.Common
                     foreach (var token in cancelTokens)
                     {
                         if (token == null || token.IsCancellationRequested) continue;
-                        token.Cancel(true);
+                        token.Cancel(false);
                     }
                 }
             });
         }
         static List<CancellationTokenSource> cancelTokens = new List<CancellationTokenSource>();
+        static CancellationTokenSource cancelToken = new CancellationTokenSource();
         public async static Task<string> DownloadStringAsync(string url)
         {
             var tcs = new CancellationTokenSource();
@@ -45,6 +46,8 @@ namespace Jean_Doe.Common
             {
                 var x = await client.GetAsync(url, tcs.Token);
                 res = await x.Content.ReadAsStringAsync();
+                if (tcs.IsCancellationRequested)
+                    throw new OperationCanceledException("");
             }
             catch (Exception e)
             {

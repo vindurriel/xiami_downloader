@@ -191,7 +191,7 @@ namespace Jean_Doe.MusicControl
         {
             var t = listView.SelectedItems.OfType<IHasCollection>().FirstOrDefault();
             if (t == null) return;
-            await SearchManager.GetMusic(t.CollectionId,EnumSearchType.collection_song);
+            await SearchManager.GetMusic(t.CollectionId,EnumSearchType.collect);
         }
 
         protected virtual void go_song(object sender, RoutedEventArgs e)

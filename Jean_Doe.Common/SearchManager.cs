@@ -64,6 +64,7 @@ namespace Jean_Doe.Common
         {
             NetAccess.CancelAsync();
             state = EnumSearchState.Cancelling;
+            notifyState();
         }
     }
     public enum EnumSearchState { Started, Working, Cancelling, Finished }

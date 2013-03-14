@@ -115,7 +115,7 @@ namespace Jean_Doe.MusicControl
                         break;
                     default:
                         img_stop.Visibility = Visibility.Collapsed;
-                        img_search.Visibility = Visibility.Visible;
+                        img_search.Visibility = Visibility.Visible; 
                         break;
                 }
             }));

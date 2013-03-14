@@ -10,6 +10,8 @@ using Jean_Doe.Common;
 using Artwork.MessageBus;
 using Artwork.MessageBus.Interfaces;
 using System.Collections.Generic;
+using System.Windows.Data;
+using System.ComponentModel;
 namespace Jean_Doe.MusicControl
 {
     /// <summary>
@@ -68,12 +70,15 @@ namespace Jean_Doe.MusicControl
             }
             SelectedIndex = 0;
         }
+        ICollectionView Source;
         public HistorySearch()
         {
             InitializeComponent();
             MessageBus.Instance.Subscribe(this);
             IsEditable = true;
-            ItemsSource = HistoryItems;
+            Source = CollectionViewSource.GetDefaultView(HistoryItems);
+            Source.Filter = (s) => { return HistoryItems.IndexOf(s as HistorySearchItem) < 10; };
+            ItemsSource = Source;
             MinWidth = 200;
             MouseLeftButtonUp += HistorySearch_MouseLeftButtonUp;
         }

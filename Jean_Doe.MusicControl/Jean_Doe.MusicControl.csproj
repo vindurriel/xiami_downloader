@@ -133,7 +133,7 @@
     <Compile Include="SearchControl\HistorySearch.xaml.cs">
       <DependentUpon>HistorySearch.xaml</DependentUpon>
     </Compile>
-    <Compile Include="HistorySearchItem.cs" />
+    <Compile Include="SearchControl\HistorySearchItem.cs" />
     <Compile Include="MsgChangeWindowState.cs" />
     <Compile Include="Controls\ProgressBar.xaml.cs">
       <DependentUpon>ProgressBar.xaml</DependentUpon>
