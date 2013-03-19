@@ -67,18 +67,24 @@ namespace Jean_Doe.MusicControl
             }));
         }
         #endregion
-
+        public ListView ListView { get { return listView; } }
         MusicViewModelList items;
         public MusicViewModelList Items { get { return items; } }
         private int itemsCount;
         public int ItemsCount { get { return itemsCount; } set { itemsCount = value; Notify("ItemsCount"); } }
         private int selectCount;
         public int SelectCount { get { return selectCount; } set { selectCount = value; Notify("SelectCount"); } }
+        object nowPlaying = null;
+        public object NowPlaying { get { return nowPlaying; } set { nowPlaying = value; Notify("NowPlaying"); } }
         public IEnumerable<SongViewModel> SelectedSongs
         {
             get
             {
                 return listView.SelectedItems.OfType<SongViewModel>();
+            }
+            set 
+            {
+                listView.SelectedItem = value.FirstOrDefault();
             }
         }
         public IEnumerable<MusicViewModel> SelectedItems
@@ -91,6 +97,7 @@ namespace Jean_Doe.MusicControl
         public SongListControl()
         {
             InitializeComponent();
+            btn_show.Click += btn_show_Click;
             btn_filter.Click += (s, e) => ApplyFilter();
             input_filter.TextChanged += (s, e) =>
             {
@@ -233,6 +240,12 @@ namespace Jean_Doe.MusicControl
           {
               SelectCount = listView.SelectedItems.Count;
           }));
+        }
+
+        void btn_show_Click(object sender, RoutedEventArgs e)
+        {
+            SelectedSongs = new SongViewModel[] { NowPlaying as SongViewModel };
+            listView.ScrollIntoView(NowPlaying);
         }
         private void select_all_Click(object sender, RoutedEventArgs e)
         {

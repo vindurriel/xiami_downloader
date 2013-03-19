@@ -167,6 +167,13 @@
                                           x:Name="color_colorskin"></controls:ColorPicker>
                     </Border>
                 </Popup>
+                <TextBlock Text="下一首模式" />
+                <ComboBox x:Name="combo_playnextmode">
+                    <ComboBoxItem Content="顺序"
+                              Tag="Sequential" />
+                    <ComboBoxItem Content="随机"
+                              Tag="Random" />
+                </ComboBox>
             </StackPanel>
         </ScrollViewer>
     </Grid>

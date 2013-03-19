@@ -52,7 +52,7 @@
     <ListView     ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden"   BorderThickness="0" Background="Transparent" x:Name="charmBarItemWrapper" SelectionMode="Single">
         <ListView.ItemsPanel>
             <ItemsPanelTemplate>
-                <StackPanel Orientation="Horizontal" Margin="0"/>
+                <StackPanel Orientation="Horizontal" Margin="1"/>
             </ItemsPanelTemplate>
         </ListView.ItemsPanel>
         <ListView.ItemContainerStyle>

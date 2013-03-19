@@ -220,8 +220,7 @@
                             </Style>
                         </Grid.Style>
                     </Grid>
-                </Grid>
-               
+                </Grid>    
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -254,10 +253,6 @@
                     <Grid x:Name="page3"
                 		Opacity="0"
                 		IsHitTestVisible="false">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
                         <controls:CompleteSongListControl x:Name="list_complete" />
 
                     </Grid>

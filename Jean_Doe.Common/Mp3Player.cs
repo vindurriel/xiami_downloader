@@ -6,10 +6,21 @@ using System.Threading.Tasks;
 using NAudio;
 using NAudio.Wave;
 using System.Windows.Threading;
+using System.ComponentModel;
 namespace Jean_Doe.Common
 {
+    public enum EnumPlayNextMode
+    {
+        [Description("顺序")]
+        Sequential,
+        [Description("随机")]
+        Random,
+        [Description("随机")]
+        Stop,
+    }
     public class Mp3Player
     {
+        public static EnumPlayNextMode PlayNextMode { get; set; }
         static IWavePlayer waveOutDevice = new WaveOut();
         static WaveStream waveStream;
         public static event EventHandler<TimeChangedEventArgs> TimeChanged;
@@ -29,7 +40,14 @@ namespace Jean_Doe.Common
         static Mp3Player()
         {
             timer.Tick += timer_Tick;
+            Global.ListenToEvent("PlayNextMode", (s) => { 
+                var mode=EnumPlayNextMode.Sequential;
+                Enum.TryParse(s,out mode);
+                PlayNextMode = mode;
+            });
+
         }
+
 
         static void timer_Tick(object sender, EventArgs e)
         {

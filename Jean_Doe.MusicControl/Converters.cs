@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 namespace Jean_Doe.MusicControl
 {
@@ -32,7 +33,7 @@ namespace Jean_Doe.MusicControl
             {
                 return (double)values[0] / (double)values[1];
             }
-            catch 
+            catch
             {
                 return 0;
             }

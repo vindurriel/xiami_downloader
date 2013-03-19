@@ -236,9 +236,36 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <DockPanel Margin="5,10"  Height="24" LastChildFill="False" Visibility="{Binding ItemsCount,ElementName=me,Converter={StaticResource int2vis}}">
+        <DockPanel x:Name="now_playing"  LastChildFill="False" DataContext="{Binding NowPlaying,ElementName=me}">
+            <DockPanel.Resources>
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                    <Setter Property="Margin" Value="5,0"/>
+                    <Setter Property="Padding" Value="10"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
+                </Style>
+                <Style TargetType="TextBlock" >
+                    <Setter Property="Foreground"  Value="White"/>
+                    <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+            </DockPanel.Resources>
+            <Button    x:Name="btn_show" Content="{Binding Name}">
+            </Button>
+            <!--<ContentControl Foreground="White" IsHitTestVisible="False" Content="{Binding}" HorizontalAlignment="Left">
+                <ContentControl.ContentTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                        </Grid>
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>-->
+        </DockPanel>
+        <DockPanel Grid.Row="1" Margin="5,10"    LastChildFill="False" Visibility="{Binding ItemsCount,ElementName=me,Converter={StaticResource int2vis}}">
             <ComboBox  x:Name="combo_sort">
                 <ComboBoxItem Tag="Default_Asc" IsSelected="True">无排序</ComboBoxItem>
                 <ComboBoxItem Tag="Date_Dsc">最近下载</ComboBoxItem>
@@ -247,13 +274,13 @@
                 <ComboBoxItem Tag="Name_Dsc">名称降序</ComboBoxItem>
             </ComboBox>
             <Grid Margin="0,0" >
-                <TextBox   Foreground="White"  BorderThickness="0" Width="200" x:Name="input_filter" Background="#555"/>
+                <TextBox VerticalContentAlignment="Center"  Foreground="White"  BorderThickness="0" Width="200" x:Name="input_filter" Background="#555"/>
                 <TextBlock VerticalAlignment="Center" Margin="3" x:Name="mask_filter" Text="输入字符以过滤"  IsHitTestVisible="False" Foreground="{DynamicResource lightBrush}"  />
             </Grid>
-            <Button Height="24" Content="&#xE16E;" Margin="1,0" MinWidth="0"  Width="70" x:Name="btn_filter" FontFamily="Segoe UI Symbol"/>
+            <Button   Content="&#xE16E;" Margin="1,0" MinWidth="0"  Width="70" x:Name="btn_filter" FontFamily="Segoe UI Symbol"/>
         </DockPanel>
-        <TextBlock FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource label_base}" Margin="10,10,0,0" Grid.Row="1">列表为空</TextBlock>
-        <ListView Grid.Row="1" ItemTemplate="{StaticResource completeTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+        <TextBlock FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource label_base}" Margin="10,10,0,0" Grid.Row="2">列表为空</TextBlock>
+        <ListView Grid.Row="2" ItemTemplate="{StaticResource completeTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
             BorderThickness="0" 
             Background="Transparent" 
                   ItemsSource="{Binding}"

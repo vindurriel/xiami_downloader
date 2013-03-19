@@ -32,6 +32,7 @@ namespace MusicPlayer
                 {"MaxConnection", EnumConfigControlType.combo},
                 {"ColorSkin", EnumConfigControlType.color},
                 {"ShowDetails", EnumConfigControlType.toggle},
+                {"PlayNextMode", EnumConfigControlType.combo},
             };
         public ConfigPage()
         {

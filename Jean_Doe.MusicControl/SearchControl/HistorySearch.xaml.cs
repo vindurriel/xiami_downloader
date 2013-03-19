@@ -17,7 +17,7 @@ namespace Jean_Doe.MusicControl
     /// <summary>
     /// Interaction logic for HistorySearch.xaml
     /// </summary>
-    public partial class HistorySearch : ComboBox, IHandle<SearchResult>
+    public partial class HistorySearch : IHandle<SearchResult>
     {
         ObservableCollection<HistorySearchItem> HistoryItems = new ObservableCollection<HistorySearchItem>();
         public void Load()
@@ -75,7 +75,7 @@ namespace Jean_Doe.MusicControl
         {
             InitializeComponent();
             MessageBus.Instance.Subscribe(this);
-            IsEditable = true;
+            //IsEditable = true;
             Source = CollectionViewSource.GetDefaultView(HistoryItems);
             Source.Filter = (s) => { return HistoryItems.IndexOf(s as HistorySearchItem) < 10; };
             ItemsSource = Source;

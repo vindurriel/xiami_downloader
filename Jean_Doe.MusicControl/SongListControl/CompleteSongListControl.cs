@@ -25,6 +25,7 @@ namespace Jean_Doe.MusicControl
             //    SortDirection = System.ComponentModel.ListSortDirection.Ascending,
             //});
             Items.CollectionChanged += Items_CollectionChanged;
+            now_playing.Visibility = Visibility.Visible;
         }
 
         void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -61,6 +62,7 @@ namespace Jean_Doe.MusicControl
                     new CharmAction("播放/暂停",this.btn_play_Click,(s)=>{
                         return (s as CompleteSongListControl).SelectCount == 1;
                     }),    
+                    new CharmAction("下一首",this.btn_next_Click,defaultActionValidate),    
                     new CharmAction("查看专辑歌曲",link_album,IsType<IHasAlbum>),
                     new CharmAction("查看歌手歌曲",link_artist,IsType<IHasArtist>),
                     new CharmAction("存为播放列表",this.btn_save_playlist_Click,defaultActionValidate),
@@ -79,8 +81,36 @@ namespace Jean_Doe.MusicControl
                 if (!string.IsNullOrEmpty(item.Song.FilePath))
                 {
                     Mp3Player.PlayPause(item.Song.FilePath);
+                    NowPlaying=item;
                 }
             }
+        }
+        void btn_next_Click(object sender, RoutedEventArgs e)
+        {
+            if (Items.Count == 0) return;
+            var slider = Artwork.DataBus.DataBus.Get("slider") as Slider;
+            slider.Visibility = Visibility.Visible;
+            Mp3Player.PlayNextMode = Mp3Player.PlayNextMode;
+            SongViewModel item = null;
+            if (Mp3Player.PlayNextMode == EnumPlayNextMode.Random)
+            {
+                var r = new Random().Next(Items.Count);
+                item = Items.OfType<SongViewModel>().ToList().ElementAt(r);
+            }
+            else if (Mp3Player.PlayNextMode == EnumPlayNextMode.Sequential)
+            {
+                int i = Items.IndexOf(SelectedSongs.FirstOrDefault());
+                if (i == -1 || i >= Items.Count) return;
+                i = i == Items.Count - 1 ? 0 : i + 1;
+                item = Items.OfType<SongViewModel>().ToList().ElementAt(i);
+                SelectedSongs = new SongViewModel[] { item };
+            }
+            if (item == null || !item.HasMp3 || string.IsNullOrEmpty(item.Song.FilePath)) return;
+            Mp3Player.PlayPause(item.Song.FilePath);
+            SelectedSongs = new SongViewModel[] { item };
+            NowPlaying = item;
+            listView.ScrollIntoView(item);
+
         }
 
         void btn_save_playlist_Click(object sender, RoutedEventArgs e)

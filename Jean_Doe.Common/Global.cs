@@ -43,6 +43,7 @@ namespace Jean_Doe.Common
             {"ColorSkin","#ffaaff"},
             {"SearchType","key"},
             {"SearchResultType","song"},
+            {"PlayNextMode","Sequential"},
         };
         public static void LoadSettings()
         {
