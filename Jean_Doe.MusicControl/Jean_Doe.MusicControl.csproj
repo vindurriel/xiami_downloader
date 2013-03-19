@@ -213,6 +213,12 @@
   <ItemGroup>
     <Folder Include="Messages\" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\album.png" />
+    <Resource Include="Resources\artist.png" />
+    <Resource Include="Resources\collect.png" />
+    <Resource Include="Resources\fav.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

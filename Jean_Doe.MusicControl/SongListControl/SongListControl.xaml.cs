@@ -97,7 +97,6 @@ namespace Jean_Doe.MusicControl
         public SongListControl()
         {
             InitializeComponent();
-            btn_show.Click += btn_show_Click;
             btn_filter.Click += (s, e) => ApplyFilter();
             input_filter.TextChanged += (s, e) =>
             {
@@ -242,11 +241,6 @@ namespace Jean_Doe.MusicControl
           }));
         }
 
-        void btn_show_Click(object sender, RoutedEventArgs e)
-        {
-            SelectedSongs = new SongViewModel[] { NowPlaying as SongViewModel };
-            listView.ScrollIntoView(NowPlaying);
-        }
         private void select_all_Click(object sender, RoutedEventArgs e)
         {
             listView.SelectAll();

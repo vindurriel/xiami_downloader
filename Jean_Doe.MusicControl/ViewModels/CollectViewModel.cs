@@ -13,6 +13,7 @@ namespace Jean_Doe.MusicControl
             : base(a)
         {
             collect = a;
+            ImageSource = "/Jean_Doe.MusicControl;component/Resources/fav.png";
         }
         public string TypeColor { get { return "#588ae4"; } }
         public string CollectionId

@@ -17,13 +17,6 @@ namespace Jean_Doe.MusicControl
         public CompleteSongListControl()
         {
             MessageBus.Instance.Subscribe(this);
-            //dataGrid.Columns.Add(new DataGridTemplateColumn
-            //{
-            //    Header = "完成日期",
-            //    CellTemplate = dataGrid.FindResource("dateTemplate") as DataTemplate,
-            //    SortMemberPath = "Date",
-            //    SortDirection = System.ComponentModel.ListSortDirection.Ascending,
-            //});
             Items.CollectionChanged += Items_CollectionChanged;
             now_playing.Visibility = Visibility.Visible;
         }
@@ -61,16 +54,27 @@ namespace Jean_Doe.MusicControl
                     new CharmAction("取消选择",this.btn_cancel_selection_Click,defaultActionValidate),
                     new CharmAction("播放/暂停",this.btn_play_Click,(s)=>{
                         return (s as CompleteSongListControl).SelectCount == 1;
-                    }),    
+                    }),  
+                    new CharmAction("正在播放",this.btn_show_Click,(s)=>{
+                        var list = s as CompleteSongListControl;
+                        if (list.NowPlaying == null) return false;
+                        var song=list.SelectedSongs.FirstOrDefault();
+                        return !Object.ReferenceEquals(list.NowPlaying, song);
+                    }),  
                     new CharmAction("下一首",this.btn_next_Click,defaultActionValidate),    
                     new CharmAction("查看专辑歌曲",link_album,IsType<IHasAlbum>),
                     new CharmAction("查看歌手歌曲",link_artist,IsType<IHasArtist>),
-                    new CharmAction("存为播放列表",this.btn_save_playlist_Click,defaultActionValidate),
+                    new CharmAction("存为播放列表",this.btn_save_playlist_Click,s=>(s as CompleteSongListControl).SelectedSongs.Count()>1),
                     new CharmAction("复制文件到剪贴板",this.btn_copy_Click,defaultActionValidate),
                     new CharmAction("删除",this.btn_remove_complete_Click,defaultActionValidate),
                 };
         }
-
+        void btn_show_Click(object sender, RoutedEventArgs e)
+        {
+            SelectedSongs = new SongViewModel[] { NowPlaying as SongViewModel };
+            listView.ScrollIntoView(NowPlaying);
+            ActionBarService.Refresh();
+        }
         void btn_play_Click(object sender, RoutedEventArgs e)
         {
             var slider = Artwork.DataBus.DataBus.Get("slider") as Slider;
@@ -81,7 +85,7 @@ namespace Jean_Doe.MusicControl
                 if (!string.IsNullOrEmpty(item.Song.FilePath))
                 {
                     Mp3Player.PlayPause(item.Song.FilePath);
-                    NowPlaying=item;
+                    NowPlaying = item;
                 }
             }
         }
@@ -90,20 +94,25 @@ namespace Jean_Doe.MusicControl
             if (Items.Count == 0) return;
             var slider = Artwork.DataBus.DataBus.Get("slider") as Slider;
             slider.Visibility = Visibility.Visible;
-            Mp3Player.PlayNextMode = Mp3Player.PlayNextMode;
             SongViewModel item = null;
-            if (Mp3Player.PlayNextMode == EnumPlayNextMode.Random)
+            var sel = SelectedSongs.FirstOrDefault();
+            var mode = EnumPlayNextMode.Random;
+            Enum.TryParse(Global.AppSettings["PlayNextMode"], out mode);
+            if (!Object.ReferenceEquals(NowPlaying, sel))
+            {
+                item = sel;
+            }
+            else if (mode == EnumPlayNextMode.Random)
             {
                 var r = new Random().Next(Items.Count);
                 item = Items.OfType<SongViewModel>().ToList().ElementAt(r);
             }
-            else if (Mp3Player.PlayNextMode == EnumPlayNextMode.Sequential)
+            else if (mode == EnumPlayNextMode.Sequential)
             {
-                int i = Items.IndexOf(SelectedSongs.FirstOrDefault());
+                int i = Items.IndexOf(sel);
                 if (i == -1 || i >= Items.Count) return;
                 i = i == Items.Count - 1 ? 0 : i + 1;
                 item = Items.OfType<SongViewModel>().ToList().ElementAt(i);
-                SelectedSongs = new SongViewModel[] { item };
             }
             if (item == null || !item.HasMp3 || string.IsNullOrEmpty(item.Song.FilePath)) return;
             Mp3Player.PlayPause(item.Song.FilePath);

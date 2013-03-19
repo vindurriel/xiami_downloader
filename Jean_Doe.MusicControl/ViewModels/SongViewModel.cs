@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using Jean_Doe.Common;
 namespace Jean_Doe.MusicControl
 {
-    public class SongViewModel : MusicViewModel, IHasArtist,IHasAlbum
+    public class SongViewModel : MusicViewModel, IHasArtist, IHasAlbum
     {
         #region Properties
         double playTimes = 0;
@@ -63,7 +63,7 @@ namespace Jean_Doe.MusicControl
 
         public void SetProgress(int i)
         {
-            if(i >= 100)
+            if (i >= 100)
             {
                 i = 100;
             }
@@ -72,9 +72,9 @@ namespace Jean_Doe.MusicControl
         #endregion
         public void Open()
         {
-            if(!CanOpen) return;
+            if (!CanOpen) return;
             var filename = System.IO.Path.Combine(Global.AppSettings["DownloadFolder"], Dir, FileNameBase + ".mp3");
-            if(File.Exists(filename))
+            if (File.Exists(filename))
             {
                 RunProgramHelper.RunProgram("explorer.exe", string.Format("/select, \"{0}\"", filename));
             }
@@ -83,7 +83,9 @@ namespace Jean_Doe.MusicControl
             : base(song)
         {
             this.song = song;
-            ImageSource = System.IO.Path.Combine(Global.BasePath, "cache", AlbumId + ".art");
+            var art = System.IO.Path.Combine(Global.BasePath, "cache", AlbumId + ".art");
+            if (File.Exists(art))
+                ImageSource = art;                
         }
         #region 试听
         private WebBrowser playContent;
@@ -103,7 +105,7 @@ namespace Jean_Doe.MusicControl
         }
         public void Stop()
         {
-            if(PlayContent == null) return;
+            if (PlayContent == null) return;
             PlayContent.Navigated += (s, e) =>
             {
                 PlayContent.Dispose();
@@ -115,7 +117,7 @@ namespace Jean_Doe.MusicControl
         bool isPlaying = false;
         public void TogglePlay()
         {
-            if(isPlaying) Stop();
+            if (isPlaying) Stop();
             else Play();
         }
         #endregion
@@ -146,11 +148,11 @@ namespace Jean_Doe.MusicControl
         {
             var pattern = isFolder ? Global.AppSettings["FolderPattern"] : Global.AppSettings["SongnamePattern"];
             var tags = new string[] { "ArtistName", "AlbumName", "Id", "Name" };
-            foreach(var tag in tags)
+            foreach (var tag in tags)
             {
                 System.Reflection.PropertyInfo pi = GetType().GetProperty(tag);
                 var value = pi.GetValue(this, null);
-                if(value != null)
+                if (value != null)
                     pattern = pattern.Replace("%" + tag, value.ToString().ValidPath(ignoreSep: isFolder));
             }
             return pattern;
@@ -159,14 +161,14 @@ namespace Jean_Doe.MusicControl
         {
             get
             {
-                return HasMp3  && HasArt;
+                return HasMp3 && HasArt;
             }
         }
         public bool Done
         {
             get
             {
-				return HasMp3;
+                return HasMp3;
             }
         }
     }
