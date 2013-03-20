@@ -12,7 +12,7 @@ using Jean_Doe.Common;
 using Jean_Doe.Downloader;
 namespace Jean_Doe.MusicControl
 {
-    public class CompleteSongListControl : SongListControl, IHandle<MsgDownloadStateChanged>, IActionProvider
+    public class CompleteSongListControl : SongListControl, IHandle<MsgDownloadStateChanged>, IHandle<MsgRequestNextSong>, IActionProvider
     {
         public CompleteSongListControl()
         {
@@ -79,48 +79,15 @@ namespace Jean_Doe.MusicControl
         {
             var slider = Artwork.DataBus.DataBus.Get("slider") as Slider;
             slider.Visibility = Visibility.Visible;
-            foreach (var item in SelectedSongs)
+            var item = SelectedSongs.FirstOrDefault();
+            if (item==null || !item.HasMp3) return;
+            if (!string.IsNullOrEmpty(item.Song.FilePath))
             {
-                if (!item.HasMp3) continue;
-                if (!string.IsNullOrEmpty(item.Song.FilePath))
-                {
-                    Mp3Player.PlayPause(item.Song.FilePath);
-                    NowPlaying = item;
-                }
+                Mp3Player.PlayPause(item.Song.FilePath);
+                NowPlaying = item;
             }
         }
-        void btn_next_Click(object sender, RoutedEventArgs e)
-        {
-            if (Items.Count == 0) return;
-            var slider = Artwork.DataBus.DataBus.Get("slider") as Slider;
-            slider.Visibility = Visibility.Visible;
-            SongViewModel item = null;
-            var sel = SelectedSongs.FirstOrDefault();
-            var mode = EnumPlayNextMode.Random;
-            Enum.TryParse(Global.AppSettings["PlayNextMode"], out mode);
-            if (!Object.ReferenceEquals(NowPlaying, sel))
-            {
-                item = sel;
-            }
-            else if (mode == EnumPlayNextMode.Random)
-            {
-                var r = new Random().Next(Items.Count);
-                item = Items.OfType<SongViewModel>().ToList().ElementAt(r);
-            }
-            else if (mode == EnumPlayNextMode.Sequential)
-            {
-                int i = Items.IndexOf(sel);
-                if (i == -1 || i >= Items.Count) return;
-                i = i == Items.Count - 1 ? 0 : i + 1;
-                item = Items.OfType<SongViewModel>().ToList().ElementAt(i);
-            }
-            if (item == null || !item.HasMp3 || string.IsNullOrEmpty(item.Song.FilePath)) return;
-            Mp3Player.PlayPause(item.Song.FilePath);
-            SelectedSongs = new SongViewModel[] { item };
-            NowPlaying = item;
-            listView.ScrollIntoView(item);
 
-        }
 
         void btn_save_playlist_Click(object sender, RoutedEventArgs e)
         {
@@ -178,6 +145,50 @@ namespace Jean_Doe.MusicControl
                 path = Global.AppSettings["DownloadFolder"] + "\\default.m3u";
             File.WriteAllLines(path, Playlist, Encoding.UTF8);
             return path;
+        }
+
+        public void Handle(MsgRequestNextSong message)
+        {
+            if (Items.Count == 0) return;
+            SongViewModel item = null;
+            var now = (NowPlaying as SongViewModel) ?? SelectedSongs.FirstOrDefault() ;
+            var mode = EnumPlayNextMode.Random;
+            Enum.TryParse(Global.AppSettings["PlayNextMode"], out mode);
+            switch (mode)
+            {
+                case EnumPlayNextMode.Sequential:
+                     int i = Items.IndexOf(now);
+                if (i == -1 || i >= Items.Count) return;
+                i = i == Items.Count - 1 ? 0 : i + 1;
+                item = Items.OfType<SongViewModel>().ToList().ElementAt(i);
+                    break;
+                case EnumPlayNextMode.Random:
+                    var r = new Random().Next(Items.Count);
+                item = Items.OfType<SongViewModel>().ToList().ElementAt(r);
+                    break;
+                case EnumPlayNextMode.Repeat:
+                    item = now;
+                    break;
+                default:
+                    break;
+            }
+            if (item == null || !item.HasMp3 || string.IsNullOrEmpty(item.Song.FilePath)) return;
+            message.Next = item.Song.FilePath;
+            message.NextObject = item;
+            NowPlaying = item;
+            SelectedSongs = new SongViewModel[] { item };
+            listView.ScrollIntoView(item);
+            ActionBarService.Refresh();
+        }
+        void btn_next_Click(object sender, RoutedEventArgs e)
+        {
+            var msg = new MsgRequestNextSong();
+            Handle(msg);
+            if (msg.Next == null)
+                return;
+            var slider = Artwork.DataBus.DataBus.Get("slider") as Slider;
+            slider.Visibility = Visibility.Visible;
+            Mp3Player.PlayPause(msg.Next);
         }
     }
 }

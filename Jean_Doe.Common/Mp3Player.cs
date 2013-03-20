@@ -15,6 +15,8 @@ namespace Jean_Doe.Common
         Sequential,
         [Description("随机")]
         Random,
+        [Description("单曲循环")]
+        Repeat,
     }
     public class Mp3Player
     {
@@ -44,17 +46,25 @@ namespace Jean_Doe.Common
         {
             if (waveStream.Length<=waveStream.Position)
             {
-                CurrentTime = TimeSpan.Zero;
+                var msg=new MsgRequestNextSong();
+                Artwork.MessageBus.MessageBus.Instance.Publish(msg);
+                if (!string.IsNullOrEmpty(msg.Next))
+                    PlayPause(msg.Next);
             }
             if (TimeChanged != null && waveStream!=null)
                 TimeChanged(null, new TimeChangedEventArgs { Total = TimeSpan.Zero, Current = waveStream.CurrentTime });
         }
         public static void PlayPause(string filepath)
         {
-
+            if (!System.IO.File.Exists(filepath))
+                return;
             if (filepath == FilePath)
             {
-                if (IsPlaying)
+                if (waveStream.Length <= waveStream.Position)
+                {
+                    CurrentTime = TimeSpan.Zero;
+                }
+                else if (IsPlaying)
                 {
                     waveOutDevice.Pause();
                     timer.Stop();
@@ -99,5 +109,10 @@ namespace Jean_Doe.Common
             public TimeSpan Current { get; set; }
             public bool IsNewSong { get; set; }
         }
+    }
+    public class MsgRequestNextSong
+    {
+        public string Next { get; set; }
+        public object NextObject { get; set; }
     }
 }

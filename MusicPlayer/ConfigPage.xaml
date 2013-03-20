@@ -173,6 +173,8 @@
                               Tag="Sequential" />
                     <ComboBoxItem Content="随机"
                               Tag="Random" />
+                    <ComboBoxItem Content="单曲循环"
+                              Tag="Repeat" />
                 </ComboBox>
             </StackPanel>
         </ScrollViewer>
