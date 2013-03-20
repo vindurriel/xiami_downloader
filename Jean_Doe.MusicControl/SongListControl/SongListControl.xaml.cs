@@ -71,7 +71,15 @@ namespace Jean_Doe.MusicControl
         MusicViewModelList items;
         public MusicViewModelList Items { get { return items; } }
         private int itemsCount;
-        public int ItemsCount { get { return itemsCount; } set { itemsCount = value; Notify("ItemsCount"); } }
+        public int ItemsCount
+        {
+            get { return itemsCount; }
+            set
+            {
+                itemsCount = value; Notify("ItemsCount");
+                emptyText.Visibility = value > 0 ? Visibility.Collapsed : Visibility.Visible;
+            }
+        }
         private int selectCount;
         public int SelectCount { get { return selectCount; } set { selectCount = value; Notify("SelectCount"); } }
         object nowPlaying = null;
@@ -82,7 +90,7 @@ namespace Jean_Doe.MusicControl
             {
                 return listView.SelectedItems.OfType<SongViewModel>();
             }
-            set 
+            set
             {
                 listView.SelectedItem = value.FirstOrDefault();
             }
@@ -97,11 +105,12 @@ namespace Jean_Doe.MusicControl
         public SongListControl()
         {
             InitializeComponent();
-            btn_filter.Click += (s, e) => ApplyFilter();
+            //btn_filter.Click += (s, e) => ApplyFilter();
             input_filter.TextChanged += (s, e) =>
             {
                 if (!string.IsNullOrEmpty(input_filter.Text))
                     mask_filter.Visibility = Visibility.Collapsed;
+                ApplyFilter();
             };
             input_filter.GotFocus += (s, e) =>
                 {
@@ -197,7 +206,7 @@ namespace Jean_Doe.MusicControl
         {
             var t = listView.SelectedItems.OfType<IHasCollection>().FirstOrDefault();
             if (t == null) return;
-            await SearchManager.GetMusic(t.CollectionId,EnumSearchType.collect);
+            await SearchManager.GetMusic(t.CollectionId, EnumSearchType.collect);
         }
 
         protected virtual void go_song(object sender, RoutedEventArgs e)
@@ -311,7 +320,6 @@ namespace Jean_Doe.MusicControl
             var s = (source as SongListControl);
             return s.SelectedItems.Count(x => x is TInterface) == 1;
         }
-
         private void ApplyFilter()
         {
             Source.Filter = filter;
@@ -335,13 +343,7 @@ namespace Jean_Doe.MusicControl
             if (string.IsNullOrWhiteSpace(input_filter.Text)) return true;
             var music = o as MusicViewModel;
             if (music == null) return false;
-            var text = new List<string>();
-            text.Add(music.Name.ToLower());
-            if (o is IHasAlbum)
-                text.Add(((IHasAlbum)o).AlbumName.ToLower());
-            if (o is IHasArtist)
-                text.Add(((IHasArtist)o).ArtistName.ToLower());
-            return string.Join(" ", text).Contains(input_filter.Text.ToLower());
+            return music.SearchStr.Contains(input_filter.Text.ToLower());
         }
     }
 }

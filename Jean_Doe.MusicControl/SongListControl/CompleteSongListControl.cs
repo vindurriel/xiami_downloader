@@ -174,7 +174,6 @@ namespace Jean_Doe.MusicControl
             }
             if (item == null || !item.HasMp3 || string.IsNullOrEmpty(item.Song.FilePath)) return;
             message.Next = item.Song.FilePath;
-            message.NextObject = item;
             NowPlaying = item;
             SelectedSongs = new SongViewModel[] { item };
             listView.ScrollIntoView(item);

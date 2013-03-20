@@ -113,6 +113,5 @@ namespace Jean_Doe.Common
     public class MsgRequestNextSong
     {
         public string Next { get; set; }
-        public object NextObject { get; set; }
     }
 }

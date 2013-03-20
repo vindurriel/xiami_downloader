@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using Jean_Doe.Common;
+using System.Collections.Generic;
 namespace Jean_Doe.MusicControl
 {
     public class MusicViewModel : INotifyPropertyChanged
@@ -23,6 +24,25 @@ namespace Jean_Doe.MusicControl
         {
             music = m;
         }
+        private string searchStr=null;
+
+        public string SearchStr
+        {
+            get
+            {
+                if (searchStr == null) {
+                    var text = new List<string>();
+                    text.Add(Name.ToLower());
+                    if (this is IHasAlbum)
+                        text.Add(((IHasAlbum)this).AlbumName.ToLower());
+                    if (this is IHasArtist)
+                        text.Add(((IHasArtist)this).ArtistName.ToLower());
+                    searchStr=string.Join(" ", text);
+                }
+                return searchStr;
+            }
+        }
+
         public virtual string Name { get { return music.Name; } }
         public virtual string Id { get { return music.Id; } }
         public virtual string Logo { get { return music.Logo; } }
