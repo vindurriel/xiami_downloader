@@ -266,7 +266,7 @@
                 <TextBox VerticalContentAlignment="Center"  Foreground="White"  BorderThickness="0" Width="200" x:Name="input_filter" Background="#555"/>
                 <TextBlock VerticalAlignment="Center" Margin="3" x:Name="mask_filter" Text="输入字符以过滤"  IsHitTestVisible="False" Foreground="{DynamicResource lightBrush}"  />
             </Grid>
-            <Button  Visibility="Collapsed" Content="&#xE16E;" Margin="5,0" MinWidth="0"  Width="70" x:Name="btn_filter" FontFamily="Segoe UI Symbol"/>
+            <Button Visibility="Collapsed" x:Name="btn_search" Click="btn_search_click"  Content="没有？在网上搜索一下" Padding="5,0"  />
         </DockPanel>
         <TextBlock x:Name="emptyText" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource label_base}" Margin="5,10,0,0" Grid.Row="2">列表为空</TextBlock>
         <ListView Grid.Row="2" ItemTemplate="{StaticResource completeTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"

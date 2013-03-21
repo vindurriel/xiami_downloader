@@ -77,7 +77,6 @@ namespace Jean_Doe.MusicControl
             set
             {
                 itemsCount = value; Notify("ItemsCount");
-                emptyText.Visibility = value > 0 ? Visibility.Collapsed : Visibility.Visible;
             }
         }
         private int selectCount;
@@ -105,13 +104,13 @@ namespace Jean_Doe.MusicControl
         public SongListControl()
         {
             InitializeComponent();
-            //btn_filter.Click += (s, e) => ApplyFilter();
             input_filter.TextChanged += (s, e) =>
             {
                 if (!string.IsNullOrEmpty(input_filter.Text))
                     mask_filter.Visibility = Visibility.Collapsed;
-                ApplyFilter();
+
             };
+            input_filter.TextChanged += input_filter_TextChanged;
             input_filter.GotFocus += (s, e) =>
                 {
                     mask_filter.Visibility = Visibility.Collapsed;
@@ -126,10 +125,34 @@ namespace Jean_Doe.MusicControl
             items = new MusicViewModelList();
             items.CollectionChanged += items_CollectionChanged;
             Source = CollectionViewSource.GetDefaultView(items);
+            Source.Filter = filter;
+            Source.CollectionChanged += Source_CollectionChanged;
             listView.DataContext = Source;
             listView.SelectionChanged += dataGrid_SelectionChanged;
             HandleShowDetails(Global.AppSettings["ShowDetails"]);
 
+        }
+
+        void Source_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            var i = 0;
+            foreach (var item in (sender as ICollectionView))
+            {
+                i++;
+            }
+            emptyText.Visibility = i > 0 ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        void input_filter_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            filter_text = input_filter.Text.ToLower();
+            Source.Refresh();
+            var i = 0;
+            foreach (var item in Source)
+            {
+                i++;
+            }
+            btn_search.Visibility = (i == 0 && !string.IsNullOrEmpty(filter_text)) ? Visibility.Visible : Visibility.Collapsed;
         }
         public ICollectionView Source { get; set; }
         public void UnselectAll()
@@ -238,7 +261,6 @@ namespace Jean_Doe.MusicControl
             UIHelper.RunOnUI(new Action(() =>
             {
                 ItemsCount = Items.Count;
-                //fitToContent();
             }));
             Save();
         }
@@ -258,7 +280,10 @@ namespace Jean_Doe.MusicControl
         {
             listView.UnselectAll();
         }
-
+        private async void btn_search_click(object sender, RoutedEventArgs e)
+        {
+            await SearchManager.Search(filter_text);
+        }
         private void btn_play_Click(object sender, RoutedEventArgs e)
         {
             var item = (sender as Button).DataContext as SongViewModel;
@@ -320,10 +345,6 @@ namespace Jean_Doe.MusicControl
             var s = (source as SongListControl);
             return s.SelectedItems.Count(x => x is TInterface) == 1;
         }
-        private void ApplyFilter()
-        {
-            Source.Filter = filter;
-        }
         private void ApplySort()
         {
             var tag = (combo_sort.SelectedItem as ComboBoxItem).Tag.ToString();
@@ -334,16 +355,26 @@ namespace Jean_Doe.MusicControl
             }
             var prop = tag.Split("_".ToCharArray())[0];
             var order = tag.Split("_".ToCharArray())[1];
-            Source.SortDescriptions.Clear();
-            Source.SortDescriptions.Add(new SortDescription
-                (prop, order == "Asc" ? ListSortDirection.Ascending : ListSortDirection.Descending));
+            using (Source.DeferRefresh())
+            {
+                Source.SortDescriptions.Clear();
+                Source.SortDescriptions.Add(new SortDescription(prop,
+                    order == "Asc" ? ListSortDirection.Ascending : ListSortDirection.Descending));
+            }
         }
-        bool filter(object o)
+        string filter_text = "";
+        bool filter(object sender)
         {
-            if (string.IsNullOrWhiteSpace(input_filter.Text)) return true;
-            var music = o as MusicViewModel;
-            if (music == null) return false;
-            return music.SearchStr.Contains(input_filter.Text.ToLower());
+            if (string.IsNullOrWhiteSpace(input_filter.Text))
+            {
+                return true;
+            };
+            var music = sender as MusicViewModel;
+            if (music == null)
+            {
+                return false;
+            };
+            return music.SearchStr.Contains(filter_text);
         }
     }
 }
