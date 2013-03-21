@@ -11,6 +11,7 @@ using System.Windows.Threading;
 using Artwork.MessageBus;
 using Jean_Doe.Common;
 using System.Windows.Data;
+using System.Windows.Input;
 namespace Jean_Doe.MusicControl
 {
     /// <summary>
@@ -65,6 +66,43 @@ namespace Jean_Doe.MusicControl
             {
                 items.Clear();
             }));
+        }
+        #endregion
+        #region drag drop
+        Point startPoint;
+        List<SongViewModel> draggingSongs = new List<SongViewModel>();
+        private void List_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // Store the mouse position
+            startPoint = e.GetPosition(listView);
+            draggingSongs.Clear();
+            draggingSongs.AddRange(SelectedSongs);
+        }
+        private void List_MouseMove(object sender, MouseEventArgs e)
+        {
+            // Get the current mouse position
+            Point mousePos = e.GetPosition(listView);
+            Vector diff = startPoint - mousePos;
+
+            if (e.LeftButton == MouseButtonState.Pressed &&
+                (Math.Abs(diff.X) > 10 || Math.Abs(diff.Y) > 10))
+            {
+                var files = new System.Collections.Specialized.StringCollection();
+                foreach (var item in draggingSongs)
+                {
+                    if (string.IsNullOrEmpty(item.Song.FilePath))
+                        files.Add(System.IO.Path.Combine(".", item.Dir, item.FileNameBase + ".mp3"));
+                    else
+                        files.Add(item.Song.FilePath);
+                }
+                if (files.Count > 0)
+                {
+                    var dragData = new DataObject();
+                    dragData.SetFileDropList(files);
+                    DragDrop.DoDragDrop(listView, dragData, DragDropEffects.Copy);
+                }
+
+            }
         }
         #endregion
         public ListView ListView { get { return listView; } }
@@ -185,14 +223,8 @@ namespace Jean_Doe.MusicControl
 
         protected virtual void btn_open_click(object sender, RoutedEventArgs e)
         {
-            SongViewModel s = null;
-            try
-            {
-                s = (sender as FrameworkElement).DataContext as SongViewModel;
-            }
-            catch { }
+            var s = SelectedSongs.FirstOrDefault();
             if (s == null || !s.CanOpen) return;
-            e.Handled = true;
             s.Open();
         }
 
@@ -284,38 +316,15 @@ namespace Jean_Doe.MusicControl
         {
             await SearchManager.Search(filter_text);
         }
-        private void btn_play_Click(object sender, RoutedEventArgs e)
-        {
-            var item = (sender as Button).DataContext as SongViewModel;
-            if (item == null) return;
-            PlayItem = item;
-        }
-        private static SongViewModel playItem = null;
-
-        public static SongViewModel PlayItem
-        {
-            get { return playItem; }
-            set
-            {
-                if (playItem == value)
-                {
-                    playItem.TogglePlay();
-                    return;
-                }
-                if (playItem != null)
-                    playItem.Stop();
-                playItem = value;
-                if (playItem != null)
-                    playItem.Play();
-            }
-        }
 
         private void Image_SourceUpdated_1(object sender, System.Windows.Data.DataTransferEventArgs e)
         {
             var img = sender as Image;
             //Show(img);
         }
-
+        protected virtual void btn_play_Click(object sender, RoutedEventArgs e)
+        {
+        }
         private static void Show(UIElement obj)
         {
             var da = new DoubleAnimation
@@ -375,6 +384,12 @@ namespace Jean_Doe.MusicControl
                 return false;
             };
             return music.SearchStr.Contains(filter_text);
+        }
+
+        private void item_double_click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            btn_play_Click(sender, e);
+            ActionBarService.Refresh();
         }
     }
 }

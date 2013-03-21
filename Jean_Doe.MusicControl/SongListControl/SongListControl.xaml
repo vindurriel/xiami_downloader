@@ -209,18 +209,15 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="completeTemplate">
-            <Grid Width="220" Height="70" >
+            <Grid Width="220" Height="70">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <!--<Image   Width="60" Height="60"  
-                        Source="/Jean_Doe.MusicControl;component/Resources/nocover.png"
-                        Stretch="Uniform" VerticalAlignment="Top"/>-->
-                <Image TargetUpdated="Image_SourceUpdated_1" Width="60" Height="60"  
+                <Image IsHitTestVisible="False" TargetUpdated="Image_SourceUpdated_1" Width="60" Height="60"  
                         Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
                         Stretch="Uniform" VerticalAlignment="Top"/>
-                <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10,0">
+                <StackPanel IsHitTestVisible="False" Grid.Column="1" VerticalAlignment="Top" Margin="10,0">
                     <TextBlock Text="{Binding Name}" FontSize="18"  Style="{DynamicResource label_base}"/>
                     <TextBlock Style="{StaticResource label_base}"   Text="{Binding ArtistName}" />
                     <TextBlock Style="{StaticResource label_base}"   Text="{Binding AlbumName}" />
@@ -272,6 +269,8 @@
         <ListView Grid.Row="2" ItemTemplate="{StaticResource completeTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
             BorderThickness="0" 
             Background="Transparent" 
+            PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" 
+            PreviewMouseMove="List_MouseMove"
                   ItemsSource="{Binding}"
             x:Name="listView" Foreground="White" SelectionMode="Extended" >
             <ListView.ItemContainerStyle>
@@ -309,6 +308,7 @@
                             </TransformGroup>
                         </Setter.Value>
                     </Setter>
+                    <EventSetter Event="MouseDoubleClick" Handler="item_double_click"/>
                     <Setter Property="RenderTransformOrigin" Value=".5,.5"/>
                     <Setter Property="Margin" Value="5,0,5,10"/>
                     <Setter Property="Padding" Value="15"/>

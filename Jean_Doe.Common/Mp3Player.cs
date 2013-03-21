@@ -49,10 +49,38 @@ namespace Jean_Doe.Common
                 var msg=new MsgRequestNextSong();
                 Artwork.MessageBus.MessageBus.Instance.Publish(msg);
                 if (!string.IsNullOrEmpty(msg.Next))
-                    PlayPause(msg.Next);
+                    Next(msg.Next);
             }
             if (TimeChanged != null && waveStream!=null)
                 TimeChanged(null, new TimeChangedEventArgs { Total = TimeSpan.Zero, Current = waveStream.CurrentTime });
+        }
+        public static void Next(string filepath)
+        {
+            if (!System.IO.File.Exists(filepath))
+                return;
+            play(filepath);
+        }
+        static void play(string filepath)
+        {
+            if (IsPlaying)
+            {
+                waveOutDevice.Pause();
+                timer.Stop();
+            }
+            try
+            {
+                waveStream = CreateInputStream(filepath);
+                waveOutDevice.Init(waveStream);
+                if (TimeChanged != null && waveStream != null)
+                    TimeChanged(null, new TimeChangedEventArgs { Total = waveStream.TotalTime, IsNewSong = true });
+            }
+            catch (Exception)
+            {
+                return;
+            }
+            waveOutDevice.Play();
+            timer.Start();
+            FilePath = filepath;
         }
         public static void PlayPause(string filepath)
         {
@@ -77,25 +105,7 @@ namespace Jean_Doe.Common
             }
             else
             {
-                if (IsPlaying)
-                {
-                    waveOutDevice.Pause();
-                    timer.Stop();
-                }
-                try
-                {
-                    waveStream = CreateInputStream(filepath);
-                    waveOutDevice.Init(waveStream);
-                    if (TimeChanged != null && waveStream != null)
-                        TimeChanged(null, new TimeChangedEventArgs { Total = waveStream.TotalTime,IsNewSong=true });
-                }
-                catch (Exception)
-                {
-                    return;
-                }
-                waveOutDevice.Play();
-                timer.Start();
-                FilePath = filepath;
+                play(filepath);
             }
         }
         static WaveStream CreateInputStream(string fileName)

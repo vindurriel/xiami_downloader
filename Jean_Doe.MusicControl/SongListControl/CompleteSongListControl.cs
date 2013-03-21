@@ -52,22 +52,30 @@ namespace Jean_Doe.MusicControl
             return new List<CharmAction> 
                 {   
                     new CharmAction("取消选择",this.btn_cancel_selection_Click,defaultActionValidate),
-                    new CharmAction("播放/暂停",this.btn_play_Click,(s)=>{
-                        return (s as CompleteSongListControl).SelectCount == 1;
-                    }),  
-                    new CharmAction("正在播放",this.btn_show_Click,(s)=>{
-                        var list = s as CompleteSongListControl;
-                        if (list.NowPlaying == null) return false;
-                        var song=list.SelectedSongs.FirstOrDefault();
-                        return !Object.ReferenceEquals(list.NowPlaying, song);
-                    }),  
-                    new CharmAction("下一首",this.btn_next_Click,defaultActionValidate),    
+                    new CharmAction("正在播放",this.btn_show_Click,isNowPlayingNotSelected),  
+                    new CharmAction("下一首",this.btn_next_Click,isNowPlayingSelected),    
                     new CharmAction("查看专辑歌曲",link_album,IsType<IHasAlbum>),
                     new CharmAction("查看歌手歌曲",link_artist,IsType<IHasArtist>),
                     new CharmAction("存为播放列表",this.btn_save_playlist_Click,s=>(s as CompleteSongListControl).SelectedSongs.Count()>1),
                     new CharmAction("复制文件到剪贴板",this.btn_copy_Click,defaultActionValidate),
+                    new CharmAction("打开文件所在位置",this.btn_open_click,defaultActionValidate),
                     new CharmAction("删除",this.btn_remove_complete_Click,defaultActionValidate),
                 };
+        }
+        bool isNowPlayingSelected(object s)
+        {
+            var list = s as CompleteSongListControl;
+            var song = list.SelectedSongs.FirstOrDefault();
+            if (song == null) return false;
+            if (list.NowPlaying == null) return true;
+            return Object.ReferenceEquals(list.NowPlaying, song);
+        }
+        bool isNowPlayingNotSelected(object s)
+        {
+            var list = s as CompleteSongListControl;
+            if (list.NowPlaying == null) return false;
+            var song = list.SelectedSongs.FirstOrDefault();
+            return !Object.ReferenceEquals(list.NowPlaying, song);
         }
         void btn_show_Click(object sender, RoutedEventArgs e)
         {
@@ -75,7 +83,7 @@ namespace Jean_Doe.MusicControl
             listView.ScrollIntoView(NowPlaying);
             ActionBarService.Refresh();
         }
-        void btn_play_Click(object sender, RoutedEventArgs e)
+        protected override void btn_play_Click(object sender, RoutedEventArgs e)
         {
             var slider = Artwork.DataBus.DataBus.Get("slider") as Slider;
             slider.Visibility = Visibility.Visible;
@@ -168,6 +176,7 @@ namespace Jean_Doe.MusicControl
                     break;
                 case EnumPlayNextMode.Repeat:
                     item = now;
+                    Mp3Player.CurrentTime = TimeSpan.Zero;
                     break;
                 default:
                     break;
@@ -187,7 +196,7 @@ namespace Jean_Doe.MusicControl
                 return;
             var slider = Artwork.DataBus.DataBus.Get("slider") as Slider;
             slider.Visibility = Visibility.Visible;
-            Mp3Player.PlayPause(msg.Next);
+            Mp3Player.Next(msg.Next);
         }
     }
 }
