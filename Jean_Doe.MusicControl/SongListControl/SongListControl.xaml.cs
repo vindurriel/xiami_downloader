@@ -95,12 +95,12 @@ namespace Jean_Doe.MusicControl
                     else
                         files.Add(item.Song.FilePath);
                 }
-                if (files.Count > 0)
-                {
-                    var dragData = new DataObject();
-                    dragData.SetFileDropList(files);
-                    DragDrop.DoDragDrop(listView, dragData, DragDropEffects.Copy);
-                }
+                if (files.Count == 0) return;
+                var source = (e.OriginalSource as FrameworkElement).DataContext as SongViewModel;
+                if (source == null) return;
+                var dragData = new DataObject();
+                dragData.SetFileDropList(files);
+                DragDrop.DoDragDrop(listView, dragData, DragDropEffects.Copy);
 
             }
         }
@@ -119,8 +119,8 @@ namespace Jean_Doe.MusicControl
         }
         private int selectCount;
         public int SelectCount { get { return selectCount; } set { selectCount = value; Notify("SelectCount"); } }
-        object nowPlaying = null;
-        public object NowPlaying { get { return nowPlaying; } set { nowPlaying = value; Notify("NowPlaying"); } }
+        SongViewModel nowPlaying = null;
+        public SongViewModel NowPlaying { get { return nowPlaying; } set { nowPlaying = value; Notify("NowPlaying"); } }
         public IEnumerable<SongViewModel> SelectedSongs
         {
             get

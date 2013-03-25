@@ -12,13 +12,16 @@ namespace MusicPlayer
     public class MusicSliderConnector
     {
         public Slider _slider;
-        public MusicSliderConnector( Slider slider)
+        public MusicSliderConnector(Slider slider)
         {
             _slider = slider;
             Mp3Player.TimeChanged += Mp3Player_TimeChanged;
+            Mp3Player.SongChanged += Mp3Player_SongChanged;
             slider.PreviewMouseDown += slider_MouseLeftButtonDown;
             slider.PreviewMouseUp += slider_MouseLeftButtonUp;
         }
+
+
         void slider_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             _slider.ValueChanged -= slider_ValueChanged;
@@ -40,11 +43,13 @@ namespace MusicPlayer
             Mp3Player.CurrentTime = TimeSpan.FromSeconds(e.NewValue);
         }
 
-        void Mp3Player_TimeChanged(object sender,  Mp3Player.TimeChangedEventArgs e)
+        void Mp3Player_TimeChanged(object sender, Mp3Player.TimeChangedEventArgs e)
         {
-            if (e.IsNewSong)
-                _slider.Maximum = e.Total.TotalSeconds;
             _slider.Value = e.Current.TotalSeconds;
+        }
+        void Mp3Player_SongChanged(object sender, Mp3Player.SongChangedEventArgs e)
+        {
+            _slider.Maximum = e.Total.TotalSeconds;
         }
     }
 }

@@ -1,22 +1,16 @@
-﻿using System;
+﻿using Artwork.MessageBus;
+using Artwork.MessageBus.Interfaces;
+using Jean_Doe.Common;
+using Jean_Doe.Downloader;
+using Jean_Doe.MusicControl;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using Artwork.MessageBus;
-using Artwork.MessageBus.Interfaces;
-using Jean_Doe.Common;
-using Jean_Doe.Downloader;
-using Jean_Doe.MusicControl;
-using System.Windows.Data;
-using System.Collections.ObjectModel;
 namespace MusicPlayer
 {
     /// <summary>
@@ -87,7 +81,12 @@ namespace MusicPlayer
             slider.Visibility = Visibility.Collapsed;
             ActionBarService.SetActionBar(this.charmBar);
             Artwork.DataBus.DataBus.Set("list_download", list_download);
-            Artwork.DataBus.DataBus.Set("slider", slider);
+            Mp3Player.SongChanged += Mp3Player_SongChanged;
+        }
+
+        void Mp3Player_SongChanged(object sender, Mp3Player.SongChangedEventArgs e)
+        {
+            slider.Visibility = Visibility.Visible;
         }
         void initCharms()
         {

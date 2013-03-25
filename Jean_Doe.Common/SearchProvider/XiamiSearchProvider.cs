@@ -38,6 +38,10 @@ public class XiamiSearchProvider : ISearchProvider
         var newKey = "";
 		switch(type)
 		{
+            case EnumSearchType.song:
+                searchType = EnumSearchType.song;
+                items = GetSong(json, out newKey);
+                break;
             case EnumSearchType.album:
             case EnumSearchType.album_song:
                 searchType = EnumSearchType.album_song;
@@ -257,21 +261,20 @@ public class XiamiSearchProvider : ISearchProvider
 		catch { }
 		return items;
 	}
-    //async static Task<Song> GetSong(string id)
-    //{
-    //    var url = XiamiUrl.UrlPlaylistByIdAndType(id, EnumMusicType.song);
-    //    Song song = null;
-    //    try
-    //    {
-    //        var json = await NetAccess.DownloadStringAsync(url);
-    //        ////////
-    //        if(json == null) return null;
-    //        var obj = json.ToDynamicObject().song;
-    //        song = MusicFactory.CreateFromJson(obj, EnumMusicType.song);
-    //    }
-    //    catch { }
-    //    return song;
-    //}
+    static List<IMusic> GetSong(string json, out string musicName)
+    {
+        List<IMusic> res = new List<IMusic>();
+        musicName = "";
+        try
+        {
+            var obj = json.ToDynamicObject().song;
+            var song = MusicFactory.CreateFromJson(obj, EnumMusicType.song);
+            musicName = song.Name;
+            res.Add(song);
+        }
+        catch { }
+        return res;
+    }
     //public async static Task<Album> GetAlbum(string id)
     //{
     //    var url = XiamiUrl.UrlPlaylistByIdAndType(id, EnumMusicType.album.ToString());

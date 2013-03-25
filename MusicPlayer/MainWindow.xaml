@@ -188,7 +188,7 @@
                               Style="{StaticResource toggleStyle}">
                     <StackPanel Orientation="Vertical" Width="80">
                         <DockPanel HorizontalAlignment="Center">
-                            <TextBlock Text="&#xE0A5;" Style="{StaticResource glyph}"/>
+                            <TextBlock Text="&#xE142;" Style="{StaticResource glyph}"/>
                             <TextBlock Visibility="{Binding ItemsCount, Converter={StaticResource int2vis}, ElementName=list_complete}" Text="{Binding ItemsCount, ElementName=list_complete, StringFormat=\{0\}}" />
                         </DockPanel>
                         <TextBlock Text="已下载"  Style="{StaticResource hint}" HorizontalAlignment="Center"/>
@@ -220,6 +220,7 @@
                             </Style>
                         </Grid.Style>
                     </Grid>
+                    <!--<controls:MusicControl FontSize="20" HorizontalAlignment="Left"   Width="150" Height="50" x:Name="musicControl"  />-->
                 </Grid>    
             </Grid>
             <Grid Grid.Row="1">

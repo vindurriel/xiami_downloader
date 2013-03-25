@@ -23,9 +23,8 @@ namespace Jean_Doe.Common
         static IWavePlayer waveOutDevice = new WaveOut();
         static WaveStream waveStream;
         public static event EventHandler<TimeChangedEventArgs> TimeChanged;
+        public static event EventHandler<SongChangedEventArgs> SongChanged;
         static DispatcherTimer timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1000) };
-
-        public static string FilePath { get; set; }
         public static bool IsPlaying { get { return waveOutDevice != null && waveOutDevice.PlaybackState == PlaybackState.Playing; } }
         public static TimeSpan CurrentTime
         {
@@ -49,15 +48,16 @@ namespace Jean_Doe.Common
                 var msg=new MsgRequestNextSong();
                 Artwork.MessageBus.MessageBus.Instance.Publish(msg);
                 if (!string.IsNullOrEmpty(msg.Next))
-                    Next(msg.Next);
+                    Next(msg.Next,msg.Id);
             }
             if (TimeChanged != null && waveStream!=null)
-                TimeChanged(null, new TimeChangedEventArgs { Total = TimeSpan.Zero, Current = waveStream.CurrentTime });
+                TimeChanged(null, new TimeChangedEventArgs {Current = waveStream.CurrentTime });
         }
-        public static void Next(string filepath)
+        public static void Next(string filepath,string id)
         {
             if (!System.IO.File.Exists(filepath))
                 return;
+            _id = id;
             play(filepath);
         }
         static void play(string filepath)
@@ -71,8 +71,8 @@ namespace Jean_Doe.Common
             {
                 waveStream = CreateInputStream(filepath);
                 waveOutDevice.Init(waveStream);
-                if (TimeChanged != null && waveStream != null)
-                    TimeChanged(null, new TimeChangedEventArgs { Total = waveStream.TotalTime, IsNewSong = true });
+                if (SongChanged != null && waveStream != null)
+                    SongChanged(null, new SongChangedEventArgs { Total = waveStream.TotalTime, Id = _id });
             }
             catch (Exception)
             {
@@ -80,31 +80,37 @@ namespace Jean_Doe.Common
             }
             waveOutDevice.Play();
             timer.Start();
-            FilePath = filepath;
         }
-        public static void PlayPause(string filepath)
+        static string _id = null;
+        public static void PauseResume()
         {
-            if (!System.IO.File.Exists(filepath))
-                return;
-            if (filepath == FilePath)
+            if (waveStream == null) return;
+            if (waveStream.Length <= waveStream.Position)
             {
-                if (waveStream.Length <= waveStream.Position)
-                {
-                    CurrentTime = TimeSpan.Zero;
-                }
-                else if (IsPlaying)
-                {
-                    waveOutDevice.Pause();
-                    timer.Stop();
-                }
-                else
-                {
-                    timer.Start();
-                    waveOutDevice.Play();
-                }
+                CurrentTime = TimeSpan.Zero;
+            }
+            else if (IsPlaying)
+            {
+                waveOutDevice.Pause();
+                timer.Stop();
             }
             else
             {
+                timer.Start();
+                waveOutDevice.Play();
+            }
+        }
+        public static void Play(string filepath,string id)
+        {
+            if (!System.IO.File.Exists(filepath))
+                return;
+            if (_id==id)
+            {
+                PauseResume();
+            }
+            else
+            {
+                _id = id;
                 play(filepath);
             }
         }
@@ -115,13 +121,17 @@ namespace Jean_Doe.Common
         }
         public class TimeChangedEventArgs : EventArgs
         {
-            public TimeSpan Total { get; set; }
             public TimeSpan Current { get; set; }
-            public bool IsNewSong { get; set; }
+        }
+        public class SongChangedEventArgs : EventArgs
+        {
+            public TimeSpan Total { get; set; }
+            public string Id{ get; set; }
         }
     }
     public class MsgRequestNextSong
     {
         public string Next { get; set; }
+        public string Id { get; set; }
     }
 }
