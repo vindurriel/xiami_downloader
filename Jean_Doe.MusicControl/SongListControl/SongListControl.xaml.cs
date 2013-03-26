@@ -266,28 +266,51 @@ namespace Jean_Doe.MusicControl
 
         protected virtual void go_song(object sender, RoutedEventArgs e)
         {
-            var t = (sender as Hyperlink).DataContext as MusicViewModel;
+            var t = sender as MusicViewModel;
             if (t == null) return;
             RunProgramHelper.RunProgram(XiamiUrl.GoSong(t.Id), null);
         }
         protected virtual void go_artist(object sender, RoutedEventArgs e)
         {
-            var t = (sender as Hyperlink).DataContext as IHasArtist;
+            var t = sender as IHasArtist;
             if (t == null) return;
             RunProgramHelper.RunProgram(XiamiUrl.GoArtist(t.ArtistId), null);
         }
         protected virtual void go_album(object sender, RoutedEventArgs e)
         {
-            var t = (sender as Hyperlink).DataContext as IHasAlbum;
+            var t = sender as IHasAlbum;
             if (t == null) return;
             RunProgramHelper.RunProgram(XiamiUrl.GoAlbum(t.AlbumId), null);
         }
         protected virtual void go_collect(object sender, RoutedEventArgs e)
         {
-            var t = (sender as Hyperlink).DataContext as MusicViewModel;
+            var t = sender as MusicViewModel;
             if (t == null) return;
             RunProgramHelper.RunProgram(XiamiUrl.GoCollect(t.Id), null);
         }
+
+        protected void btn_browse_Click(object sender, RoutedEventArgs e)
+        {
+            var music = SelectedItems.FirstOrDefault();
+            if (music == null) return;
+            if (music is SongViewModel)
+            {
+                go_song(music, null);
+            }
+            else if (music is AlbumViewModel)
+            {
+                go_album(music, null);
+            }
+            else if (music is ArtistViewModel)
+            {
+                go_artist(music, null);
+            }
+            else if (music is CollectViewModel)
+            {
+                go_collect(music, null);
+            }
+        }
+
         void items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             UIHelper.RunOnUI(new Action(() =>

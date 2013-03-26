@@ -9,6 +9,47 @@
     <Expander.Resources>
         <BooleanToVisibilityConverter x:Key="bool2vis" />
         <sys:Double x:Key="MaxLength">50</sys:Double>
+        <Style x:Key="itemStyle" TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Foreground" Value="White"/>
+            <EventSetter Event="UIElement.MouseLeftButtonUp" Handler="charmBarAct"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <Border x:Name="Border" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                            <Border.Background>
+                                <SolidColorBrush x:Name="BorderBg" Color="#00000000"/>
+                            </Border.Background>
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard Storyboard.TargetName="BorderBg">
+                                            <ColorAnimation Storyboard.TargetProperty="Color" Duration="0:0:0.2" To="#333"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard Storyboard.TargetName="BorderBg">
+                                            <ColorAnimation Storyboard.TargetProperty="Color"  Duration="0:0:0.2" To="#00000000"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <DataTemplate x:Key="itemTemplate">
+            <Grid>
+                <TextBlock Foreground="White" FontFamily="Segoe UI Symbol"  Text="{Binding Label}"/>
+            </Grid>
+        </DataTemplate>
     </Expander.Resources>
     <Expander.Style>
         <Style   TargetType="Expander">
@@ -49,57 +90,39 @@
             </Setter>
         </Style>
     </Expander.Style>
-    <ListView     ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden"   BorderThickness="0" Background="Transparent" x:Name="charmBarItemWrapper" SelectionMode="Single">
-        <ListView.ItemsPanel>
-            <ItemsPanelTemplate>
-                <StackPanel Orientation="Horizontal" Margin="1"/>
-            </ItemsPanelTemplate>
-        </ListView.ItemsPanel>
-        <ListView.ItemContainerStyle>
-            <Style TargetType="{x:Type ListBoxItem}">
-                <Setter Property="Margin" Value="0"/>
-                <Setter Property="Padding" Value="20,10"/>
-                <Setter Property="Foreground" Value="White"/>
-                <EventSetter Event="UIElement.MouseLeftButtonUp" Handler="charmBarAct"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                            <Border x:Name="Border" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
-                                <Border.Background>
-                                    <SolidColorBrush x:Name="BorderBg" Color="#00000000"/>
-                                </Border.Background>
-                                <ContentPresenter/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Trigger.EnterActions>
-                                        <BeginStoryboard>
-                                            <Storyboard Storyboard.TargetName="BorderBg">
-                                                <ColorAnimation Storyboard.TargetProperty="Color" Duration="0:0:0.2" To="#333"/>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </Trigger.EnterActions>
-                                    <Trigger.ExitActions>
-                                        <BeginStoryboard>
-                                            <Storyboard Storyboard.TargetName="BorderBg">
-                                                <ColorAnimation Storyboard.TargetProperty="Color"  Duration="0:0:0.2" To="#00000000"/>
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </Trigger.ExitActions>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-        </ListView.ItemContainerStyle>
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <Grid>
-                    <TextBlock Foreground="Gray"  Text="{Binding Label}"/>
-                    <TextBlock Foreground="White"  Visibility="{Binding IsActive, Converter={StaticResource bool2vis}}" Text="{Binding Label}"/>
-                </Grid>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+    <DockPanel LastChildFill="False">
+       
+        <ListView     
+            ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
+            ScrollViewer.VerticalScrollBarVisibility="Hidden"   
+            BorderThickness="0" 
+            Background="Transparent" 
+            x:Name="list" 
+            ItemContainerStyle="{StaticResource itemStyle}"
+            ItemTemplate="{StaticResource itemTemplate}"
+            SelectionMode="Single">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="1"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
+        <!--<Button Content="..."   x:Name="more" Click="more_Click_1"/>-->
+        <Popup x:Name="more_actions"
+               PopupAnimation="Slide"
+                StaysOpen="False"
+                Placement="Top"
+               Focusable="False"
+               PlacementTarget="{Binding ElementName=list}"
+               >
+            <ListView x:Name="menu"
+                      ItemContainerStyle="{StaticResource itemStyle}"
+                      ItemTemplate="{StaticResource itemTemplate}"
+                        ScrollViewer.VerticalScrollBarVisibility="Hidden"   
+                        BorderThickness="0" 
+                        Background="Transparent" 
+                        SelectionMode="Single"
+                      ></ListView>
+        </Popup>
+    </DockPanel>
 </Expander>

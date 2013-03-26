@@ -50,8 +50,12 @@ namespace Jean_Doe.MusicControl
         public void Handle(MsgDownloadStateChanged message)
         {
             var item = message.Item as SongViewModel;
-            if (item != null && item.Done)
-                Insert(0, item);
+            if (item == null || !item.HasMp3)
+                return;
+            var dup = Items.FirstOrDefault(x => x.Id == item.Id) as SongViewModel;
+            if (dup != null)
+                Remove(dup);
+            Insert(0, item);
         }
 
         public IEnumerable<CharmAction> ProvideActions()
@@ -81,7 +85,8 @@ namespace Jean_Doe.MusicControl
                     new CharmAction("查看歌手歌曲",link_artist,IsType<IHasArtist>),
                     new CharmAction("存为播放列表",this.btn_save_playlist_Click,s=>(s as CompleteSongListControl).SelectedSongs.Count()>1),
                     new CharmAction("复制文件到剪贴板",this.btn_copy_Click,defaultActionValidate),
-                    new CharmAction("打开文件所在位置",this.btn_open_click,defaultActionValidate),
+                    new CharmAction("打开文件所在位置",this.btn_open_click,IsType<IHasMusicPart>),
+                    new CharmAction("在浏览器中打开",this.btn_browse_Click,IsType<IHasMusicPart>),
                     new CharmAction("删除",this.btn_remove_complete_Click,defaultActionValidate),
                 };
         }
@@ -100,6 +105,7 @@ namespace Jean_Doe.MusicControl
             var song = list.SelectedSongs.FirstOrDefault();
             return !Object.ReferenceEquals(list.NowPlaying, song);
         }
+
         void btn_show_Click(object sender, RoutedEventArgs e)
         {
             SelectedSongs = new SongViewModel[] { NowPlaying as SongViewModel };

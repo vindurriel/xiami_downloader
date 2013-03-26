@@ -120,8 +120,9 @@ namespace Jean_Doe.MusicControl
                new CharmAction("查看艺术家的相似艺人",link_similar_artist,IsType<IHasArtist>),
                new CharmAction("查看艺术家的歌曲",link_artist,IsType<IHasArtist>),
                new CharmAction("查看艺术家的专辑",link_artist_album,IsType<IHasArtist>),
+               new CharmAction("在浏览器中打开",this.btn_browse_Click,IsType<IHasMusicPart>),
             };
         }
-       
+
     }
 }
