@@ -121,6 +121,8 @@ namespace Jean_Doe.MusicControl
                new CharmAction("查看艺术家的歌曲",link_artist,IsType<IHasArtist>),
                new CharmAction("查看艺术家的专辑",link_artist_album,IsType<IHasArtist>),
                new CharmAction("在浏览器中打开",this.btn_browse_Click,IsType<IHasMusicPart>),
+               new CharmAction("收藏该歌曲",this.btn_fav_Click,defaultActionValidate),
+               new CharmAction("不再收藏该歌曲",this.btn_unfav_Click,defaultActionValidate),
             };
         }
 

@@ -91,7 +91,6 @@ namespace Jean_Doe.MusicControl
                     new CharmAction("收藏该歌曲",this.btn_fav_Click,defaultActionValidate),
                     new CharmAction("不再收藏该歌曲",this.btn_unfav_Click,defaultActionValidate),
                     new CharmAction("删除",this.btn_remove_complete_Click,defaultActionValidate),
-                    new CharmAction("dumb",(s,e)=>{},defaultActionValidate),
                 };
         }
         bool isNowPlayingSelected(object s)
@@ -109,24 +108,8 @@ namespace Jean_Doe.MusicControl
             var song = list.SelectedSongs.FirstOrDefault();
             return !Object.ReferenceEquals(list.NowPlaying, song);
         }
-        void btn_fav_Click(object sender, RoutedEventArgs e)
-        {
-            var song = SelectedSongs.FirstOrDefault();
-            if (song == null) return;
-            Task.Run(async () =>
-            {
-                await XiamiClient.GetDefault().Fav_Song(song.Id);
-            });
-        }
-        void btn_unfav_Click(object sender, RoutedEventArgs e)
-        {
-            var song=SelectedSongs.FirstOrDefault();
-            if (song == null) return;
-            Task.Run(async () =>
-            {
-                await XiamiClient.GetDefault().Unfav_Song(song.Id);
-            });
-        }
+
+
         void btn_show_Click(object sender, RoutedEventArgs e)
         {
             SelectedSongs = new SongViewModel[] { NowPlaying as SongViewModel };

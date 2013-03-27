@@ -19,35 +19,30 @@ namespace Jean_Doe.Common
         static object lck = new object();
         public static void CancelAsync()
         {
-            Task.Run(() =>
-            {
-                lock (lck)
-                {
-                    foreach (var token in cancelTokens)
-                    {
-                        if (token == null || token.IsCancellationRequested) continue;
-                        token.Cancel(false);
-                    }
-                }
-            });
+            //Task.Run(() =>
+            //{
+            //    lock (lck)
+            //    {
+            //        foreach (var token in cancelTokens)
+            //        {
+            //            if (token == null || token.IsCancellationRequested) continue;
+            //            token.Cancel(false);
+            //        }
+            //    }
+            //});
+            cancelToken.Cancel();
+            cancelToken = new CancellationTokenSource();
         }
         static List<CancellationTokenSource> cancelTokens = new List<CancellationTokenSource>();
         static CancellationTokenSource cancelToken = new CancellationTokenSource();
         public async static Task<string> DownloadStringAsync(string url)
         {
-            var tcs = new CancellationTokenSource();
             var client = new HttpClient();
-            lock (lck)
-            {
-                cancelTokens.Add(tcs);
-            }
             string res = null;
             try
             {
-                var x = await client.GetAsync(url, tcs.Token);
+                var x = await client.GetAsync(url, cancelToken.Token);
                 res = await x.Content.ReadAsStringAsync();
-                if (tcs.IsCancellationRequested)
-                    throw new OperationCanceledException("");
             }
             catch (Exception e)
             {
@@ -56,11 +51,6 @@ namespace Jean_Doe.Common
             finally
             {
                 client.Dispose();
-                lock (lck)
-                {
-                    cancelTokens.Remove(tcs);
-                }
-                tcs.Dispose();
             }
             return res;
         }
