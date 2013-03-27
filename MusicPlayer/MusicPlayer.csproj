@@ -81,6 +81,9 @@
       <DependentUpon>ConfigPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MusicSliderConnector.cs" />
+    <Compile Include="ValidationWindow.xaml.cs">
+      <DependentUpon>ValidationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WindowManager.cs" />
     <Page Include="ActionBar.xaml">
       <SubType>Designer</SubType>
@@ -110,6 +113,10 @@
     <Page Include="ToggleButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ValidationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

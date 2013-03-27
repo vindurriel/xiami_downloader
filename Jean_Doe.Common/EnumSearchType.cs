@@ -9,5 +9,5 @@ namespace Jean_Doe.Common
 {
     public enum EnumSearchType { 
         all, 
-        song, artist, album, collect,artist_similar,artist_song, artist_album, album_song, collection_song }
+        song, artist, album, collect,artist_similar,artist_song, artist_album, album_song, collection_song,user_song, }
 }

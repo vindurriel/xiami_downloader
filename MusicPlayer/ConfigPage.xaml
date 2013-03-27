@@ -29,6 +29,20 @@
                         Value="Left" />
                 <Setter Property="Margin"
                         Value="{StaticResource lineMargin}" />
+                <Setter Property="Height"
+                        Value="{StaticResource lineHeight}" />
+            </Style>
+            <Style TargetType="TextBox"
+                   BasedOn="{StaticResource {x:Type TextBox}}">
+                <Setter Property="MinWidth" Value="100"/>
+                <Setter Property="HorizontalContentAlignment"
+                        Value="Left" />
+                <Setter Property="VerticalContentAlignment"
+                        Value="Center" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Left" />
+                <Setter Property="Margin"
+                        Value="{StaticResource lineMargin}" />
                 <Setter Property="Background"
                         Value="#555" />
                 <Setter Property="Height"
@@ -176,6 +190,15 @@
                     <ComboBoxItem Content="单曲循环"
                               Tag="Repeat" />
                 </ComboBox>
+                <Label>虾米账号</Label>
+                <TextBlock Text="用户名"/>
+                <TextBox x:Name="input_xiami_username"  />
+                <TextBlock Text="密码"/>
+                <TextBox x:Name="input_xiami_password"/>
+                <Button x:Name="btn_login" Click="btn_login_Click" Content="登陆" Width="70" HorizontalAlignment="Left"/>
+                <Image x:Name="image_validation" Source="{Binding ValidateImage,ElementName=me}" Stretch="None" Width="80" HorizontalAlignment="Left"/>
+                <TextBox x:Name="input_validation"   HorizontalAlignment="Left"  />
+                <TextBlock x:Name="msg_validaton" Text="sample text"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>

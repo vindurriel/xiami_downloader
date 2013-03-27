@@ -40,7 +40,7 @@ namespace MusicPlayer
         public ActionBar()
         {
             InitializeComponent();
-            ListSource = new CollectionViewSource { Source = source}.View;
+            ListSource = new CollectionViewSource { Source = source }.View;
             ListSource.Filter = filter1;
             MenuSource = new CollectionViewSource { Source = source }.View;
             MenuSource.Filter = filter2;
@@ -49,10 +49,10 @@ namespace MusicPlayer
         }
         bool filter1(object x)
         {
-            var s=x as CharmAction;
-            if(s==null) return false;
-            var index=source.IndexOf(s);
-            var name=s.Label;
+            var s = x as CharmAction;
+            if (s == null) return false;
+            var index = source.IndexOf(s);
+            var name = s.Label;
             return index <= MaxItemCount;
         }
         bool filter2(object x)
@@ -68,8 +68,9 @@ namespace MusicPlayer
         private void charmBarAct(object sender, RoutedEventArgs e)
         {
             var sel = (sender as FrameworkElement).DataContext as CharmAction;
-            if (sel != null)
-                sel.Action(sel, null);
+            if (sel == null) return;
+            more_actions.IsOpen = false;
+            sel.Action(sel, null);
         }
         ObservableCollection<CharmAction> source = new ObservableCollection<CharmAction>();
         void IActionBar.ValidActions(IEnumerable<CharmAction> actions)

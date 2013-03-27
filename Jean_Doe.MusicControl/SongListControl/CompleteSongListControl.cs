@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 namespace Jean_Doe.MusicControl
 {
@@ -87,7 +88,10 @@ namespace Jean_Doe.MusicControl
                     new CharmAction("复制文件到剪贴板",this.btn_copy_Click,defaultActionValidate),
                     new CharmAction("打开文件所在位置",this.btn_open_click,IsType<IHasMusicPart>),
                     new CharmAction("在浏览器中打开",this.btn_browse_Click,IsType<IHasMusicPart>),
+                    new CharmAction("收藏该歌曲",this.btn_fav_Click,defaultActionValidate),
+                    new CharmAction("不再收藏该歌曲",this.btn_unfav_Click,defaultActionValidate),
                     new CharmAction("删除",this.btn_remove_complete_Click,defaultActionValidate),
+                    new CharmAction("dumb",(s,e)=>{},defaultActionValidate),
                 };
         }
         bool isNowPlayingSelected(object s)
@@ -105,7 +109,24 @@ namespace Jean_Doe.MusicControl
             var song = list.SelectedSongs.FirstOrDefault();
             return !Object.ReferenceEquals(list.NowPlaying, song);
         }
-
+        void btn_fav_Click(object sender, RoutedEventArgs e)
+        {
+            var song = SelectedSongs.FirstOrDefault();
+            if (song == null) return;
+            Task.Run(async () =>
+            {
+                await XiamiClient.GetDefault().Fav_Song(song.Id);
+            });
+        }
+        void btn_unfav_Click(object sender, RoutedEventArgs e)
+        {
+            var song=SelectedSongs.FirstOrDefault();
+            if (song == null) return;
+            Task.Run(async () =>
+            {
+                await XiamiClient.GetDefault().Unfav_Song(song.Id);
+            });
+        }
         void btn_show_Click(object sender, RoutedEventArgs e)
         {
             SelectedSongs = new SongViewModel[] { NowPlaying as SongViewModel };

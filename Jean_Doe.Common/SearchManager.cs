@@ -63,7 +63,7 @@ namespace Jean_Doe.Common
         public static void Cancel()
         {
             NetAccess.CancelAsync();
-            state = EnumSearchState.Cancelling;
+            state = EnumSearchState.Finished;
             notifyState();
         }
     }

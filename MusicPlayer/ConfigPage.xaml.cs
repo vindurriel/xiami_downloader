@@ -6,10 +6,11 @@ using System.Windows.Media;
 using Jean_Doe.Common;
 using Jean_Doe.MusicControl;
 using System.ComponentModel;
+using System.Threading.Tasks;
 //using System.Windows.Forms;
 namespace MusicPlayer
 {
-    public enum EnumConfigControlType { label, combo, toggle, color }
+    public enum EnumConfigControlType { label, combo, toggle, color,input }
     /// <summary>
     /// Interaction logic for ConfigWindow.xaml
     /// </summary>
@@ -33,6 +34,8 @@ namespace MusicPlayer
                 {"ColorSkin", EnumConfigControlType.color},
                 {"ShowDetails", EnumConfigControlType.toggle},
                 {"PlayNextMode", EnumConfigControlType.combo},
+                {"xiami_username", EnumConfigControlType.input},
+                {"xiami_password", EnumConfigControlType.input},
             };
         public ConfigPage()
         {
@@ -74,7 +77,7 @@ namespace MusicPlayer
             set { isDirty = value; Notify("IsDirty"); }
         }
 
-       
+
 
         void LoadConfig()
         {
@@ -90,6 +93,10 @@ namespace MusicPlayer
                     case EnumConfigControlType.label:
                         var tb = x as TextBlock;
                         if (tb != null) tb.Text = value;
+                        break;
+                    case EnumConfigControlType.input:
+                        var t = x as TextBox;
+                        if (t != null) t.Text = value;
                         break;
                     case EnumConfigControlType.combo:
                         ComboSelect(x as ComboBox, value);
@@ -130,6 +137,10 @@ namespace MusicPlayer
                     case EnumConfigControlType.label:
                         var textBlock = x as TextBlock;
                         if (textBlock != null) value = textBlock.Text;
+                        break;
+                    case EnumConfigControlType.input:
+                        var t = x as TextBox;
+                        if (t != null) value = t.Text;
                         break;
                     case EnumConfigControlType.combo:
                         var comboBox = x as ComboBox;
@@ -201,6 +212,37 @@ namespace MusicPlayer
         public IEnumerable<CharmAction> ProvideActions()
         {
             return actions;
+        }
+        private string validateImage;
+
+        public string ValidateImage
+        {
+            get { return validateImage; }
+            set { validateImage = value; Notify("ValidateImage"); }
+        }
+
+        private async void  btn_login_Click(object sender, RoutedEventArgs e)
+        {
+            SaveConfig();
+            var c = Jean_Doe.Common.XiamiClient.GetDefault();
+            c.Username = input_xiami_username.Text;
+            c.Password = input_xiami_password.Text;
+            var res = await c.Login(input_validation.Text);
+            if (res == "ok")
+            {
+                msg_validaton.Text = "登陆成功";
+            }
+            else if (res.StartsWith("validation required"))
+            {
+                input_validation.Visibility = Visibility.Visible;
+                msg_validaton.Text = "请输入验证码";
+                var codeImage = res.Substring(res.IndexOf(':') + 1);
+                ValidateImage = codeImage;
+            }
+            else
+            {
+                msg_validaton.Text = res;
+            }
         }
     }
 }
