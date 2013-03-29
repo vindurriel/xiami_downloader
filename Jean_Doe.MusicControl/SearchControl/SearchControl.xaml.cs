@@ -30,51 +30,67 @@ namespace Jean_Doe.MusicControl
             refresh();
             btn_search.DataContext = this;
             btn_search.Click += btn_search_Click;
+            hs.SelectionChanged += hs_SelectionChanged;
+            
+
             Loaded += SearchControl_Loaded;
+
+        }
+
+        void hs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.combo_xiami_type.SelectedItem = hs.SelectedSearchType;
         }
         void SearchControl_Loaded(object sender, RoutedEventArgs e)
         {
-            var xtype = EnumMusicType.song;
-            Enum.TryParse(Global.AppSettings["SearchResultType"], out xtype);
-            var sel = combo_xiami_type.Items
-                .OfType<ComboBoxItem>()
-                .FirstOrDefault(x => x.Tag != null && x.Tag.ToString() == xtype.ToString());
-            if(sel != null) combo_xiami_type.SelectedItem = sel;
+            var source = new CollectionViewSource { Source = Enum.GetValues(typeof(EnumSearchType)).Cast<EnumSearchType>() }.View;
+            source.Filter = searchTypeFilter;
+            combo_xiami_type.ItemsSource = source;
+            var xtype = EnumSearchType.all;
+            //Enum.TryParse(Global.AppSettings["SearchResultType"], out xtype);
+            combo_xiami_type.SelectedItem = xtype;
+            combo_xiami_type.SelectionChanged += this.combo_xiami_type_SelectionChanged_1;
+            hs.GotFocus += (s, dd) =>
+            {
+                mask_filter.Visibility = Visibility.Collapsed;
+            };
+            hs.LostFocus += (s, dd) =>
+            {
+                mask_filter.Visibility = string.IsNullOrEmpty(hs.Text) ? Visibility.Visible : Visibility.Collapsed;
+            };
         }
-
+        static bool searchTypeFilter(object s)
+        {
+            var t = (EnumSearchType)s;
+            bool res = false;
+            switch (t)
+            {
+                case EnumSearchType.all:
+                case EnumSearchType.song:
+                case EnumSearchType.artist:
+                case EnumSearchType.album:
+                case EnumSearchType.collect:
+                case EnumSearchType.user_song:
+                    res = true;
+                    break;
+                default:
+                    break;
+            }
+            return res;
+        }
         void refresh()
         {
-            if(hs == null) return;
+            if (hs == null) return;
             hs.SavePath = SavePath;
             hs.Load();
         }
-
-        private EnumMusicType musicType;
-
-        public EnumMusicType MusicType
-        {
-            get { return musicType; }
-            set { musicType = value; }
-        }
-
-        private EnumSearchType searchType;
-        public EnumSearchType SearchType
-        {
-            get { return searchType; }
-            set
-            {
-                searchType = value;
-                refresh();
-            }
-        }
-
-        public string SavePath { get { return System.IO.Path.Combine(Global.BasePath, "history_" + SearchType.ToString() + ".xml"); } }
+        public string SavePath { get { return System.IO.Path.Combine(Global.BasePath, "history_all.xml"); } }
 
         static T FindParentOfType<T>(DependencyObject e) where T : DependencyObject
         {
             var p = LogicalTreeHelper.GetParent(e);
-            if(p == null) return null;
-            if(p is T) return p as T;
+            if (p == null) return null;
+            if (p is T) return p as T;
             return FindParentOfType<T>(p);
         }
 
@@ -84,7 +100,8 @@ namespace Jean_Doe.MusicControl
             {
                 if (SearchManager.State == EnumSearchState.Finished)
                 {
-                    await search();
+                    hs.Upsert(SearchType, Key, 0);
+                    await SearchManager.Search(Key);
                 }
                 else
                 {
@@ -96,16 +113,11 @@ namespace Jean_Doe.MusicControl
                 Jean_Doe.Downloader.Logger.Error(ex);
             }
         }
-        async Task search()
-        {
-            var key = hs.Text.Trim();
-			await SearchManager.Search(key);
-        }
         public void Handle(MsgSearchStateChanged message)
         {
             UIHelper.RunOnUI(new Action(() =>
             {
-                switch(message.State)
+                switch (message.State)
                 {
                     case EnumSearchState.Started:
                         img_search.Visibility = Visibility.Collapsed;
@@ -115,20 +127,40 @@ namespace Jean_Doe.MusicControl
                         break;
                     default:
                         img_stop.Visibility = Visibility.Collapsed;
-                        img_search.Visibility = Visibility.Visible; 
+                        img_search.Visibility = Visibility.Visible;
                         break;
                 }
             }));
         }
-
+        public EnumSearchType SearchType
+        {
+            get
+            {
+                if (combo_xiami_type.SelectedItem == null)
+                    return EnumSearchType.song;
+                return (EnumSearchType)combo_xiami_type.SelectedItem;
+            }
+        }
+        public string Key
+        {
+            get
+            {
+                return hs.Text.Trim();
+            }
+        }
         private void combo_xiami_type_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
-            var x = (combo_xiami_type.SelectedItem as ComboBoxItem).Tag;
-            if(x is EnumMusicType)
-                MusicType = (EnumMusicType)x;
-            Global.AppSettings["SearchResultType"] = MusicType.ToString();
+            var x = combo_xiami_type.SelectedItem;
+            if (x == null) return;
+            EnumSearchType t = EnumSearchType.song;
+            if (!Enum.TryParse(x.ToString(), out t))
+                return;
+            if (t == EnumSearchType.user_song)
+            {
+                hs.Text = "user:me";
+                combo_xiami_type.SelectedItem = t = EnumSearchType.song;
+            }
+            Global.AppSettings["SearchResultType"] = t.ToString();
         }
-
-      
     }
 }

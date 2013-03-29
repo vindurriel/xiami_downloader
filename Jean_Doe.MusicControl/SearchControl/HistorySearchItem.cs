@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using Jean_Doe.Common;
+using System.Xml;
 using System.Xml.Serialization;
 namespace Jean_Doe.MusicControl
 {
@@ -12,6 +13,8 @@ namespace Jean_Doe.MusicControl
         }
         [XmlIgnore]
         public string Key { get; set; }
+        [XmlAttribute]
+        public EnumSearchType SearchType { get; set; }
         [XmlAttribute]
         public int SearchCount { get; set; }
         [XmlAttribute]

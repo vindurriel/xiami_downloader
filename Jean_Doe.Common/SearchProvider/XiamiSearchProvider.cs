@@ -14,7 +14,7 @@ public class XiamiSearchProvider : ISearchProvider
     {
         if (string.IsNullOrEmpty(key))
             return null;
-        var m = Regex.Match(key, "user:(\\d+)");
+        var m = Regex.Match(key, "user:(\\w+)");
         if (m.Success)
         {
             await GetUserSongs(m.Groups[1].Value);
@@ -111,6 +111,10 @@ public class XiamiSearchProvider : ISearchProvider
     }
     public static async Task GetUserSongs(string userId)
     {
+        if (string.IsNullOrEmpty(userId))
+            return;
+        if (userId == "me")
+            userId = Global.AppSettings["xiami_uid"];
         int page = 1;
         while (true)
         {

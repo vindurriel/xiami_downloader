@@ -46,6 +46,7 @@ namespace Jean_Doe.Common
             {"PlayNextMode","Sequential"},
             {"xiami_username","vindurriel@gmail.com"},
             {"xiami_password","password"},
+            {"xiami_uid","86"},
         };
         public static void LoadSettings()
         {

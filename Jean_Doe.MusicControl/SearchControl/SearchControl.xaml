@@ -34,25 +34,14 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <!--search options-->
-            <ComboBox x:Name="combo_xiami_type"
-                              SelectionChanged="combo_xiami_type_SelectionChanged_1">
-                <ComboBoxItem Content="所有"
-                                      Tag="{StaticResource any}" />
-                <ComboBoxItem Content="歌曲"
-                                      Tag="{StaticResource song}" />
-                <ComboBoxItem  Content="艺术家"
-                                       Tag="{StaticResource artist}" />
-                <ComboBoxItem  Content="专辑"
-                                       Tag="{StaticResource album}" />
-                <ComboBoxItem  Content="精选集"
-                                       Tag="{StaticResource collect}" />
-            </ComboBox>
-          
-           
+            <ComboBox x:Name="combo_xiami_type" />
+
+
             <!--search box-->
-            <local:HistorySearch  x:Name="hs"
-                                  Grid.Column="1"
-                                  HorizontalContentAlignment="Left" />
+            <Grid Grid.Column="1">
+                <local:HistorySearch  x:Name="hs" HorizontalContentAlignment="Left" />
+                <TextBlock x:Name="mask_filter"  VerticalAlignment="Center" Margin="3" Text="输入字符以搜索"  IsHitTestVisible="False" Foreground="{DynamicResource lightBrush}"  />
+            </Grid>
             <!--button search-->
             <Button x:Name="btn_search"
                     Style="{DynamicResource StyleSearchButton}"

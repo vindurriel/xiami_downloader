@@ -14,8 +14,14 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding Key}" VerticalAlignment="Center" TextTrimming="WordEllipsis"/>
-                <TextBlock Grid.Column="1" Margin="5,0,0,0"  Text="{Binding SearchCount,StringFormat={}搜索{0}次}" />
+                <DockPanel Margin="0,0,5,0">
+                    <TextBlock  Text="{Binding SearchType}"/>
+                    <TextBlock  Text=":"/>
+                </DockPanel>
+                <DockPanel Grid.Column="1">
+                    <TextBlock  Text="{Binding Key}" VerticalAlignment="Center" TextTrimming="WordEllipsis"/>
+                    <!--<TextBlock Grid.Column="1" Margin="5,0,0,0"  Text="{Binding SearchCount,StringFormat={}搜索{0}次}" />-->
+                </DockPanel>
                 <FrameworkElement Grid.Column="2"  Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
             </Grid>
         </DataTemplate>

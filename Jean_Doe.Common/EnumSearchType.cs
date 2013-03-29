@@ -1,13 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.ComponentModel;
 namespace Jean_Doe.Common
 {
-    public enum EnumSearchType { 
-        all, 
-        song, artist, album, collect,artist_similar,artist_song, artist_album, album_song, collection_song,user_song, }
+    [TypeConverter(typeof(Enum2StringConverter<EnumSearchType>))]
+    public enum EnumSearchType
+    {
+        [Description("所有")]
+        all,
+        [Description("歌曲")]
+        song,
+        [Description("艺术家")]
+        artist,
+        [Description("专辑")]
+        album,
+        [Description("精选集")]
+        collect,
+        [Description("相似艺术家")]
+        artist_similar,
+        [Description("艺术家的歌曲")]
+        artist_song,
+        [Description("艺术家的专辑")]
+        artist_album,
+        [Description("专辑的歌曲")]
+        album_song,
+        [Description("精选集的歌曲")]
+        collection_song,
+        [Description("我收藏的歌曲")]
+        user_song,
+    }
 }

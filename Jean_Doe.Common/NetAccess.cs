@@ -19,17 +19,6 @@ namespace Jean_Doe.Common
         static object lck = new object();
         public static void CancelAsync()
         {
-            //Task.Run(() =>
-            //{
-            //    lock (lck)
-            //    {
-            //        foreach (var token in cancelTokens)
-            //        {
-            //            if (token == null || token.IsCancellationRequested) continue;
-            //            token.Cancel(false);
-            //        }
-            //    }
-            //});
             cancelToken.Cancel();
             cancelToken = new CancellationTokenSource();
         }

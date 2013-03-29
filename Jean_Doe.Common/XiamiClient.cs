@@ -151,8 +151,6 @@ namespace Jean_Doe.Common
                     {      "password", Password},
                     {     "remember", "1"},
                     {     "LoginButton",  Uri.EscapeUriString("登录")},
-                    //{     "done", "/"},
-                    //{     "type", ""},
                     };
                 if (!string.IsNullOrWhiteSpace(validationCode))
                 {
@@ -170,12 +168,21 @@ namespace Jean_Doe.Common
                         return "Email or password incorrect";
                 }
                 SaveCookies(cookiesPath);
+                await fetchUserId();
                 return "ok";
             }
             catch (Exception e)
             {
                 return e.ToString();
             }
+        }
+        async Task fetchUserId()
+        {
+            var html = await GetString("http://www.xiami.com/web/edit-introduction");
+            var m=Regex.Match(html,"/web/feed/id/(\\d+)");
+            if (!m.Success)
+                return;
+            Global.AppSettings["xiami_uid"]=m.Groups[1].Value;
         }
     }
 }
