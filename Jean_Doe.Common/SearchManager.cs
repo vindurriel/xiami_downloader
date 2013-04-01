@@ -33,7 +33,7 @@ namespace Jean_Doe.Common
             state = EnumSearchState.Started;
             notifyState(new SearchResult { Keyword = input, SearchType = t });
             ISearchProvider provider=null;
-            var re_source=new Regex(@"(from:\s*(\w+))");
+            var re_source=new Regex(@"(source:\s*(\w+))");
             var m = re_source.Match(input);
             if (m.Success) {
                 var type=m.Groups[2].Value.ToLower();

@@ -42,9 +42,9 @@ namespace MusicPlayer
                     header.IsChecked = i == page;
                     i += 1;
                 }
-                if (contents.Children.Count > page-1)
+                if (contents.Children.Count > page - 1)
                 {
-                    var content = contents.Children[page-1] as FrameworkElement;
+                    var content = contents.Children[page - 1] as FrameworkElement;
                     if (content != null)
                         showPage(content, isLeft);
                 }
@@ -196,6 +196,8 @@ namespace MusicPlayer
         }
         void SetAvatar(string s)
         {
+            if (!System.IO.File.Exists(s))
+                return;
             var bi = new BitmapImage();
             bi.BeginInit();
             bi.StreamSource = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(s));

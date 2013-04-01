@@ -149,7 +149,6 @@ public class XiamiSearchProvider : ISearchProvider
 
     static async Task<SearchResult> SearchByKey(string key)
     {
-
         EnumMusicType type = EnumMusicType.song;
         Enum.TryParse(Global.AppSettings["SearchResultType"], out type);
         if (type == EnumMusicType.any)
