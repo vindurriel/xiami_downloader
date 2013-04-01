@@ -220,7 +220,6 @@ namespace MusicPlayer
             get { return validateImage; }
             set { validateImage = value; Notify("ValidateImage"); }
         }
-
         private async void  btn_login_Click(object sender, RoutedEventArgs e)
         {
            await  XiamiClient.GetDefault().Login();

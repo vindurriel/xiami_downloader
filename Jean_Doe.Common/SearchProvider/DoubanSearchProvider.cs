@@ -12,13 +12,13 @@ public class DoubanSearchProvider : ISearchProvider
     {
         get { return new Regex(@"douban\.(?:com|fm)"); }
     }
-    public async Task<SearchResult> Search(string key)
+    public async Task<SearchResult> Search(string key, EnumSearchType t)
     {
         var res = new SearchResult
         {
             Items = new List<IMusic>(),
             Keyword = key,
-            SearchType = EnumSearchType.all,
+            SearchType = t,
             Page = 1,
         };
         if (string.IsNullOrEmpty(key) || !re_url.IsMatch(key)) return res;

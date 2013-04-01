@@ -46,6 +46,7 @@ namespace Jean_Doe.Common
             {"PlayNextMode","Sequential"},
             {"xiami_uid","86"},
             {"xiami_avatar",""},
+            {"xiami_username","虾小米"},
         };
         public static void LoadSettings()
         {
@@ -90,6 +91,8 @@ namespace Jean_Doe.Common
             if(!dict.ContainsKey(@event))
                 dict[@event] = new List<Action<string>>();
             dict[@event].Add(a);
+            if(AppSettings.ContainsKey(@event))
+            a(AppSettings[@event]);
         }
         static void RaiseEvent(string @event)
         {

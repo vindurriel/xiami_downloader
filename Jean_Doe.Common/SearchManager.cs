@@ -25,13 +25,13 @@ namespace Jean_Doe.Common
         {
             if (string.IsNullOrEmpty(id)) return;
 			var key=string.Format("http://www.xiami.com/type/{0}/id/{1}",type.ToString(),id);
-			await Search(key);
+			await Search(key,type);
         }
-        public static async Task Search(string input)
+        public static async Task Search(string input,EnumSearchType t=EnumSearchType.all)
         {
             if (string.IsNullOrEmpty(input)) return;
             state = EnumSearchState.Started;
-            notifyState();
+            notifyState(new SearchResult { Keyword = input, SearchType = t });
             ISearchProvider provider=null;
             var re_source=new Regex(@"(from:\s*(\w+))");
             var m = re_source.Match(input);
@@ -50,7 +50,7 @@ namespace Jean_Doe.Common
             if (provider == null)
                 provider = new XiamiSearchProvider();
             state = EnumSearchState.Working;
-            var sr=await provider.Search(input);
+            var sr=await provider.Search(input,t);
             if (sr != null && state != EnumSearchState.Cancelling)
             {
                 MessageBus.Instance.Publish(sr);

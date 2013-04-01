@@ -72,10 +72,6 @@ namespace Jean_Doe.MusicControl
                 case EnumSearchType.artist:
                 case EnumSearchType.album:
                 case EnumSearchType.collect:
-                case EnumSearchType.user_song:
-                case EnumSearchType.user_artist:
-                case EnumSearchType.user_album:
-                case EnumSearchType.user_collect:
                     res = true;
                     break;
                 default:
@@ -105,8 +101,7 @@ namespace Jean_Doe.MusicControl
             {
                 if (SearchManager.State == EnumSearchState.Finished)
                 {
-                    hs.Upsert(SearchType, Key, 0);
-                    await SearchManager.Search(Key);
+                    await SearchManager.Search(Key, SearchType);
                 }
                 else
                 {
@@ -127,6 +122,8 @@ namespace Jean_Doe.MusicControl
                     case EnumSearchState.Started:
                         img_search.Visibility = Visibility.Collapsed;
                         img_stop.Visibility = Visibility.Visible;
+                        hs.Text = message.SearchResult.Keyword;
+                        combo_xiami_type.SelectedItem = message.SearchResult.SearchType;
                         break;
                     case EnumSearchState.Working:
                         break;
@@ -163,8 +160,8 @@ namespace Jean_Doe.MusicControl
             if (t >= EnumSearchType.user_song)
             {
                 hs.Text = "user:me";
-                var s=t.ToString();
-                Enum.TryParse(s.Substring("user_".Length) ,out t);
+                var s = t.ToString();
+                Enum.TryParse(s.Substring("user_".Length), out t);
                 combo_xiami_type.SelectedItem = t;
             }
             Global.AppSettings["SearchResultType"] = t.ToString();

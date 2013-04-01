@@ -17,11 +17,12 @@ namespace Jean_Doe.MusicControl
     /// <summary>
     /// Interaction logic for HistorySearch.xaml
     /// </summary>
-    public partial class HistorySearch  
+    public partial class HistorySearch :IHandle<SearchResult>
     {
         public HistorySearch()
         {
             InitializeComponent();
+            MessageBus.Instance.Subscribe(this);
             Source = CollectionViewSource.GetDefaultView(HistoryItems);
             Source.Filter = (s) => { return HistoryItems.IndexOf(s as HistorySearchItem) < 10; };
             ItemsSource = Source;
@@ -102,10 +103,7 @@ namespace Jean_Doe.MusicControl
 
         public void Handle(SearchResult message)
         {
-            if (message == null) return;
-            int a;
-            if (int.TryParse(message.Keyword, out a))
-                return;
+            if (message == null || string.IsNullOrEmpty(message.Keyword)) return;
             UIHelper.RunOnUI(new Action(() =>
             {
                 this.Upsert(message.SearchType, message.Keyword, message.Count);

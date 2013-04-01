@@ -190,8 +190,6 @@
                     <ComboBoxItem Content="单曲循环"
                               Tag="Repeat" />
                 </ComboBox>
-                <Label>虾米账号</Label>
-                <Button x:Name="btn_login" Click="btn_login_Click" Content="登陆" Width="70" HorizontalAlignment="Left"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>

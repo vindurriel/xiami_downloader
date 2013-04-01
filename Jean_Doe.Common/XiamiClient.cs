@@ -174,7 +174,9 @@ namespace Jean_Doe.Common
 
         public async Task Login()
         {
+            Global.AppSettings["xiami_avatar"] = "";
             Uri url = new Uri("http://www.xiami.com/web/login");
+            Application.SetCookie(url, "member_auth=");
             var win = new Window();
             var br = new WebBrowser { };
             win.Content = br;
@@ -187,20 +189,24 @@ namespace Jean_Doe.Common
         }
         async Task getUserId()
         {
-            var html = await GetString("http://www.xiami.com");
-            var m = Regex.Match(html, "var myUid = parseInt\\('(\\d+)'\\);");
+            var html = await GetString("/member/edit");
+            var m = Regex.Match(html, "\"/u/(\\d+)\"");
             if (m.Success)
             {
                 Global.AppSettings["xiami_uid"] = m.Groups[1].Value;
             }
-            m = Regex.Match(html, "http://img\\.xiami.com/\\./images/avatar_new/[\\d/_]+\\.(jp|pn)g");
+            m = Regex.Match(html, "value=\"([^\"]+)\" name =\"m_nick_name\"");
             if (m.Success)
             {
-                Global.AppSettings["xiami_avatar"] = "";
+                Global.AppSettings["xiami_username"] = m.Groups[1].Value;
+            }
+            m = Regex.Match(html, "http://img\\.xiami.com/\\./images/avatar_new/[\\d/_]+\\.(jpg|png)");
+            if (m.Success)
+            {
                 var imgUrl = m.Groups[0].Value;
                 var bytes = await client.GetByteArrayAsync(imgUrl);
-                var imgFile = Path.Combine(Global.BasePath, "avatar.png");
-                File.WriteAllBytes(imgFile,bytes);
+                var imgFile = Path.Combine(Global.BasePath, "cache", Global.AppSettings["xiami_uid"] + ".user");
+                File.WriteAllBytes(imgFile, bytes);
                 Global.AppSettings["xiami_avatar"] = imgFile;
             }
         }

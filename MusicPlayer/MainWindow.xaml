@@ -161,40 +161,35 @@
                     <DockPanel.Resources>
                         <Style TargetType="ToggleButton" BasedOn="{StaticResource toggleStyle}"/>
                     </DockPanel.Resources>
-                    <ToggleButton x:Name="head1"
-                              Style="{StaticResource toggleStyle}">
+                    <ToggleButton  MinWidth="0"
+                           Padding="0,4,0,0"   >
+                        <Image  Source="{Binding Avatar,ElementName=me}"   Stretch="UniformToFill"/>
+                    </ToggleButton>
+                    <ToggleButton   >
                         <DockPanel HorizontalAlignment="Center">
                             <TextBlock Text="&#xE11a;" Style="{StaticResource glyph}"/>
                             <TextBlock Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_search}" Text="{Binding ItemsCount, ElementName=list_search, StringFormat=\{0\}}" />
                         </DockPanel>
                     </ToggleButton>
-                    <ToggleButton x:Name="head2"
-                              Style="{StaticResource toggleStyle}">
+                    <ToggleButton   >
                         <DockPanel HorizontalAlignment="Center">
                             <TextBlock Text="&#xE118;" Style="{StaticResource glyph}"/>
                             <TextBlock Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_download}" Text="{Binding ItemsCount, ElementName=list_download, StringFormat= \{0\}}" />
                         </DockPanel>
                     </ToggleButton>
 
-                    <ToggleButton x:Name="head3"
-                              Style="{StaticResource toggleStyle}">
+                    <ToggleButton  >
                         <DockPanel HorizontalAlignment="Center">
                             <TextBlock Text="&#xE142;" Style="{StaticResource glyph}"/>
                             <TextBlock Visibility="{Binding ItemsCount, Converter={StaticResource int2vis}, ElementName=list_complete}" Text="{Binding ItemsCount, ElementName=list_complete, StringFormat=\{0\}}" />
                         </DockPanel>
                     </ToggleButton>
-                    <ToggleButton x:Name="head4" 
-                              Style="{StaticResource toggleStyle}">
+                    <ToggleButton  >
                         <DockPanel HorizontalAlignment="Center">
                             <TextBlock Text="&#xE115;" Style="{StaticResource glyph}"/>
                         </DockPanel>
                     </ToggleButton>
-                    <ToggleButton x:Name="head5" 
-                              Style="{StaticResource toggleStyle}">
-                        <DockPanel HorizontalAlignment="Center">
-                            <Image  Source="{Binding Avatar,ElementName=me}" MaxWidth="50" Stretch="Uniform"/>
-                        </DockPanel>
-                    </ToggleButton>
+                
                 </DockPanel>
                 <Grid  Grid.Column="2" Background="Black">
                     <Grid Background="{DynamicResource lightBrush}" MouseLeftButtonDown="btn_move_MouseDown">
@@ -218,7 +213,12 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <Grid x:Name="content" Margin="30,30,30,0">
+                <Grid x:Name="contents" Margin="30,30,30,0">
+                    <Grid x:Name="page5"
+                		Opacity="0"
+                		IsHitTestVisible="false">
+                        <my:UserPage x:Name="userPage"/>
+                    </Grid>
                     <Grid x:Name="page1"
                 		Opacity="0"
                 		IsHitTestVisible="false">
@@ -256,6 +256,7 @@
                         </Grid.ColumnDefinitions>
                         <my:ConfigPage x:Name="configPage"  />
                     </Grid>
+                    
                 </Grid>
             </Grid>
             <!--contents-->

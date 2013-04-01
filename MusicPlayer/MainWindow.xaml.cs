@@ -38,13 +38,16 @@ namespace MusicPlayer
                 int i = 1;
                 foreach (var item in headers.Children)
                 {
-                    var header =item as ToggleButton;
+                    var header = item as ToggleButton;
                     header.IsChecked = i == page;
                     i += 1;
                 }
-                var content = FindName("page" + page.ToString()) as FrameworkElement;
-                if (content != null)
-                    showPage(content, isLeft);
+                if (contents.Children.Count > page-1)
+                {
+                    var content = contents.Children[page-1] as FrameworkElement;
+                    if (content != null)
+                        showPage(content, isLeft);
+                }
                 ActionBarService.ContextName = page.ToString();
                 ActionBarService.Refresh();
             }
@@ -95,10 +98,11 @@ namespace MusicPlayer
         void initCharms()
         {
             var int2bool = FindResource("int2bool") as IntToBoolConverter;
-            ActionBarService.RegisterContext("1", list_search);
-            ActionBarService.RegisterContext("2", list_download);
-            ActionBarService.RegisterContext("3", list_complete);
-            ActionBarService.RegisterContext("4", configPage);
+            ActionBarService.RegisterContext("1", userPage);
+            ActionBarService.RegisterContext("2", list_search);
+            ActionBarService.RegisterContext("3", list_download);
+            ActionBarService.RegisterContext("4", list_complete);
+            ActionBarService.RegisterContext("5", configPage);
             list_search.PropertyChanged += this.contentControl_PropertyChanged;
             list_download.PropertyChanged += this.contentControl_PropertyChanged;
             list_complete.PropertyChanged += this.contentControl_PropertyChanged;
@@ -118,7 +122,7 @@ namespace MusicPlayer
                 if (header != null)
                     header.Click += (s, a) =>
                     {
-                        Page=headers.Children.IndexOf(s as UIElement);
+                        Page = headers.Children.IndexOf(s as UIElement) + 1;
                     };
 
             }
@@ -133,11 +137,6 @@ namespace MusicPlayer
             //load last active page
             var lastPage = int.Parse(Global.AppSettings["ActivePage"]);
             Page = lastPage;
-            //enable magnet 
-            SetEnableMagnet(Global.AppSettings["EnableMagnet"]);
-            //set skin color
-            SetColorSkin(Global.AppSettings["ColorSkin"]);
-            SetAvatar(Global.AppSettings["xiami_avatar"]);
         }
 
         private void loadSongLists()
@@ -218,87 +217,9 @@ namespace MusicPlayer
         }
 
 
-
-
-
-        int lastPageNum = 0;
-        void btn_more_Click(object sender, RoutedEventArgs e)
-        {
-            var more = sender as ToggleButton;
-            if (more.IsChecked == true)
-            {
-                lastPageNum = Page;
-                Page = 0;
-            }
-            else
-            {
-                Page = lastPageNum;
-            }
-            var anim = FindResource(more.IsChecked == true ? "anim_show_more" : "anim_hide_more") as Storyboard;
-            anim.Begin();
-        }
         void btn_move_MouseDown(object sender, RoutedEventArgs e)
         {
             this.DragMove();
-        }
-
-
-
-
-        void setSearchTitle(string status)
-        {
-            UIHelper.RunOnUI(() =>
-            {
-                text_search.Visibility = string.IsNullOrEmpty(status) ? Visibility.Collapsed : Visibility.Visible;
-                text_search.Text = status;
-                //statusBar.Text = status;
-            });
-        }
-
-        string getSearchResultDisplay(EnumSearchType t, string key)
-        {
-            var res = "所有";
-            switch (t)
-            {
-                case EnumSearchType.song:
-                    res = "歌曲";
-                    break;
-                case EnumSearchType.artist:
-                    res = "艺术家";
-                    break;
-                case EnumSearchType.album:
-                    res = "专辑";
-                    break;
-                case EnumSearchType.collect:
-                    res = "精选集";
-                    break;
-                case EnumSearchType.artist_song:
-                    res = "艺术家";
-                    break;
-                case EnumSearchType.artist_album:
-                    res = "艺术家的专辑";
-                    return res;
-                case EnumSearchType.album_song:
-                    res = "专辑";
-                    break;
-                case EnumSearchType.collection_song:
-                    res = "精选集";
-                    break;
-                case EnumSearchType.user_song:
-                    res = "用户收藏的歌曲";
-                    return res;
-                case EnumSearchType.artist_similar:
-                    res = "相似艺术家";
-                    return res;
-                default:
-                    break;
-            }
-            res += "\"" + key + "\"";
-            if (t >= EnumSearchType.artist_song)
-                res += "的歌曲搜索结果";
-            else
-                res += "的搜索结果";
-            return res;
         }
 
         public void Handle(MsgSearchStateChanged message)
@@ -308,22 +229,17 @@ namespace MusicPlayer
                 case EnumSearchState.Started:
                     UIHelper.RunOnUI(new Action(() =>
                     {
-                        Page = 1;
+                        Page = 2;
                         busyIndicator.StartSpin();
-                        setSearchTitle("");
                     }));
                     break;
                 case EnumSearchState.Working:
-                    if (message.SearchResult == null) return;
-                    var key = message.SearchResult.Keyword;
-                    var t = getSearchResultDisplay(message.SearchResult.SearchType, key);
-                    setSearchTitle(t);
                     break;
                 case EnumSearchState.Cancelling:
                 case EnumSearchState.Finished:
                     UIHelper.RunOnUI(new Action(() =>
                     {
-                        Page = 1;
+                        Page = 2;
                         busyIndicator.StopSpin();
                     }));
                     break;
@@ -333,7 +249,6 @@ namespace MusicPlayer
         }
         public void Handle(string message)
         {
-            setSearchTitle(message);
         }
         public void Handle(MsgChangeWindowState message)
         {
@@ -361,6 +276,7 @@ namespace MusicPlayer
                     break;
             }
         }
+
         public void Handle(MsgSetBusy message)
         {
             if (message.On)

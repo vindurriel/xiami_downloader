@@ -10,14 +10,14 @@ public class BaiduSearchProvider : ISearchProvider
     static readonly Regex re_artist = new Regex("\"site_title\":\\s*\"([^\"]+?)\"");
     static readonly string search_url = "http://openapi.baidu.com/public/2.0/mp3/info/suggestion?format=json&word={0}";
     static readonly string download_url = "http://ting.baidu.com/song/%s/download";
-    public async Task<SearchResult> Search(string key)
+    public async Task<SearchResult> Search(string key, EnumSearchType t)
     {
         key = key.Trim();
         var res = new SearchResult
         {
             Items = new List<IMusic>(),
             Keyword = key,
-            SearchType = EnumSearchType.all,
+            SearchType = t,
             Page = 1,
         };
         var url = string.Format(search_url, Uri.EscapeDataString(key));

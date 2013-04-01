@@ -10,14 +10,14 @@ public class XiamiSearchProvider : ISearchProvider
     {
         get { return new Regex(@"xiami\.com"); }
     }
-    public async Task<SearchResult> Search(string key)
+    public async Task<SearchResult> Search(string key, EnumSearchType t)
     {
         if (string.IsNullOrEmpty(key))
             return null;
         var m = Regex.Match(key, "user:(\\w+)");
         if (m.Success)
         {
-            await GetUserMusic(m.Groups[1].Value, Global.AppSettings["SearchResultType"]);
+            await GetUserMusic(m.Groups[1].Value, t.ToString());
             return null;
         }
         if (Uri.IsWellFormedUriString(key, UriKind.Absolute))
@@ -40,35 +40,28 @@ public class XiamiSearchProvider : ISearchProvider
         ///////////////////////////////////////////////////////
         if (json == null) return null;
         List<IMusic> items = new List<IMusic>();
-        var searchType = EnumSearchType.song;
         var newKey = "";
         switch (type)
         {
             case EnumSearchType.song:
-                searchType = EnumSearchType.song;
                 items = GetSong(json, out newKey);
                 break;
             case EnumSearchType.album:
             case EnumSearchType.album_song:
-                searchType = EnumSearchType.album_song;
                 items = GetSongsOfAlbum(json, out newKey);
                 break;
             case EnumSearchType.artist:
             case EnumSearchType.artist_song:
-                searchType = EnumSearchType.artist_song;
                 items = GetSongsOfArtist(json, out newKey);
                 break;
             case EnumSearchType.collect:
             case EnumSearchType.collection_song:
-                searchType = EnumSearchType.collection_song;
                 items = GetSongsOfCollect(json, out newKey);
                 break;
             case EnumSearchType.artist_similar:
-                searchType = EnumSearchType.artist_similar;
                 items = GetSimilarsOfArtist(json, out newKey);
                 break;
             case EnumSearchType.artist_album:
-                searchType = EnumSearchType.artist_album;
                 items = GetAlbumsOfArtist(json, out newKey);
                 break;
             default:
@@ -78,7 +71,7 @@ public class XiamiSearchProvider : ISearchProvider
         {
             Items = items,
             Keyword = string.IsNullOrEmpty(newKey) ? id : newKey,
-            SearchType = searchType,
+            SearchType = type,
             Page = 1,
         };
         return res;
@@ -130,7 +123,7 @@ public class XiamiSearchProvider : ISearchProvider
             if (obj == null || obj.status == "failed") break;
             var items = new List<IMusic>();
             var list = obj[musicType.ToString() + "s"];
-            if (list==null || list.Count() == 0) break;
+            if (list==null || list.Count == 0) break;
             foreach (dynamic item in list)
             {
                 try
@@ -146,6 +139,7 @@ public class XiamiSearchProvider : ISearchProvider
             {
                 break;
             }
+            Artwork.MessageBus.MessageBus.Instance.Publish(sr);
             SearchManager.notifyState(sr);
             page++;
             if (obj.more != "true")
@@ -171,7 +165,7 @@ public class XiamiSearchProvider : ISearchProvider
             {
                 break;
             }
-
+            Artwork.MessageBus.MessageBus.Instance.Publish(sr);
             SearchManager.notifyState(sr);
             page++;
         }
