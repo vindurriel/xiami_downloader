@@ -15,7 +15,7 @@ namespace Jean_Doe.Common
         [Description("精选集")]
         collect,
         [Description("相似艺术家")]
-        artist_similar,
+        artist_artist,
         [Description("艺术家的歌曲")]
         artist_song,
         [Description("艺术家的专辑")]

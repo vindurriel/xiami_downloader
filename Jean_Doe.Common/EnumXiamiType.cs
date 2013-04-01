@@ -13,6 +13,6 @@ namespace Jean_Doe.Common
         [Description("歌曲")]
         song = 4,
         [Description("所有")]
-        any = 0,
+        all = 0,
     }
 }

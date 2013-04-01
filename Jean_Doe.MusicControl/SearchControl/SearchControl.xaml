@@ -12,11 +12,7 @@
                 <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/TouchButtonStyle.xaml" />
                 <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/ComboBoxStyle.xaml" />
                 <ResourceDictionary>
-                    <common:EnumMusicType x:Key="song">song</common:EnumMusicType>
-                    <common:EnumMusicType x:Key="artist">artist</common:EnumMusicType>
-                    <common:EnumMusicType x:Key="album">album</common:EnumMusicType>
-                    <common:EnumMusicType x:Key="collect">collect</common:EnumMusicType>
-                    <common:EnumMusicType x:Key="any">any</common:EnumMusicType>
+                   
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

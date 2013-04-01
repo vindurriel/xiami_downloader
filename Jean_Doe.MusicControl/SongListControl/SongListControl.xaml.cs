@@ -233,7 +233,8 @@ namespace Jean_Doe.MusicControl
             var t = listView.SelectedItems.OfType<IHasAlbum>().FirstOrDefault();
             if (t == null) return;
             var id = t.AlbumId;
-            await SearchManager.GetMusic(t.AlbumId, EnumSearchType.album);
+            await SearchManager.Search("album:" + id, EnumSearchType.song);
+            //await SearchManager.GetMusic(t.AlbumId, EnumSearchType.album);
         }
 
         protected virtual async void link_artist(object sender, RoutedEventArgs e)
@@ -241,27 +242,29 @@ namespace Jean_Doe.MusicControl
             var t = listView.SelectedItems.OfType<IHasArtist>().FirstOrDefault();
 
             if (t == null) return;
-            await SearchManager.GetMusic(t.ArtistId, EnumSearchType.artist_song);
+            await SearchManager.Search("artist:" + t.ArtistId, EnumSearchType.song);
+            //await SearchManager.GetMusic(t.ArtistId, EnumSearchType.artist_song);
         }
         protected virtual async void link_similar_artist(object sender, RoutedEventArgs e)
         {
             var t = listView.SelectedItems.OfType<IHasArtist>().FirstOrDefault();
 
             if (t == null) return;
-            await SearchManager.GetMusic(t.ArtistId, EnumSearchType.artist_similar);
+            await SearchManager.Search("artist:" + t.ArtistId, EnumSearchType.artist);
+            //await SearchManager.GetMusic(t.ArtistId, EnumSearchType.artist_similar);
         }
         protected virtual async void link_artist_album(object sender, RoutedEventArgs e)
         {
             var t = listView.SelectedItems.OfType<IHasArtist>().FirstOrDefault();
 
             if (t == null) return;
-            await SearchManager.GetMusic(t.ArtistId, EnumSearchType.artist_album);
+            await SearchManager.Search("artist:"+t.ArtistId, EnumSearchType.album);
         }
         protected virtual async void link_collection(object sender, RoutedEventArgs e)
         {
             var t = listView.SelectedItems.OfType<IHasCollection>().FirstOrDefault();
             if (t == null) return;
-            await SearchManager.GetMusic(t.CollectionId, EnumSearchType.collect);
+            await SearchManager.Search("collect:"+t.CollectionId, EnumSearchType.song);
         }
 
         protected virtual void go_song(object sender, RoutedEventArgs e)
