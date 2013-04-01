@@ -31,7 +31,6 @@ namespace Jean_Doe.MusicControl
             btn_search.DataContext = this;
             btn_search.Click += btn_search_Click;
             hs.SelectionChanged += hs_SelectionChanged;
-            
 
             Loaded += SearchControl_Loaded;
 
@@ -47,9 +46,12 @@ namespace Jean_Doe.MusicControl
             source.Filter = searchTypeFilter;
             combo_xiami_type.ItemsSource = source;
             var xtype = EnumSearchType.all;
-            //Enum.TryParse(Global.AppSettings["SearchResultType"], out xtype);
             combo_xiami_type.SelectedItem = xtype;
             combo_xiami_type.SelectionChanged += this.combo_xiami_type_SelectionChanged_1;
+            hs.TextChanged += (s, dd) =>
+            {
+                mask_filter.Visibility = Visibility.Collapsed;
+            };
             hs.GotFocus += (s, dd) =>
             {
                 mask_filter.Visibility = Visibility.Collapsed;
@@ -71,6 +73,9 @@ namespace Jean_Doe.MusicControl
                 case EnumSearchType.album:
                 case EnumSearchType.collect:
                 case EnumSearchType.user_song:
+                case EnumSearchType.user_artist:
+                case EnumSearchType.user_album:
+                case EnumSearchType.user_collect:
                     res = true;
                     break;
                 default:
@@ -155,10 +160,12 @@ namespace Jean_Doe.MusicControl
             EnumSearchType t = EnumSearchType.song;
             if (!Enum.TryParse(x.ToString(), out t))
                 return;
-            if (t == EnumSearchType.user_song)
+            if (t >= EnumSearchType.user_song)
             {
                 hs.Text = "user:me";
-                combo_xiami_type.SelectedItem = t = EnumSearchType.song;
+                var s=t.ToString();
+                Enum.TryParse(s.Substring("user_".Length) ,out t);
+                combo_xiami_type.SelectedItem = t;
             }
             Global.AppSettings["SearchResultType"] = t.ToString();
         }

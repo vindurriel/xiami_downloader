@@ -26,5 +26,11 @@ namespace Jean_Doe.Common
         collection_song,
         [Description("我收藏的歌曲")]
         user_song,
+        [Description("我收藏的专辑")]
+        user_album,
+        [Description("我收藏的艺术家")]
+        user_artist,
+        [Description("我收藏的精选集")]
+        user_collect,
     }
 }

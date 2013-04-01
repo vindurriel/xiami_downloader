@@ -6,7 +6,7 @@ internal static class MusicHelper
 	{
 		var type = m.Type.ToString();
 		m.Name = Get(obj,  type + "_name", "name","title" );
-		m.Id = Get(obj, type + "_id", "id" );
+		m.Id = Get(obj, type + "_id", "id","obj_id" );
 		m.Logo = StringHelper.EscapeUrl(Get(obj, type + "_logo", "logo","album_logo" ));
 	}
     public static string Get(dynamic obj, params string[] props)

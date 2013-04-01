@@ -11,18 +11,19 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 namespace MusicPlayer
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow :
+        INotifyPropertyChanged,
         IHandle<MsgSearchStateChanged>,
         IHandle<string>,
         IHandle<MsgChangeWindowState>,
         IHandle<MsgSetBusy>
     {
-        readonly int pageCount = 4;
         FrameworkElement lastPage;
         List<CharmBarEntity> charms = new List<CharmBarEntity>();
         private int page;
@@ -34,10 +35,12 @@ namespace MusicPlayer
                 if (value == page) return;
                 bool isLeft = value > page;
                 page = value;
-                for (int i = 1; i < pageCount + 1; i++)
+                int i = 1;
+                foreach (var item in headers.Children)
                 {
-                    var header = FindName("head" + i.ToString()) as ToggleButton;
+                    var header =item as ToggleButton;
                     header.IsChecked = i == page;
+                    i += 1;
                 }
                 var content = FindName("page" + page.ToString()) as FrameworkElement;
                 if (content != null)
@@ -71,6 +74,7 @@ namespace MusicPlayer
             Global.LoadSettings();
             Global.ListenToEvent("EnableMagnet", SetEnableMagnet);
             Global.ListenToEvent("ColorSkin", SetColorSkin);
+            Global.ListenToEvent("xiami_avatar", SetAvatar);
             InitializeComponent();
             DataContext = this;
             MessageBus.Instance.Subscribe(this);
@@ -108,14 +112,15 @@ namespace MusicPlayer
         {
             initCharms();
             //tag control events
-            for (int i = 1; i < pageCount + 1; i++)
+            foreach (var item in headers.Children)
             {
-                var header = FindName("head" + i.ToString()) as ToggleButton;
+                var header = item as ToggleButton;
                 if (header != null)
                     header.Click += (s, a) =>
                     {
-                        Page = int.Parse((s as FrameworkElement).Name.Substring(4));
+                        Page=headers.Children.IndexOf(s as UIElement);
                     };
+
             }
             //load last window position
             var rect = Rect.Parse(Global.AppSettings["WindowPos"]);
@@ -132,6 +137,7 @@ namespace MusicPlayer
             SetEnableMagnet(Global.AppSettings["EnableMagnet"]);
             //set skin color
             SetColorSkin(Global.AppSettings["ColorSkin"]);
+            SetAvatar(Global.AppSettings["xiami_avatar"]);
         }
 
         private void loadSongLists()
@@ -189,6 +195,19 @@ namespace MusicPlayer
             }
             catch { }
         }
+        void SetAvatar(string s)
+        {
+            var bi = new BitmapImage();
+            bi.BeginInit();
+            bi.StreamSource = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(s));
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.EndInit();
+            Avatar = bi;
+        }
+        BitmapSource avatar;
+        public BitmapSource Avatar { get { return avatar; } set { avatar = value; Notify("Avatar"); } }
+
+
         void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             list_download.Save();
@@ -349,5 +368,13 @@ namespace MusicPlayer
             else
                 busyIndicator.StopSpin();
         }
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void Notify(string prop)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+        #endregion
     }
 }

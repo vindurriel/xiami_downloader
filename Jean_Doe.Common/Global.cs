@@ -44,9 +44,8 @@ namespace Jean_Doe.Common
             {"SearchType","key"},
             {"SearchResultType","song"},
             {"PlayNextMode","Sequential"},
-            {"xiami_username","vindurriel@gmail.com"},
-            {"xiami_password","password"},
             {"xiami_uid","86"},
+            {"xiami_avatar",""},
         };
         public static void LoadSettings()
         {

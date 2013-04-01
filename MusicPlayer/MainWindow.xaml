@@ -5,9 +5,9 @@
                         xmlns:common="clr-namespace:Jean_Doe.Common;assembly=Jean_Doe.Common"
                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"  x:Class="MusicPlayer.MainWindow"
                         WindowStyle="None"
-                        Background="#01ffffff"
                         Foreground="{DynamicResource lightBrush}"
                         AllowsTransparency="True"
+                       Background="#01ffffff"
                         Icon="icon.ico"
                         SnapsToDevicePixels="True"
                         FontSize="15"
@@ -138,10 +138,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.Resources>
                     <Style TargetType="TextBlock">
@@ -160,52 +157,46 @@
                         <Setter Property="FontSize" Value="15"/>
                     </Style>
                 </Grid.Resources>
-                <ToggleButton x:Name="head1"
+                <DockPanel Grid.Column="1" x:Name="headers">
+                    <DockPanel.Resources>
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource toggleStyle}"/>
+                    </DockPanel.Resources>
+                    <ToggleButton x:Name="head1"
                               Style="{StaticResource toggleStyle}">
-                    <StackPanel>
                         <DockPanel HorizontalAlignment="Center">
                             <TextBlock Text="&#xE11a;" Style="{StaticResource glyph}"/>
                             <TextBlock Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_search}" Text="{Binding ItemsCount, ElementName=list_search, StringFormat=\{0\}}" />
                         </DockPanel>
-                        <TextBlock Text="搜索"  Style="{StaticResource hint}" />
-                    </StackPanel>
-
-                </ToggleButton>
-                <ToggleButton x:Name="head2"
-                                  Grid.Column="1"
+                    </ToggleButton>
+                    <ToggleButton x:Name="head2"
                               Style="{StaticResource toggleStyle}">
-                    <StackPanel>
                         <DockPanel HorizontalAlignment="Center">
                             <TextBlock Text="&#xE118;" Style="{StaticResource glyph}"/>
                             <TextBlock Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_download}" Text="{Binding ItemsCount, ElementName=list_download, StringFormat= \{0\}}" />
                         </DockPanel>
-                        <TextBlock Text="下载中"   Style="{StaticResource hint}"/>
-                    </StackPanel>
-                </ToggleButton>
+                    </ToggleButton>
 
-                <ToggleButton x:Name="head3"
-                                    Grid.Column="2"
+                    <ToggleButton x:Name="head3"
                               Style="{StaticResource toggleStyle}">
-                    <StackPanel Orientation="Vertical" Width="80">
                         <DockPanel HorizontalAlignment="Center">
                             <TextBlock Text="&#xE142;" Style="{StaticResource glyph}"/>
                             <TextBlock Visibility="{Binding ItemsCount, Converter={StaticResource int2vis}, ElementName=list_complete}" Text="{Binding ItemsCount, ElementName=list_complete, StringFormat=\{0\}}" />
                         </DockPanel>
-                        <TextBlock Text="已下载"  Style="{StaticResource hint}" HorizontalAlignment="Center"/>
-                    </StackPanel>
-                </ToggleButton>
-                <ToggleButton x:Name="head4" 
-                                    Grid.Column="3"
+                    </ToggleButton>
+                    <ToggleButton x:Name="head4" 
                               Style="{StaticResource toggleStyle}">
-                    <StackPanel Orientation="Vertical">
                         <DockPanel HorizontalAlignment="Center">
                             <TextBlock Text="&#xE115;" Style="{StaticResource glyph}"/>
                         </DockPanel>
-                        <TextBlock Text="配置" Style="{StaticResource hint}"/>
-                    </StackPanel>
-                    <!--<TextBlock Text="配置" />-->
-                </ToggleButton>
-                <Grid  Grid.Column="4" Background="Black">
+                    </ToggleButton>
+                    <ToggleButton x:Name="head5" 
+                              Style="{StaticResource toggleStyle}">
+                        <DockPanel HorizontalAlignment="Center">
+                            <Image  Source="{Binding Avatar,ElementName=me}" MaxWidth="50" Stretch="Uniform"/>
+                        </DockPanel>
+                    </ToggleButton>
+                </DockPanel>
+                <Grid  Grid.Column="2" Background="Black">
                     <Grid Background="{DynamicResource lightBrush}" MouseLeftButtonDown="btn_move_MouseDown">
                         <Grid.Style>
                             <Style TargetType="Grid">
@@ -220,8 +211,7 @@
                             </Style>
                         </Grid.Style>
                     </Grid>
-                    <!--<controls:MusicControl FontSize="20" HorizontalAlignment="Left"   Width="150" Height="50" x:Name="musicControl"  />-->
-                </Grid>    
+                </Grid>
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -239,7 +229,7 @@
                         <DockPanel>
                             <controls:SearchControl Margin="5,10"  DockPanel.Dock="Top"  x:Name="searchKeywordControl" />
                             <TextBlock Text="" x:Name="text_search" Foreground="{DynamicResource skinBrush}" DockPanel.Dock="Top" Margin="5" FontSize="20" Visibility="Collapsed" />
-                                <controls:SearchSongListControl x:Name="list_search" />
+                            <controls:SearchSongListControl x:Name="list_search" />
                         </DockPanel>
                     </Grid>
                     <Grid x:Name="page2"

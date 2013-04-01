@@ -87,40 +87,6 @@ namespace Jean_Doe.MusicControl
             if (File.Exists(art))
                 ImageSource = art;                
         }
-        #region 试听
-        private WebBrowser playContent;
-        public WebBrowser PlayContent
-        {
-            get { return playContent; }
-            set { playContent = value; Notify("PlayContent"); }
-        }
-        public void Play()
-        {
-            PlayContent = new WebBrowser();
-            PlayContent.Width = 257;
-            PlayContent.Height = 33;
-            var uriPlay = string.Format("http://www.xiami.com/widget/0_{0}/singlePlayer.swf", Id);
-            PlayContent.Navigate(uriPlay);
-            isPlaying = true;
-        }
-        public void Stop()
-        {
-            if (PlayContent == null) return;
-            PlayContent.Navigated += (s, e) =>
-            {
-                PlayContent.Dispose();
-                PlayContent = null;
-                isPlaying = false;
-            };
-            PlayContent.Navigate("about:blank");
-        }
-        bool isPlaying = false;
-        public void TogglePlay()
-        {
-            if (isPlaying) Stop();
-            else Play();
-        }
-        #endregion
         Song song;
         public string TypeColor { get { return "#d20101"; } }
         public Song Song

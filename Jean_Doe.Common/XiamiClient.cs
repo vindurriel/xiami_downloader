@@ -7,6 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Controls;
 namespace Jean_Doe.Common
 {
     class MyHttpClienHanlder : HttpClientHandler
@@ -18,13 +21,64 @@ namespace Jean_Doe.Common
         }
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
         {
-            request.Headers.Referrer = new Uri("http://www.xiami.com/web/login");
+            request.Headers.Referrer = new Uri("http://www.xiami.com");
             request.Headers.Add("UserAgent", "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727)");
             return base.SendAsync(request, cancellationToken);
         }
     }
     public class XiamiClient
     {
+        [DllImport("wininet.dll", SetLastError = true)]
+        public static extern bool InternetGetCookieEx(
+            string url,
+            string cookieName,
+            StringBuilder cookieData,
+            ref int size,
+            Int32 dwFlags,
+            IntPtr lpReserved);
+
+        private const Int32 InternetCookieHttponly = 0x2000;
+
+        /// <summary>
+        /// Gets the URI cookie container.
+        /// </summary>
+        /// <param name="uri">The URI.</param>
+        /// <returns></returns>
+        public static CookieContainer GetUriCookieContainer(Uri uri)
+        {
+            CookieContainer cookies = null;
+            // Determine the size of the cookie
+            int datasize = 8192 * 16;
+            StringBuilder cookieData = new StringBuilder(datasize);
+            if (!InternetGetCookieEx(uri.ToString(), null, cookieData, ref datasize, InternetCookieHttponly, IntPtr.Zero))
+            {
+                if (datasize < 0)
+                    return null;
+                // Allocate stringbuilder large enough to hold the cookie
+                cookieData = new StringBuilder(datasize);
+                if (!InternetGetCookieEx(
+                    uri.ToString(),
+                    null, cookieData,
+                    ref datasize,
+                    InternetCookieHttponly,
+                    IntPtr.Zero))
+                    return null;
+            }
+            if (cookieData.Length > 0)
+            {
+                cookies = new CookieContainer();
+                cookies.SetCookies(uri, cookieData.ToString().Replace(';', ','));
+            }
+            return cookies;
+        }
+        private string cookiesPath = "cookies.dat";
+
+        public string CookiesPath
+        {
+            get { return cookiesPath; }
+            set { cookiesPath = value; }
+        }
+
         static XiamiClient _inst = null;
         public static XiamiClient GetDefault()
         {
@@ -34,21 +88,19 @@ namespace Jean_Doe.Common
         }
         public XiamiClient()
         {
-            LoadCookies("cookies.dat");
+            LoadCookies();
         }
         CookieContainer cookieJar = new CookieContainer();
         public string Username { get; set; }
         public string Password { get; set; }
-        string cookiesPath = null;
-        public void SaveCookies(string path)
+        public void SaveCookies()
         {
-            PersistHelper.SaveBin(cookieJar, path);
+            PersistHelper.SaveBin(cookieJar, CookiesPath);
         }
-        public void LoadCookies(string path)
+        public void LoadCookies()
         {
-            var c = PersistHelper.LoadBin<CookieContainer>(path);
+            var c = PersistHelper.LoadBin<CookieContainer>(CookiesPath);
             if (c == null) return;
-            cookiesPath = path;
             cookieJar = c;
         }
         HttpClient client = null;
@@ -100,11 +152,7 @@ namespace Jean_Doe.Common
                 {"id",songId},
             };
             var postObj = new FormUrlEncodedContent(favData);
-            if (client == null)
-            {
-                client = new HttpClient(new MyHttpClienHanlder(cookieJar));
-                client.BaseAddress = new Uri("http://www.xiami.com");
-            }
+            ensureClient();
             var resp = await client.PostAsync(new Uri(xm_favUrl), postObj);
             resp.EnsureSuccessStatusCode();
             var content = await resp.Content.ReadAsStringAsync();
@@ -114,75 +162,47 @@ namespace Jean_Doe.Common
         public async Task<string> GetString(string url)
         {
             ensureClient();
-            return await client.GetStringAsync(url);
-        }
-        public async Task<string> Login(string validationCode = null)
-        {
             try
             {
-                string url = "http://www.xiami.com/web/login";
-                Uri address = new Uri(url);
-                if (client == null)
-                {
-                    client = new HttpClient(new MyHttpClienHanlder(cookieJar));
-                    client.BaseAddress = new Uri("http://www.xiami.com");
-                }
-                if (string.IsNullOrWhiteSpace(validationCode))
-                {
-                    var resp = await client.GetAsync(url);
-                    if (resp.StatusCode == HttpStatusCode.Redirect)
-                    {
-                        return "ok";
-                    }
-                    var content = await resp.Content.ReadAsStringAsync();
-                    var m = Regex.Match(content, "src=\"(/coop/checkcode\\?forlogin=1&\\d+)\"");
-                    if (m.Success)
-                    {
-                        var codeImage = m.Groups[1].Value;
-                        resp = await client.GetAsync(codeImage);
-                        resp.EnsureSuccessStatusCode();
-                        var bytes = await resp.Content.ReadAsByteArrayAsync();
-                        File.WriteAllBytes(Path.Combine(Global.BasePath, "capcha.bmp"), bytes);
-                        return "validation required:";
-                    }
-                }
-                var postData = new Dictionary<string, string>{
-                    {"email", Username},
-                    {      "password", Password},
-                    {     "remember", "1"},
-                    {     "LoginButton",  Uri.EscapeUriString("登录")},
-                    };
-                if (!string.IsNullOrWhiteSpace(validationCode))
-                {
-                    postData.Add("validate", validationCode);
-                }
-                var postObj = new FormUrlEncodedContent(postData);
-                var r = await client.PostAsync(url, postObj);
-                r.EnsureSuccessStatusCode();
-                var c = await r.Content.ReadAsStringAsync();
-                if (c.Contains("会员登录"))
-                {
-                    if (c.Contains("验证码错误"))
-                        return "validation code incorrect";
-                    else if (c.Contains("密码错误"))
-                        return "Email or password incorrect";
-                }
-                SaveCookies(cookiesPath);
-                await fetchUserId();
-                return "ok";
+                return await client.GetStringAsync(url);
             }
             catch (Exception e)
             {
-                return e.ToString();
+                return "";
             }
         }
-        async Task fetchUserId()
+
+        public async Task Login()
         {
-            var html = await GetString("http://www.xiami.com/web/edit-introduction");
-            var m=Regex.Match(html,"/web/feed/id/(\\d+)");
-            if (!m.Success)
-                return;
-            Global.AppSettings["xiami_uid"]=m.Groups[1].Value;
+            Uri url = new Uri("http://www.xiami.com/web/login");
+            var win = new Window();
+            var br = new WebBrowser { };
+            win.Content = br;
+            br.Navigate(url);
+            win.ShowDialog();
+            cookieJar = GetUriCookieContainer(new Uri("http://www.xiami.com"));
+            client = null;
+            await getUserId();
+            SaveCookies();
+        }
+        async Task getUserId()
+        {
+            var html = await GetString("http://www.xiami.com");
+            var m = Regex.Match(html, "var myUid = parseInt\\('(\\d+)'\\);");
+            if (m.Success)
+            {
+                Global.AppSettings["xiami_uid"] = m.Groups[1].Value;
+            }
+            m = Regex.Match(html, "http://img\\.xiami.com/\\./images/avatar_new/[\\d/_]+\\.(jp|pn)g");
+            if (m.Success)
+            {
+                Global.AppSettings["xiami_avatar"] = "";
+                var imgUrl = m.Groups[0].Value;
+                var bytes = await client.GetByteArrayAsync(imgUrl);
+                var imgFile = Path.Combine(Global.BasePath, "avatar.png");
+                File.WriteAllBytes(imgFile,bytes);
+                Global.AppSettings["xiami_avatar"] = imgFile;
+            }
         }
     }
 }

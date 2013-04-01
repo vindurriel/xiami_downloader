@@ -112,6 +112,12 @@ namespace Jean_Doe.MusicControl
                 this.Save();
             }));
         }
+        public event TextChangedEventHandler TextChanged;
+        private void ComboBox_TextChanged_1(object sender, TextChangedEventArgs e)
+        {
+            if (TextChanged != null)
+                TextChanged(sender, e);
+        }
     }
     [XmlRoot("History")]
     public class XHistorySearch

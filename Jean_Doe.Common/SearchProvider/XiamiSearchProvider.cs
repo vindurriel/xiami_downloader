@@ -17,7 +17,7 @@ public class XiamiSearchProvider : ISearchProvider
         var m = Regex.Match(key, "user:(\\w+)");
         if (m.Success)
         {
-            await GetUserSongs(m.Groups[1].Value);
+            await GetUserMusic(m.Groups[1].Value, Global.AppSettings["SearchResultType"]);
             return null;
         }
         if (Uri.IsWellFormedUriString(key, UriKind.Absolute))
@@ -109,32 +109,39 @@ public class XiamiSearchProvider : ISearchProvider
         };
         return sr;
     }
-    public static async Task GetUserSongs(string userId)
+    public static async Task GetUserMusic(string userId, string t)
     {
         if (string.IsNullOrEmpty(userId))
             return;
         if (userId == "me")
             userId = Global.AppSettings["xiami_uid"];
+        if (t == "all" || t == "any") t = "song";
+        var searchType = EnumSearchType.song;
+        Enum.TryParse(t.ToString(), out searchType);
+        var musicType = EnumMusicType.song;
+        Enum.TryParse(t.ToString(), out musicType);
         int page = 1;
         while (true)
         {
-            var url = string.Format("/app/iphone/lib-songs/uid/{0}/page/{1}", userId, page);
+            var url = string.Format("/app/iphone/lib-{0}s/uid/{1}/page/{2}", t, userId, page);
             var json = await XiamiClient.GetDefault().GetString(url);
-            if (json == null) break;
+            if (json == null ) break;
             dynamic obj = json.ToDynamicObject();
-            if (obj == null) break;
+            if (obj == null || obj.status == "failed") break;
             var items = new List<IMusic>();
-            foreach (dynamic item in obj.songs)
+            var list = obj[musicType.ToString() + "s"];
+            if (list==null || list.Count() == 0) break;
+            foreach (dynamic item in list)
             {
                 try
                 {
-                    items.Add(MusicFactory.CreateFromJson(item, EnumMusicType.song));
+                    items.Add(MusicFactory.CreateFromJson(item, musicType));
                 }
                 catch (Exception e)
                 {
                 }
             }
-            var sr = new SearchResult { Items = items, SearchType = EnumSearchType.user_song };
+            var sr = new SearchResult { Items = items, SearchType = searchType };
             if (sr == null || sr.Count == 0 || SearchManager.State == EnumSearchState.Cancelling)
             {
                 break;

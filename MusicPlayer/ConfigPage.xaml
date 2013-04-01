@@ -191,14 +191,7 @@
                               Tag="Repeat" />
                 </ComboBox>
                 <Label>虾米账号</Label>
-                <TextBlock Text="用户名"/>
-                <TextBox x:Name="input_xiami_username"  />
-                <TextBlock Text="密码"/>
-                <TextBox x:Name="input_xiami_password"/>
                 <Button x:Name="btn_login" Click="btn_login_Click" Content="登陆" Width="70" HorizontalAlignment="Left"/>
-                <Image x:Name="image_validation" Source="{Binding ValidateImage,ElementName=me}" Stretch="None" Width="80" HorizontalAlignment="Left"/>
-                <TextBox x:Name="input_validation"   HorizontalAlignment="Left"  />
-                <TextBlock x:Name="msg_validaton" Text="sample text"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>

@@ -223,26 +223,8 @@ namespace MusicPlayer
 
         private async void  btn_login_Click(object sender, RoutedEventArgs e)
         {
-            SaveConfig();
-            var c = Jean_Doe.Common.XiamiClient.GetDefault();
-            c.Username = input_xiami_username.Text;
-            c.Password = input_xiami_password.Text;
-            var res = await c.Login(input_validation.Text);
-            if (res == "ok")
-            {
-                msg_validaton.Text = "登陆成功";
-            }
-            else if (res.StartsWith("validation required"))
-            {
-                input_validation.Visibility = Visibility.Visible;
-                msg_validaton.Text = "请输入验证码";
-                var codeImage = res.Substring(res.IndexOf(':') + 1);
-                ValidateImage = codeImage;
-            }
-            else
-            {
-                msg_validaton.Text = res;
-            }
+           await  XiamiClient.GetDefault().Login();
+           
         }
     }
 }
