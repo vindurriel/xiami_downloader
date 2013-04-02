@@ -21,6 +21,38 @@ namespace Jean_Doe.MusicControl
             Mp3Player.SongChanged += Mp3Player_SongChanged;
             Items.CollectionChanged += Items_CollectionChanged;
             now_playing.Visibility = Visibility.Visible;
+            watcher = CreateWatcher();
+        }
+        static FileSystemWatcher watcher;
+        FileSystemWatcher CreateWatcher()
+        {
+            using (var s = File.CreateText(Path.Combine(Global.BasePath, "a.txt"))) { }
+            var f = new FileSystemWatcher(Global.BasePath, "a.txt") { EnableRaisingEvents = true, NotifyFilter = NotifyFilters.LastWrite };
+            f.Changed += f_Changed;
+            return f;
+        }
+        void f_Changed(object sender, FileSystemEventArgs e)
+        {
+            while (true)
+            {
+                try
+                {
+                    using (var s = File.Open(e.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                    }
+                    break;
+                }
+                catch (Exception)
+                {
+                    System.Threading.Thread.Sleep(100);
+                }
+            }
+            var cmd = File.ReadAllText(e.FullPath);
+            if (cmd == "next")
+                UIHelper.RunOnUI(() => btn_next_Click(null, null));
+            else if(cmd=="pause")
+                UIHelper.RunOnUI(() => btn_play_Click(null, null));
+
         }
 
         void Mp3Player_SongChanged(object sender, Mp3Player.SongChangedEventArgs e)
