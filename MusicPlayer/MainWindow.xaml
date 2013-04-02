@@ -163,7 +163,10 @@
                     </DockPanel.Resources>
                     <ToggleButton  MinWidth="0"
                            Padding="0,4,0,0"   >
-                        <Image  Source="{Binding Avatar,ElementName=me}" Width="50"   Stretch="UniformToFill"/>
+                        <Grid  Width="50">
+                            <Image  Source="icon.ico"   Stretch="UniformToFill"/>
+                            <Image  Source="{Binding Avatar,ElementName=me}"   Stretch="UniformToFill"/>
+                        </Grid>
                     </ToggleButton>
                     <ToggleButton   >
                         <DockPanel HorizontalAlignment="Center">

@@ -197,7 +197,10 @@ namespace MusicPlayer
         void SetAvatar(string s)
         {
             if (!System.IO.File.Exists(s))
+            {
+                Avatar = null;
                 return;
+            }
             var bi = new BitmapImage();
             bi.BeginInit();
             bi.StreamSource = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(s));

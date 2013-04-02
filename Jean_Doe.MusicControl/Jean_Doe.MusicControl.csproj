@@ -186,29 +186,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\arrow.png" />
-    <Resource Include="Resources\close.png" />
-    <Resource Include="Resources\max.png" />
-    <Resource Include="Resources\min.png" />
-    <Resource Include="Resources\skin.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\search.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\stop.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\icon.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\nocover.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\downloading.png" />
-    <Resource Include="Resources\music_record.png" />
-    <Resource Include="Resources\search1.png" />
-    <Resource Include="Resources\settings.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Messages\" />
@@ -217,7 +201,6 @@
     <Resource Include="Resources\album.png" />
     <Resource Include="Resources\artist.png" />
     <Resource Include="Resources\collect.png" />
-    <Resource Include="Resources\fav.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -36,7 +36,11 @@ public class XiamiSearchProvider : ISearchProvider
     static async Task<SearchResult> getByType(EnumSearchType type, string id)
     {
         string url = "";
-        if (type == EnumSearchType.artist||type==EnumSearchType.artist_song)
+        if (type!=EnumSearchType.song && !type.ToString().Contains("_"))
+        {
+            Enum.TryParse(type.ToString() + "_song", out type);
+        }
+        if (type==EnumSearchType.artist_song)
             url = XiamiUrl.UrlArtistTopSong(id);
         else if (type == EnumSearchType.artist_artist)
             url = XiamiUrl.UrlArtistSimilars(id);
@@ -48,44 +52,40 @@ public class XiamiSearchProvider : ISearchProvider
         ///////////////////////////////////////////////////////
         if (json == null) return null;
         List<IMusic> items = new List<IMusic>();
-        var newKey = "";
         switch (type)
         {
             case EnumSearchType.song:
-                items = GetSong(json, out newKey);
+                items = GetSong(json);
                 break;
-            case EnumSearchType.album:
             case EnumSearchType.album_song:
-                items = GetSongsOfAlbum(json, out newKey);
+                items = GetSongsOfAlbum(json);
                 break;
-            case EnumSearchType.artist:
             case EnumSearchType.artist_song:
-                items = GetSongsOfArtist(json, out newKey);
+                type = EnumSearchType.artist_song;
+                items = GetSongsOfArtist(json);
                 break;
-            case EnumSearchType.collect:
-            case EnumSearchType.collection_song:
-                items = GetSongsOfCollect(json, out newKey);
+            case EnumSearchType.collect_song:
+                items = GetSongsOfCollect(json);
                 break;
             case EnumSearchType.artist_artist:
-                items = GetSimilarsOfArtist(json, out newKey);
+                items = GetSimilarsOfArtist(json);
                 break;
             case EnumSearchType.artist_album:
-                items = GetAlbumsOfArtist(json, out newKey);
+                items = GetAlbumsOfArtist(json);
                 break;
             default:
                 break;
         }
-        newKey = id;
         if (type.ToString().Contains("_"))
         {
             var duo=type.ToString().Split("_".ToCharArray());
-            newKey = duo[0] + ":" + id;
+            id = duo[0] + ":" + id;
             Enum.TryParse(duo[1], out type);
         }
         var res = new SearchResult
         {
             Items = items,
-            Keyword = newKey,
+            Keyword = id,
             SearchType = type,
             Page = 1,
         };
@@ -234,12 +234,12 @@ public class XiamiSearchProvider : ISearchProvider
         var t = EnumSearchType.song;
         Enum.TryParse<EnumSearchType>(strType, out t);
         var res = await getByType(t, id);
+        res.Keyword = url;
         return res;
     }
-    static List<IMusic> GetSimilarsOfArtist(string json, out string musicName)
+    static List<IMusic> GetSimilarsOfArtist(string json)
     {
         var items = new List<IMusic>();
-        musicName = "";
         try
         {
             var obj = json.ToDynamicObject().artists;
@@ -251,10 +251,9 @@ public class XiamiSearchProvider : ISearchProvider
         catch { }
         return items;
     }
-    static List<IMusic> GetAlbumsOfArtist(string json, out string musicName)
+    static List<IMusic> GetAlbumsOfArtist(string json)
     {
         var items = new List<IMusic>();
-        musicName = "";
         try
         {
             var obj = json.ToDynamicObject().albums;
@@ -266,48 +265,42 @@ public class XiamiSearchProvider : ISearchProvider
         catch { }
         return items;
     }
-    static List<IMusic> GetSongsOfArtist(string json, out string musicName)
+    static List<IMusic> GetSongsOfArtist(string json)
     {
         var items = new List<IMusic>();
-        musicName = "";
         try
         {
             var obj = json.ToDynamicObject().songs;
             foreach (var x in obj)
             {
-                if (musicName == "")
-                    musicName = x.artist_name;
                 items.Add(MusicFactory.CreateFromJson(x, EnumMusicType.song));
             }
         }
         catch { }
         return items;
     }
-    static List<IMusic> GetSongsOfCollect(string json, out string musicName)
+    static List<IMusic> GetSongsOfCollect(string json)
     {
         var items = new List<IMusic>();
         try
         {
             var obj = json.ToDynamicObject().collect;
-            musicName = obj.name;
             foreach (var x in obj.songs)
             {
                 items.Add(MusicFactory.CreateFromJson(x, EnumMusicType.song));
             }
         }
-        catch { musicName = ""; }
+        catch {  }
         return items;
     }
-    static List<IMusic> GetSongsOfAlbum(string json, out string musicName)
+    static List<IMusic> GetSongsOfAlbum(string json)
     {
         var items = new List<IMusic>();
-        musicName = "";
+        
         try
         {
             dynamic obj = json.ToDynamicObject();
             var album_name = obj.album.title;
-            if (musicName == "")
-                musicName = album_name;
             foreach (var x in obj.album.songs)
             {
                 Song a = MusicFactory.CreateFromJson(x, EnumMusicType.song);
@@ -318,15 +311,14 @@ public class XiamiSearchProvider : ISearchProvider
         catch { }
         return items;
     }
-    static List<IMusic> GetSong(string json, out string musicName)
+    static List<IMusic> GetSong(string json)
     {
         List<IMusic> res = new List<IMusic>();
-        musicName = "";
+        
         try
         {
             var obj = json.ToDynamicObject().song;
             var song = MusicFactory.CreateFromJson(obj, EnumMusicType.song);
-            musicName = song.Name;
             res.Add(song);
         }
         catch { }

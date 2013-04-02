@@ -15,7 +15,7 @@ namespace Jean_Doe.Common
             {
                 get
                 {
-                    if(!ContainsKey(key)) return default(TValue);
+                    if (!ContainsKey(key)) return default(TValue);
                     return base[key];
                 }
                 set
@@ -29,9 +29,6 @@ namespace Jean_Doe.Common
         public static string BasePath { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).ToString(), "XiamiDownloader"); } }
         static readonly ObservDict<string, string> DefaultSettings = new ObservDict<string, string>{
             {"DownloadFolder", "D:\\music"},
-            {"SearchByKeyPath", "history_key.xml"},
-            {"SearchByUrlPath", "history_url.xml"},
-            {"SearchByIdPath", "history_id.xml"},
             {"ConfigPath", "config.ini"},
             {"FolderPattern", ""},
             {"SongnamePattern", "%ArtistName - %Name - %AlbumName"},
@@ -39,34 +36,31 @@ namespace Jean_Doe.Common
             {"WindowPos","0,0,0,0"},
             {"EnableMagnet","1"},
             {"MaxConnection","10"},
-            {"ShowDetails","1"},
             {"ColorSkin","#ffaaff"},
-            {"SearchType","key"},
             {"SearchResultType","song"},
             {"PlayNextMode","Sequential"},
             {"xiami_uid","86"},
             {"xiami_avatar",""},
-            {"xiami_username","虾小米"},
+            {"xiami_username","未登录"},
         };
         public static void LoadSettings()
         {
             AppSettings = DefaultSettings;
             var config = Path.Combine(BasePath, AppSettings["ConfigPath"]);
-            if(!File.Exists(config))
+            if (!File.Exists(config))
                 return;
             try
             {
                 var lines = File.ReadAllLines(config);
-                foreach(var line in lines)
+                foreach (var line in lines)
                 {
                     var x = line.Split(new char[] { '=' }, 2, StringSplitOptions.RemoveEmptyEntries);
-                    if(x.Length != 2) continue;
+                    if (x.Length != 2) continue;
                     var key = x[0].Trim();
                     var value = x[1].Trim();
-                    if(!AppSettings.ContainsKey(key))
-                        AppSettings.Add(key, value);
-                    else
-                        AppSettings[key] = value;
+                    if (!AppSettings.ContainsKey(key))
+                        continue;
+                    AppSettings[key] = value;
                 }
             }
             catch
@@ -87,19 +81,19 @@ namespace Jean_Doe.Common
         }
         public static void ListenToEvent(string @event, Action<string> a)
         {
-            if(string.IsNullOrEmpty(@event)) return;
-            if(!dict.ContainsKey(@event))
+            if (string.IsNullOrEmpty(@event)) return;
+            if (!dict.ContainsKey(@event))
                 dict[@event] = new List<Action<string>>();
             dict[@event].Add(a);
-            if(AppSettings.ContainsKey(@event))
-            a(AppSettings[@event]);
+            if (AppSettings.ContainsKey(@event))
+                a(AppSettings[@event]);
         }
         static void RaiseEvent(string @event)
         {
-            if(!dict.ContainsKey(@event)) return;
-            if(!AppSettings.ContainsKey(@event)) return;
+            if (!dict.ContainsKey(@event)) return;
+            if (!AppSettings.ContainsKey(@event)) return;
             var value = AppSettings[@event];
-            foreach(var action in dict[@event])
+            foreach (var action in dict[@event])
             {
                 try
                 {

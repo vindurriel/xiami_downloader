@@ -162,18 +162,6 @@
   <ItemGroup>
     <Resource Include="icon.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\search1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\settings.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\music_record.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\downloading.png" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y $(TargetDir)*.exe e:\tools\xiami

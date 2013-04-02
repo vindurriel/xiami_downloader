@@ -23,7 +23,7 @@ namespace Jean_Doe.Common
         [Description("专辑的歌曲")]
         album_song,
         [Description("精选集的歌曲")]
-        collection_song,
+        collect_song,
         [Description("我收藏的歌曲")]
         user_song,
         [Description("我收藏的专辑")]
