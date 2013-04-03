@@ -9,6 +9,25 @@ namespace Jean_Doe.Common
 
     public static class Global
     {
+        static readonly ObservDict<string, string> DefaultSettings = new ObservDict<string, string>{
+            {"DownloadFolder", "D:\\music"},
+            {"ConfigPath", "config.ini"},
+            {"FolderPattern", ""},
+            {"SongnamePattern", "%ArtistName - %Name - %AlbumName"},
+            {"ActivePage","1"},
+            {"WindowPos","0,0,0,0"},
+            {"EnableMagnet","1"},
+            {"MaxConnection","10"},
+            {"ColorSkin","#ffaaff"},
+            {"SearchResultType","song"},
+            {"PlayNextMode","Sequential"},
+            {"xiami_uid","86"},
+            {"xiami_avatar",""},
+            {"xiami_username",""},
+            {"xiami_password",""},
+            {"xiami_access_token",""},
+            {"xiami_refresh_token",""},
+        };
         public class ObservDict<Tkey, TValue> : Dictionary<Tkey, TValue>
         {
             public new TValue this[Tkey key]
@@ -27,22 +46,7 @@ namespace Jean_Doe.Common
         }
         public static ObservDict<string, string> AppSettings = new ObservDict<string, string>();
         public static string BasePath { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).ToString(), "XiamiDownloader"); } }
-        static readonly ObservDict<string, string> DefaultSettings = new ObservDict<string, string>{
-            {"DownloadFolder", "D:\\music"},
-            {"ConfigPath", "config.ini"},
-            {"FolderPattern", ""},
-            {"SongnamePattern", "%ArtistName - %Name - %AlbumName"},
-            {"ActivePage","1"},
-            {"WindowPos","0,0,0,0"},
-            {"EnableMagnet","1"},
-            {"MaxConnection","10"},
-            {"ColorSkin","#ffaaff"},
-            {"SearchResultType","song"},
-            {"PlayNextMode","Sequential"},
-            {"xiami_uid","86"},
-            {"xiami_avatar",""},
-            {"xiami_username","未登录"},
-        };
+
         public static void LoadSettings()
         {
             AppSettings = DefaultSettings;

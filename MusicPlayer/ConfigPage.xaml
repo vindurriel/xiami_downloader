@@ -34,6 +34,26 @@
             </Style>
             <Style TargetType="TextBox"
                    BasedOn="{StaticResource {x:Type TextBox}}">
+                <EventSetter Event="TextBox.TextChanged"
+                             Handler="input_TextChanged" />
+                <Setter Property="MinWidth" Value="100"/>
+                <Setter Property="HorizontalContentAlignment"
+                        Value="Left" />
+                <Setter Property="VerticalContentAlignment"
+                        Value="Center" />
+                <Setter Property="HorizontalAlignment"
+                        Value="Left" />
+                <Setter Property="Margin"
+                        Value="{StaticResource lineMargin}" />
+                <Setter Property="Background"
+                        Value="#555" />
+                <Setter Property="Height"
+                        Value="{StaticResource lineHeight}" />
+            </Style>
+            <Style TargetType="PasswordBox"
+                   BasedOn="{StaticResource {x:Type PasswordBox}}">
+                <EventSetter Event="PasswordBox.PasswordChanged"
+                             Handler="pass_PasswordChanged" />
                 <Setter Property="MinWidth" Value="100"/>
                 <Setter Property="HorizontalContentAlignment"
                         Value="Left" />
@@ -190,6 +210,10 @@
                     <ComboBoxItem Content="单曲循环"
                               Tag="Repeat" />
                 </ComboBox>
+                <Label>虾米账号</Label>
+                <TextBox x:Name="input_xiami_username"/>
+                <PasswordBox x:Name="pass_xiami_password"/>
+                <Button x:Name="btn_xiami_login" Width="70" HorizontalAlignment="Left" Margin="0,5">登录</Button>
             </StackPanel>
         </ScrollViewer>
     </Grid>

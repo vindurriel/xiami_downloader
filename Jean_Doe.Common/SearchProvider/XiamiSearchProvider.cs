@@ -132,9 +132,9 @@ public class XiamiSearchProvider : ISearchProvider
         while (true)
         {
             var url = string.Format("/app/iphone/lib-{0}s/uid/{1}/page/{2}", t, userId, page);
-            var json = await XiamiClient.GetDefault().GetString(url);
-            if (json == null) break;
-            dynamic obj = json.ToDynamicObject();
+            //var json = await XiamiClient.GetDefault().GetString(url);
+            //if (json == null) break;
+            dynamic obj = XiamiClient.GetDefault().GetUserSongs();
             if (obj == null || obj.status == "failed") break;
             var items = new List<IMusic>();
             var list = obj[musicType.ToString() + "s"];

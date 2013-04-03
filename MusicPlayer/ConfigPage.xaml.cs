@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 //using System.Windows.Forms;
 namespace MusicPlayer
 {
-    public enum EnumConfigControlType { label, combo, toggle, color,input }
+    public enum EnumConfigControlType { label, combo, toggle, color, input, pass }
     /// <summary>
     /// Interaction logic for ConfigWindow.xaml
     /// </summary>
@@ -35,14 +35,22 @@ namespace MusicPlayer
                 {"ShowDetails", EnumConfigControlType.toggle},
                 {"PlayNextMode", EnumConfigControlType.combo},
                 {"xiami_username", EnumConfigControlType.input},
-                {"xiami_password", EnumConfigControlType.input},
+                {"xiami_password", EnumConfigControlType.pass},
             };
         public ConfigPage()
         {
             InitializeComponent();
             Loaded += (s, e) => LoadConfig();
             pop_skin.Opened += pop_skin_Opened;
+            btn_xiami_login.Click += btn_xiami_login_Click;
             actions.Add(new CharmAction("保存", this.btn_save_config_Click, (s) => { return (s as ConfigPage).IsDirty; }));
+        }
+
+       
+
+        private async void btn_xiami_login_Click(object sender, RoutedEventArgs e)
+        {
+            await XiamiClient.GetDefault().Login();
         }
 
         void pop_skin_Opened(object sender, EventArgs e)
@@ -58,14 +66,21 @@ namespace MusicPlayer
                 IsDirty = true;
             colorSkin = color_colorskin.SelectedColor;
         }
-
         Color colorSkin;
 
         void combo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             IsDirty = true;
         }
+        void input_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            IsDirty = true;
+        }
 
+        void pass_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            IsDirty = true;
+        }
         void btn_save_config_Click(object sender, RoutedEventArgs e)
         {
             SaveConfig();
@@ -97,6 +112,10 @@ namespace MusicPlayer
                     case EnumConfigControlType.input:
                         var t = x as TextBox;
                         if (t != null) t.Text = value;
+                        break;
+                    case EnumConfigControlType.pass:
+                        var p = x as PasswordBox;
+                        if (p != null) p.Password = value;
                         break;
                     case EnumConfigControlType.combo:
                         ComboSelect(x as ComboBox, value);
@@ -141,6 +160,16 @@ namespace MusicPlayer
                     case EnumConfigControlType.input:
                         var t = x as TextBox;
                         if (t != null) value = t.Text;
+                        break;
+                    case EnumConfigControlType.pass:
+                        var p = x as PasswordBox;
+                        if (p != null)
+                        {
+                            if (p.Password.Length != 32)
+                                value = p.Password.ToMD5();
+                            else
+                                value = p.Password;
+                        }
                         break;
                     case EnumConfigControlType.combo:
                         var comboBox = x as ComboBox;
@@ -220,10 +249,10 @@ namespace MusicPlayer
             get { return validateImage; }
             set { validateImage = value; Notify("ValidateImage"); }
         }
-        private async void  btn_login_Click(object sender, RoutedEventArgs e)
+        private async void btn_login_Click(object sender, RoutedEventArgs e)
         {
-           await  XiamiClient.GetDefault().Login();
-           
+            await XiamiClient.GetDefault().Login();
+
         }
     }
 }

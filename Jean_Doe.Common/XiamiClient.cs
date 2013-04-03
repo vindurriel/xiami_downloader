@@ -171,21 +171,61 @@ namespace Jean_Doe.Common
                 return "";
             }
         }
-
+        static string ApiPath = @"E:\tools\Python27\pyinstaller-2.0\xiami_api\dist\xiami_api.exe";
+        async  Task<dynamic>  call_xiami_api(string methodName, params string[] args)
+        {
+            var p = new List<string>() { "api_get", methodName, Global.AppSettings["xiami_access_token"] };
+            if (args != null)
+                p.AddRange(args);
+            var res = await RunProgramHelper.RunProgramGetOutput(ApiPath, p.ToArray());
+            return res.ToDynamicObject();
+        }
+        public dynamic GetUserSongs()
+        {
+              return  call_xiami_api("Library.getSongs");
+        }
         public async Task Login()
         {
             Global.AppSettings["xiami_avatar"] = "";
-            Uri url = new Uri("http://www.xiami.com/web/login");
-            Application.SetCookie(url, "member_auth=");
-            var win = new Window();
-            var br = new WebBrowser { };
-            win.Content = br;
-            br.Navigate(url);
-            win.ShowDialog();
-            cookieJar = GetUriCookieContainer(new Uri("http://www.xiami.com"));
-            client = null;
-            await getUserId();
-            SaveCookies();
+            var res = await RunProgramHelper.RunProgramGetOutput(ApiPath, new[]{
+                "get_new_token",
+                Global.AppSettings["xiami_username"],
+                Global.AppSettings["xiami_password"],
+            });
+            var json=res.ToDynamicObject();
+            if (json.error != null)
+            {
+                MessageBox.Show(json.error.ToString());
+                return;
+            }
+            Global.AppSettings["xiami_access_token"] = json.access_token.ToString();
+            Global.AppSettings["xiami_refresh_token"] = json.refresh_token.ToString();
+            var r =await call_xiami_api("Members.showUser");
+            if (r.error != null)
+            {
+                MessageBox.Show(r.error.ToString());
+                return;
+            }
+            Global.AppSettings["xiami_uid"] = r.user_id.ToString();
+            string avatarUrl = r.avatar.ToString();
+            if (!string.IsNullOrEmpty(avatarUrl))
+            {
+                var bytes = await new HttpClient().GetByteArrayAsync(avatarUrl);
+                var imgFile = Path.Combine(Global.BasePath, "cache", Global.AppSettings["xiami_uid"] + ".user");
+                File.WriteAllBytes(imgFile, bytes);
+                Global.AppSettings["xiami_avatar"] = imgFile;
+            }
+            //Uri url = new Uri("http://www.xiami.com/web/login");
+            //Application.SetCookie(url, "member_auth=");
+            //var win = new Window();
+            //var br = new WebBrowser { };
+            //win.Content = br;
+            //br.Navigate(url);
+            //win.ShowDialog();
+            //cookieJar = GetUriCookieContainer(new Uri("http://www.xiami.com"));
+            //client = null;
+            //await getUserId();
+            //SaveCookies();
         }
         async Task getUserId()
         {
