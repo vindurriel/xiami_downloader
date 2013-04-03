@@ -148,7 +148,7 @@ public class XiamiSearchProvider : ISearchProvider
                 {
                 }
             }
-            var sr = new SearchResult { Keyword = "user:me", Items = items, SearchType = searchType };
+            var sr = new SearchResult { Keyword = "user:"+key, Items = items, SearchType = searchType };
             if (sr == null || sr.Count == 0 || SearchManager.State == EnumSearchState.Cancelling)
             {
                 break;
