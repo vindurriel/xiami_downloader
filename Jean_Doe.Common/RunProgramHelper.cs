@@ -22,7 +22,7 @@ namespace Jean_Doe.Common
             }
             catch (Exception) { }
         }
-        public static Task<string> RunProgramGetOutput(string programName, string[] args)
+        public async static Task<string> RunProgramGetOutput(string programName, string[] args)
         {
             try
             {
@@ -31,28 +31,20 @@ namespace Jean_Doe.Common
                     FileName = programName,
                     Arguments = string.Join(" ",args),
                     UseShellExecute = false,
-                    RedirectStandardOutput=true,
-                    RedirectStandardError=true,
+                    RedirectStandardOutput = true,
                     CreateNoWindow = true,
                 };
                 var p=new Process { StartInfo = pi,EnableRaisingEvents=true };
                 var tcs = new TaskCompletionSource<string>();
-                p.Exited += async (s, e) =>
-                {
-                    var res = "";
-                    if (p.ExitCode != 0)
-                        res = await p.StandardError.ReadToEndAsync();
-                    else
-                        res = await p.StandardOutput.ReadToEndAsync();
-                    tcs.SetResult(res);
-                };
                 p.Start();
-                return tcs.Task;
+                var res=await p.StandardOutput.ReadToEndAsync();
+                return res;
             }
             catch (Exception e) {
                 return null;
             }
         }
+
        
     }
 }

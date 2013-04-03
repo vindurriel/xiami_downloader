@@ -56,11 +56,15 @@ namespace MusicPlayer
         {
             await SearchManager.Search("user:me", EnumSearchType.collect);
         }
+        private async void btn_user_daily_Click(object sender, RoutedEventArgs e)
+        {
+            await SearchManager.Search("user:daily", EnumSearchType.song);
+        }
 
         public IEnumerable<CharmAction> ProvideActions()
         {
             return new List<CharmAction>{
-            new CharmAction("登录",btn_login_Click,s=>true),
+            new CharmAction("今日推荐歌单",btn_user_daily_Click,IsLoggedIn),
             new CharmAction("收藏的歌曲",btn_user_song_Click,IsLoggedIn),
             new CharmAction("收藏的艺术家",btn_user_artist_Click,IsLoggedIn),
             new CharmAction("收藏的专辑",btn_user_album_Click,IsLoggedIn),

@@ -1,13 +1,14 @@
 #encoding=utf-8
-'''
-usage: xiami_api.exe method_name file_input_args
-'''
+'''usage: xiami_api.exe method_name file_input_args'''
 import requests as r
 import sys,os
-username="vindurriel@gmail.com"
-password="1q2w3e4r"
 client_id="55ee94348aeba2635326059e60d20a49"
 client_secret="ec253979c7f51e10010a30241c2ca2de"
+def cwd(*args):
+	d=os.path.dirname(sys.argv[0])
+	for x in args:
+		d=os.path.join(d,x)
+	return d
 def md5(raw):
 	import hashlib
 	return hashlib.md5(raw).hexdigest() 
@@ -26,6 +27,7 @@ def get_new_token(username,password):
 	json=resp.json()
 	if 'error' in json:
 		die(json["error"])
+	file(cwd("access_token"),'w').write(json["access_token"])
 	return json["access_token"],json["refresh_token"]
 def get_api_signature(dic,secret):
 	res=""
@@ -33,7 +35,11 @@ def get_api_signature(dic,secret):
 		res+=k+str(dic[k])
 	res+=secret
 	return md5(res)
-def api_get(method,access_token,params={}):
+def api_get(method,params={}):
+	f=cwd("access_token")
+	if not os.path.isfile(f):
+		die("file access_token not found in %s. Get new token first."%cwd())
+	access_token=file(f,'r').read()
 	url_api="http://api.xiami.com/api"
 	dic={
 		"method":method,
@@ -75,18 +81,16 @@ if __name__ == '__main__':
 	elif method=="api_get":
 		if len(args)==0:
 			die("api method missing") 
-		if len(args)==1:
-			die("api access_token missing") 
-		m,token=args[:2]
+		m=args[0]
 		dic={}
-		if len(args)>2:
+		if len(args)>1:
 			try:
-				for x in args[2:]:
+				for x in args[1:]:
 					k,v=x.split('=')
 					dic[k]=v
 			except Exception, e:
 				die("api method %s args error: %s"%(m,args))
-		res=api_get(m,token,dic)
+		res=api_get(m,dic)
 		print_json(res)
 	else:
 		die("unknown method:"+method)

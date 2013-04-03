@@ -172,17 +172,24 @@ namespace Jean_Doe.Common
             }
         }
         static string ApiPath = @"E:\tools\Python27\pyinstaller-2.0\xiami_api\dist\xiami_api.exe";
-        async  Task<dynamic>  call_xiami_api(string methodName, params string[] args)
+        async Task<dynamic> call_xiami_api(string methodName, params string[] args)
         {
-            var p = new List<string>() { "api_get", methodName, Global.AppSettings["xiami_access_token"] };
+            var p = new List<string>() { "api_get", methodName };
             if (args != null)
                 p.AddRange(args);
-            var res = await RunProgramHelper.RunProgramGetOutput(ApiPath, p.ToArray());
+            string res = await RunProgramHelper.RunProgramGetOutput(ApiPath, p.ToArray());
             return res.ToDynamicObject();
         }
-        public dynamic GetUserSongs()
+        public async Task<dynamic> GetDailyRecommend()
         {
-              return  call_xiami_api("Library.getSongs");
+            return await call_xiami_api("Recommend.DailySongs");
+        }
+        public async Task<dynamic> GetUserMusic(string t, int page)
+        {
+            if (t == "collect")
+                return await call_xiami_api("Collects.getLibCollects", string.Format("page={0}", page));
+            var s = t[0].ToString().ToUpper() + t.Substring(1);
+            return await call_xiami_api(string.Format("Library.get{0}s", s), string.Format("page={0}", page));
         }
         public async Task Login()
         {
@@ -192,15 +199,15 @@ namespace Jean_Doe.Common
                 Global.AppSettings["xiami_username"],
                 Global.AppSettings["xiami_password"],
             });
-            var json=res.ToDynamicObject();
+            var json = res.ToDynamicObject();
             if (json.error != null)
             {
                 MessageBox.Show(json.error.ToString());
                 return;
             }
-            Global.AppSettings["xiami_access_token"] = json.access_token.ToString();
-            Global.AppSettings["xiami_refresh_token"] = json.refresh_token.ToString();
-            var r =await call_xiami_api("Members.showUser");
+            //Global.AppSettings["xiami_access_token"] = json.access_token.ToString();
+            //Global.AppSettings["xiami_refresh_token"] = json.refresh_token.ToString();
+            var r = await call_xiami_api("Members.showUser");
             if (r.error != null)
             {
                 MessageBox.Show(r.error.ToString());

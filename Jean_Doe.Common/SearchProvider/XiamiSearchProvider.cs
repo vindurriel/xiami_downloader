@@ -17,7 +17,7 @@ public class XiamiSearchProvider : ISearchProvider
         var m = Regex.Match(key, "user:(\\w+)");
         if (m.Success)
         {
-            await GetUserMusic(m.Groups[1].Value, t.ToString());
+            await getUserMusic(m.Groups[1].Value, t.ToString());
             return null;
         }
         m = Regex.Match(key, "(artist|album|collect):(\\d+)");
@@ -36,11 +36,11 @@ public class XiamiSearchProvider : ISearchProvider
     static async Task<SearchResult> getByType(EnumSearchType type, string id)
     {
         string url = "";
-        if (type!=EnumSearchType.song && !type.ToString().Contains("_"))
+        if (type != EnumSearchType.song && !type.ToString().Contains("_"))
         {
             Enum.TryParse(type.ToString() + "_song", out type);
         }
-        if (type==EnumSearchType.artist_song)
+        if (type == EnumSearchType.artist_song)
             url = XiamiUrl.UrlArtistTopSong(id);
         else if (type == EnumSearchType.artist_artist)
             url = XiamiUrl.UrlArtistSimilars(id);
@@ -78,7 +78,7 @@ public class XiamiSearchProvider : ISearchProvider
         }
         if (type.ToString().Contains("_"))
         {
-            var duo=type.ToString().Split("_".ToCharArray());
+            var duo = type.ToString().Split("_".ToCharArray());
             id = duo[0] + ":" + id;
             Enum.TryParse(duo[1], out type);
         }
@@ -117,12 +117,8 @@ public class XiamiSearchProvider : ISearchProvider
         };
         return sr;
     }
-    public static async Task GetUserMusic(string userId, string t)
+    static async Task getUserMusic(string key, string t)
     {
-        if (string.IsNullOrEmpty(userId))
-            return;
-        if (userId == "me")
-            userId = Global.AppSettings["xiami_uid"];
         if (t == "all" || t == "any") t = "song";
         var searchType = EnumSearchType.song;
         Enum.TryParse(t.ToString(), out searchType);
@@ -131,11 +127,14 @@ public class XiamiSearchProvider : ISearchProvider
         int page = 1;
         while (true)
         {
-            var url = string.Format("/app/iphone/lib-{0}s/uid/{1}/page/{2}", t, userId, page);
-            //var json = await XiamiClient.GetDefault().GetString(url);
-            //if (json == null) break;
-            dynamic obj = XiamiClient.GetDefault().GetUserSongs();
-            if (obj == null || obj.status == "failed") break;
+            dynamic obj=null;
+            if (key == "daily")
+                obj = await XiamiClient.GetDefault().GetDailyRecommend();
+            else if (key == "me" || key == "lib")
+                obj = await XiamiClient.GetDefault().GetUserMusic(t, page);
+            else
+                throw new Exception("user:" + key + " is not supported");
+            if (obj == null) break;
             var items = new List<IMusic>();
             var list = obj[musicType.ToString() + "s"];
             if (list == null || list.Count == 0) break;
@@ -149,7 +148,7 @@ public class XiamiSearchProvider : ISearchProvider
                 {
                 }
             }
-            var sr = new SearchResult { Items = items, SearchType = searchType };
+            var sr = new SearchResult { Keyword = "user:me", Items = items, SearchType = searchType };
             if (sr == null || sr.Count == 0 || SearchManager.State == EnumSearchState.Cancelling)
             {
                 break;
@@ -290,13 +289,13 @@ public class XiamiSearchProvider : ISearchProvider
                 items.Add(MusicFactory.CreateFromJson(x, EnumMusicType.song));
             }
         }
-        catch {  }
+        catch { }
         return items;
     }
     static List<IMusic> GetSongsOfAlbum(string json)
     {
         var items = new List<IMusic>();
-        
+
         try
         {
             dynamic obj = json.ToDynamicObject();
@@ -314,7 +313,7 @@ public class XiamiSearchProvider : ISearchProvider
     static List<IMusic> GetSong(string json)
     {
         List<IMusic> res = new List<IMusic>();
-        
+
         try
         {
             var obj = json.ToDynamicObject().song;
