@@ -171,14 +171,20 @@ namespace Jean_Doe.Common
                 return "";
             }
         }
-        static string ApiPath = @"E:\tools\Python27\pyinstaller-2.0\xiami_api\dist\xiami_api.exe";
+        static string ApiPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "xiami_api.exe");
         async Task<dynamic> call_xiami_api(string methodName, params string[] args)
         {
             var p = new List<string>() { "api_get", methodName };
             if (args != null)
                 p.AddRange(args);
             string res = await RunProgramHelper.RunProgramGetOutput(ApiPath, p.ToArray());
-            return res.ToDynamicObject();
+            var json= res.ToDynamicObject();
+            if (json.error != null)
+            {
+                MessageBox.Show(json.error.ToString());
+                return null;
+            }
+            return json;
         }
         public async Task<dynamic> GetDailyRecommend()
         {

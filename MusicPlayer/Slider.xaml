@@ -1,5 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:my="clr-namespace:MusicPlayer"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <my:DoubleToTimeSpanConverter x:Key="double2timespan"/>
     <Style x:Key="SliderButtonStyle" TargetType="{x:Type RepeatButton}">
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="OverridesDefaultStyle" Value="true"/>
@@ -24,39 +26,41 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
                     <Grid>
-                        <Ellipse 
-                          Width="10" Height="10"
-                         Fill="{TemplateBinding Background}"
-                          StrokeThickness="0" />
                         <Canvas>
-                            <Ellipse Canvas.Left="-15" Canvas.Top="-15" 
-                          Width="40" Height="40"
-                            Opacity="0"
-                          Name="Ellipse" 
-                         Fill="{TemplateBinding Background}"
+                            <Rectangle Canvas.Left="0" Canvas.Top="4"
+                                Width="10" Height="10"
+                                Fill="{TemplateBinding Background}"
+                                Name="rect" 
                           StrokeThickness="0" />
+                            <TextBlock x:Name="indicator" Opacity="0" Canvas.Left="4" Canvas.Top="3" 
+                                       FontFamily="Segoe UI Light"
+                                       Text="{Binding Value,Converter={StaticResource double2timespan}, RelativeSource={RelativeSource AncestorType=Slider}}" 
+                                       FontSize="16"  Foreground="White"/>
                         </Canvas>
-                      
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Trigger.EnterActions>
                                 <BeginStoryboard>
-                                    <Storyboard Storyboard.TargetName="Ellipse">
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0.5" Duration="0:0:0.2"/> 
+                                    <Storyboard >
+                                        <DoubleAnimation Storyboard.TargetName="indicator" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1"/>
+                                        <DoubleAnimation Storyboard.TargetName="rect" Storyboard.TargetProperty="Width" To="50" Duration="0:0:0.1"/>
+                                        <DoubleAnimation Storyboard.TargetName="rect" Storyboard.TargetProperty="Height" To="20" Duration="0:0:0.1"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
                             <Trigger.ExitActions>
                                 <BeginStoryboard>
-                                    <Storyboard Storyboard.TargetName="Ellipse">
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.2"/>
+                                    <Storyboard >
+                                        <DoubleAnimation Storyboard.TargetName="indicator" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.1"/>
+                                        <DoubleAnimation Storyboard.TargetName="rect" Storyboard.TargetProperty="Width" To="10" Duration="0:0:0.1"/>
+                                        <DoubleAnimation Storyboard.TargetName="rect" Storyboard.TargetProperty="Height" To="10" Duration="0:0:0.1"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource DisabledBackgroundBrush}"/>
+                            <Setter TargetName="rect" Property="Fill" Value="{StaticResource DisabledBackgroundBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -186,7 +190,7 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
-    <Style TargetType="{x:Type Slider}">
+    <Style TargetType="{x:Type Slider}" >
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="OverridesDefaultStyle" Value="true"/>
         <Style.Triggers>

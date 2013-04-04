@@ -80,7 +80,9 @@
     <Compile Include="ConfigPage.xaml.cs">
       <DependentUpon>ConfigPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomControl1.cs" />
     <Compile Include="MusicSliderConnector.cs" />
+    <Compile Include="MySlider.cs" />
     <Compile Include="UserPage.xaml.cs">
       <DependentUpon>UserPage.xaml</DependentUpon>
     </Compile>
@@ -109,6 +111,10 @@
     <Page Include="Slider.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="ToggleButton.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -161,6 +167,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="user.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
