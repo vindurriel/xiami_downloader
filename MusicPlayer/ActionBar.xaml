@@ -91,7 +91,6 @@
         </Style>
     </Expander.Style>
     <DockPanel LastChildFill="False">
-       
         <ListView     
             ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
             ScrollViewer.VerticalScrollBarVisibility="Hidden"   
@@ -107,13 +106,13 @@
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
         </ListView>
-        <!--<Button Content="..."   x:Name="more" Click="more_Click_1"/>-->
+        <FrameworkElement  x:Name="holder" />
         <Popup x:Name="more_actions"
                PopupAnimation="Slide"
-                StaysOpen="False"
-                Placement="Top"
-               Focusable="False"
-               PlacementTarget="{Binding ElementName=list}"
+               Placement="Top"
+               HorizontalOffset="-60"
+               Focusable="True"
+               PlacementTarget="{Binding ElementName=holder}"
                >
             <ListView x:Name="menu"
                       ItemContainerStyle="{StaticResource itemStyle}"

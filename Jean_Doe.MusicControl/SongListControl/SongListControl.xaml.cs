@@ -258,13 +258,13 @@ namespace Jean_Doe.MusicControl
             var t = listView.SelectedItems.OfType<IHasArtist>().FirstOrDefault();
 
             if (t == null) return;
-            await SearchManager.Search("artist:"+t.ArtistId, EnumSearchType.album);
+            await SearchManager.Search("artist:" + t.ArtistId, EnumSearchType.album);
         }
         protected virtual async void link_collection(object sender, RoutedEventArgs e)
         {
             var t = listView.SelectedItems.OfType<IHasCollection>().FirstOrDefault();
             if (t == null) return;
-            await SearchManager.Search("collect:"+t.CollectionId, EnumSearchType.song);
+            await SearchManager.Search("collect:" + t.CollectionId, EnumSearchType.song);
         }
 
         protected virtual void go_song(object sender, RoutedEventArgs e)
@@ -364,7 +364,7 @@ namespace Jean_Doe.MusicControl
                     Task.Run(async () =>
                     {
                         await XiamiClient.GetDefault().Fav_Song(id);
-                },token.Token));
+                    }, token.Token));
             }
             Task.WaitAll(tasks.ToArray());
             MessageBus.Instance.Publish(new Jean_Doe.Downloader.MsgSetBusy { On = false });

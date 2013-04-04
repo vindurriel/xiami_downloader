@@ -20,16 +20,17 @@ namespace Jean_Doe.Common
             sr = sr ?? SearchResult.Empty;
             MessageBus.Instance.Publish(new MsgSearchStateChanged { State = state, SearchResult = sr });
         }
-        public static async Task Search(string input,EnumSearchType t=EnumSearchType.all)
+        public static async Task Search(string input, EnumSearchType t = EnumSearchType.all)
         {
             if (string.IsNullOrEmpty(input)) return;
             state = EnumSearchState.Started;
             notifyState(new SearchResult { Keyword = input, SearchType = t });
-            ISearchProvider provider=null;
-            var re_source=new Regex(@"(source:\s*(\w+))");
+            ISearchProvider provider = null;
+            var re_source = new Regex(@"(source:\s*(\w+))");
             var m = re_source.Match(input);
-            if (m.Success) {
-                var type=m.Groups[2].Value.ToLower();
+            if (m.Success)
+            {
+                var type = m.Groups[2].Value.ToLower();
                 switch (type)
                 {
                     case "baidu": provider = new BaiduSearchProvider(); break;
@@ -43,7 +44,7 @@ namespace Jean_Doe.Common
             if (provider == null)
                 provider = new XiamiSearchProvider();
             state = EnumSearchState.Working;
-            var sr=await provider.Search(input,t);
+            var sr = await provider.Search(input, t);
             if (sr != null && state != EnumSearchState.Cancelling)
             {
                 MessageBus.Instance.Publish(sr);
@@ -51,11 +52,14 @@ namespace Jean_Doe.Common
             }
             state = EnumSearchState.Finished;
             notifyState();
-        }  
+        }
 
         public static void Cancel()
         {
-            NetAccess.CancelAsync();
+            Task.Run(() =>
+            {
+                NetAccess.CancelAsync();
+            });
             state = EnumSearchState.Finished;
             notifyState();
         }
