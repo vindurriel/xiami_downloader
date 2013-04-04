@@ -3,7 +3,6 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              FontSize="15"
              xmlns:controls="http://jean.doe/controls"
-             FontFamily="Segoe UI Light;造字工房悦黑体验版纤细体"
              x:Name="me"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <UserControl.Resources>
@@ -37,6 +36,8 @@
                 <EventSetter Event="TextBox.TextChanged"
                              Handler="input_TextChanged" />
                 <Setter Property="MinWidth" Value="100"/>
+                <Setter Property="Foreground"
+                        Value="{DynamicResource lightBrush}" />
                 <Setter Property="HorizontalContentAlignment"
                         Value="Left" />
                 <Setter Property="VerticalContentAlignment"
@@ -54,6 +55,8 @@
                    BasedOn="{StaticResource {x:Type PasswordBox}}">
                 <EventSetter Event="PasswordBox.PasswordChanged"
                              Handler="pass_PasswordChanged" />
+                <Setter Property="Foreground"
+                        Value="{DynamicResource lightBrush}" />
                 <Setter Property="MinWidth" Value="100"/>
                 <Setter Property="HorizontalContentAlignment"
                         Value="Left" />
@@ -125,6 +128,7 @@
                         <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
                     <TextBlock x:Name="label_downloadfolder"
+                               FontSize="20"
                            MinWidth="100"
                            Margin="0"
                            Height="{StaticResource lineHeight}"

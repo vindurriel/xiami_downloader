@@ -178,7 +178,7 @@ namespace Jean_Doe.Common
             if (args != null)
                 p.AddRange(args);
             string res = await RunProgramHelper.RunProgramGetOutput(ApiPath, p.ToArray());
-            var json= res.ToDynamicObject();
+            var json = res.ToDynamicObject();
             if (json.error != null)
             {
                 MessageBox.Show(json.error.ToString());
@@ -200,6 +200,7 @@ namespace Jean_Doe.Common
         public async Task Login()
         {
             Global.AppSettings["xiami_avatar"] = "";
+            Global.AppSettings["xiami_nick_name"] = "";
             var res = await RunProgramHelper.RunProgramGetOutput(ApiPath, new[]{
                 "get_new_token",
                 Global.AppSettings["xiami_username"],
@@ -211,8 +212,6 @@ namespace Jean_Doe.Common
                 MessageBox.Show(json.error.ToString());
                 return;
             }
-            //Global.AppSettings["xiami_access_token"] = json.access_token.ToString();
-            //Global.AppSettings["xiami_refresh_token"] = json.refresh_token.ToString();
             var r = await call_xiami_api("Members.showUser");
             if (r.error != null)
             {
@@ -220,44 +219,11 @@ namespace Jean_Doe.Common
                 return;
             }
             Global.AppSettings["xiami_uid"] = r.user_id.ToString();
+            Global.AppSettings["xiami_nick_name"] = string.Format("来自{0}的{1}",r.city,r.nick_name);
             string avatarUrl = r.avatar.ToString();
             if (!string.IsNullOrEmpty(avatarUrl))
             {
                 var bytes = await new HttpClient().GetByteArrayAsync(avatarUrl);
-                var imgFile = Path.Combine(Global.BasePath, "cache", Global.AppSettings["xiami_uid"] + ".user");
-                File.WriteAllBytes(imgFile, bytes);
-                Global.AppSettings["xiami_avatar"] = imgFile;
-            }
-            //Uri url = new Uri("http://www.xiami.com/web/login");
-            //Application.SetCookie(url, "member_auth=");
-            //var win = new Window();
-            //var br = new WebBrowser { };
-            //win.Content = br;
-            //br.Navigate(url);
-            //win.ShowDialog();
-            //cookieJar = GetUriCookieContainer(new Uri("http://www.xiami.com"));
-            //client = null;
-            //await getUserId();
-            //SaveCookies();
-        }
-        async Task getUserId()
-        {
-            var html = await GetString("/member/edit");
-            var m = Regex.Match(html, "\"/u/(\\d+)\"");
-            if (m.Success)
-            {
-                Global.AppSettings["xiami_uid"] = m.Groups[1].Value;
-            }
-            m = Regex.Match(html, "value=\"([^\"]+)\" name =\"m_nick_name\"");
-            if (m.Success)
-            {
-                Global.AppSettings["xiami_username"] = m.Groups[1].Value;
-            }
-            m = Regex.Match(html, "http://img\\.xiami.com/\\./images/avatar_new/[\\d/_]+\\.(jpg|png)");
-            if (m.Success)
-            {
-                var imgUrl = m.Groups[0].Value;
-                var bytes = await client.GetByteArrayAsync(imgUrl);
                 var imgFile = Path.Combine(Global.BasePath, "cache", Global.AppSettings["xiami_uid"] + ".user");
                 File.WriteAllBytes(imgFile, bytes);
                 Global.AppSettings["xiami_avatar"] = imgFile;

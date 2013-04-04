@@ -33,7 +33,6 @@
                                 Name="rect" 
                           StrokeThickness="0" />
                             <TextBlock x:Name="indicator" Opacity="0" Canvas.Left="4" Canvas.Top="3" 
-                                       FontFamily="Segoe UI Light"
                                        Text="{Binding Value,Converter={StaticResource double2timespan}, RelativeSource={RelativeSource AncestorType=Slider}}" 
                                        FontSize="16"  Foreground="White"/>
                         </Canvas>

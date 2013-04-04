@@ -26,7 +26,6 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="FontSize" Value="15" />
-            <Setter Property="FontFamily" Value="Segoe UI Light" />
             <Setter Property="TextTrimming" Value="WordEllipsis" />
         </Style>
         <Style TargetType="TextBlock" x:Key="tag_base" BasedOn="{StaticResource label_base}">

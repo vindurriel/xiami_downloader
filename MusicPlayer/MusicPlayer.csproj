@@ -80,7 +80,6 @@
     <Compile Include="ConfigPage.xaml.cs">
       <DependentUpon>ConfigPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CustomControl1.cs" />
     <Compile Include="MusicSliderConnector.cs" />
     <Compile Include="MySlider.cs" />
     <Compile Include="UserPage.xaml.cs">
@@ -111,10 +110,6 @@
     <Page Include="Slider.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="ToggleButton.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -150,6 +145,8 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <Resource Include="sohogothicpro-light.otf" />
+    <Resource Include="sohostdlight.otf" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Jean_Doe.Common\Jean_Doe.Common.csproj">

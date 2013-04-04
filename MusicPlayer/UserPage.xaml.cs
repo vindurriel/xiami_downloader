@@ -25,11 +25,14 @@ namespace MusicPlayer
         {
             InitializeComponent();
             Global.ListenToEvent("xiami_avatar", SetIsLoggedIn);
-            Global.ListenToEvent("xiami_username", SetUserName);
+            Global.ListenToEvent("xiami_nick_name", SetNickName);
         }
-        public void SetUserName(string s)
+        public void SetNickName(string s)
         {
-            username.Text = s;
+            if (string.IsNullOrEmpty(s))
+                username.Text = "未登录，请先到设置页面登录。";
+            else
+            username.Text="欢迎，"+s;
         }
          public void  SetIsLoggedIn(string s)
         {

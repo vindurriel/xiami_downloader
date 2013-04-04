@@ -50,7 +50,7 @@ namespace Jean_Doe.Common
             get { return hasMp3; }
             set { hasMp3 = value; }
         }
-       
+
         private bool hasArt;
         [XmlAttribute]
         public bool HasArt
@@ -82,8 +82,8 @@ namespace Jean_Doe.Common
         public string Logo { get { return UrlArt; } set { UrlArt = value; } }
         [XmlIgnore]
         public EnumMusicType Type { get { return EnumMusicType.song; } }
-		[XmlIgnore]
-		public bool WriteId3 { get; set; }
+        [XmlIgnore]
+        public bool WriteId3 { get; set; }
         [XmlIgnore]
         public string Name { get; set; }
         private string artistName;
@@ -93,12 +93,12 @@ namespace Jean_Doe.Common
             get { return artistName; }
             set
             {
-                if(string.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                 {
                     artistName = value; return;
                 }
                 var list = value.Split(';').ToList();
-                if(list.Count > 1)
+                if (list.Count > 1)
                 {
                     artistName = list[0];
                     list.RemoveAt(0);
@@ -117,12 +117,12 @@ namespace Jean_Doe.Common
         {
             MusicHelper.LoadMusicInfoFromJson(this, obj);
             ArtistId = MusicHelper.Get(obj, "artist_id");
-            ArtistName = MusicHelper.Get(obj, "artist_name","name");
+            ArtistName = MusicHelper.Get(obj, "artist_name", "name");
             AlbumId = MusicHelper.Get(obj, "album_id");
-			AlbumName = MusicHelper.Get(obj, "album_name", "name");
-			UrlMp3 = StringHelper.EscapeUrl(MusicHelper.Get(obj, "location", "song_location"));
-			UrlLrc = StringHelper.EscapeUrl(MusicHelper.Get(obj, "lyric", "song_lyric"));
-			WriteId3 = true;
+            AlbumName = MusicHelper.Get(obj, "album_name", "name");
+            UrlMp3 = StringHelper.EscapeUrl(MusicHelper.Get(obj, "location", "song_location", "listen_file"));
+            UrlLrc = StringHelper.EscapeUrl(MusicHelper.Get(obj, "lyric", "song_lyric"));
+            WriteId3 = true;
         }
     }
     [XmlRoot("Songs")]

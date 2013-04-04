@@ -16,7 +16,7 @@
                         MinHeight="480"
                         SizeToContent="Manual"
                          MinWidth="640"
-                        FontFamily="Segoe UI Light;造字工房悦黑体验版纤细体"
+                        FontFamily="./#Soho Std"
                         Title="虾米下载" BorderWidth="5">
     <controls:ResizeWindow.Resources>
         <controls:BoolToVisibilityConverter x:Key="bool2vis" />

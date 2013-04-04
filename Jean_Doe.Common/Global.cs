@@ -25,8 +25,7 @@ namespace Jean_Doe.Common
             {"xiami_avatar",""},
             {"xiami_username",""},
             {"xiami_password",""},
-            {"xiami_access_token",""},
-            {"xiami_refresh_token",""},
+            {"xiami_nick_name",""},
         };
         public class ObservDict<Tkey, TValue> : Dictionary<Tkey, TValue>
         {

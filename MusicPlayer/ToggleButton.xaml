@@ -17,8 +17,6 @@
                                 Value="#bbbbbb" />
         <Setter Property="FontSize"
                                 Value="20" />
-        <Setter Property="FontFamily"
-                                Value="Segoe UI Light;造字工房悦黑体验版纤细体" />
         <Setter Property="MinWidth"
                                 Value="100" />
         <Setter Property="Template">
