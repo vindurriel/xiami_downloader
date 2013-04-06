@@ -357,34 +357,26 @@ namespace Jean_Doe.MusicControl
             var ids = SelectedSongs.Select(x => x.Id).ToList();
             var tasks = new List<Task>();
             var token = new System.Threading.CancellationTokenSource();
-            MessageBus.Instance.Publish(new Jean_Doe.Downloader.MsgSetBusy { On = true });
             foreach (var id in ids)
             {
-                tasks.Add(
-                    Task.Run(async () =>
-                    {
-                        await XiamiClient.GetDefault().Fav_Song(id);
-                    }, token.Token));
+                Task.Run(async () =>
+                {
+                    await XiamiClient.GetDefault().Fav_Song(id);
+                }, token.Token);
             }
-            Task.WaitAll(tasks.ToArray());
-            MessageBus.Instance.Publish(new Jean_Doe.Downloader.MsgSetBusy { On = false });
         }
         protected void btn_unfav_Click(object sender, RoutedEventArgs e)
         {
             var ids = SelectedSongs.Select(x => x.Id).ToList();
             var tasks = new List<Task>();
             var token = new System.Threading.CancellationTokenSource();
-            MessageBus.Instance.Publish(new Jean_Doe.Downloader.MsgSetBusy { On = true });
             foreach (var id in ids)
             {
-                tasks.Add(
-                    Task.Run(async () =>
-                    {
-                        await XiamiClient.GetDefault().Unfav_Song(id);
-                    }, token.Token));
+                Task.Run(async () =>
+                {
+                    await XiamiClient.GetDefault().Unfav_Song(id);
+                }, token.Token);
             }
-            Task.WaitAll(tasks.ToArray());
-            MessageBus.Instance.Publish(new Jean_Doe.Downloader.MsgSetBusy { On = false });
         }
 
         private static void Show(UIElement obj)
