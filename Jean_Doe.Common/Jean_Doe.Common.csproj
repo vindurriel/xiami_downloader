@@ -59,7 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionBarService.cs" />
-    <Compile Include="CharmBarEntity.cs" />
+    <Compile Include="CharmAction.cs" />
     <Compile Include="Dom\Artist.cs" />
     <Compile Include="Dom\Album.cs" />
     <Compile Include="Dom\Collection.cs" />

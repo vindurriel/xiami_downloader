@@ -225,47 +225,42 @@
             </Grid>
         </DataTemplate>
         <SolidColorBrush Color='{DynamicResource skinColor}' Opacity="0.2" x:Key='skinBrushFade' />
-        <my:MyStyleSelector x:Key="styleSelector" AlbumTemplate="{StaticResource AlbumTemplate}"
-                ArtistTemplate="{StaticResource ArtistTemplate}" SongTemplate="{StaticResource SongTemplate}"
-                CollectionTemplate="{StaticResource CollectionTemplate}" />
     </UserControl.Resources>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <DockPanel x:Name="now_playing"  LastChildFill="False" DataContext="{Binding NowPlaying,ElementName=me}">
-            <DockPanel.Resources>
-                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                    <Setter Property="Margin" Value="5,0"/>
-                    <Setter Property="Padding" Value="10"/>
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
-                </Style>
-                <Style TargetType="TextBlock" >
-                    <Setter Property="Foreground"  Value="White"/>
-                    <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
-                    <Setter Property="VerticalAlignment" Value="Center"/>
-                </Style>
-            </DockPanel.Resources>
-        </DockPanel>
-        <DockPanel Grid.Row="1" Margin="5,10"    LastChildFill="False" Visibility="{Binding ItemsCount,ElementName=me,Converter={StaticResource int2vis}}">
-            <ComboBox  x:Name="combo_sort">
+        <ToggleButton
+            Grid.RowSpan="2"
+            Margin="0,0,5,0" Padding="0"
+            FontSize="10"
+            Visibility="{Binding ItemsCount,ElementName=me,Converter={StaticResource int2vis}}"
+            Height="30" Width="30"  MinWidth="0"
+            Style="{StaticResource toggleStyle}"
+           VerticalAlignment="Top"    FontFamily="Segoe UI Symbol"    x:Name="btn_more" Content="&#xE0C2;"/>
+        <DockPanel Margin="6,0,0,10" Grid.Column="1"  LastChildFill="False"
+                   Height="30"
+                   Visibility="{Binding IsChecked,ElementName=btn_more,Converter={StaticResource bool2vis}}">
+            <ComboBox    x:Name="combo_sort"  >
                 <ComboBoxItem Tag="Default_Asc" IsSelected="True">无排序</ComboBoxItem>
                 <ComboBoxItem Tag="Date_Dsc">最近下载</ComboBoxItem>
                 <ComboBoxItem Tag="Date_Asc">最早下载</ComboBoxItem>
                 <ComboBoxItem Tag="Name_Asc">名称升序</ComboBoxItem>
                 <ComboBoxItem Tag="Name_Dsc">名称降序</ComboBoxItem>
             </ComboBox>
-            <Grid Margin="10,0" >
+            <Grid  Margin="10,0"    x:Name="part_filter"  >
                 <TextBox VerticalContentAlignment="Center"  Foreground="White"  BorderThickness="0" Width="200" x:Name="input_filter" Background="#555"/>
                 <TextBlock VerticalAlignment="Center" Margin="3" x:Name="mask_filter" Text="输入字符以过滤"  IsHitTestVisible="False" Foreground="{DynamicResource lightBrush}"  />
             </Grid>
             <Button Visibility="Collapsed" x:Name="btn_search" Click="btn_search_click"  Content="没有？在网上搜索一下" Padding="5,0"  />
         </DockPanel>
-        <TextBlock x:Name="emptyText" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource label_base}" Margin="5,10,0,0" Grid.Row="2">列表为空</TextBlock>
-        <ListView Grid.Row="2" ItemTemplate="{StaticResource completeTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+        <TextBlock Grid.Column="1" Grid.Row="1" x:Name="emptyText" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource label_base}" Margin="5,10,0,0" >列表为空</TextBlock>
+        <ListView Grid.Column="1" Grid.Row="1" ItemTemplate="{StaticResource completeTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
             BorderThickness="0" 
             Background="Transparent" 
             PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" 
@@ -384,104 +379,5 @@
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
         </ListView>
-        <!--<DataGrid  Visibility="{Binding Path=ItemsCount, ElementName=me,Converter={StaticResource int2vis}}"
-                ScrollViewer.CanContentScroll="False"
-                  HeadersVisibility="None" BorderThickness="0" Background="Transparent" GridLinesVisibility="None"
-                VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
-                ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                SelectionUnit="FullRow" CanUserAddRows="False" x:Name="dataGrid" AutoGenerateColumns="false">
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#3555" />
-                        </Trigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource selectBrush}" />
-                        </Trigger>
-                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" From="0"
-                                            To="1" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                        <EventTrigger RoutedEvent="FrameworkElement.Unloaded">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.3" From="1"
-                                            To="0" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                    </Style.Triggers>
-                    <EventSetter Event="MouseLeftButtonDown" Handler="btn_select_click" />
-                    <Setter Property="Background" Value="Transparent" />
-                    <Setter Property="Margin" Value="0,15" />
-                    <Setter Property="BorderThickness" Value="0,0,0,0" />
-                    <Setter Property="BorderBrush" Value="#555" />
-                </Style>
-            </DataGrid.RowStyle>
-            <DataGrid.CellStyle>
-                <Style TargetType="{x:Type DataGridCell}">
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Foreground" Value="White" />
-                        </Trigger>
-                    </Style.Triggers>
-                    <Setter Property="BorderBrush" Value="Transparent" />
-                    <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
-                    <Setter Property="Background" Value="Transparent" />
-                </Style>
-            </DataGrid.CellStyle>
-            <DataGrid.ColumnHeaderStyle>
-                <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="HorizontalContentAlignment" Value="Center" />
-                    <Setter Property="Background" Value="Transparent" />
-                    <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
-                    <Setter Property="BorderBrush" Value="#888" />
-                    <Setter Property="BorderThickness" Value="0,0,0,0" />
-                    <Setter Property="Margin" Value="0,0,0,10" />
-                    <Setter Property="Padding" Value="10,2" />
-                    <Setter Property="HorizontalContentAlignment" Value="Left" />
-                    <Setter Property="VerticalContentAlignment" Value="Center"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="Background" Value="#888" />
-                            <Setter Property="Foreground" Value="White" />
-                        </Trigger>
-                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="0"
-                                            To="1" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                        <EventTrigger RoutedEvent="FrameworkElement.Unloaded">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="1"
-                                            To="0" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.ColumnHeaderStyle>
-            <DataGrid.Columns>
-                <DataGridTemplateColumn  Width="Auto" SortMemberPath="AlbumName" Header="专辑封面"
-                        CellTemplate="{StaticResource imageTemplate}" />
-                <DataGridTemplateColumn   Width="Auto" SortMemberPath="TrackNo" Header="编号"
-                        CellTemplate="{StaticResource trackNoTemplate}" />
-                <DataGridTemplateColumn SortMemberPath="Name" IsReadOnly='True' Width="Auto" MinWidth="200" Header="名称"
-                        CellTemplateSelector="{StaticResource styleSelector}" />
-                <DataGridTemplateColumn SortMemberPath="ArtistName" IsReadOnly='True' Width="Auto" x:Name="col_artist"
-                        Header="艺术家" CellTemplate="{StaticResource ArtistTemplate}" />
-                <DataGridTemplateColumn SortMemberPath="AlbumName" IsReadOnly='True' Header="专辑" x:Name="col_album"
-                        Width="Auto" CellTemplate="{StaticResource AlbumTemplate}" />
-            </DataGrid.Columns>
-        </DataGrid>-->
     </Grid>
 </UserControl>

@@ -8,8 +8,8 @@
                 <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/ScrollBarStyle.xaml" />
                 <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/TouchButtonStyle.xaml" />
                 <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/ComboBoxStyle.xaml" />
-                <ResourceDictionary Source="Slider.xaml" />
-                <ResourceDictionary Source="ToggleButton.xaml" />
+                <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/Slider.xaml" />
+                <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/ToggleStyle.xaml" />
                 <ResourceDictionary>
                     <Color x:Key="skinColor">Red</Color>
                     <SolidColorBrush x:Key="selectBrush"
@@ -21,25 +21,8 @@
                     <SolidColorBrush  x:Key='skinBrush' Color="{DynamicResource skinColor}" />
                     <SolidColorBrush x:Key="ColorSkin"
                                      Color="Black" />
-                    <LinearGradientBrush x:Key="BrushOver"
-                                         EndPoint="0,1"
-                                         StartPoint="0,0">
-                        <GradientStop Color="#01000000"
-                                      Offset="0.0" />
-                        <GradientStop Color="#22000000"
-                                      Offset="1.0" />
-                    </LinearGradientBrush>
-                    <LinearGradientBrush x:Key="BorderBrush"
-                                         EndPoint="0,1"
-                                         StartPoint="0,0">
-                        <GradientStop Offset="0"
-                                      Color="White" />
-                        <GradientStop Offset="1"
-                                      Color="#00ffffff" />
-                    </LinearGradientBrush>
                     <QuadraticEase x:Key="easeFunc"
                                    EasingMode="EaseOut" />
-                 
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

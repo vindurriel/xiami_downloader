@@ -10,9 +10,14 @@ namespace Jean_Doe.Common
 {
     public class ActionBarService
     {
-        public static void RegisterContext(string contextName,  IActionProvider obj)
+        public static void RegisterContext(string contextName, IActionProvider obj, string propertyName)
         {
             Contexts[contextName] = obj;
+            obj.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == propertyName)
+                    Refresh();
+            };
             Actions[contextName] = new List<CharmAction>();
             foreach (var item in obj.ProvideActions())
             {
@@ -43,7 +48,7 @@ namespace Jean_Doe.Common
         void ValidActions(IEnumerable<CharmAction> actions);
         bool IsOpen { get; set; }
     }
-    public interface IActionProvider
+    public interface IActionProvider : System.ComponentModel.INotifyPropertyChanged
     {
         IEnumerable<CharmAction> ProvideActions();
     }

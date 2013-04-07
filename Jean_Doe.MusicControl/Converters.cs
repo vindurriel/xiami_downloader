@@ -6,6 +6,18 @@ using System.Windows.Controls;
 using System.Windows.Data;
 namespace Jean_Doe.MusicControl
 {
+    public class DoubleToTimeSpanConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return TimeSpan.FromSeconds((double)value).ToString(@"mm\:ss");
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
     public class MultiConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)

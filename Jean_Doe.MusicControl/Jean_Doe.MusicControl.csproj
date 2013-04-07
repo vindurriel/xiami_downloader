@@ -98,6 +98,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Themes\Slider.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ToggleStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\TouchButtonStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -118,7 +126,6 @@
     <Compile Include="Downloaders\DownloaderMp3.cs" />
     <Compile Include="Util\AfterDownloadManager.cs" />
     <Compile Include="Util\SongViewModelExtentions.cs" />
-    <Compile Include="Util\StyleSelector.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="SongListControl\CompleteSongListControl.cs" />
     <Compile Include="SearchControl\SearchControl.xaml.cs">

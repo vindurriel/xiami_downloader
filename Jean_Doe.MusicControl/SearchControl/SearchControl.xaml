@@ -17,7 +17,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid Height="28">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
@@ -34,7 +34,7 @@
 
 
             <!--search box-->
-            <Grid Grid.Column="1">
+            <Grid Grid.Column="1" Margin="10,0">
                 <local:HistorySearch  x:Name="hs" HorizontalContentAlignment="Left" />
                 <TextBlock x:Name="mask_filter"  VerticalAlignment="Center" Margin="3" Text="输入字符以搜索"  IsHitTestVisible="False" Foreground="{DynamicResource lightBrush}"  />
             </Grid>

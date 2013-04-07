@@ -27,7 +27,6 @@ namespace MusicPlayer
         IHandle<MsgSetBusy>
     {
         FrameworkElement lastPage;
-        List<CharmBarEntity> charms = new List<CharmBarEntity>();
         private int page;
         public int Page
         {
@@ -51,15 +50,6 @@ namespace MusicPlayer
                         showPage(content, isLeft);
                 }
                 ActionBarService.ContextName = page.ToString();
-                ActionBarService.Refresh();
-            }
-        }
-
-        void contentControl_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "SelectCount")
-            {
-                var selectCount = (sender as SongListControl).SelectCount;
                 ActionBarService.Refresh();
             }
         }
@@ -97,26 +87,17 @@ namespace MusicPlayer
         {
             slider.Visibility = Visibility.Visible;
         }
-        void initCharms()
+        void initActionBar()
         {
-            var int2bool = FindResource("int2bool") as IntToBoolConverter;
-            ActionBarService.RegisterContext("1", userPage);
-            ActionBarService.RegisterContext("2", list_search);
-            ActionBarService.RegisterContext("3", list_download);
-            ActionBarService.RegisterContext("4", list_complete);
-            ActionBarService.RegisterContext("5", configPage);
-            list_search.PropertyChanged += this.contentControl_PropertyChanged;
-            list_download.PropertyChanged += this.contentControl_PropertyChanged;
-            list_complete.PropertyChanged += this.contentControl_PropertyChanged;
-            this.configPage.PropertyChanged += (s, e) =>
-            {
-                if (e.PropertyName == "IsDirty")
-                    ActionBarService.Refresh();
-            };
+            ActionBarService.RegisterContext("1", userPage, "IsLoggedIn");
+            ActionBarService.RegisterContext("2", list_search, "SelectCount");
+            ActionBarService.RegisterContext("3", list_download, "SelectCount");
+            ActionBarService.RegisterContext("4", list_complete, "SelectCount");
+            ActionBarService.RegisterContext("5", configPage, "IsDirty");
         }
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            initCharms();
+            initActionBar();
             //tag control events
             foreach (var item in headers.Children)
             {
@@ -155,35 +136,11 @@ namespace MusicPlayer
             {
                 this.EnableMagnet();
                 this.SetMagnetBorder(10);
-                this.ListenToRimChanged(OnRimChanged);
             }
             else
             {
                 this.DisableMagnet();
             }
-        }
-        void OnRimChanged(EnumRim rim)
-        {
-            var t = new Thickness(0);
-            var width = 2;
-            switch (rim)
-            {
-                case EnumRim.Top:
-                    t.Bottom = width;
-                    break;
-                case EnumRim.Left:
-                    t.Right = width;
-                    break;
-                case EnumRim.Right:
-                    t.Left = width;
-                    break;
-                case EnumRim.Bottom:
-                    t.Top = width;
-                    break;
-                default:
-                    break;
-            }
-            border.BorderThickness = t;
         }
         void SetColorSkin(string s)
         {
@@ -213,7 +170,6 @@ namespace MusicPlayer
         BitmapSource avatar;
         public BitmapSource Avatar { get { return avatar; } set { avatar = value; Notify("Avatar"); } }
 
-
         void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             list_download.Save();
@@ -239,8 +195,6 @@ namespace MusicPlayer
                         Page = 2;
                         busyIndicator.StartSpin();
                     }));
-                    break;
-                case EnumSearchState.Working:
                     break;
                 case EnumSearchState.Cancelling:
                 case EnumSearchState.Finished:

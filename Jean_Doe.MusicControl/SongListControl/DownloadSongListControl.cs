@@ -114,9 +114,9 @@ namespace Jean_Doe.MusicControl
                     new CharmAction("暂停",this.btn_cancel_Click,defaultActionValidate),
                     new CharmAction("删除",this.btn_remove_Click,defaultActionValidate),
                     new CharmAction("完成",this.btn_complete_Click,defaultActionValidate),
-                    new CharmAction("查看专辑歌曲",link_album,IsType<IHasAlbum>),
-                    new CharmAction("查看歌手歌曲",link_artist,IsType<IHasArtist>),
-                    new CharmAction("在浏览器中打开",this.btn_browse_Click,IsType<IHasMusicPart>),
+                    new CharmAction("查看专辑歌曲",link_album,IsOnlyType<IHasAlbum>),
+                    new CharmAction("查看歌手歌曲",link_artist,IsOnlyType<IHasArtist>),
+                    new CharmAction("在浏览器中打开",this.btn_browse_Click,IsOnlyType<IHasMusicPart>),
                 };
         }
 

@@ -1,18 +1,7 @@
 ﻿using Jean_Doe.Common;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MusicPlayer
 {
@@ -21,6 +10,14 @@ namespace MusicPlayer
     /// </summary>
     public partial class UserPage : IActionProvider
     {
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void Notify(string prop)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+        #endregion
         public UserPage()
         {
             InitializeComponent();
@@ -32,12 +29,11 @@ namespace MusicPlayer
             if (string.IsNullOrEmpty(s))
                 username.Text = "未登录，请先到设置页面登录。";
             else
-            username.Text="欢迎，"+s;
+                username.Text = "欢迎，" + s;
         }
-         public void  SetIsLoggedIn(string s)
+        public void SetIsLoggedIn(string s)
         {
-            isLoggedIn = !string.IsNullOrEmpty(s);
-            ActionBarService.Refresh();
+            IsLoggedIn = !string.IsNullOrEmpty(s);
         }
         private async void btn_login_Click(object sender, RoutedEventArgs e)
         {
@@ -45,7 +41,7 @@ namespace MusicPlayer
         }
         private async void btn_user_song_Click(object sender, RoutedEventArgs e)
         {
-            await SearchManager.Search("user:me",EnumSearchType.song);
+            await SearchManager.Search("user:me", EnumSearchType.song);
         }
         private async void btn_user_artist_Click(object sender, RoutedEventArgs e)
         {
@@ -67,17 +63,19 @@ namespace MusicPlayer
         public IEnumerable<CharmAction> ProvideActions()
         {
             return new List<CharmAction>{
-            new CharmAction("今日推荐歌单",btn_user_daily_Click,IsLoggedIn),
-            new CharmAction("收藏的歌曲",btn_user_song_Click,IsLoggedIn),
-            new CharmAction("收藏的艺术家",btn_user_artist_Click,IsLoggedIn),
-            new CharmAction("收藏的专辑",btn_user_album_Click,IsLoggedIn),
-            new CharmAction("收藏的精选集",btn_user_collect_Click,IsLoggedIn),
+            new CharmAction("今日推荐歌单",btn_user_daily_Click,(s)=>IsLoggedIn),
+            new CharmAction("收藏的歌曲",btn_user_song_Click,(s)=>IsLoggedIn),
+            new CharmAction("收藏的艺术家",btn_user_artist_Click,(s)=>IsLoggedIn),
+            new CharmAction("收藏的专辑",btn_user_album_Click,(s)=>IsLoggedIn),
+            new CharmAction("收藏的精选集",btn_user_collect_Click,(s)=>IsLoggedIn),
             };
         }
-        bool isLoggedIn = false;
-        bool IsLoggedIn(object s)
+        private bool isLoggedIn;
+
+        public bool IsLoggedIn
         {
-            return isLoggedIn;
+            get { return isLoggedIn; }
+            set { isLoggedIn = value; Notify("IsLoggedIn"); }
         }
     }
 

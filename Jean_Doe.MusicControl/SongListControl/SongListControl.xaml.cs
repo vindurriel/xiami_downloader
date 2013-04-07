@@ -158,7 +158,6 @@ namespace Jean_Doe.MusicControl
                 mask_filter.Visibility = string.IsNullOrEmpty(input_filter.Text) ? Visibility.Visible : Visibility.Collapsed;
             };
             combo_sort.SelectionChanged += (s, e) => ApplySort();
-            Global.ListenToEvent("ShowDetails", HandleShowDetails);
             MessageBus.Instance.Subscribe(this);
             items = new MusicViewModelList();
             items.CollectionChanged += items_CollectionChanged;
@@ -167,8 +166,6 @@ namespace Jean_Doe.MusicControl
             Source.CollectionChanged += Source_CollectionChanged;
             listView.DataContext = Source;
             listView.SelectionChanged += dataGrid_SelectionChanged;
-            HandleShowDetails(Global.AppSettings["ShowDetails"]);
-
         }
 
         void Source_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -196,19 +193,6 @@ namespace Jean_Doe.MusicControl
         public void UnselectAll()
         {
             listView.UnselectAll();
-        }
-        void HandleShowDetails(string show)
-        {
-            if (show == "1")
-            {
-                //col_artist.Visibility = Visibility.Visible;
-                //col_album.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                //col_album.Visibility = Visibility.Collapsed;
-                //col_artist.Visibility = Visibility.Collapsed;
-            }
         }
 
         public string SavePath { get { return Items.SavePath; } set { Items.SavePath = value; } }
@@ -403,10 +387,15 @@ namespace Jean_Doe.MusicControl
         {
             return (s as SongListControl).SelectedItems.Any();
         }
-        protected bool IsType<TInterface>(object source) where TInterface : IHasMusicPart
+        protected bool IsOnlyType<TInterface>(object source) where TInterface : IHasMusicPart
         {
             var s = (source as SongListControl);
             return s.SelectedItems.Count(x => x is TInterface) == 1;
+        }
+        protected bool IsType<TInterface>(object source) where TInterface : IHasMusicPart
+        {
+            var s = (source as SongListControl);
+            return s.SelectedItems.Count()>0 && s.SelectedItems.All(x => x is TInterface);
         }
         private void ApplySort()
         {
@@ -444,6 +433,10 @@ namespace Jean_Doe.MusicControl
         {
             btn_play_Click(sender, e);
             ActionBarService.Refresh();
+        }
+
+        private void btn_more_Click_1(object sender, RoutedEventArgs e)
+        {
         }
     }
 }

@@ -20,7 +20,6 @@ namespace Jean_Doe.MusicControl
             MessageBus.Instance.Subscribe(this);
             Mp3Player.SongChanged += Mp3Player_SongChanged;
             Items.CollectionChanged += Items_CollectionChanged;
-            now_playing.Visibility = Visibility.Visible;
             watcher = CreateWatcher();
         }
         static FileSystemWatcher watcher;
@@ -114,14 +113,14 @@ namespace Jean_Doe.MusicControl
                     }),
                     new CharmAction("正在播放",this.btn_show_Click,isNowPlayingNotSelected),  
                     new CharmAction("下一首",this.btn_next_Click,isNowPlayingSelected),    
-                    new CharmAction("查看专辑歌曲",link_album,IsType<IHasAlbum>),
-                    new CharmAction("查看歌手歌曲",link_artist,IsType<IHasArtist>),
+                    new CharmAction("查看专辑歌曲",link_album,IsOnlyType<IHasAlbum>),
+                    new CharmAction("查看歌手歌曲",link_artist,IsOnlyType<IHasArtist>),
                     new CharmAction("存为播放列表",this.btn_save_playlist_Click,s=>(s as CompleteSongListControl).SelectedSongs.Count()>1),
                     new CharmAction("复制文件到剪贴板",this.btn_copy_Click,defaultActionValidate),
-                    new CharmAction("打开文件所在位置",this.btn_open_click,IsType<IHasMusicPart>),
-                    new CharmAction("在浏览器中打开",this.btn_browse_Click,IsType<IHasMusicPart>),
-                    new CharmAction("收藏该歌曲",this.btn_fav_Click,defaultActionValidate),
-                    new CharmAction("不再收藏该歌曲",this.btn_unfav_Click,defaultActionValidate),
+                    new CharmAction("打开文件所在位置",this.btn_open_click,IsOnlyType<IHasMusicPart>),
+                    new CharmAction("在浏览器中打开",this.btn_browse_Click,IsOnlyType<IHasMusicPart>),
+                    new CharmAction("收藏该歌曲",this.btn_fav_Click,IsType<SongViewModel>),
+                    new CharmAction("不再收藏该歌曲",this.btn_unfav_Click,IsType<SongViewModel>),
                     new CharmAction("删除",this.btn_remove_complete_Click,defaultActionValidate),
                 };
         }

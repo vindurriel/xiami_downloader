@@ -1,22 +1,9 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Data;
+
 namespace Jean_Doe.Common
 {
-
-    public class CharmBarEntity
-    {
-        private Binding b = new Binding();
-
-        public Binding Binding
-        {
-            get { return b; }
-            set { b = value; }
-        }
-        public ObservableCollection<CharmAction> Actions = new ObservableCollection<CharmAction>();
-    }
     public class CharmAction : INotifyPropertyChanged
     {
         private string label;
@@ -34,13 +21,13 @@ namespace Jean_Doe.Common
             Action = a;
             Validate = (s) => { return (s is bool) && (bool)s; };
         }
-        public CharmAction(string l, Action<object, RoutedEventArgs> a, Func<object,bool> v)
+        public CharmAction(string l, Action<object, RoutedEventArgs> a, Func<object, bool> v)
         {
             Label = l;
             Action = a;
             Validate = v;
         }
-        private bool isActive=true;
+        private bool isActive = true;
 
         public bool IsActive
         {
@@ -48,7 +35,7 @@ namespace Jean_Doe.Common
             set { isActive = value; Notify("IsActive"); }
         }
 
-        public Func<object,bool> Validate { get; set; }
+        public Func<object, bool> Validate { get; set; }
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

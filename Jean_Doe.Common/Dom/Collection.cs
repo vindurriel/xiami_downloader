@@ -27,6 +27,7 @@ public class Collection : IMusic
     public void CreateFromJson(dynamic obj)
     {
         MusicHelper.LoadMusicInfoFromJson(this, obj);
-
+        if (string.IsNullOrEmpty(Id))
+            Id = MusicHelper.Get(obj, "list_id");
     }
 }
