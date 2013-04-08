@@ -97,10 +97,10 @@
                             </Grid>
                             <Grid x:Name="PressRect"
                                                   Opacity="0">
-                                <Border  Background="{DynamicResource darkBrush}"
+                                <Border  Background="{TemplateBinding Background}"
                                                          CornerRadius="{Binding CornerRadius,ElementName=round}"
                                                          VerticalAlignment="Stretch" />
-                                <Rectangle Height="4" VerticalAlignment="Top" Fill="{DynamicResource skinBrush}"/>
+                                <!--<Rectangle Height="4" VerticalAlignment="Top" Fill="{DynamicResource skinBrush}"/>-->
                             </Grid>
                             <Grid Margin="{TemplateBinding Padding}">
                                 <ContentPresenter x:Name="content"

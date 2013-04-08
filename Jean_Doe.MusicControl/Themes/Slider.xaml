@@ -44,7 +44,7 @@
                                     <Storyboard >
                                         <DoubleAnimation Storyboard.TargetName="indicator" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.1"/>
                                         <DoubleAnimation Storyboard.TargetName="rect" Storyboard.TargetProperty="Width" To="50" Duration="0:0:0.1"/>
-                                        <DoubleAnimation Storyboard.TargetName="rect" Storyboard.TargetProperty="Height" To="20" Duration="0:0:0.1"/>
+                                        <DoubleAnimation Storyboard.TargetName="rect" Storyboard.TargetProperty="Height" To="25" Duration="0:0:0.1"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>

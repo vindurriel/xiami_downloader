@@ -2,6 +2,82 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib"
                     xmlns:my="clr-namespace:Jean_Doe.MusicControl"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style x:Key="combo_toggle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="MinWidth"
+                Value="0" />
+        <Setter Property="MinHeight"
+                Value="0" />
+        <Setter Property="Width"
+                Value="Auto" />
+        <Setter Property="Height"
+                Value="Auto" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="BorderBrush"
+                Value="Black" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="Foreground"
+                Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <DockPanel Background="Transparent"
+                               LastChildFill="False"
+                               SnapsToDevicePixels="True">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="CheckRect"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         Duration="0"
+                                                         To="1" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="CheckRect"
+                                                         Duration="0"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid DockPanel.Dock="Right"
+                              Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}">
+                            <Border x:Name="OverRect"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    Background="{TemplateBinding Background}" />
+                            <Border x:Name="CheckRect"
+                                    Background="{DynamicResource skinBrush}"
+                                    Opacity="0" />
+                            <Border x:Name="Border">
+                                <Path Data="M0,0L3.5,3 7,0z"
+                                      Fill="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                            </Border>
+                        </Grid>
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled"
+                     Value="False">
+                <Setter Property="Foreground"
+                        Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="#888888" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
     <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">25</sys:Double>
     <Style TargetType="ComboBox">
         <Setter Property="FocusVisualStyle">
@@ -145,6 +221,7 @@
                                 </Border>
                             </DockPanel>
                             <ToggleButton ClickMode="Press"
+                                          Style="{StaticResource combo_toggle}"
                                           Focusable="False"
                                           IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                           Margin="{TemplateBinding Padding}"
@@ -272,6 +349,7 @@
                                         </Popup>
                                     </Border>
                                     <ToggleButton ClickMode="Press"
+                                                  Style="{StaticResource combo_toggle}"
                                                   Focusable="False"
                                                   IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                                   Margin="{TemplateBinding Padding}"
@@ -380,82 +458,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Style TargetType="{x:Type ToggleButton}">
-        <Setter Property="MinWidth"
-                Value="0" />
-        <Setter Property="MinHeight"
-                Value="0" />
-        <Setter Property="Width"
-                Value="Auto" />
-        <Setter Property="Height"
-                Value="Auto" />
-        <Setter Property="Background"
-                Value="Transparent" />
-        <Setter Property="BorderBrush"
-                Value="Black" />
-        <Setter Property="BorderThickness"
-                Value="0" />
-        <Setter Property="Foreground"
-                Value="White" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ToggleButton}">
-                    <DockPanel Background="Transparent"
-                               LastChildFill="False"
-                               SnapsToDevicePixels="True">
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="CheckStates">
-                                <VisualState x:Name="Checked">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="CheckRect"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         Duration="0"
-                                                         To="1" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Unchecked">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="CheckRect"
-                                                         Duration="0"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         To="0" />
-                                    </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
-                        <Grid DockPanel.Dock="Right"
-                              Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}">
-                            <Border x:Name="OverRect"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                    Background="{TemplateBinding Background}" />
-                            <Border x:Name="CheckRect"
-                                    Background="{DynamicResource skinBrush}"
-                                    Opacity="0" />
-                            <Border x:Name="Border">
-                                <Path Data="M0,0L3.5,3 7,0z"
-                                      Fill="{TemplateBinding Foreground}"
-                                      HorizontalAlignment="Center"
-                                      VerticalAlignment="Center" />
-                            </Border>
-                        </Grid>
-                    </DockPanel>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Style.Triggers>
-            <Trigger Property="IsEnabled"
-                     Value="False">
-                <Setter Property="Foreground"
-                        Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
-            </Trigger>
-            <Trigger Property="IsMouseOver"
-                     Value="True">
-                <Setter Property="Background"
-                        Value="#888888" />
-            </Trigger>
-        </Style.Triggers>
-    </Style>
+   
     <!--<Style TargetType="ComboBox"
            x:Key="comboStyle"
            BasedOn="{StaticResource {x:Type ComboBox}}" />-->

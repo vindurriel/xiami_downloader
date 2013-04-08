@@ -19,22 +19,6 @@ namespace Jean_Doe.MusicControl
         public DownloadSongListControl()
         {
             listView.ItemTemplate = this.Resources["downloadingTemplate"] as DataTemplate;
-
-            //dataGrid.Columns.Insert(0, new DataGridTemplateColumn
-            //{
-            //    CellTemplate = dataGrid.FindResource("imageTemplate") as DataTemplate,
-            //    Width = DataGridLength.SizeToCells,
-            //    CanUserResize=false,
-            //    CanUserReorder=false
-            //});
-
-            //dataGrid.Columns.Add(new DataGridTemplateColumn
-            //{
-            //    CellTemplate = dataGrid.FindResource("statusTemplate") as DataTemplate,
-            //    Width = DataGridLength.SizeToCells,
-            //    Header = "状态",
-            //    SortMemberPath = "Status"
-            //});
             Items.CollectionChanged+=Items_CollectionChanged;
         }
 
@@ -51,7 +35,7 @@ namespace Jean_Doe.MusicControl
         {
 			Add(song);
             song.PrepareDownload();
-            DownloadManager.Instance.StartByTag(new List<string> { song.Id });
+            DownloadManager.Instance.StartByTag(new [] { song.Id });
         }
         public void Handle(MsgDownloadProgressChanged message)
         {
@@ -122,16 +106,16 @@ namespace Jean_Doe.MusicControl
 
         void btn_download_start_Click(object sender, RoutedEventArgs e)
         {
-            DownloadManager.Instance.StartByTag(SelectedSongs.Select(x => x.Id).ToList());
+            DownloadManager.Instance.StartByTag(SelectedSongs.Select(x => x.Id).ToArray());
         }
 
         void btn_cancel_Click(object sender, RoutedEventArgs e)
         {
-            DownloadManager.Instance.StopByTag(SelectedSongs.Select(x => x.Id).ToList());
+            DownloadManager.Instance.StopByTag(SelectedSongs.Select(x => x.Id).ToArray());
         }
         void btn_remove_Click(object sender, RoutedEventArgs e)
         {
-            DownloadManager.Instance.RemoveByTag(SelectedSongs.Select(x => x.Id).ToList());
+            DownloadManager.Instance.RemoveByTag(SelectedSongs.Select(x => x.Id).ToArray());
             var list = SelectedSongs.ToList();
             foreach (var item in list)
             {
@@ -143,7 +127,7 @@ namespace Jean_Doe.MusicControl
         {
             if (!SelectedSongs.Any())
                 return;
-            DownloadManager.Instance.StopByTag(SelectedSongs.Select(x => x.Id).ToList());
+            DownloadManager.Instance.StopByTag(SelectedSongs.Select(x => x.Id).ToArray());
             foreach (var item in SelectedSongs)
             {
                 item.HasMp3 = true; item.HasLrc = true; item.HasArt = true;

@@ -125,6 +125,7 @@
     <Compile Include="Downloaders\DownloaderLrc.cs" />
     <Compile Include="Downloaders\DownloaderMp3.cs" />
     <Compile Include="Util\AfterDownloadManager.cs" />
+    <Compile Include="Util\ImageHelper.cs" />
     <Compile Include="Util\SongViewModelExtentions.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="SongListControl\CompleteSongListControl.cs" />

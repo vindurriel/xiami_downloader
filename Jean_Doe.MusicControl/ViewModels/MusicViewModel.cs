@@ -18,8 +18,14 @@ namespace Jean_Doe.MusicControl
         public string ImageSource
         {
             get { return imageSrc; }
-            set { imageSrc = value; Notify("ImageSource"); }
+            set { imageSrc = value; Notify("ImageSource");
+            LogoColor = ImageHelper.GetAverageColor(value);
+            }
         }
+        protected  string typecolor = "#ff0000";
+        public string TypeColor { get { return typecolor; } set { typecolor = value; Notify("TypeColor"); } }
+        protected string logoColor = ImageHelper.DefaultColor;
+        public string LogoColor { get { return logoColor; } set { logoColor = value; Notify("LogoColor"); } }
         public MusicViewModel(IMusic m)
         {
             music = m;

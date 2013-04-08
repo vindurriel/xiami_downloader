@@ -42,126 +42,8 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <DataTemplate x:Key="imageTemplate">
-            <Grid  Margin="5">
-                <Image TargetUpdated="Image_SourceUpdated_1" Width="60" Height="60" Margin="0"
-                        Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                        Stretch="Uniform"></Image>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="trackNoTemplate">
-            <TextBlock Visibility="{Binding TrackNo,
-                                 Converter={StaticResource int2vis}}" Text="{Binding TrackNo,StringFormat={}{0:D2}.}"
-                    Margin="0" Style="{StaticResource label_base}" />
-        </DataTemplate>
         <DataTemplate x:Key="dateTemplate">
             <TextBlock Text="{Binding Date, StringFormat={}{0:yyyy/MM/dd HH:mm:ss}}" Style="{StaticResource label_base}" />
-        </DataTemplate>
-        <DataTemplate x:Key="statusTemplate">
-            <Grid Margin="5" MinWidth="100">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height='Auto' />
-                </Grid.RowDefinitions>
-                <TextBlock Text="{Binding Status}" Style="{StaticResource label_base}" HorizontalAlignment="Center" />
-                <!--下载状态-->
-                <Grid Grid.Row="1">
-                    <Grid.Resources>
-                        <Style TargetType='Rectangle'>
-                            <Setter Property='MinWidth' Value='80' />
-                            <Setter Property='Height' Value='10' />
-                            <Setter Property='Margin' Value='0,0,3,0' />
-                            <Setter Property='Fill' Value='{DynamicResource skinBrush}' />
-                        </Style>
-                    </Grid.Resources>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Grid x:Name='grid' Grid.ColumnSpan="10">
-                        <Rectangle Width="{Binding ElementName=mp3Indicator,Path=ActualWidth}"
-                                HorizontalAlignment="Left">
-                            <Rectangle.RenderTransform>
-                                <ScaleTransform ScaleX="{Binding Percent}" />
-                            </Rectangle.RenderTransform>
-                        </Rectangle>
-                        <Rectangle ToolTip='Mp3下载' x:Name="mp3Indicator"
-                                Opacity='{Binding HasMp3,Converter={StaticResource bool2opa}}' />
-                    </Grid>
-                    <!--<Rectangle Grid.Column="1" ToolTip='封面下载'
-                            Opacity='{Binding HasArt,Converter={StaticResource bool2opa}}' />
-                    <Rectangle Grid.Column="2" ToolTip='歌词下载'
-                            Opacity='{Binding HasLrc,Converter={StaticResource bool2opa}}' />-->
-                </Grid>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="PlayTimesTemplate">
-            <Grid MinWidth="100" Margin="5" x:Name="grid">
-                <TextBlock Style="{StaticResource label_base}" Text="{Binding PlayTimes,StringFormat=播放{0}次}" />
-                <Rectangle Fill="{DynamicResource selectBrush}" Width="{Binding ElementName=grid,Path=ActualWidth}"
-                        VerticalAlignment="Bottom" Height="10" HorizontalAlignment="Left">
-                    <Rectangle.RenderTransform>
-                        <ScaleTransform>
-                            <ScaleTransform.ScaleX>
-                                <MultiBinding Converter="{StaticResource divconv}">
-                                    <Binding Path="PlayTimes" />
-                                    <Binding Path="MaxPlayTimes"
-                                            RelativeSource="{RelativeSource AncestorType=my:SearchSongListControl}" />
-                                </MultiBinding>
-                            </ScaleTransform.ScaleX>
-                        </ScaleTransform>
-                    </Rectangle.RenderTransform>
-                </Rectangle>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="AlbumTemplate">
-            <Grid Margin="5">
-                <TextBlock Style="{StaticResource tag_base}">
-                    <Hyperlink Style="{StaticResource linkStyle}" Click='go_album'>album</Hyperlink></TextBlock>
-                <TextBlock Style="{StaticResource label_base}">
-                                        <Hyperlink Click='link_album' Style="{StaticResource linkStyle}">
-                                            <TextBlock Text="{Binding AlbumName}" />
-                                        </Hyperlink>
-                                    </TextBlock>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="ArtistTemplate">
-            <Grid Margin="5">
-                <TextBlock Style="{StaticResource tag_base}">
-                    <Hyperlink Style="{StaticResource linkStyle}" Click='go_artist'>artist</Hyperlink></TextBlock>
-                <TextBlock Style="{StaticResource label_base}">
-                                        <Hyperlink Click='link_artist' Style="{StaticResource linkStyle}">
-                                            <TextBlock Text="{Binding ArtistName}" />
-                                        </Hyperlink>
-                                    </TextBlock>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="CollectionTemplate">
-            <Grid Margin="5">
-                <TextBlock Style="{StaticResource tag_base}">
-                    <Hyperlink Style="{StaticResource linkStyle}" Click='go_collect'>collect</Hyperlink></TextBlock>
-                <TextBlock Style="{StaticResource label_base}">
-                                        <Hyperlink Click='link_collection' Style="{StaticResource linkStyle}">
-                                            <TextBlock Text="{Binding CollectionName}" />
-                                        </Hyperlink>
-                                    </TextBlock>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="SongTemplate">
-            <Grid Margin="5">
-                <DockPanel>
-                    <TextBlock Style="{StaticResource label_base}">
-                    <Hyperlink Style="{StaticResource linkStyle}" Click='go_song'>
-                        <TextBlock Text="{Binding Name}" IsHitTestVisible="True" />
-                    </Hyperlink></TextBlock>
-                    <TextBlock Style="{StaticResource label_base}" Text=" - " />
-                    <TextBlock Style="{StaticResource label_base}" Grid.Row="1">
-                    <Hyperlink Style="{StaticResource linkStyle}" Click='link_artist'>
-                        <TextBlock Text="{Binding ArtistName}" />
-                    </Hyperlink></TextBlock>
-                </DockPanel>
-            </Grid>
         </DataTemplate>
         <DataTemplate x:Key="downloadingTemplate">
             <Grid Width="220" Height="70">
@@ -181,26 +63,25 @@
                             <RowDefinition />
                             <RowDefinition Height='Auto' />
                         </Grid.RowDefinitions>
-                        <TextBlock Text="{Binding Status}" Opacity="0.5"  Style="{StaticResource label_base}" />
                         <!--下载状态-->
-                        <Grid Grid.Row="1">
+                        <Grid Grid.Row="1" Margin="0,5,0,0">
                             <Grid.Resources>
                                 <Style TargetType='Rectangle'>
                                     <Setter Property='MinWidth' Value='80' />
-                                    <Setter Property='Height' Value='5' />
+                                    <Setter Property='Height' Value='4' />
                                     <Setter Property='Margin' Value='0,0,3,0' />
-                                    <Setter Property='Fill' Value='{DynamicResource lightBrush}' />
+                                    <Setter Property='Fill' Value='{DynamicResource skinBrush}' />
                                 </Style>
                             </Grid.Resources>
-                            <Grid>
-                                <Rectangle Width="{Binding  ElementName=mp3Indicator,Path=ActualWidth}"
-                                HorizontalAlignment="Left">
+                            <Grid  >
+                                <Rectangle   x:Name="mp3Indicator"  
+                                Opacity='{Binding HasMp3,Converter={StaticResource bool2opa}}' />
+                                <Rectangle 
+                                    Width="{Binding  ElementName=mp3Indicator,Path=ActualWidth}" HorizontalAlignment="Left">
                                     <Rectangle.RenderTransform>
                                         <ScaleTransform ScaleX="{Binding Percent}" />
                                     </Rectangle.RenderTransform>
                                 </Rectangle>
-                                <Rectangle ToolTip='Mp3下载' x:Name="mp3Indicator"
-                                Opacity='{Binding HasMp3,Converter={StaticResource bool2opa}}' />
                             </Grid>
                         </Grid>
                     </Grid>
@@ -220,7 +101,6 @@
                     <TextBlock Text="{Binding Name}" FontSize="18"  Style="{DynamicResource label_base}"/>
                     <TextBlock Style="{StaticResource label_base}"   Text="{Binding ArtistName}" />
                     <TextBlock Style="{StaticResource label_base}"   Text="{Binding AlbumName}" />
-                    <!--<TextBlock Text="{Binding Date, StringFormat={}{0:yyyy/MM/dd HH:mm:ss}}" Style="{StaticResource label_base}" />-->
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -239,10 +119,11 @@
             Grid.RowSpan="2"
             Margin="0,0,5,0" Padding="0"
             FontSize="10"
+            Background="{DynamicResource skinBrush}" Foreground="White"
             Visibility="{Binding ItemsCount,ElementName=me,Converter={StaticResource int2vis}}"
             Height="30" Width="30"  MinWidth="0"
             Style="{StaticResource toggleStyle}"
-           VerticalAlignment="Top"    FontFamily="Segoe UI Symbol"    x:Name="btn_more" Content="&#xE0C2;"/>
+           VerticalAlignment="Top"    FontFamily="Segoe UI Symbol"    x:Name="btn_more" Content="&#xE16E;"/>
         <DockPanel Margin="6,0,0,10" Grid.Column="1"  LastChildFill="False"
                    Height="30"
                    Visibility="{Binding IsChecked,ElementName=btn_more,Converter={StaticResource bool2vis}}">
@@ -315,7 +196,7 @@
                                             <ScaleTransform ScaleX="1" ScaleY="1"/>
                                         </TransformGroup>
                                     </Grid.RenderTransform>
-                                    <Rectangle x:Name="normal"  Fill="#444" />
+                                    <Rectangle x:Name="normal"  Fill="{Binding LogoColor}" />
                                     <Rectangle x:Name="mouseover" Opacity="0" StrokeThickness="4" Stroke="{Binding TypeColor}"/>
                                     <Grid x:Name="pressed" Opacity="0">
                                         <Border BorderThickness="4" BorderBrush="{Binding TypeColor}" />

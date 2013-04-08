@@ -53,6 +53,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Jean_Doe.Reference\Artwork.Bus.dll</HintPath>
     </Reference>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification">
+      <HintPath>..\Jean_Doe.Reference\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -77,6 +80,9 @@
     <Compile Include="ActionBar.xaml.cs">
       <DependentUpon>ActionBar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MyBalloonTip.xaml.cs">
+      <DependentUpon>MyBalloonTip.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\ConfigPage.xaml.cs">
       <DependentUpon>ConfigPage.xaml</DependentUpon>
     </Compile>
@@ -85,6 +91,10 @@
       <DependentUpon>UserPage.xaml</DependentUpon>
     </Compile>
     <Page Include="ActionBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MyBalloonTip.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

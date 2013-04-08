@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Animation;
 
 namespace MusicPlayer
 {
@@ -15,17 +16,25 @@ namespace MusicPlayer
         public MusicSliderConnector(Slider slider)
         {
             _slider = slider;
+            slider.Visibility = Visibility.Hidden;
             Mp3Player.TimeChanged += Mp3Player_TimeChanged;
             Mp3Player.SongChanged += Mp3Player_SongChanged;
             slider.PreviewMouseDown += slider_MouseLeftButtonDown;
             slider.PreviewMouseUp += slider_MouseLeftButtonUp;
+
+            anim = new Storyboard();
+            da = new DoubleAnimation();
+            da.Duration = new Duration(TimeSpan.FromMilliseconds(Mp3Player.RefreshInterval/5));
+            da.EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut };
+            Storyboard.SetTarget(da, _slider);
+            Storyboard.SetTargetProperty(da, new PropertyPath("Value"));
+            anim.Children.Add(da);
         }
 
 
         void slider_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             _slider.ValueChanged -= slider_ValueChanged;
-
             Mp3Player.TimeChanged -= Mp3Player_TimeChanged;
             Mp3Player.TimeChanged += Mp3Player_TimeChanged;
         }
@@ -34,7 +43,7 @@ namespace MusicPlayer
         {
             _slider.ValueChanged -= slider_ValueChanged;
             _slider.ValueChanged += slider_ValueChanged;
-
+            anim.Pause();
             Mp3Player.TimeChanged -= Mp3Player_TimeChanged;
         }
 
@@ -45,10 +54,16 @@ namespace MusicPlayer
 
         void Mp3Player_TimeChanged(object sender, Mp3Player.TimeChangedEventArgs e)
         {
-            _slider.Value = e.Current.TotalSeconds;
+            da.To = e.Current.TotalSeconds;
+            anim.Begin();
         }
+        Storyboard anim;
+        DoubleAnimation da;
         void Mp3Player_SongChanged(object sender, Mp3Player.SongChangedEventArgs e)
         {
+            _slider.Visibility = Visibility.Visible;
+            da.To = 0;
+            anim.Begin();
             _slider.Maximum = e.Total.TotalSeconds;
         }
     }

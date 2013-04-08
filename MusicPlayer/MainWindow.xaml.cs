@@ -1,16 +1,14 @@
 ﻿using Artwork.MessageBus;
 using Artwork.MessageBus.Interfaces;
+using Hardcodet.Wpf.TaskbarNotification;
 using Jean_Doe.Common;
 using Jean_Doe.Downloader;
 using Jean_Doe.MusicControl;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
@@ -26,6 +24,7 @@ namespace MusicPlayer
         IHandle<MsgChangeWindowState>,
         IHandle<MsgSetBusy>
     {
+        TaskbarIcon trayIcon;
         FrameworkElement lastPage;
         private int page;
         public int Page
@@ -77,15 +76,28 @@ namespace MusicPlayer
             Loaded += MainWindow_Loaded;
             Closing += MainWindow_Closing;
             new MusicSliderConnector(slider);
-            slider.Visibility = Visibility.Collapsed;
             ActionBarService.SetActionBar(this.charmBar);
             Artwork.DataBus.DataBus.Set("list_download", list_download);
-            Mp3Player.SongChanged += Mp3Player_SongChanged;
+            trayIcon = new TaskbarIcon();
+            var iconStream = App.GetResourceStream(new Uri("pack://application:,,,/Resources/icon.ico")).Stream;
+            trayIcon.Visibility = Visibility.Visible;
+            trayIcon.TrayMouseDoubleClick += OnTrayIconClick;
+            trayIcon.Icon = new System.Drawing.Icon(iconStream);
+            Mp3Player.SongChanged += OnMp3PlayerSongChanged;
         }
 
-        void Mp3Player_SongChanged(object sender, Mp3Player.SongChangedEventArgs e)
+        void OnMp3PlayerSongChanged(object sender, Mp3Player.SongChangedEventArgs e)
         {
-            slider.Visibility = Visibility.Visible;
+            if (Global.AppSettings["ShowNowPlaying"] == "0") return;
+            var now = list_complete.NowPlaying;
+            balloonTip = new MyBalloonTip();
+            balloonTip.ViewModel=now;
+            trayIcon.ShowCustomBalloon(balloonTip, PopupAnimation.Slide, 3000);
+        }
+        MyBalloonTip balloonTip;
+        void OnTrayIconClick(object sender, EventArgs e)
+        {
+            Handle(new MsgChangeWindowState { State = EnumChangeWindowState.Minimized });
         }
         void initActionBar()
         {
@@ -231,7 +243,12 @@ namespace MusicPlayer
                     }
                     break;
                 case EnumChangeWindowState.Minimized:
-                    WindowState = WindowState.Minimized;
+                    if (WindowState == WindowState.Normal)
+                    {
+                        WindowState = WindowState.Minimized;
+                    }
+                    else
+                        WindowState = WindowState.Normal;
                     break;
                 default:
                     break;

@@ -17,13 +17,6 @@ namespace Jean_Doe.MusicControl
         public SearchSongListControl()
         {
             MessageBus.Instance.Subscribe(this);
-            var col = new DataGridTemplateColumn
-            {
-                CellTemplate = FindResource("PlayTimesTemplate") as DataTemplate,
-                Header = "播放次数",
-                SortDirection = ListSortDirection.Ascending,
-                SortMemberPath = "PlayTimes",
-            };
             Items.CollectionChanged += Items_CollectionChanged;
 
         }

@@ -82,13 +82,13 @@ namespace Jean_Doe.MusicControl
         public SongViewModel(Song song)
             : base(song)
         {
+            typecolor="#d20101";
             this.song = song;
             var art = System.IO.Path.Combine(Global.BasePath, "cache", AlbumId + ".art");
             if (File.Exists(art))
                 ImageSource = art;                
         }
         Song song;
-        public string TypeColor { get { return "#d20101"; } }
         public Song Song
         {
             get

@@ -19,7 +19,14 @@ namespace Jean_Doe.Common
         static WaveStream waveStream;
         public static event EventHandler<TimeChangedEventArgs> TimeChanged;
         public static event EventHandler<SongChangedEventArgs> SongChanged;
-        static DispatcherTimer timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(1000) };
+        private static double refreshInterval=1000.0;
+
+        public static double RefreshInterval
+        {
+            get { return refreshInterval; }
+            set { refreshInterval = value; }
+        }
+        static DispatcherTimer timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(RefreshInterval) };
         public static bool IsPlaying { get { return waveOutDevice != null && waveOutDevice.PlaybackState == PlaybackState.Playing; } }
         public static TimeSpan CurrentTime
         {
@@ -93,6 +100,8 @@ namespace Jean_Doe.Common
             {
                 timer.Start();
                 waveOutDevice.Play();
+                if (SongChanged != null && waveStream != null)
+                    SongChanged(null, new SongChangedEventArgs { Total = waveStream.TotalTime, Id = _id });
             }
         }
         public static void Play(string filepath,string id)

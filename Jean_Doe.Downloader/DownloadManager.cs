@@ -71,7 +71,7 @@ namespace Jean_Doe.Downloader
 		}
 		#endregion
 		#region public control methods
-		public void StartByTag(List<string> taglist)
+		public void StartByTag(string[] taglist)
 		{
 			startSpin();
 			foreach(var tag in taglist)
@@ -84,7 +84,7 @@ namespace Jean_Doe.Downloader
 				}
 			}
 		}
-        public void StopByTag(List<string> taglist)
+        public void StopByTag(string[] taglist)
         {
             foreach(var tag in taglist)
             {
@@ -108,7 +108,7 @@ namespace Jean_Doe.Downloader
 				tags[downloader.Info.Tag].Add(downloader.Info.Id);
 			}
 		}
-		public void RemoveByTag(List<string> taglist)
+		public void RemoveByTag(string[] taglist)
 		{
 			foreach(var tag in taglist)
 			{

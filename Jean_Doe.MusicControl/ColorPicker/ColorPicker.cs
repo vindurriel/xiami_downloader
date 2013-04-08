@@ -305,6 +305,20 @@ namespace ColorPicker
 
         #endregion
 
+
+
+        public bool ShowRgbSliders
+        {
+            get { return (bool)GetValue(ShowRgbSlidersProperty); }
+            set { SetValue(ShowRgbSlidersProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ShowRgbSliders.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ShowRgbSlidersProperty =
+            DependencyProperty.Register("ShowRgbSliders", typeof(bool), typeof(ColorPicker), new PropertyMetadata(true));
+
+
+
         #region Private Members
 
         private const string RedColorSliderName = "PART_RedColorSlider";

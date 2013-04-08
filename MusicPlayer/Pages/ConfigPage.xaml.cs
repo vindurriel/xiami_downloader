@@ -1,13 +1,11 @@
-﻿using System;
+﻿using Jean_Doe.Common;
+using Jean_Doe.MusicControl;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Jean_Doe.Common;
-using Jean_Doe.MusicControl;
-using System.ComponentModel;
-using System.Threading.Tasks;
-//using System.Windows.Forms;
 namespace MusicPlayer
 {
     public enum EnumConfigControlType { label, combo, toggle, color, input, pass }
@@ -36,6 +34,7 @@ namespace MusicPlayer
                 {"PlayNextMode", EnumConfigControlType.combo},
                 {"xiami_username", EnumConfigControlType.input},
                 {"xiami_password", EnumConfigControlType.pass},
+                {"ShowNowPlaying", EnumConfigControlType.toggle},
             };
         public ConfigPage()
         {
@@ -126,7 +125,7 @@ namespace MusicPlayer
                             tg.IsOn = value == "1";
                         break;
                     case EnumConfigControlType.color:
-                        var cp = x as ColorPicker.ColorPicker;
+                        var cp = x as   ColorPicker.ColorPicker ;
                         if (cp != null)
                             try
                             {
@@ -182,7 +181,7 @@ namespace MusicPlayer
                             value = tg.IsOn == true ? "1" : "0";
                         break;
                     case EnumConfigControlType.color:
-                        var cp = x as ColorPicker.ColorPicker;
+                        var cp = x as ColorPicker.ColorPicker ;
                         if (cp != null)
                             value = cp.SelectedColor.ToString();
                         break;

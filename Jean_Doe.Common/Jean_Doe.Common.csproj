@@ -40,7 +40,7 @@
     </Reference>
     <Reference Include="NAudio, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ReferenceLibrary\NAudio.dll</HintPath>
+      <HintPath>..\Jean_Doe.Reference\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />

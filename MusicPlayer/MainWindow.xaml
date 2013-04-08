@@ -159,7 +159,9 @@
                 </Grid.Resources>
                 <DockPanel Grid.Column="1" x:Name="headers">
                     <DockPanel.Resources>
-                        <Style TargetType="ToggleButton" BasedOn="{StaticResource toggleStyle}"/>
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource toggleStyle}">
+                            <Setter Property="Background" Value="{DynamicResource darkBrush}"/>
+                        </Style>
                     </DockPanel.Resources>
                     <ToggleButton  MinWidth="0"
                            Padding="0,0,0,0"   >
@@ -225,10 +227,6 @@
                     <Grid x:Name="page1"
                 		Opacity="0"
                 		IsHitTestVisible="false">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
                         <DockPanel>
                             <controls:SearchControl Margin="0,10"  DockPanel.Dock="Top"  x:Name="searchKeywordControl" />
                             <TextBlock Text="" x:Name="text_search" Foreground="{DynamicResource skinBrush}" DockPanel.Dock="Top" Margin="5" FontSize="20" Visibility="Collapsed" />
@@ -238,17 +236,15 @@
                     <Grid x:Name="page2"
                 		Opacity="0"
                 		IsHitTestVisible="false">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
                         <controls:DownloadSongListControl x:Name="list_download" />
                     </Grid>
                     <Grid x:Name="page3"
                 		Opacity="0"
                 		IsHitTestVisible="false">
-                        <controls:CompleteSongListControl x:Name="list_complete" />
-
+                        <DockPanel>
+                            <Slider DockPanel.Dock="Top"  Background="{DynamicResource darkBrush}" Foreground="{DynamicResource skinBrush}" Grid.Row="1" x:Name="slider" Margin="-30,-40,-30,20" VerticalAlignment="Top"/>
+                            <controls:CompleteSongListControl x:Name="list_complete" /> 
+                        </DockPanel>
                     </Grid>
                     <Grid x:Name="page4"
                 		Opacity="0"
@@ -262,8 +258,7 @@
                     
                 </Grid>
             </Grid>
-            <!--contents-->
-            <Slider  Background="{DynamicResource darkBrush}" Foreground="{DynamicResource skinBrush}" Grid.Row="1" x:Name="slider" Margin="0,-10,0,0" VerticalAlignment="Top"/>
+            <!--contents-->  
             <Grid Height="15" Grid.Row="2" >
                 <TextBlock x:Name="statusBar"
                        HorizontalAlignment="Center"
