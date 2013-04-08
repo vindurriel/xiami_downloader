@@ -70,7 +70,7 @@
                                     <Setter Property='MinWidth' Value='80' />
                                     <Setter Property='Height' Value='4' />
                                     <Setter Property='Margin' Value='0,0,3,0' />
-                                    <Setter Property='Fill' Value='{DynamicResource skinBrush}' />
+                                    <Setter Property='Fill' Value='{DynamicResource lightBrush}' />
                                 </Style>
                             </Grid.Resources>
                             <Grid  >

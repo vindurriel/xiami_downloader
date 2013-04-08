@@ -24,7 +24,16 @@ namespace MusicPlayer
             grid.MouseEnter += grid_MouseEnter;
             grid.MouseLeave += grid_MouseLeave_1;
             grid.MouseMove += OnGridMouseMove;
+            grid.MouseLeftButtonUp += OnGridMouseLeftButtonUp;
             TaskbarIcon.AddBalloonClosingHandler(this, OnBalloonClosing);
+        }
+
+        void OnGridMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var win = Artwork.DataBus.DataBus.Get("MainWindow") as Window;
+            if (win == null) return;
+            if (win.WindowState == WindowState.Minimized)
+                win.WindowState = WindowState.Normal;
         }
 
         void OnGridMouseMove(object sender, MouseEventArgs e)
@@ -88,6 +97,6 @@ namespace MusicPlayer
             pp.IsOpen = false;
         }
 
-   
+
     }
 }

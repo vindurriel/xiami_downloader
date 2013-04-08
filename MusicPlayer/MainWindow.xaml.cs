@@ -70,6 +70,7 @@ namespace MusicPlayer
             Global.ListenToEvent("ColorSkin", SetColorSkin);
             Global.ListenToEvent("xiami_avatar", SetAvatar);
             InitializeComponent();
+            Artwork.DataBus.DataBus.Set("MainWindow", this);
             DataContext = this;
             MessageBus.Instance.Subscribe(this);
             loadSongLists();
