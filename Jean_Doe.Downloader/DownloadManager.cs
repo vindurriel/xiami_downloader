@@ -5,6 +5,7 @@ using System.Windows.Threading;
 using System.Text.RegularExpressions;
 using Artwork.MessageBus;
 using System.Collections;
+using Jean_Doe.Common;
 //using Jean_Doe.Common;
 namespace Jean_Doe.Downloader
 {
@@ -23,7 +24,7 @@ namespace Jean_Doe.Downloader
             dt.Tick += (s, e) => pick();
         }
         static DownloadManager inst;
-        public static DownloadManager Instance { get { if(inst == null) inst = new DownloadManager(); return inst; } }
+        public static DownloadManager Instance { get { if (inst == null) inst = new DownloadManager(); return inst; } }
         public void SetMaxConnection(int maxConn)
         {
             System.Net.ServicePointManager.DefaultConnectionLimit = maxConn;
@@ -32,18 +33,18 @@ namespace Jean_Doe.Downloader
         object lockContentLength = new object();
         public long GetContentLength(string url)
         {
-            if(string.IsNullOrEmpty(url)) return -1;
+            if (string.IsNullOrEmpty(url)) return -1;
             long res = -1;
-            if(contentLengthOfUrl.ContainsKey(url))
+            if (contentLengthOfUrl.ContainsKey(url))
                 res = contentLengthOfUrl[url];
             return res;
         }
         public void SetContentLength(string url, long length)
         {
-            if(string.IsNullOrEmpty(url)) return;
-            lock(lockContentLength)
+            if (string.IsNullOrEmpty(url)) return;
+            lock (lockContentLength)
             {
-                if(contentLengthOfUrl.ContainsKey(url))
+                if (contentLengthOfUrl.ContainsKey(url))
                     contentLengthOfUrl[url] = length;
                 else
                     contentLengthOfUrl.Add(url, length);
@@ -52,104 +53,104 @@ namespace Jean_Doe.Downloader
         #region private control methods
         void stop(string id)
         {
-            if(!pool.ContainsKey(id)) return;
+            if (!pool.ContainsKey(id)) return;
             pool[id].StopDownload();
         }
-		void start(string id)
-		{
-			if(!pool.ContainsKey(id)) return;
-			var d = pool[id];
-			if(d.State == EnumDownloadState.Downloading || d.State == EnumDownloadState.Processing) return;
-			pool[id].State = EnumDownloadState.Waiting;
-		}
-		void remove(string id)
-		{
-			if(!pool.ContainsKey(id)) return;
-			var d = pool[id];
-			d.StopDownload();
-			pool.Remove(id);
-		}
-		#endregion
-		#region public control methods
-		public void StartByTag(string[] taglist)
-		{
-			startSpin();
-			foreach(var tag in taglist)
-			{
-				if(!tags.ContainsKey(tag))
-					continue;
-				foreach(var id in tags[tag])
-				{
-					start(id);
-				}
-			}
-		}
+        void start(string id)
+        {
+            if (!pool.ContainsKey(id)) return;
+            var d = pool[id];
+            if (d.State == EnumDownloadState.Downloading || d.State == EnumDownloadState.Processing) return;
+            pool[id].State = EnumDownloadState.Waiting;
+        }
+        void remove(string id)
+        {
+            if (!pool.ContainsKey(id)) return;
+            var d = pool[id];
+            d.StopDownload();
+            pool.Remove(id);
+        }
+        #endregion
+        #region public control methods
+        public void StartByTag(string[] taglist)
+        {
+            startSpin();
+            foreach (var tag in taglist)
+            {
+                if (!tags.ContainsKey(tag))
+                    continue;
+                foreach (var id in tags[tag])
+                {
+                    start(id);
+                }
+            }
+        }
         public void StopByTag(string[] taglist)
         {
-            foreach(var tag in taglist)
+            foreach (var tag in taglist)
             {
-                if(!tags.ContainsKey(tag))
+                if (!tags.ContainsKey(tag))
                     continue;
-                foreach(var id in tags[tag])
+                foreach (var id in tags[tag])
                 {
                     stop(id);
                 }
             }
         }
-		public void Add(Downloader downloader)
-		{
-			if(downloader.Info != null && pool.ContainsKey(downloader.Info.Id))
-				return;
-			pool.Add(downloader.Info.Id, downloader);
-			if(downloader.Info.Tag != null)
-			{
-				if(!tags.ContainsKey(downloader.Info.Tag))
-					tags.Add(downloader.Info.Tag, new List<string>());
-				tags[downloader.Info.Tag].Add(downloader.Info.Id);
-			}
-		}
-		public void RemoveByTag(string[] taglist)
-		{
-			foreach(var tag in taglist)
-			{
-				if(!tags.ContainsKey(tag)) continue;
-				foreach(var id in tags[tag])
-				{
-					remove(id);
-				}
-				tags.Remove(tag);
-			}
-		}
+        public void Add(Downloader downloader)
+        {
+            if (downloader.Info != null && pool.ContainsKey(downloader.Info.Id))
+                return;
+            pool.Add(downloader.Info.Id, downloader);
+            if (downloader.Info.Tag != null)
+            {
+                if (!tags.ContainsKey(downloader.Info.Tag))
+                    tags.Add(downloader.Info.Tag, new List<string>());
+                tags[downloader.Info.Tag].Add(downloader.Info.Id);
+            }
+        }
+        public void RemoveByTag(string[] taglist)
+        {
+            foreach (var tag in taglist)
+            {
+                if (!tags.ContainsKey(tag)) continue;
+                foreach (var id in tags[tag])
+                {
+                    remove(id);
+                }
+                tags.Remove(tag);
+            }
+        }
         public Downloader GetById(string id)
         { return pool.Values.FirstOrDefault(x => x.Id == id); }
         #endregion
         #region concurrency management
         void startSpin()
         {
-            if(!dt.IsEnabled)
+            if (!dt.IsEnabled)
             {
                 dt.Start();
-                MessageBus.Instance.Publish(new MsgSetBusy { On = true });
+                MessageBus.Instance.Publish(new MsgSetBusy(this,true));
             }
         }
         void endSpin()
         {
-            if(dt.IsEnabled)
+            if (dt.IsEnabled)
             {
                 dt.Stop();
-                MessageBus.Instance.Publish(new MsgSetBusy { On = false });
+                MessageBus.Instance.Publish(new MsgSetBusy(this,false));
 
             }
         }
-		//pick next item to download
-		bool isPicking;
+        //pick next item to download
+        bool isPicking;
         void pick()
         {
-			if(isPicking)
-				return;
-			isPicking = true;
-			var downloadingCount=pool.Count(x=>x.Value.State==EnumDownloadState.Downloading);
-            int priority=0;
+            if (isPicking)
+                return;
+            isPicking = true;
+            var downloadingCount = pool.Count(x => x.Value.State == EnumDownloadState.Downloading);
+            int priority = 0;
             if (downloadingCount > 0)
             {
                 priority = pool.Select(x => x.Value).
@@ -157,9 +158,9 @@ namespace Jean_Doe.Downloader
                     .Min(x => x.Info.Priority);
             }
             List<Downloader> waiters = pool.Values
-                .Where(x => x.State == EnumDownloadState.Waiting 
+                .Where(x => x.State == EnumDownloadState.Waiting
                     && x.CanDownload
-                    && x.Info.Priority>=priority)
+                    && x.Info.Priority >= priority)
                 .OrderByDescending(x => x.Info.Priority)
                 .ToList();
             if (waiters.Count > 0)
@@ -174,16 +175,16 @@ namespace Jean_Doe.Downloader
                     d.StartDownload();
                 }
             }
-			var completeList = pool.Values.Where(x => x.State >= EnumDownloadState.Processing).ToList();
-			foreach(var item in completeList)
-			{
-				remove(item.Info.Id);
-			}
+            var completeList = pool.Values.Where(x => x.State >= EnumDownloadState.Processing).ToList();
+            foreach (var item in completeList)
+            {
+                remove(item.Info.Id);
+            }
             if (downloadingCount == 0 && waiters.Count == 0)
             {
                 endSpin();
             }
-			isPicking = false;
+            isPicking = false;
         }
         #endregion
     }

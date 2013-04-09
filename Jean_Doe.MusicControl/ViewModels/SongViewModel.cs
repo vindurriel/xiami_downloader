@@ -44,7 +44,7 @@ namespace Jean_Doe.MusicControl
         public string UrlArt { get { return song.UrlArt; } }
         public string UrlLrc { get { return song.UrlLrc; } set { song.UrlLrc = value; } }
         public int TrackNo { get { return song.TrackNo; } set { song.TrackNo = value; Notify("TrackNo"); } }
-
+        string lyric = null;
 
         private string status;
         public string Status
@@ -82,8 +82,9 @@ namespace Jean_Doe.MusicControl
         public SongViewModel(Song song)
             : base(song)
         {
-            typecolor="#d20101";
             this.song = song;
+            typecolor = "#d20101";
+            ImageSource = "/Jean_Doe.MusicControl;component/Resources/artist.png";
             var art = System.IO.Path.Combine(Global.BasePath, "cache", AlbumId + ".art");
             if (File.Exists(art))
                 ImageSource = art;                

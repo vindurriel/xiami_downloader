@@ -41,21 +41,24 @@ namespace Jean_Doe.Common
         {
             timer.Tick += timer_Tick;
         }
-
+        public static  void Next()
+        {
+            var msg = new MsgRequestNextSong();
+            Artwork.MessageBus.MessageBus.Instance.Publish(msg);
+            if (!string.IsNullOrEmpty(msg.Next))
+                forcePlay(msg.Next, msg.Id);
+        }
 
         static void timer_Tick(object sender, EventArgs e)
         {
             if (waveStream.Length<=waveStream.Position)
             {
-                var msg=new MsgRequestNextSong();
-                Artwork.MessageBus.MessageBus.Instance.Publish(msg);
-                if (!string.IsNullOrEmpty(msg.Next))
-                    Next(msg.Next,msg.Id);
+                Next();
             }
             if (TimeChanged != null && waveStream!=null)
                 TimeChanged(null, new TimeChangedEventArgs {Current = waveStream.CurrentTime });
         }
-        public static void Next(string filepath,string id)
+        public static void forcePlay(string filepath,string id)
         {
             if (!System.IO.File.Exists(filepath))
                 return;

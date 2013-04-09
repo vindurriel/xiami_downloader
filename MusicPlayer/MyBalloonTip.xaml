@@ -1,12 +1,94 @@
-﻿<UserControl
-  x:Class="MusicPlayer.MyBalloonTip"
-  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    x:Name="me"
-    Opacity="0"
-  xmlns:tb="http://www.hardcodet.net/taskbar">
+﻿<UserControl x:Class="MusicPlayer.MyBalloonTip"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Name="me" Opacity="0" xmlns:tb="http://www.hardcodet.net/taskbar" FontFamily="/xiami;component/Resources/#Soho Gothic Pro Light">
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="bool2vis"/>
+        <Style TargetType="TextBlock" x:Key="glyph">
+            <Setter Property="FontFamily" Value="Segoe UI Symbol" />
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+        <BooleanToVisibilityConverter x:Key="bool2vis" />
+        <SolidColorBrush x:Key="AppBarItemForegroundThemeBrush">White</SolidColorBrush>
+        <SolidColorBrush x:Key="AppBarItemBackgroundThemeBrush">#01000000</SolidColorBrush>
+        <SolidColorBrush x:Key="AppBarItemPointerOverForegroundThemeBrush">White</SolidColorBrush>
+        <SolidColorBrush x:Key="AppBarItemPointerOverBackgroundThemeBrush">#333</SolidColorBrush>
+        <SolidColorBrush x:Key="AppBarItemPressedForegroundThemeBrush">White</SolidColorBrush>
+        <SolidColorBrush x:Key="AppBarItemPressedBackgroundThemeBrush">Black</SolidColorBrush>
+        <SolidColorBrush x:Key="AppBarItemDisabledForegroundThemeBrush">#555</SolidColorBrush>
+        <SolidColorBrush x:Key="AppBarItemDisabledBackgroundThemeBrush">Transparent</SolidColorBrush>
+        <Color x:Key="co">Black</Color>
+        <Style x:Key="AppBarButtonStyle" TargetType="ButtonBase">
+            <Setter Property="Foreground" Value="{StaticResource AppBarItemForegroundThemeBrush}" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="FontFamily" Value="Segoe UI Symbol" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="AutomationProperties.ItemType" Value="App Bar Button" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ButtonBase">
+                        <Grid x:Name="RootGrid" Width="50" Height="50" Background="Transparent">
+                            <StackPanel VerticalAlignment="Center">
+                                <Grid Width="40" Height="40" Margin="0" HorizontalAlignment="Center">
+                                    <TextBlock x:Name="BackgroundGlyph" Text="&#xE0A8;" FontFamily="Segoe UI Symbol" FontSize="53.333" Margin="-4,-19,0,0" Foreground="{StaticResource AppBarItemBackgroundThemeBrush}" />
+                                    <TextBlock x:Name="OutlineGlyph" Text="&#xE0A7;" FontFamily="Segoe UI Symbol" FontSize="53.333" Margin="-4,-19,0,0" />
+                                    <ContentPresenter x:Name="Content" HorizontalAlignment="Center" Margin="-1,-1,0,0" VerticalAlignment="Center" />
+                                </Grid>
+                                <TextBlock x:Name="TextLabel" Visibility="Collapsed" Text="{TemplateBinding AutomationProperties.Name}" Foreground="{StaticResource AppBarItemForegroundThemeBrush}" Margin="0,0,2,0" FontSize="12" TextAlignment="Center" Width="88" MaxHeight="32" TextTrimming="WordEllipsis" />
+                            </StackPanel>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundGlyph" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppBarItemPointerOverBackgroundThemeBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OutlineGlyph" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppBarItemPressedForegroundThemeBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundGlyph" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppBarItemPressedBackgroundThemeBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OutlineGlyph" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppBarItemDisabledForegroundThemeBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TextLabel" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppBarItemDisabledForegroundThemeBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="CheckStates">
+                                    <VisualState x:Name="Checked">
+                                        <Storyboard>
+                                            <DoubleAnimation Duration="0" To="0" Storyboard.TargetName="OutlineGlyph" Storyboard.TargetProperty="Opacity" />
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundGlyph" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppBarItemForegroundThemeBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundCheckedGlyph" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Content" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppBarItemPressedForegroundThemeBrush}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unchecked" />
+                                    <VisualState x:Name="Indeterminate" />
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style TargetType="TextBlock" x:Key="label_base">
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Left" />
@@ -15,50 +97,60 @@
             <Setter Property="TextTrimming" Value="WordEllipsis" />
         </Style>
         <Storyboard x:Key="FadeIn">
-            <DoubleAnimation  Storyboard.TargetName="me" Storyboard.TargetProperty="Opacity" EasingFunction="{DynamicResource easeFunc}" 
-                              To="1" 
-                              Duration="0:0:0.2"/>
+            <DoubleAnimation Storyboard.TargetName="me" Storyboard.TargetProperty="Opacity" EasingFunction="{DynamicResource easeFunc}" To="1" Duration="0:0:0.2" />
         </Storyboard>
         <Storyboard x:Key="FadeBack">
-            <DoubleAnimation  Storyboard.TargetName="me" Storyboard.TargetProperty="Opacity" EasingFunction="{DynamicResource easeFunc}" 
-                              To="1" 
-                              Duration="0:0:0.2"/>
+            <DoubleAnimation Storyboard.TargetName="me" Storyboard.TargetProperty="Opacity" EasingFunction="{DynamicResource easeFunc}" To="1" Duration="0:0:0.2" />
         </Storyboard>
-        <Storyboard x:Key="FadeOut" Completed="OnFadeOutCompleted" >
-            <DoubleAnimation  Storyboard.TargetName="me" Storyboard.TargetProperty="Opacity" EasingFunction="{DynamicResource easeFunc}" 
-                              To="0" 
-                              Duration="0:0:0.2"/>
+        <Storyboard x:Key="FadeOut" Completed="OnFadeOutCompleted">
+            <DoubleAnimation Storyboard.TargetName="me" Storyboard.TargetProperty="Opacity" EasingFunction="{DynamicResource easeFunc}" To="0" Duration="0:0:0.2" />
         </Storyboard>
     </UserControl.Resources>
     <UserControl.Triggers>
         <EventTrigger RoutedEvent="tb:TaskbarIcon.BalloonShowing">
-            <BeginStoryboard Storyboard="{StaticResource FadeIn}" x:Name="FadeIn_BeginStoryboard"/>
+            <BeginStoryboard Storyboard="{StaticResource FadeIn}" x:Name="FadeIn_BeginStoryboard" />
         </EventTrigger>
         <EventTrigger RoutedEvent="Mouse.MouseEnter">
-            <StopStoryboard BeginStoryboardName="FadeIn_BeginStoryboard"/>
-            <BeginStoryboard x:Name="FadeBack_BeginStoryboard1" Storyboard="{StaticResource FadeBack}"/>
+            <StopStoryboard BeginStoryboardName="FadeIn_BeginStoryboard" />
+            <BeginStoryboard x:Name="FadeBack_BeginStoryboard1" Storyboard="{StaticResource FadeBack}" />
         </EventTrigger>
         <EventTrigger RoutedEvent="tb:TaskbarIcon.BalloonClosing">
-            <BeginStoryboard Storyboard="{StaticResource FadeOut}" x:Name="FadeOut_BeginStoryboard"/>
+            <BeginStoryboard Storyboard="{StaticResource FadeOut}" x:Name="FadeOut_BeginStoryboard" />
         </EventTrigger>
     </UserControl.Triggers>
     <Grid x:Name="grid" Background="{Binding LogoColor}">
-        <Grid Width="220" Height="70" Margin="15">
+        <Grid Width="220" Height="80" Margin="15,15,15,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Image IsHitTestVisible="False" Width="60" Height="60"  
-                        Source="{Binding ImageSource}"
-                        Stretch="Uniform" VerticalAlignment="Top"/>
-            <StackPanel IsHitTestVisible="False" Grid.Column="1" VerticalAlignment="Top" Margin="10,0">
-                <TextBlock Text="{Binding Name}" FontSize="18"  Style="{DynamicResource label_base}"/>
+            <Image IsHitTestVisible="False" Width="60" Height="60" Source="{Binding ImageSource}" Stretch="Uniform" VerticalAlignment="Top" />
+            <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10,0">
+                <TextBlock Text="{Binding Name}" FontSize="18" Style="{DynamicResource label_base}" />
                 <TextBlock Style="{DynamicResource label_base}"   Text="{Binding ArtistName}" />
-                <TextBlock Style="{DynamicResource label_base}"   Text="{Binding AlbumName}" />
             </StackPanel>
+            <DockPanel 
+                Margin="0,0,-15,0"
+                LastChildFill="False" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                <DockPanel.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource AppBarButtonStyle}">
+                        <Setter Property="Visibility" Value="{Binding IsMouseOver,ElementName=grid,Converter={StaticResource bool2vis}}" />
+                    </Style>
+                    <Style TargetType="Viewbox">
+                        <Setter Property="Width" Value="35" />
+                        <Setter Property="Height" Value="35" />
+                    </Style>
+                </DockPanel.Resources>
+                <Viewbox>
+                    <Button x:Name="btn_play" Content="&#xE103;" Click="btn_play_click" />
+                </Viewbox>
+                <Viewbox>
+                    <Button x:Name="btn_next" Content="&#xE101;" Click="btn_next_click" />
+                </Viewbox>
+                <Viewbox>
+                    <Button x:Name="btn_close" Click="imgClose_MouseDown" Content="&#xE10a;" />
+                </Viewbox>
+            </DockPanel>
         </Grid>
-        <TextBlock x:Name="btn_close" Visibility="Hidden" MouseLeftButtonUp="imgClose_MouseDown" Text="&#xE10a;" FontFamily="Segoe UI Symbol" Foreground="White" FontSize="16" Margin="0,5,5,0"
-                   VerticalAlignment="Top"
-                   HorizontalAlignment="Right"/>
     </Grid>
 </UserControl>

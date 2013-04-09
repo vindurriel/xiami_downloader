@@ -28,7 +28,7 @@ namespace Jean_Doe.MusicControl
         }
         public static string GetAverageColor(string path)
         {
-            if (string.IsNullOrEmpty(path)) return DefaultColor;
+            if (string.IsNullOrEmpty(path) || path.StartsWith("/")) return DefaultColor;
             if (!dic.ContainsKey(path))
             {
                 Bitmap bmp = new Bitmap(1, 1);

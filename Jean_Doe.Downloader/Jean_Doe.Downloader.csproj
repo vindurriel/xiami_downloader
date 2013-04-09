@@ -57,9 +57,14 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Messages\MsgDownloadProgressChanged.cs" />
     <Compile Include="Messages\MsgDownloadStateChanged.cs" />
-    <Compile Include="Messages\MsgSetBusy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResumableDownloader.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Jean_Doe.Common\Jean_Doe.Common.csproj">
+      <Project>{16bfccc4-6a14-41c7-a16a-66a744e4d004}</Project>
+      <Name>Jean_Doe.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -13,8 +13,8 @@ namespace Jean_Doe.MusicControl
         {
             artist = a;
             ImageSource = "/Jean_Doe.MusicControl;component/Resources/artist.png";
+            typecolor = "#78a674";
         }
-        public string TypeColor { get { return "#78a674"; } }
         public string ArtistName { get { return artist.AlbumCount; } }
         public string AlbumName { get { return artist.Description; } }
         public string ArtistId

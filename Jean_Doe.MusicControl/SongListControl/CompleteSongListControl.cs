@@ -112,6 +112,7 @@ namespace Jean_Doe.MusicControl
                         return false;
                     }),
                     new CharmAction("正在播放",this.btn_show_Click,isNowPlayingNotSelected),  
+                    new CharmAction("查看歌词",this.btn_lrc_Click,(s)=>{return IsOnlyType<SongViewModel>(s) && (s as SongListControl).SelectedSongs.First().HasLrc;}),  
                     new CharmAction("下一首",this.btn_next_Click,isNowPlayingSelected),    
                     new CharmAction("查看专辑歌曲",link_album,IsOnlyType<IHasAlbum>),
                     new CharmAction("查看歌手歌曲",link_artist,IsOnlyType<IHasArtist>),
@@ -124,6 +125,7 @@ namespace Jean_Doe.MusicControl
                     new CharmAction("删除",this.btn_remove_complete_Click,defaultActionValidate),
                 };
         }
+
         bool isNowPlayingSelected(object s)
         {
             var list = s as CompleteSongListControl;
@@ -139,7 +141,12 @@ namespace Jean_Doe.MusicControl
             var song = list.SelectedSongs.FirstOrDefault();
             return !Object.ReferenceEquals(list.NowPlaying, song);
         }
-
+        void btn_lrc_Click(object sender, RoutedEventArgs e)
+        {
+            var song=this.SelectedSongs.First();
+            var lrcPath = Path.Combine(Global.BasePath, "cache", song.Id + ".lrc");
+            RunProgramHelper.RunProgram("notepad.exe", lrcPath);
+        }
 
         void btn_show_Click(object sender, RoutedEventArgs e)
         {
@@ -251,11 +258,7 @@ namespace Jean_Doe.MusicControl
         }
         void btn_next_Click(object sender, RoutedEventArgs e)
         {
-            var msg = new MsgRequestNextSong();
-            Handle(msg);
-            if (msg.Next == null)
-                return;
-            Mp3Player.Next(msg.Next, msg.Id);
+            Mp3Player.Next();
         }
     }
 }

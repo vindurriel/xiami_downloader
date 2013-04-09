@@ -3,6 +3,7 @@ using Jean_Doe.MusicControl;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -45,18 +46,17 @@ namespace MusicPlayer
             actions.Add(new CharmAction("保存", this.btn_save_config_Click, (s) => { return (s as ConfigPage).IsDirty; }));
         }
 
-       
-
         private async void btn_xiami_login_Click(object sender, RoutedEventArgs e)
         {
+            Artwork.MessageBus.MessageBus.Instance.Publish(new MsgSetBusy (this,true));
             await XiamiClient.GetDefault().Login();
+            Artwork.MessageBus.MessageBus.Instance.Publish(new MsgSetBusy (this,false));
         }
 
         void pop_skin_Opened(object sender, EventArgs e)
         {
             color_colorskin.SelectedColorChanged -= color_colorskin_SelectedColorChanged;
             color_colorskin.SelectedColorChanged += color_colorskin_SelectedColorChanged;
-
         }
 
         void color_colorskin_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color> e)
@@ -125,7 +125,7 @@ namespace MusicPlayer
                             tg.IsOn = value == "1";
                         break;
                     case EnumConfigControlType.color:
-                        var cp = x as   ColorPicker.ColorPicker ;
+                        var cp = x as ColorPicker.ColorPicker;
                         if (cp != null)
                             try
                             {
@@ -181,7 +181,7 @@ namespace MusicPlayer
                             value = tg.IsOn == true ? "1" : "0";
                         break;
                     case EnumConfigControlType.color:
-                        var cp = x as ColorPicker.ColorPicker ;
+                        var cp = x as ColorPicker.ColorPicker;
                         if (cp != null)
                             value = cp.SelectedColor.ToString();
                         break;

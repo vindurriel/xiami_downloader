@@ -51,7 +51,7 @@ namespace Jean_Doe.MusicControl
         {
             var item = message.Item as SongViewModel;
             if(item == null) return;
-            if(item.Done)
+            if(item.HasMp3)
             {
                 Remove(item);
                 return;

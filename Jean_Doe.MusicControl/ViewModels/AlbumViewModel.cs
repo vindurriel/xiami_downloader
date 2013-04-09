@@ -12,10 +12,10 @@ namespace Jean_Doe.MusicControl
         {
             album = a;
             ImageSource = "/Jean_Doe.MusicControl;component/Resources/album.png";
+            typecolor = "#c3b775";
         }
         public string AlbumName { get { return album.Description; } }
         public string ArtistName { get { return album.ArtistName; } }
-        public string TypeColor { get { return "#c3b775"; } }
 
         public string AlbumId
         {

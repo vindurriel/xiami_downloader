@@ -243,7 +243,8 @@
                 		IsHitTestVisible="false">
                         <DockPanel>
                             <Slider DockPanel.Dock="Top"  Background="{DynamicResource darkBrush}" Foreground="{DynamicResource skinBrush}" Grid.Row="1" x:Name="slider" Margin="-30,-40,-30,20" VerticalAlignment="Top"/>
-                            <controls:CompleteSongListControl x:Name="list_complete" /> 
+                            <controls:LyricControl DockPanel.Dock="Bottom"  Height="400"/>
+                            <controls:CompleteSongListControl x:Name="list_complete" />
                         </DockPanel>
                     </Grid>
                     <Grid x:Name="page4"

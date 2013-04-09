@@ -14,18 +14,21 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Jean_Doe.Common;
+using Artwork.MessageBus;
+using Artwork.MessageBus.Interfaces;
 
 namespace Jean_Doe.MusicControl
 {
     /// <summary>
     /// Interaction logic for ProgressBar.xaml
     /// </summary>
-    public partial class ProgressBar
+    public partial class ProgressBar : IHandle<MsgSetBusy>
     {
         public ProgressBar()
         {
             InitializeComponent();
             this.Loaded += ProgressBar_Loaded;
+            MessageBus.Instance.Subscribe(this);
         }
         Storyboard story;
         void ProgressBar_Loaded(object sender, RoutedEventArgs e)
@@ -33,15 +36,15 @@ namespace Jean_Doe.MusicControl
             story = pb.Template.FindName("story", pb) as Storyboard;
             pb.IsIndeterminate = IsIndeterminate;
         }
-        
-        public void StopSpin()
+
+        void stopSpin()
         {
             UIHelper.RunOnUI(new Action(() =>
             {
                 IsIndeterminate = false;
             }));
         }
-        public void StartSpin()
+        void startSpin()
         {
             UIHelper.RunOnUI(new Action(() =>
             {
@@ -91,6 +94,19 @@ namespace Jean_Doe.MusicControl
 
 
         #endregion
-
+        public void Handle(MsgSetBusy message)
+        {
+            if (message.On)
+            {
+                counter.Add(message.Sender);
+            }
+            else
+                counter.Remove(message.Sender);
+            if (counter.Count == 1)
+                startSpin();
+            else if (counter.Count == 0)
+                stopSpin();
+        }
+        HashSet<object> counter = new HashSet<object>();
     }
 }

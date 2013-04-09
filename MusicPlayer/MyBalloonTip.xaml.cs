@@ -1,4 +1,5 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
+using Jean_Doe.Common;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -45,12 +46,14 @@ namespace MusicPlayer
             //(makes things too complicated for the sample)
 
             //the tray icon assigned this attached property to simplify access
-            btn_close.Visibility = Visibility.Visible;
+            //btn_close.Visibility = Visibility.Visible;
+            //btn_next.Visibility = Visibility.Visible;
+            //btn_play.Visibility = Visibility.Visible;
             TaskBarIcon.ResetBalloonCloseTimer();
         }
         private void grid_MouseLeave_1(object sender, MouseEventArgs e)
         {
-            btn_close.Visibility = Visibility.Hidden;
+            //btn_close.Visibility = Visibility.Hidden;
         }
         /// <summary>
         /// By subscribing to the <see cref="TaskbarIcon.BalloonClosingEvent"/>
@@ -66,9 +69,10 @@ namespace MusicPlayer
         /// Resolves the <see cref="TaskbarIcon"/> that displayed
         /// the balloon and requests a close action.
         /// </summary>
-        private void imgClose_MouseDown(object sender, MouseButtonEventArgs e)
+        private void imgClose_MouseDown(object sender, RoutedEventArgs e)
         {
             //the tray icon assigned this attached property to simplify access
+            e.Handled = true;
             TaskBarIcon.CloseBalloon();
         }
         TaskbarIcon _parent;
@@ -96,7 +100,15 @@ namespace MusicPlayer
             Popup pp = (Popup)Parent;
             pp.IsOpen = false;
         }
-
+        private void btn_next_click(object sender, RoutedEventArgs e)
+        {
+            Mp3Player.Next();
+        }
+        private void btn_play_click(object sender, RoutedEventArgs e)
+        {
+            (sender as Button).Content = "\xE102";
+            Mp3Player.PauseResume();
+        }
 
     }
 }

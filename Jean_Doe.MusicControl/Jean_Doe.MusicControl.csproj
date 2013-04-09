@@ -66,6 +66,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="LyricControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SearchControl\SearchControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -124,6 +128,10 @@
     </Compile>
     <Compile Include="Downloaders\DownloaderLrc.cs" />
     <Compile Include="Downloaders\DownloaderMp3.cs" />
+    <Compile Include="LyricControl.xaml.cs">
+      <DependentUpon>LyricControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LyricViewModel.cs" />
     <Compile Include="Util\AfterDownloadManager.cs" />
     <Compile Include="Util\ImageHelper.cs" />
     <Compile Include="Util\SongViewModelExtentions.cs" />

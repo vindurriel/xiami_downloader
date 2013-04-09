@@ -21,8 +21,7 @@ namespace MusicPlayer
         INotifyPropertyChanged,
         IHandle<MsgSearchStateChanged>,
         IHandle<string>,
-        IHandle<MsgChangeWindowState>,
-        IHandle<MsgSetBusy>
+        IHandle<MsgChangeWindowState>
     {
         TaskbarIcon trayIcon;
         FrameworkElement lastPage;
@@ -65,6 +64,8 @@ namespace MusicPlayer
         }
         public MainWindow()
         {
+            var list = new double[] { 1, 3, 5, 7, 9, 10 };
+            //int i = LyricControl.binarySearch(list, 5.2, 0, list.Length-1);
             Global.LoadSettings();
             Global.ListenToEvent("EnableMagnet", SetEnableMagnet);
             Global.ListenToEvent("ColorSkin", SetColorSkin);
@@ -80,7 +81,7 @@ namespace MusicPlayer
             ActionBarService.SetActionBar(this.charmBar);
             Artwork.DataBus.DataBus.Set("list_download", list_download);
             trayIcon = new TaskbarIcon();
-            var iconStream = App.GetResourceStream(new Uri("pack://application:,,,/Resources/icon.ico")).Stream;
+            var iconStream = App.GetResourceStream(new Uri("pack://application:,,/Resources/icon.ico")).Stream;
             trayIcon.Visibility = Visibility.Visible;
             trayIcon.TrayMouseDoubleClick += OnTrayIconClick;
             trayIcon.Icon = new System.Drawing.Icon(iconStream);
@@ -92,7 +93,7 @@ namespace MusicPlayer
             if (Global.AppSettings["ShowNowPlaying"] == "0") return;
             var now = list_complete.NowPlaying;
             balloonTip = new MyBalloonTip();
-            balloonTip.ViewModel=now;
+            balloonTip.ViewModel = now;
             trayIcon.ShowCustomBalloon(balloonTip, PopupAnimation.Slide, 3000);
         }
         MyBalloonTip balloonTip;
@@ -203,19 +204,19 @@ namespace MusicPlayer
             switch (message.State)
             {
                 case EnumSearchState.Started:
-                    UIHelper.RunOnUI(new Action(() =>
+                    UIHelper.RunOnUI(() =>
                     {
                         Page = 2;
-                        busyIndicator.StartSpin();
-                    }));
+                    });
+                    MessageBus.Instance.Publish(new MsgSetBusy(this,true));
                     break;
                 case EnumSearchState.Cancelling:
                 case EnumSearchState.Finished:
-                    UIHelper.RunOnUI(new Action(() =>
+                    UIHelper.RunOnUI(() =>
                     {
                         Page = 2;
-                        busyIndicator.StopSpin();
-                    }));
+                    });
+                    MessageBus.Instance.Publish(new MsgSetBusy(this,false));
                     break;
                 default:
                     break;
@@ -254,14 +255,6 @@ namespace MusicPlayer
                 default:
                     break;
             }
-        }
-
-        public void Handle(MsgSetBusy message)
-        {
-            if (message.On)
-                busyIndicator.StartSpin();
-            else
-                busyIndicator.StopSpin();
         }
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
