@@ -21,35 +21,40 @@ namespace Jean_Doe.MusicControl
         bool isworking;
         void OnMp3PlayerTimeChanged(object sender, Mp3Player.TimeChangedEventArgs e)
         {
-            if (timelist == null ||timelist.Length==0) return;
+            if (timelist == null || timelist.Length == 0) return;
             var t = e.Current;
             if (isworking) return;
             isworking = true;
-            var i = binarySearch( timelist,t.TotalMilliseconds, 0, timelist.Length-1);
+            var i = binarySearch(timelist, t.TotalMilliseconds, 0, timelist.Length - 1);
             isworking = false;
-            UIHelper.RunOnUI(() => {
+            if (i == -1) return;
+            UIHelper.RunOnUI(() =>
+            {
                 SelectedIndex = i;
-                ScrollIntoView(SelectedItem);
+                this.ScrollToCenterOfView(SelectedItem);
             });
         }
-        public static int binarySearch(double[] list, double t,int l,int h)
+        public static int binarySearch(double[] list, double t, int l, int h)
         {
-            if (l >= h)
-            {
-                if (list[h] > t) return h- 1;
+            if (list.Length == 0) return -1;
+            if (list[0] > t) return -1;
+            if (list[0] == t) return 0;
+            if (list[list.Length - 1] <= t) return list.Length - 1;
+            if (h - l == 1)
                 return l;
+            if (h == l)
+            {
+                if (list[h] > t)
+                    return h - 1;
+                return h;
             }
             int m = (l + h) / 2;
-            double cur=list[m];
-            if (cur == t)
-                return m;
+            double cur = list[m];
             if (cur > t)
-            {
-                if (m == 0)
-                    return 0;
                 return binarySearch(list, t, l, m - 1);
-            }
-            return binarySearch(list,t, m+1, h);
+            if (cur < t)
+                return binarySearch(list, t, m + 1, h);
+            return m;
         }
 
         ObservableCollection<LyricViewModel> source = new ObservableCollection<LyricViewModel>();

@@ -102,10 +102,6 @@
                     <TextBlock Style="{StaticResource label_base}"   Text="{Binding ArtistName}" />
                     <TextBlock Style="{StaticResource label_base}"   Text="{Binding AlbumName}" />
                 </StackPanel>
-                <TextBlock 
-                    Visibility="{Binding HasLrc,Converter={StaticResource bool2vis}}"
-                    Grid.Column="1" 
-                    Text="&#xE001;" FontFamily="Segoe UI Symbol" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="15" Foreground="White" />
             </Grid>
         </DataTemplate>
         <SolidColorBrush Color='{DynamicResource skinColor}' Opacity="0.2" x:Key='skinBrushFade' />

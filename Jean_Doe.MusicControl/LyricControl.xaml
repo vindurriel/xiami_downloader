@@ -51,7 +51,17 @@
     </ListView.ItemContainerStyle>
     <ListView.ItemTemplate>
         <DataTemplate>
-            <TextBlock Text="{Binding Text}" />
+            <DockPanel>
+                <TextBlock>
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0:D2}:{1:D2}">
+                            <Binding Path="Time.Minutes" />
+                            <Binding Path="Time.Seconds" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBlock Margin="10,0" Text="{Binding Text}" />
+            </DockPanel>
         </DataTemplate>
     </ListView.ItemTemplate>
 </ListView>

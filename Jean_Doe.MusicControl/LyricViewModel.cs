@@ -15,22 +15,47 @@ namespace Jean_Doe.MusicControl
             var res = new List<LyricViewModel>();
             try
             {
-                foreach (var line in File.ReadAllLines(file))
-                {
-                    var strings = line.Split("]".ToCharArray(), 2, StringSplitOptions.RemoveEmptyEntries);
-                    if (strings.Count() != 2) continue;
-                    var item = new LyricViewModel
+                var f = File.ReadAllText(file);
+                if (!f.Contains("]"))
+                    foreach (var line in f.Split("\r\n".ToCharArray(),StringSplitOptions.RemoveEmptyEntries))
                     {
-                        Time = TimeSpan.ParseExact(strings[0].Replace("[", ""), @"mm\:ss\.ff", null),
-                        Text = strings[1],
-                    };
-                    res.Add(item);
-                }
+                        var item = new LyricViewModel
+                        {
+                            Time = TimeSpan.FromDays(1),
+                            Text = line,
+                        };
+                        res.Add(item);
+                    }
+                else
+                    foreach (var line in f.Split("\r\n".ToCharArray(),StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        var strings = line.Split("]".ToCharArray(), 2, StringSplitOptions.RemoveEmptyEntries);
+                        if (strings.Count() != 2) continue;
+                        var t = TimeSpan.MaxValue;
+                        if(TimeSpan.TryParseExact(strings[0].Replace("[", ""), @"mm\:ss\.ff", null,out t))
+                        {
+                            var item = new LyricViewModel
+                            {
+                                Time = t,
+                                Text = strings[1],
+                            };
+                            res.Add(item);
+                        }
+                    }
             }
             catch (Exception e)
             {
             }
+            res.Sort(comparer);
             return res;
+        }
+        static LyricComparer comparer = new LyricComparer();
+    }
+    public class LyricComparer : IComparer<LyricViewModel>
+    {
+        public int Compare(LyricViewModel x, LyricViewModel y)
+        {
+            return TimeSpan.Compare(x.Time, y.Time);
         }
     }
 }

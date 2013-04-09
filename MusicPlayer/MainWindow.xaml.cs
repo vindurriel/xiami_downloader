@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
@@ -64,8 +65,6 @@ namespace MusicPlayer
         }
         public MainWindow()
         {
-            var list = new double[] { 1, 3, 5, 7, 9, 10 };
-            //int i = LyricControl.binarySearch(list, 5.2, 0, list.Length-1);
             Global.LoadSettings();
             Global.ListenToEvent("EnableMagnet", SetEnableMagnet);
             Global.ListenToEvent("ColorSkin", SetColorSkin);
@@ -80,16 +79,13 @@ namespace MusicPlayer
             new MusicSliderConnector(slider);
             ActionBarService.SetActionBar(this.charmBar);
             Artwork.DataBus.DataBus.Set("list_download", list_download);
-            trayIcon = new TaskbarIcon();
-            var iconStream = App.GetResourceStream(new Uri("pack://application:,,/Resources/icon.ico")).Stream;
-            trayIcon.Visibility = Visibility.Visible;
-            trayIcon.TrayMouseDoubleClick += OnTrayIconClick;
-            trayIcon.Icon = new System.Drawing.Icon(iconStream);
+
             Mp3Player.SongChanged += OnMp3PlayerSongChanged;
         }
 
         void OnMp3PlayerSongChanged(object sender, Mp3Player.SongChangedEventArgs e)
         {
+            if (trayIcon == null) return;
             if (Global.AppSettings["ShowNowPlaying"] == "0") return;
             var now = list_complete.NowPlaying;
             balloonTip = new MyBalloonTip();
@@ -112,6 +108,20 @@ namespace MusicPlayer
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             initActionBar();
+            var h = new WindowInteropHelper(this);
+            h.EnsureHandle();
+            try
+            {
+                trayIcon = new TaskbarIcon();
+                var iconStream = App.GetResourceStream(new Uri("pack://application:,,/Resources/icon.ico")).Stream;
+                trayIcon.Visibility = Visibility.Visible;
+                trayIcon.TrayMouseDoubleClick += OnTrayIconClick;
+                trayIcon.Icon = new System.Drawing.Icon(iconStream);
+            }
+            catch (Exception ex)
+            {
+            }
+            
             //tag control events
             foreach (var item in headers.Children)
             {
