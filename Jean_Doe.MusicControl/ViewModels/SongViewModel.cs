@@ -84,7 +84,7 @@ namespace Jean_Doe.MusicControl
         {
             this.song = song;
             typecolor = "#d20101";
-            ImageSource = "/Jean_Doe.MusicControl;component/Resources/artist.png";
+            ImageSource = "/Jean_Doe.MusicControl;component/Resources/nocover.png";
             var art = System.IO.Path.Combine(Global.BasePath, "cache", AlbumId + ".art");
             if (File.Exists(art))
                 ImageSource = art;                

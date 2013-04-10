@@ -24,20 +24,20 @@ namespace Jean_Doe.Common
         }
         public async Task Fav_Song(string songId)
         {
-            await call_xiami_api("Library.addSong", "id=" + songId, "grade=5");
+            await Call_xiami_api("Library.addSong", "id=" + songId, "grade=5");
         }
         public async Task Unfav_Song(string songId)
         {
-            await call_xiami_api("Library.removeSong", "id=" + songId);
+            await Call_xiami_api("Library.removeSong", "id=" + songId);
         }
-        async Task<dynamic> call_xiami_api(string methodName, params string[] args)
+        public async Task<dynamic> Call_xiami_api(string methodName, params string[] args)
         {
             var p = new List<string>() { "api_get", methodName };
             if (args != null)
                 p.AddRange(args);
             string res = await RunProgramHelper.RunProgramGetOutput(ApiPath, p.ToArray());
             var json = res.ToDynamicObject();
-            if (!(json is string) && json.error != null)
+            if (!(json is string) && !(json is Array) && json.error != null)
             {
                 MessageBox.Show(json.error.ToString());
                 return null;
@@ -46,14 +46,15 @@ namespace Jean_Doe.Common
         }
         public async Task<dynamic> GetDailyRecommend()
         {
-            return await call_xiami_api("Recommend.DailySongs");
+            dynamic json = await Call_xiami_api("Recommend.DailySongs"); //DailySongs
+            return json;
         }
         public async Task<dynamic> GetUserMusic(string t, int page)
         {
             if (t == "collect")
-                return await call_xiami_api("Collects.getLibCollects", string.Format("page={0}", page));
+                return await Call_xiami_api("Collects.getLibCollects", string.Format("page={0}", page));
             var s = t[0].ToString().ToUpper() + t.Substring(1);
-            return await call_xiami_api(string.Format("Library.get{0}s", s), string.Format("page={0}", page));
+            return await Call_xiami_api(string.Format("Library.get{0}s", s), string.Format("page={0}", page));
         }
         public async Task Login()
         {
@@ -70,7 +71,7 @@ namespace Jean_Doe.Common
                 MessageBox.Show(json.error.ToString());
                 return;
             }
-            var r = await call_xiami_api("Members.showUser");
+            var r = await Call_xiami_api("Members.showUser");
             if (r.error != null)
             {
                 MessageBox.Show(r.error.ToString());
