@@ -16,14 +16,14 @@ namespace MusicPlayer
     {
         public string GroupName { get; set; }
         public string Key { get; set; }
-        public abstract string StrValue { get; set; }
+        public virtual string StrValue { get; set; }
         public string DisplayName { get; set; }
         public abstract FrameworkElement UI { get; }
-        public void Save()
+        public virtual void Save()
         {
             Global.AppSettings[Key] = StrValue;
         }
-        public void Load()
+        public virtual void Load()
         {
             StrValue = Global.AppSettings[Key];
         }
@@ -119,10 +119,10 @@ namespace MusicPlayer
         public ComboConfigItem(string g, string k, string n)
             : base(g, k, n)
         {
-            ui.ItemsSource= Global.ValueOptions[Key];
+            ui.ItemsSource = Global.ValueOptions[Key];
             ui.DisplayMemberPath = "Key";
             ui.SelectedValuePath = "Value";
-            
+
         }
         ComboBox ui = new ComboBox();
         public override FrameworkElement UI
@@ -176,5 +176,27 @@ namespace MusicPlayer
                 ui.SelectedColor = (Color)ColorConverter.ConvertFromString(value);
             }
         }
+    }
+
+    public class ButtonConfigItem : ConfigItem
+    {
+        public ButtonConfigItem(string g, string k, string n, Action<object, RoutedEventArgs> clickEvent)
+            : base(g, k, n)
+        {
+            this.DisplayName = null;
+            ui = new Button { Content = n };
+            ui.Click += (s, e) => { clickEvent(s, e); };
+        }
+        Button ui;
+        public override FrameworkElement UI
+        {
+            get { return ui; }
+        }
+        public override void Load()
+        {
+        }
+        public override void Save()
+        {
+        } 
     }
 }

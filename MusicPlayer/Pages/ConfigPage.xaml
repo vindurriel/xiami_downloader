@@ -14,17 +14,10 @@
             </ResourceDictionary.MergedDictionaries>
             <sys:Double x:Key="lineHeight">30</sys:Double>
             <Thickness x:Key="lineMargin">0,5</Thickness>
-            <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+            <Style TargetType="ListView" >
                 <Setter Property="Background" Value="#01000000" />
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Foreground" Value="{Binding Foreground,ElementName=me}" />
-            </Style>
-            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
-                <EventSetter Event="ComboBox.SelectionChanged" Handler="combo_SelectionChanged" />
-                <Setter Property="HorizontalContentAlignment" Value="Left" />
-                <Setter Property="HorizontalAlignment" Value="Left" />
-                <Setter Property="Margin" Value="{StaticResource lineMargin}" />
-                <Setter Property="Height" Value="{StaticResource lineHeight}" />
             </Style>
             <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
                 <EventSetter Event="TextBox.TextChanged" Handler="input_TextChanged" />
@@ -33,7 +26,6 @@
                 <Setter Property="HorizontalContentAlignment" Value="Left" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="HorizontalAlignment" Value="Left" />
-                <Setter Property="Margin" Value="{StaticResource lineMargin}" />
                 <Setter Property="Background" Value="#555" />
                 <Setter Property="Height" Value="{StaticResource lineHeight}" />
             </Style>
@@ -44,13 +36,11 @@
                 <Setter Property="HorizontalContentAlignment" Value="Left" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="HorizontalAlignment" Value="Left" />
-                <Setter Property="Margin" Value="{StaticResource lineMargin}" />
                 <Setter Property="Background" Value="#555" />
                 <Setter Property="Height" Value="{StaticResource lineHeight}" />
             </Style>
             <Style TargetType="controls:ToggleSwitch">
                 <EventSetter Event="IsOnChanged" Handler="toggle_changed" />
-                <Setter Property="Margin" Value="{StaticResource lineMargin}" />
                 <Setter Property="Height" Value="{StaticResource lineHeight}" />
                 <Setter Property="OnColor" Value="{DynamicResource skinBrush}" />
                 <Setter Property="OffColor" Value="{DynamicResource selectBrush}" />
@@ -59,43 +49,97 @@
             </Style>
             <Style TargetType="controls:ColorPicker">
                 <EventSetter Event="SelectedColorChanged" Handler="color_colorskin_SelectedColorChanged" />
+                <Setter Property="ShowRgbSliders" Value="False"/>
             </Style>
             <Style TargetType="TextBlock">
-                <Setter Property="Margin" Value="0,10,0,0" />
                 <Setter Property="FontSize" Value="15" />
                 <Setter Property="HorizontalAlignment" Value="Left" />
                 <Setter Property="VerticalAlignment" Value="Center" />
-            </Style>
-            <Style TargetType="Label">
-                <Setter Property="Margin" Value="{StaticResource lineMargin}" />
-                <Setter Property="Padding" Value="0,00,0,0" />
-                <Setter Property="Foreground" Value="{DynamicResource skinBrush}" />
-                <Setter Property="FontSize" Value="30" />
-                <Setter Property="HorizontalAlignment" Value="Left" />
-                <Setter Property="VerticalAlignment" Value="Center" />
-            </Style>
-            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                <Setter Property="Foreground" Value="{DynamicResource skinBrush}" />
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid x:Name="root">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <ListBox x:Name="list_groups"  ItemsSource="{Binding SourceGroup,ElementName=me}">
-        </ListBox>
-        <ListBox ItemsSource="{Binding SourceItem,ElementName=me}" Grid.Column="1" SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Auto">
-            <ListBox.ItemTemplate>
+        <ListView x:Name="list_groups" FontSize="20" ItemsSource="{Binding SourceGroup,ElementName=me}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="true">
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                    </Style.Triggers>
+                    <Setter Property="Padding" Value="20,10,50,10" />
+                    <Setter Property="Foreground" Value="#aaa" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                <Grid  x:Name="root">
+                                    <Border BorderBrush="White" BorderThickness="0,0,1,0"/>
+                                    <Path Opacity="0" Data="M 0,10 L 10,0 10,20 Z" Fill="White" x:Name="pressed" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                    <ContentPresenter  x:Name="content" Margin="{TemplateBinding Padding}" />
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup x:Name="SelectionStates">
+                                            <VisualState x:Name="Selected">
+                                                <Storyboard>
+                                                    <DoubleAnimation 
+                                                        Storyboard.TargetName="pressed" 
+                                                        Storyboard.TargetProperty="Opacity" 
+                                                        Duration="0:0:0.1" To="1"/>
+                                                </Storyboard>
+                                            </VisualState>
+                                            <VisualState x:Name="Unselected"/>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+        <ListView Margin="-3,0,0,0" ItemsSource="{Binding SourceItem,ElementName=me}" Grid.Column="1" SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="Padding" Value="20,10" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                <Border BorderBrush="White" BorderThickness="1,0,0,0">
+                                    <ContentPresenter  x:Name="content" Margin="{TemplateBinding Padding}" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
                 <DataTemplate>
-                    <DockPanel>
-                        <TextBlock Text="{Binding DisplayName}" Width="200" />
+                    <DockPanel LastChildFill="False">
+                        <DockPanel.Resources>
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="Foreground" Value="{DynamicResource skinBrush}" />
+                                <Setter Property="Padding" Value="10,5" />
+                            </Style>
+                            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                                <EventSetter Event="ComboBox.SelectionChanged" Handler="combo_SelectionChanged" />
+                                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                                <Setter Property="HorizontalAlignment" Value="Left" />
+                                <Setter Property="SelectedValuePath" Value="Value" />
+                                <Setter Property="DisplayMemberPath" Value="Key" />
+                                <Setter Property="Margin" Value="{StaticResource lineMargin}" />
+                                <Setter Property="Height" Value="{StaticResource lineHeight}" />
+                            </Style>
+                        </DockPanel.Resources>
+                        <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center"  Width="100" TextWrapping="Wrap" />
                         <ContentControl Content="{Binding UI}"/>
                     </DockPanel>
                 </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </UserControl>
 <!--<ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0">

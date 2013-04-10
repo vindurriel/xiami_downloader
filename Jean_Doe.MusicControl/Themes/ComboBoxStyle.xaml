@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib"
                     xmlns:my="clr-namespace:Jean_Doe.MusicControl"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
     <Style x:Key="combo_toggle" TargetType="{x:Type ToggleButton}">
         <Setter Property="MinWidth"
                 Value="0" />
@@ -79,7 +79,7 @@
         </Style.Triggers>
     </Style>
     <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">25</sys:Double>
-    <Style TargetType="ComboBox">
+    <Style TargetType="{x:Type ComboBox}">
         <Setter Property="FocusVisualStyle">
             <Setter.Value>
                 <Style>
@@ -107,10 +107,10 @@
                     <Setter Property="BorderThickness"
                             Value="0" />
                     <Setter Property="HorizontalContentAlignment"
-                            Value="{Binding HorizontalContentAlignment,RelativeSource={RelativeSource TemplatedParent}}" />
+                            Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource TemplatedParent}}" />
                     <Setter Property="Padding"
                             Value="2,5" />
-                    <Setter Property="Control.Template">
+                    <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ComboBoxItem}">
                                 <Border SnapsToDevicePixels="True"
@@ -214,6 +214,7 @@
                                         Padding="2">
                                     <ContentPresenter ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                                       Content="{TemplateBinding SelectionBoxItem}"
+                                                      ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                                                       ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
                                                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                       SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
@@ -227,8 +228,8 @@
                                           Margin="{TemplateBinding Padding}"
                                           MinWidth="0"
                                           MinHeight="0"
-                                          Width="Auto"></ToggleButton>
-                            <ListView Visibility="Hidden" ItemsSource="{Binding Items,RelativeSource={RelativeSource TemplatedParent}}">
+                                          Width="Auto"/>
+                            <ListView Visibility="Hidden" ItemsSource="{Binding Items, RelativeSource={RelativeSource TemplatedParent}}">
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <Grid/>
@@ -325,7 +326,7 @@
                                                PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}"
                                                Placement="Bottom">
                                             <Border x:Name="DropDownBorder"
-                                                    MinWidth="{Binding ActualWidth,ElementName=root}"
+                                                    MinWidth="{Binding ActualWidth, ElementName=root}"
                                                     BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
                                                     BorderThickness="1"
                                                     Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
@@ -355,8 +356,7 @@
                                                   Margin="{TemplateBinding Padding}"
                                                   MinWidth="0"
                                                   MinHeight="0"
-                                                  
-                                                  Width="Auto"></ToggleButton>
+                                                  Width="Auto"/>
                                     <DockPanel Margin="{TemplateBinding Padding}">
                                         <FrameworkElement DockPanel.Dock="Right"
                                                           Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
@@ -373,13 +373,6 @@
                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
                                             <TextBox.Style>
                                                 <Style TargetType="{x:Type TextBox}">
-                                                    <Style.Triggers>
-                                                        <Trigger Property="IsMouseOver"
-                                                                 Value="True">
-                                                            <Setter Property="Background"
-                                                                    Value="#888888" />
-                                                        </Trigger>
-                                                    </Style.Triggers>
                                                     <Setter Property="Background"
                                                             Value="#555" />
                                                     <Setter Property="OverridesDefaultStyle"
@@ -403,11 +396,18 @@
                                                             </ControlTemplate>
                                                         </Setter.Value>
                                                     </Setter>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver"
+                                                                 Value="True">
+                                                            <Setter Property="Background"
+                                                                    Value="#888888" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
                                                 </Style>
                                             </TextBox.Style>
                                         </TextBox>
                                     </DockPanel>
-                                    <ListView IsHitTestVisible="False"   Visibility="Hidden" ItemTemplate="{TemplateBinding ItemTemplate}"   ItemsSource="{Binding Items,RelativeSource={RelativeSource TemplatedParent}}">
+                                    <ListView IsHitTestVisible="False"   Visibility="Hidden" ItemTemplate="{TemplateBinding ItemTemplate}"   ItemsSource="{Binding Items, RelativeSource={RelativeSource TemplatedParent}}">
                                         <ListView.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <Grid/>
@@ -458,7 +458,6 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-   
     <!--<Style TargetType="ComboBox"
            x:Key="comboStyle"
            BasedOn="{StaticResource {x:Type ComboBox}}" />-->

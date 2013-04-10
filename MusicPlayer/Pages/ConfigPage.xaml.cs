@@ -25,34 +25,7 @@ namespace MusicPlayer
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
         #endregion
-        List<ConfigItem> Configs = new List<ConfigItem> { 
-            new InputConfigItem("下载","DownloadFolder","下载位置"),
-            new ComboConfigItem("下载","FolderPattern","目录名称规则"),
-            new ComboConfigItem("下载","SongnamePattern","歌曲名称规则"),
-            new ToggleConfigItem("外观","EnableMagnet","边界停靠"),
-            new ComboConfigItem("下载","MaxConnection","同时下载数量"),
-            new ColorConfigItem("外观","ColorSkin","主题颜色"),
-            new ComboConfigItem("播放","PlayNextMode","下一首模式"),
-            new InputConfigItem("虾米账户","xiami_username","用户名"),
-            new PasswordConfigItem("虾米账户","xiami_password","密码"),
-            new ToggleConfigItem("外观","ShowNowPlaying","显示正在播放"),
-            new ToggleConfigItem("外观","ShowLyric","显示歌词"),
-        };
-        static readonly Dictionary<string, EnumConfigControlType> map = new Dictionary<string, EnumConfigControlType>
-         {
-                {"DownloadFolder", EnumConfigControlType.label},
-                {"FolderPattern", EnumConfigControlType.combo},
-                {"SongnamePattern", EnumConfigControlType.combo},
-                {"EnableMagnet", EnumConfigControlType.toggle},
-                {"MaxConnection", EnumConfigControlType.combo},
-                {"ColorSkin", EnumConfigControlType.color},
-                {"ShowDetails", EnumConfigControlType.toggle},
-                {"PlayNextMode", EnumConfigControlType.combo},
-                {"xiami_username", EnumConfigControlType.input},
-                {"xiami_password", EnumConfigControlType.pass},
-                {"ShowNowPlaying", EnumConfigControlType.toggle},
-                {"ShowLyric", EnumConfigControlType.toggle},
-            };
+        List<ConfigItem> Configs;
         private ObservableCollection<string> sourceGroup = new ObservableCollection<string>();
 
         public ObservableCollection<string> SourceGroup
@@ -65,10 +38,24 @@ namespace MusicPlayer
         {
             get { return sourceItem; }
         }
-
         public ConfigPage()
         {
             InitializeComponent();
+            Configs = new List<ConfigItem>() { 
+                new LabelConfigItem("下载","DownloadFolder","下载位置"),
+                new ButtonConfigItem("下载","","浏览",btn_browse_Click),
+                new ComboConfigItem("下载","FolderPattern","目录名称规则"),
+                new ComboConfigItem("下载","SongnamePattern","歌曲名称规则"),
+                new ComboConfigItem("下载","MaxConnection","同时下载数量"),
+                new ToggleConfigItem("外观","EnableMagnet","边界停靠"),
+                new ColorConfigItem("外观","ColorSkin","主题颜色"),
+                new ToggleConfigItem("外观","ShowNowPlaying","显示正在播放"),
+                new ToggleConfigItem("外观","ShowLyric","显示歌词"),       
+                new ComboConfigItem("播放","PlayNextMode","下一首模式"),
+                new InputConfigItem("虾米账户","xiami_username","用户名"),
+                new PasswordConfigItem("虾米账户","xiami_password","密码"),
+                new ButtonConfigItem("虾米账户","","登录",btn_xiami_login_Click),
+            };
             Loaded += (s, e) => LoadConfig();
             foreach (var item in Configs.Select(x => x.GroupName).Distinct())
             {
@@ -104,9 +91,7 @@ namespace MusicPlayer
 
         void color_colorskin_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color> e)
         {
-            //if (color_colorskin.SelectedColor != colorSkin)
-            //    IsDirty = true;
-            //colorSkin = color_colorskin.SelectedColor;
+            IsDirty = e.NewValue.ToString() != Global.AppSettings["ColorSkin"];
         }
         Color colorSkin;
 
@@ -155,17 +140,18 @@ namespace MusicPlayer
         }
         private void btn_browse_Click(object sender, RoutedEventArgs e)
         {
-            //var dialog = new System.Windows.Forms.FolderBrowserDialog
-            //                 {
-            //                     ShowNewFolderButton = true,
-            //                     RootFolder = Environment.SpecialFolder.MyComputer,
-            //                     SelectedPath = label_downloadfolder.Text
-            //                 };
-            //var res = dialog.ShowDialog();
-            //if (res == System.Windows.Forms.DialogResult.OK)
-            //{
-            //    label_downloadfolder.Text = dialog.SelectedPath;
-            //}
+            var ui = Configs.FirstOrDefault(x => x.Key == "DownloadFolder").UI as TextBlock;
+            var dialog = new System.Windows.Forms.FolderBrowserDialog
+                             {
+                                 ShowNewFolderButton = true,
+                                 RootFolder = Environment.SpecialFolder.MyComputer,
+                                 SelectedPath = ui.Text
+                             };
+            var res = dialog.ShowDialog();
+            if (res == System.Windows.Forms.DialogResult.OK)
+            {
+                ui.Text = dialog.SelectedPath;
+            }
         }
         private static void ComboSelect(ComboBox c, string s)
         {
@@ -205,11 +191,6 @@ namespace MusicPlayer
         {
             get { return validateImage; }
             set { validateImage = value; Notify("ValidateImage"); }
-        }
-        private async void btn_login_Click(object sender, RoutedEventArgs e)
-        {
-            await XiamiClient.GetDefault().Login();
-
         }
     }
 }

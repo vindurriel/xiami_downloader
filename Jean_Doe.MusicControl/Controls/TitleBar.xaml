@@ -10,7 +10,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/TouchButtonStyle.xaml" />
                 <ResourceDictionary>
-                 
                     <Style x:Key="glyph" TargetType="TextBlock">
                         <Setter Property="HorizontalAlignment" Value="Stretch"/>
                         <Setter Property="VerticalAlignment" Value="Stretch"/>
@@ -24,19 +23,6 @@
                 Value="Transparent" />
                         <Setter Property="Foreground"
                 Value="{DynamicResource darkBrush}" /> 
-                    </Style>
-                    <DropShadowEffect x:Key="shadow"
-                                      Color="Black"
-                                      BlurRadius="3"
-                                      Direction="-45"
-                                      ShadowDepth="0" />
-                    <Style TargetType="Image">
-                        <Setter Property="Width"
-                                Value="15" />
-                        <Setter Property="Height"
-                                Value="15" />
-                        <Setter Property="Stretch"
-                                Value="UniformToFill" />
                     </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
