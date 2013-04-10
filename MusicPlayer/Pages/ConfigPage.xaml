@@ -182,6 +182,8 @@
                 <controls:ToggleSwitch x:Name="toggle_enablemagnet"/>
                 <TextBlock Text="显示正在播放" />
                 <controls:ToggleSwitch x:Name="toggle_shownowplaying"/>
+                <TextBlock Text="显示歌词" />
+                <controls:ToggleSwitch x:Name="toggle_showlyric" />
                 <TextBlock Text="主题颜色" />
                 <Button Width="auto"
                     x:Name="btn_skin"

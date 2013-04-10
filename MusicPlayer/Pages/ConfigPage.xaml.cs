@@ -36,6 +36,7 @@ namespace MusicPlayer
                 {"xiami_username", EnumConfigControlType.input},
                 {"xiami_password", EnumConfigControlType.pass},
                 {"ShowNowPlaying", EnumConfigControlType.toggle},
+                {"ShowLyric", EnumConfigControlType.toggle},
             };
         public ConfigPage()
         {

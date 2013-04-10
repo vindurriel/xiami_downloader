@@ -79,8 +79,12 @@ namespace MusicPlayer
             new MusicSliderConnector(slider);
             ActionBarService.SetActionBar(this.charmBar);
             Artwork.DataBus.DataBus.Set("list_download", list_download);
-
+            SizeChanged += MainWindow_SizeChanged;
             Mp3Player.SongChanged += OnMp3PlayerSongChanged;
+        }
+
+        void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
         }
 
         void OnMp3PlayerSongChanged(object sender, Mp3Player.SongChangedEventArgs e)

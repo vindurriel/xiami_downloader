@@ -1,116 +1,62 @@
-﻿<controls:ResizeWindow xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                        xmlns:my="clr-namespace:MusicPlayer"
-                        xmlns:controls="http://jean.doe/controls"
-                        xmlns:common="clr-namespace:Jean_Doe.Common;assembly=Jean_Doe.Common"
-                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"  x:Class="MusicPlayer.MainWindow"
-                        WindowStyle="None"
-                        Foreground="{DynamicResource lightBrush}"
-                        AllowsTransparency="True"
-                       Background="#01ffffff"
-                        Icon="Resources/icon.ico"
-                        SnapsToDevicePixels="True"
-                        FontSize="15"
-                        ResizeMode="CanResizeWithGrip"
-                        x:Name="me"
-                        MinHeight="480"
-                        SizeToContent="Manual"
-                         MinWidth="640"
-                        FontFamily="/xiami;component/Resources/#Soho Gothic Pro Light"
-                        Title="虾米下载" BorderWidth="5">
+﻿<controls:ResizeWindow xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:my="clr-namespace:MusicPlayer" xmlns:controls="http://jean.doe/controls" xmlns:common="clr-namespace:Jean_Doe.Common;assembly=Jean_Doe.Common" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="MusicPlayer.MainWindow" WindowStyle="None" Foreground="{DynamicResource lightBrush}" AllowsTransparency="True" Background="#01ffffff" Icon="Resources/icon.ico" SnapsToDevicePixels="True" FontSize="15" ResizeMode="CanResizeWithGrip" x:Name="me" MinHeight="480" SizeToContent="Manual" MinWidth="640" FontFamily="/xiami;component/Resources/#Soho Gothic Pro Light" Title="虾米下载" BorderWidth="5">
     <controls:ResizeWindow.Resources>
         <controls:BoolToVisibilityConverter x:Key="bool2vis" />
         <Storyboard x:Key="Maximize">
             <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetProperty="Left" />
-            <DoubleAnimation  Duration="0:0:0.2" Storyboard.TargetProperty="Top"  />
-            <DoubleAnimation  Duration="0:0:0.2" Storyboard.TargetProperty="Width" />
-            <DoubleAnimation  Duration="0:0:0.2" Storyboard.TargetProperty="Height"  />
+            <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetProperty="Top" />
+            <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetProperty="Width" />
+            <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetProperty="Height" />
         </Storyboard>
         <Storyboard x:Key="SlideInRight">
-            <ThicknessAnimation Duration="0:0:.2"
-                                Storyboard.TargetProperty="Margin"
-                                From="30,0,-30,0"
-                                To="0"
-                                EasingFunction="{StaticResource easeFunc}" />
-            <DoubleAnimation Duration="0:0:.1"
-                             Storyboard.TargetProperty="Opacity"
-                             From="0"
-                             To="1" />
+            <ThicknessAnimation Duration="0:0:.2" Storyboard.TargetProperty="Margin" From="30,0,-30,0" To="0" EasingFunction="{StaticResource easeFunc}" />
+            <DoubleAnimation Duration="0:0:.1" Storyboard.TargetProperty="Opacity" From="0" To="1" />
             <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="IsHitTestVisible">
-                <DiscreteBooleanKeyFrame KeyTime="0"
-                                         Value="True" />
+                <DiscreteBooleanKeyFrame KeyTime="0" Value="True" />
             </BooleanAnimationUsingKeyFrames>
         </Storyboard>
         <Storyboard x:Key="SlideInLeft">
-            <ThicknessAnimation Duration="0:0:.2"
-                                Storyboard.TargetProperty="Margin"
-                                From="-30,0,30,0"
-                                To="0"
-                                EasingFunction="{StaticResource easeFunc}" />
-            <DoubleAnimation Duration="0:0:.1"
-                             Storyboard.TargetProperty="Opacity"
-                             From="0"
-                             To="1" />
+            <ThicknessAnimation Duration="0:0:.2" Storyboard.TargetProperty="Margin" From="-30,0,30,0" To="0" EasingFunction="{StaticResource easeFunc}" />
+            <DoubleAnimation Duration="0:0:.1" Storyboard.TargetProperty="Opacity" From="0" To="1" />
             <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="IsHitTestVisible">
-                <DiscreteBooleanKeyFrame KeyTime="0"
-                                         Value="True" />
+                <DiscreteBooleanKeyFrame KeyTime="0" Value="True" />
             </BooleanAnimationUsingKeyFrames>
         </Storyboard>
         <Storyboard x:Key="SlideOut">
-            <DoubleAnimation Duration="0:0:0.1"
-                             Storyboard.TargetProperty="Opacity"
-                             From="1"
-                             To="0" />
+            <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="Opacity" From="1" To="0" />
             <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="IsHitTestVisible">
-                <DiscreteBooleanKeyFrame KeyTime="0"
-                                         Value="False" />
+                <DiscreteBooleanKeyFrame KeyTime="0" Value="False" />
             </BooleanAnimationUsingKeyFrames>
         </Storyboard>
         <Storyboard x:Key="anim_show_more" Storyboard.TargetName="navi">
-            <DoubleAnimation Storyboard.TargetProperty="Height" Duration="0:0:0.2" To="80" EasingFunction="{StaticResource easeFunc}"/>
+            <DoubleAnimation Storyboard.TargetProperty="Height" Duration="0:0:0.2" To="80" EasingFunction="{StaticResource easeFunc}" />
         </Storyboard>
         <Storyboard x:Key="anim_hide_more" Storyboard.TargetName="navi">
-            <DoubleAnimation Storyboard.TargetProperty="Height" Duration="0:0:0.2" To="50" EasingFunction="{StaticResource easeFunc}"/>
+            <DoubleAnimation Storyboard.TargetProperty="Height" Duration="0:0:0.2" To="50" EasingFunction="{StaticResource easeFunc}" />
         </Storyboard>
-        <Style TargetType="{x:Type Button}"
-               BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="MinWidth"
-                    Value="80" />
-            <Setter Property="Height"
-                    Value="30" />
-            <Setter Property="Margin"
-                    Value="5,2" />
-            <Setter Property="Padding"
-                    Value="5,2" />
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="MinWidth" Value="80" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Margin" Value="5,2" />
+            <Setter Property="Padding" Value="5,2" />
         </Style>
-        <Style x:Key="{x:Type ResizeGrip}"
-               TargetType="{x:Type ResizeGrip}">
-            <Setter Property="OverridesDefaultStyle"
-                    Value="true" />
-            <Setter Property="Foreground"
-                    Value="#555" />
-            <Setter Property="Cursor"
-                    Value="Hand" />
+        <Style x:Key="{x:Type ResizeGrip}" TargetType="{x:Type ResizeGrip}">
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Foreground" Value="#555" />
+            <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ResizeGrip}">
-                        <Border Background="Transparent"
-                                SnapsToDevicePixels="True"
-                                Width="16"
-                                Height="16">
+                        <Border Background="Transparent" SnapsToDevicePixels="True" Width="16" Height="16">
                             <Viewbox>
-                                <Path Fill="{TemplateBinding Foreground}"
-                                      Data="M 4 0 L 4 4 L 0 4 z"/>
+                                <Path Fill="{TemplateBinding Foreground}" Data="M 4 0 L 4 4 L 0 4 z" />
                             </Viewbox>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
-                <Trigger Property="IsMouseOver"
-                         Value="true">
-                    <Setter Property="Foreground"
-                            Value="{DynamicResource skinBrush}" />
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Foreground" Value="{DynamicResource skinBrush}" />
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -118,94 +64,84 @@
         <controls:IntToBoolConverter x:Key="int2bool" />
     </controls:ResizeWindow.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <Border x:Name="border"
-                BorderBrush="Black"
-                Background="{DynamicResource darkBrush}"
-                BorderThickness="2"/>
-        <Grid Margin="2">
+        <Border x:Name="border" BorderBrush="Black" Background="{DynamicResource darkBrush}" BorderThickness="2" />
+        <Grid Margin="2,2,2,50">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="10*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <!--navigation-->
-            <Grid  x:Name="navi"   HorizontalAlignment="Stretch"
-                   Height="50"  >
+            <Grid x:Name="navi" HorizontalAlignment="Stretch" Height="50">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.Resources>
                     <Style TargetType="TextBlock">
-                        <Setter Property="Padding" Value="2"/>
-                        <Setter Property="HorizontalAlignment" Value="Center"/>
-                        <Setter Property="FontSize" Value="15"/>
+                        <Setter Property="Padding" Value="2" />
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                        <Setter Property="FontSize" Value="15" />
                     </Style>
                     <Style TargetType="TextBlock" x:Key="glyph">
-                        <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
-                        <Setter Property="HorizontalAlignment" Value="Center"/>
-                        <Setter Property="FontSize" Value="20"/>
+                        <Setter Property="FontFamily" Value="Segoe UI Symbol" />
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                        <Setter Property="FontSize" Value="20" />
                     </Style>
                     <Style TargetType="TextBlock" x:Key="hint">
-                        <Setter Property="Margin" Value="5,10,5,0"/>
-                        <Setter Property="HorizontalAlignment" Value="Center"/>
-                        <Setter Property="FontSize" Value="15"/>
+                        <Setter Property="Margin" Value="5,10,5,0" />
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                        <Setter Property="FontSize" Value="15" />
                     </Style>
                 </Grid.Resources>
                 <DockPanel Grid.Column="1" x:Name="headers">
                     <DockPanel.Resources>
                         <Style TargetType="ToggleButton" BasedOn="{StaticResource toggleStyle}">
-                            <Setter Property="Background" Value="{DynamicResource darkBrush}"/>
+                            <Setter Property="Background" Value="{DynamicResource darkBrush}" />
                         </Style>
                     </DockPanel.Resources>
-                    <ToggleButton  MinWidth="0"
-                           Padding="0,0,0,0"   >
-                        <Grid  Width="50">
-                            <Image  Source="Resources/user.png"   Stretch="UniformToFill"/>
-                            <Image  Source="{Binding Avatar,ElementName=me}"   Stretch="UniformToFill"/>
+                    <ToggleButton MinWidth="0" Padding="0,0,0,0">
+                        <Grid Width="50">
+                            <Image Source="Resources/user.png" Stretch="UniformToFill" />
+                            <Image Source="{Binding Avatar,ElementName=me}" Stretch="UniformToFill" />
                         </Grid>
                     </ToggleButton>
-                    <ToggleButton   >
+                    <ToggleButton>
                         <DockPanel HorizontalAlignment="Center">
-                            <TextBlock Text="&#xE11a;" Style="{StaticResource glyph}"/>
+                            <TextBlock Text="&#xE11a;" Style="{StaticResource glyph}" />
                             <TextBlock Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_search}" Text="{Binding ItemsCount, ElementName=list_search, StringFormat=\{0\}}" />
                         </DockPanel>
                     </ToggleButton>
-                    <ToggleButton   >
+                    <ToggleButton>
                         <DockPanel HorizontalAlignment="Center">
-                            <TextBlock Text="&#xE118;" Style="{StaticResource glyph}"/>
+                            <TextBlock Text="&#xE118;" Style="{StaticResource glyph}" />
                             <TextBlock Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_download}" Text="{Binding ItemsCount, ElementName=list_download, StringFormat= \{0\}}" />
                         </DockPanel>
                     </ToggleButton>
 
-                    <ToggleButton  >
+                    <ToggleButton>
                         <DockPanel HorizontalAlignment="Center">
-                            <TextBlock Text="&#xE142;" Style="{StaticResource glyph}"/>
+                            <TextBlock Text="&#xE142;" Style="{StaticResource glyph}" />
                             <TextBlock Visibility="{Binding ItemsCount, Converter={StaticResource int2vis}, ElementName=list_complete}" Text="{Binding ItemsCount, ElementName=list_complete, StringFormat=\{0\}}" />
                         </DockPanel>
                     </ToggleButton>
-                    <ToggleButton  >
+                    <ToggleButton>
                         <DockPanel HorizontalAlignment="Center">
-                            <TextBlock Text="&#xE115;" Style="{StaticResource glyph}"/>
+                            <TextBlock Text="&#xE115;" Style="{StaticResource glyph}" />
                         </DockPanel>
                     </ToggleButton>
-                
                 </DockPanel>
-                <Grid  Grid.Column="2" Background="Black">
+                <Grid Grid.Column="2" Background="Black">
                     <Grid Background="{DynamicResource lightBrush}" MouseLeftButtonDown="btn_move_MouseDown">
                         <Grid.Style>
                             <Style TargetType="Grid">
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter  Property="Opacity" Value=".5"/>
+                                        <Setter Property="Opacity" Value=".5" />
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="False">
-                                        <Setter  Property="Opacity" Value="0"/>
+                                        <Setter Property="Opacity" Value="0" />
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
@@ -213,66 +149,47 @@
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-                <Grid x:Name="contents" Margin="30,30,30,0">
-                    <Grid x:Name="page5"
-                		Opacity="0"
-                		IsHitTestVisible="false">
-                        <my:UserPage x:Name="userPage"/>
+            <Grid x:Name="contents" Grid.Row="1" Margin="30,30,30,0">
+                <Grid x:Name="page5" Opacity="0" IsHitTestVisible="false">
+                    <my:UserPage x:Name="userPage" />
+                </Grid>
+                <Grid x:Name="page1" Opacity="0" IsHitTestVisible="false">
+                    <DockPanel>
+                        <controls:SearchControl Margin="0,10" DockPanel.Dock="Top" x:Name="searchKeywordControl" />
+                        <TextBlock Text="" x:Name="text_search" Foreground="{DynamicResource skinBrush}" DockPanel.Dock="Top" Margin="5" FontSize="20" Visibility="Collapsed" />
+                        <controls:SearchSongListControl x:Name="list_search" />
+                    </DockPanel>
+                </Grid>
+                <Grid x:Name="page2" Opacity="0" IsHitTestVisible="false">
+                    <controls:DownloadSongListControl x:Name="list_download" />
+                </Grid>
+                <Grid x:Name="page3" Opacity="0" IsHitTestVisible="false">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <DockPanel Grid.Row="1">
+                        <controls:CompleteSongListControl x:Name="list_complete" />
+                    </DockPanel>
+                    <Grid x:Name="lrc" Margin="0,-10,0,0">
+                        <controls:LyricControl HorizontalAlignment="Center"  Grid.Row="1" x:Name="lyricShow"  MaxHeight="{Binding ActualHeight,ElementName=lrc}"/>
                     </Grid>
-                    <Grid x:Name="page1"
-                		Opacity="0"
-                		IsHitTestVisible="false">
-                        <DockPanel>
-                            <controls:SearchControl Margin="0,10"  DockPanel.Dock="Top"  x:Name="searchKeywordControl" />
-                            <TextBlock Text="" x:Name="text_search" Foreground="{DynamicResource skinBrush}" DockPanel.Dock="Top" Margin="5" FontSize="20" Visibility="Collapsed" />
-                            <controls:SearchSongListControl x:Name="list_search" />
-                        </DockPanel>
-                    </Grid>
-                    <Grid x:Name="page2"
-                		Opacity="0"
-                		IsHitTestVisible="false">
-                        <controls:DownloadSongListControl x:Name="list_download" />
-                    </Grid>
-                    <Grid x:Name="page3"
-                		Opacity="0"
-                		IsHitTestVisible="false">
-                        <DockPanel>
-                            <Slider DockPanel.Dock="Top"  Background="{DynamicResource darkBrush}" Foreground="{DynamicResource skinBrush}" Grid.Row="1" x:Name="slider" Margin="-30,-40,-30,20" VerticalAlignment="Top"/>
-                            <controls:LyricControl DockPanel.Dock="Right" />
-                            <controls:CompleteSongListControl x:Name="list_complete" />
-                        </DockPanel>
-                    </Grid>
-                    <Grid x:Name="page4"
-                		Opacity="0"
-                		IsHitTestVisible="false">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <my:ConfigPage x:Name="configPage"  />
-                    </Grid>
-                    
+                    <Slider Background="{DynamicResource darkBrush}" Foreground="{DynamicResource skinBrush}" x:Name="slider" Margin="-30,-40,-30,20" VerticalAlignment="Top" />
+                    <GridSplitter Grid.Row="0" Background="#01000000" Height="45"   VerticalAlignment="Bottom" HorizontalAlignment="Stretch" />
+                </Grid>
+                <Grid x:Name="page4" Opacity="0" IsHitTestVisible="false">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <my:ConfigPage x:Name="configPage" />
                 </Grid>
             </Grid>
-            <!--contents-->  
-            <Grid Height="15" Grid.Row="2" >
-                <TextBlock x:Name="statusBar"
-                       HorizontalAlignment="Center"
-                           Foreground="White"/>
-                <controls:ProgressBar x:Name="busyIndicator"
-                                  Foreground="{DynamicResource skinBrush}"
-                                  Margin="0"
-                                  VerticalAlignment="Center"
-                                  HorizontalAlignment="Stretch"
-                                   IsIndeterminate="False" ItemWidth="5" />
+            <Grid x:Name="footer" Grid.Row="2">
+                <controls:ProgressBar x:Name="busyIndicator" Foreground="{DynamicResource skinBrush}" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Stretch" IsIndeterminate="False" ItemWidth="5" />
             </Grid>
         </Grid>
-        <my:ActionBar MaxLength="200" Grid.Row="2" x:Name="charmBar" Background="Black" VerticalAlignment="Bottom"/>
-        <controls:TitleBar FontSize="20" HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top"  Width="150" Height="50" x:Name="titleBar"  />
+        <my:ActionBar Height="50" x:Name="charmBar" Background="Black" VerticalAlignment="Bottom" />
+        <controls:TitleBar FontSize="20" HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Width="150" Height="50" x:Name="titleBar" />
     </Grid>
 </controls:ResizeWindow>

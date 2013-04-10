@@ -16,8 +16,8 @@ namespace MusicPlayer
     {
         public double MaxLength
         {
-            get { return (double)this.Resources["MaxLength"]; }
-            set { this.Resources["MaxLength"] = value; }
+            get { return (double)GetValue(MaxLengthProperty); }
+            set { SetValue(MaxLengthProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for MaxLength.  This enables animation, styling, binding, etc...
