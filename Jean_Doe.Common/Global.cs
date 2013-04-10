@@ -29,6 +29,30 @@ namespace Jean_Doe.Common
             {"ShowNowPlaying","1"},
             {"ShowLyric","1"},
         };
+        public static Dictionary<string, Dictionary<string,string>> ValueOptions = new Dictionary<string, Dictionary<string,string>>
+        {
+            {"MaxConnection", new Dictionary<string,string>{
+                {"10","10"},
+                {"20","20"},
+                {"不限制","9999"},
+            }},
+            {"SongnamePattern", new Dictionary<string,string>{
+                {"艺术家 - 歌曲名 - 专辑名","%ArtistName - %Name - %AlbumName"},
+                {"歌曲名 - 歌曲ID","%Name - %Id"},
+                {"艺术家 - 歌曲名","%ArtistName - %Name"},
+            }},
+            {"FolderPattern", new Dictionary<string,string>{
+                {"不建立目录",""},
+                {"艺术家\\专辑","%ArtistName\\%AlbumName"},
+                {"仅专辑","%AlbumName"},
+                {"仅艺术家","%ArtistName"},
+            }},            
+            {"PlayNextMode", new Dictionary<string,string>{
+                {"顺序","Sequential"},
+                {"随机","Random"},
+                {"单曲循环","Repeat"},
+            }},
+        };
         public class ObservDict<Tkey, TValue> : Dictionary<Tkey, TValue>
         {
             public new TValue this[Tkey key]

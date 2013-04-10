@@ -12,115 +12,95 @@
                 <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/TouchButtonStyle.xaml" />
                 <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/ComboBoxStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <sys:Double x:Key="lineHeight">30</sys:Double>
+            <Thickness x:Key="lineMargin">0,5</Thickness>
+            <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+                <Setter Property="Background" Value="#01000000" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Foreground" Value="{Binding Foreground,ElementName=me}" />
+            </Style>
+            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                <EventSetter Event="ComboBox.SelectionChanged" Handler="combo_SelectionChanged" />
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="Margin" Value="{StaticResource lineMargin}" />
+                <Setter Property="Height" Value="{StaticResource lineHeight}" />
+            </Style>
+            <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                <EventSetter Event="TextBox.TextChanged" Handler="input_TextChanged" />
+                <Setter Property="MinWidth" Value="100" />
+                <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="Margin" Value="{StaticResource lineMargin}" />
+                <Setter Property="Background" Value="#555" />
+                <Setter Property="Height" Value="{StaticResource lineHeight}" />
+            </Style>
+            <Style TargetType="PasswordBox" BasedOn="{StaticResource {x:Type PasswordBox}}">
+                <EventSetter Event="PasswordBox.PasswordChanged" Handler="pass_PasswordChanged" />
+                <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
+                <Setter Property="MinWidth" Value="100" />
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="Margin" Value="{StaticResource lineMargin}" />
+                <Setter Property="Background" Value="#555" />
+                <Setter Property="Height" Value="{StaticResource lineHeight}" />
+            </Style>
+            <Style TargetType="controls:ToggleSwitch">
+                <EventSetter Event="IsOnChanged" Handler="toggle_changed" />
+                <Setter Property="Margin" Value="{StaticResource lineMargin}" />
+                <Setter Property="Height" Value="{StaticResource lineHeight}" />
+                <Setter Property="OnColor" Value="{DynamicResource skinBrush}" />
+                <Setter Property="OffColor" Value="{DynamicResource selectBrush}" />
+                <Setter Property="SkinColor" Value="{DynamicResource skinBrush}" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+            </Style>
+            <Style TargetType="controls:ColorPicker">
+                <EventSetter Event="SelectedColorChanged" Handler="color_colorskin_SelectedColorChanged" />
+            </Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="Margin" Value="0,10,0,0" />
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+            <Style TargetType="Label">
+                <Setter Property="Margin" Value="{StaticResource lineMargin}" />
+                <Setter Property="Padding" Value="0,00,0,0" />
+                <Setter Property="Foreground" Value="{DynamicResource skinBrush}" />
+                <Setter Property="FontSize" Value="30" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="Foreground" Value="{DynamicResource skinBrush}" />
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid x:Name="root">
-        <Grid.Resources>
-            <sys:Double x:Key="lineHeight">30</sys:Double>
-            <Thickness x:Key="lineMargin">0,5</Thickness>
-            <Style TargetType="ComboBox"
-                   BasedOn="{StaticResource {x:Type ComboBox}}">
-                <EventSetter Event="ComboBox.SelectionChanged"
-                             Handler="combo_SelectionChanged" />
-                <Setter Property="HorizontalContentAlignment"
-                        Value="Left" />
-                <Setter Property="HorizontalAlignment"
-                        Value="Left" />
-                <Setter Property="Margin"
-                        Value="{StaticResource lineMargin}" />
-                <Setter Property="Height"
-                        Value="{StaticResource lineHeight}" />
-            </Style>
-            <Style TargetType="TextBox"
-                   BasedOn="{StaticResource {x:Type TextBox}}">
-                <EventSetter Event="TextBox.TextChanged"
-                             Handler="input_TextChanged" />
-                <Setter Property="MinWidth" Value="100"/>
-                <Setter Property="Foreground"
-                        Value="{DynamicResource lightBrush}" />
-                <Setter Property="HorizontalContentAlignment"
-                        Value="Left" />
-                <Setter Property="VerticalContentAlignment"
-                        Value="Center" />
-                <Setter Property="HorizontalAlignment"
-                        Value="Left" />
-                <Setter Property="Margin"
-                        Value="{StaticResource lineMargin}" />
-                <Setter Property="Background"
-                        Value="#555" />
-                <Setter Property="Height"
-                        Value="{StaticResource lineHeight}" />
-            </Style>
-            <Style TargetType="PasswordBox"
-                   BasedOn="{StaticResource {x:Type PasswordBox}}">
-                <EventSetter Event="PasswordBox.PasswordChanged"
-                             Handler="pass_PasswordChanged" />
-                <Setter Property="Foreground"
-                        Value="{DynamicResource lightBrush}" />
-                <Setter Property="MinWidth" Value="100"/>
-                <Setter Property="HorizontalContentAlignment"
-                        Value="Left" />
-                <Setter Property="VerticalContentAlignment"
-                        Value="Center" />
-                <Setter Property="HorizontalAlignment"
-                        Value="Left" />
-                <Setter Property="Margin"
-                        Value="{StaticResource lineMargin}" />
-                <Setter Property="Background"
-                        Value="#555" />
-                <Setter Property="Height"
-                        Value="{StaticResource lineHeight}" />
-            </Style>
-            <Style TargetType="controls:ToggleSwitch">
-                <EventSetter Event="IsOnChanged"  Handler="toggle_changed"/>
-                <Setter Property="Margin"
-                        Value="{StaticResource lineMargin}" />
-                <Setter Property="Height"
-                        Value="{StaticResource lineHeight}" />
-                <Setter Property="OnColor"
-                        Value="{DynamicResource skinBrush}" />
-                <Setter Property="OffColor"
-                        Value="{DynamicResource selectBrush}" />
-                <Setter Property="SkinColor"
-                        Value="{DynamicResource skinBrush}" />
-                <Setter Property="HorizontalAlignment"
-                        Value="Left" />
-            </Style>
-        </Grid.Resources>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <ListBox x:Name="list_groups"  ItemsSource="{Binding SourceGroup,ElementName=me}">
+        </ListBox>
+        <ListBox ItemsSource="{Binding SourceItem,ElementName=me}" Grid.Column="1" SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel>
+                        <TextBlock Text="{Binding DisplayName}" Width="200" />
+                        <ContentControl Content="{Binding UI}"/>
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>
+<!--<ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0">
             <StackPanel>
                 <StackPanel.Resources>
-                    <Style TargetType="controls:ColorPicker">
-                        <EventSetter Event="SelectedColorChanged" Handler="color_colorskin_SelectedColorChanged"/>
-                    </Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="Margin"
-                           Value="0,10,0,0" />
-                        <Setter Property="FontSize"
-                            Value="15" />
-                        <Setter Property="HorizontalAlignment"
-                            Value="Left" />
-                        <Setter Property="VerticalAlignment"
-                            Value="Center" />
-                    </Style>
-                    <Style TargetType="Label">
-                        <Setter Property="Margin"
-                            Value="{StaticResource lineMargin}" />
-                        <Setter Property="Padding"
-                            Value="0,00,0,0" />
-                        <Setter Property="Foreground"
-                            Value="{DynamicResource skinBrush}" />
-                        <Setter Property="FontSize"
-                            Value="30" />
-                        <Setter Property="HorizontalAlignment"
-                            Value="Left" />
-                        <Setter Property="VerticalAlignment"
-                            Value="Center" />
-                    </Style>
-                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                        <Setter Property="Foreground"
-                            Value="{DynamicResource skinBrush}" />
-                    </Style>
                 </StackPanel.Resources>
                 <Label>下载</Label>
                 <TextBlock Text="下载位置" />
@@ -227,6 +207,4 @@
                 <PasswordBox x:Name="pass_xiami_password"/>
                 <Button x:Name="btn_xiami_login" Width="70" HorizontalAlignment="Left" Margin="0,5">登录</Button>
             </StackPanel>
-        </ScrollViewer>
-    </Grid>
-</UserControl>
+        </ScrollViewer>-->

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Text.RegularExpressions;
 namespace Jean_Doe.MusicControl
 {
     public class LyricViewModel
@@ -13,40 +14,37 @@ namespace Jean_Doe.MusicControl
         public static List<LyricViewModel> LoadLrcFile(string file)
         {
             var res = new List<LyricViewModel>();
-            try
+            var pattern = new Regex("\\[(.*?)\\]");
+            if (!System.IO.File.Exists(file)) return res;
+            foreach (var line in File.ReadLines(file))
             {
-                var f = File.ReadAllText(file);
-                if (!f.Contains("]"))
-                    foreach (var line in f.Split("\r\n".ToCharArray(),StringSplitOptions.RemoveEmptyEntries))
+                if (string.IsNullOrWhiteSpace(line)) continue;
+                var m = pattern.Matches(line);
+                var text = line;
+                var time = TimeSpan.Zero;
+                if (m.Count > 0)
+                {
+                    text = pattern.Replace(line, "");
+                    foreach (Match ma in m)
                     {
-                        var item = new LyricViewModel
-                        {
-                            Time = TimeSpan.FromDays(1),
-                            Text = line,
-                        };
-                        res.Add(item);
-                    }
-                else
-                    foreach (var line in f.Split("\r\n".ToCharArray(),StringSplitOptions.RemoveEmptyEntries))
-                    {
-                        var strings = line.Split("]".ToCharArray(), 2, StringSplitOptions.RemoveEmptyEntries);
-                        if (strings.Count() != 2) continue;
-                        var t = TimeSpan.MaxValue;
-                        if(TimeSpan.TryParseExact(strings[0].Replace("[", ""), @"mm\:ss\.ff", null,out t))
-                        {
-                            var item = new LyricViewModel
+                        if (!TimeSpan.TryParseExact(ma.Groups[1].Value, @"mm\:ss\.ff", null, out time))
+                            text = ma.Groups[1].Value + text;
+                        res.Add(new LyricViewModel
                             {
-                                Time = t,
-                                Text = strings[1],
-                            };
-                            res.Add(item);
-                        }
+                                Time = time,
+                                Text = text,
+                            });
                     }
+                }
+                else
+                    res.Add(new LyricViewModel
+                          {
+                              Time = time,
+                              Text = text,
+                          });
+                var t = TimeSpan.Zero;
             }
-            catch (Exception e)
-            {
-            }
-            res.Sort(comparer);
+            res = res.OrderBy(x => x.Time).ToList();
             return res;
         }
         static LyricComparer comparer = new LyricComparer();
