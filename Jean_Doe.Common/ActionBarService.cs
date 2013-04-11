@@ -28,9 +28,9 @@ namespace Jean_Doe.Common
         {
             actionBar = bar;
         }
-        private static  string contextName;
+        private static string contextName;
 
-        public static  string ContextName
+        public static string ContextName
         {
             get { return contextName; }
             set { contextName = value; Refresh(); }
@@ -38,11 +38,13 @@ namespace Jean_Doe.Common
 
         public static void Refresh()
         {
-            if (string.IsNullOrEmpty(ContextName)) return;
-            if (!Contexts.ContainsKey(ContextName)) return;
             if (actionBar == null) return;
-            var validActions = Actions[ContextName].Where(x => x.Validate(Contexts[ContextName])).ToList();
-            actionBar.ValidActions(validActions);
+            var validActions = new List<CharmAction>();
+            if (!string.IsNullOrEmpty(ContextName) && Contexts.ContainsKey(ContextName))
+            {
+                validActions = Actions[ContextName].Where(x => x.Validate(Contexts[ContextName])).ToList();
+                actionBar.ValidActions(validActions);
+            }
             actionBar.IsOpen = validActions.Count > 0;
         }
         static Dictionary<string, object> Contexts = new Dictionary<string, object>();

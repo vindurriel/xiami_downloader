@@ -21,7 +21,7 @@ namespace Jean_Doe.MusicControl
                 if (string.IsNullOrWhiteSpace(line)) continue;
                 var m = pattern.Matches(line);
                 var text = line;
-                var time = TimeSpan.Zero;
+                var time = TimeSpan.FromDays(1);
                 if (m.Count > 0)
                 {
                     text = pattern.Replace(line, "");
@@ -42,7 +42,6 @@ namespace Jean_Doe.MusicControl
                               Time = time,
                               Text = text,
                           });
-                var t = TimeSpan.Zero;
             }
             res = res.OrderBy(x => x.Time).ToList();
             return res;
