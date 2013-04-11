@@ -9,41 +9,44 @@ namespace Jean_Doe.MusicControl
         public event PropertyChangedEventHandler PropertyChanged;
         protected void Notify(string property)
         {
-            if(PropertyChanged != null)
+            if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
         #endregion
         IMusic music;
-        private string imageSrc="/Jean_Doe.MusicControl;component/Resources/nocover.png";
+        private string imageSrc;
         public string ImageSource
         {
             get { return imageSrc; }
-            set { imageSrc = value; Notify("ImageSource");
-            LogoColor = ImageHelper.GetAverageColor(value);
+            set
+            {
+                imageSrc = value; Notify("ImageSource");
+                LogoColor = ImageHelper.GetAverageColor(value);
             }
         }
-        protected  string typecolor = "#ff0000";
-        public string TypeColor { get { return typecolor; } set { typecolor = value; Notify("TypeColor"); } }
+        protected string typeImage;
+        public string TypeImage { get { return typeImage; } set { typeImage = value; Notify("TypeImage"); } }
         protected string logoColor = ImageHelper.DefaultColor;
         public string LogoColor { get { return logoColor; } set { logoColor = value; Notify("LogoColor"); } }
         public MusicViewModel(IMusic m)
         {
             music = m;
         }
-        private string searchStr=null;
+        private string searchStr = null;
 
         public string SearchStr
         {
             get
             {
-                if (searchStr == null) {
+                if (searchStr == null)
+                {
                     var text = new List<string>();
                     text.Add(Name.ToLower());
                     if (this is IHasAlbum)
                         text.Add(((IHasAlbum)this).AlbumName.ToLower());
                     if (this is IHasArtist)
                         text.Add(((IHasArtist)this).ArtistName.ToLower());
-                    searchStr=string.Join(" ", text);
+                    searchStr = string.Join(" ", text);
                 }
                 return searchStr;
             }

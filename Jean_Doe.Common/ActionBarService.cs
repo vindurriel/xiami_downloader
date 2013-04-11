@@ -28,7 +28,14 @@ namespace Jean_Doe.Common
         {
             actionBar = bar;
         }
-        public static string ContextName { get; set; }
+        private static  string contextName;
+
+        public static  string ContextName
+        {
+            get { return contextName; }
+            set { contextName = value; Refresh(); }
+        }
+
         public static void Refresh()
         {
             if (string.IsNullOrEmpty(ContextName)) return;

@@ -29,7 +29,7 @@ namespace Jean_Doe.Common
             {"ShowNowPlaying","1"},
             {"ShowLyric","1"},
         };
-        public static Dictionary<string, Dictionary<string,string>> ValueOptions = new Dictionary<string, Dictionary<string,string>>
+        public static Dictionary<string, Dictionary<string, string>> ValueOptions = new Dictionary<string, Dictionary<string, string>>
         {
             {"MaxConnection", new Dictionary<string,string>{
                 {"10","10"},
@@ -108,21 +108,21 @@ namespace Jean_Doe.Common
             {
             }
         }
-        public static void ListenToEvent(string @event, Action<string> a)
+        public static void ListenToEvent(string e, Action<string> a)
         {
-            if (string.IsNullOrEmpty(@event)) return;
-            if (!dict.ContainsKey(@event))
-                dict[@event] = new List<Action<string>>();
-            dict[@event].Add(a);
-            if (AppSettings.ContainsKey(@event))
-                a(AppSettings[@event]);
+            if (string.IsNullOrEmpty(e)) return;
+            if (!AppSettings.ContainsKey(e)) return;
+            if (!events.ContainsKey(e))
+                events[e] = new List<Action<string>>();
+            events[e].Add(a);
+            a(AppSettings[e]);
         }
-        static void RaiseEvent(string @event)
+        static void RaiseEvent(string e)
         {
-            if (!dict.ContainsKey(@event)) return;
-            if (!AppSettings.ContainsKey(@event)) return;
-            var value = AppSettings[@event];
-            foreach (var action in dict[@event])
+            if (!events.ContainsKey(e)) return;
+            if (!AppSettings.ContainsKey(e)) return;
+            var value = AppSettings[e];
+            foreach (var action in events[e])
             {
                 try
                 {
@@ -131,6 +131,6 @@ namespace Jean_Doe.Common
                 catch { }
             }
         }
-        public static Dictionary<string, List<Action<string>>> dict = new Dictionary<string, List<Action<string>>>();
+        public static Dictionary<string, List<Action<string>>> events = new Dictionary<string, List<Action<string>>>();
     }
 }

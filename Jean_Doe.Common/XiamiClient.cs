@@ -31,17 +31,20 @@ namespace Jean_Doe.Common
             await Call_xiami_api("Library.removeSong", "id=" + songId);
         }
         public async Task<dynamic> Call_xiami_api(string methodName, params string[] args)
-        {
+        { 
             var p = new List<string>() { "api_get", methodName };
             if (args != null)
                 p.AddRange(args);
+            Artwork.MessageBus.MessageBus.Instance.Publish(new MsgSetBusy(this, true));
             string res = await RunProgramHelper.RunProgramGetOutput(ApiPath, p.ToArray());
+            Artwork.MessageBus.MessageBus.Instance.Publish(new MsgSetBusy(this,false));
             var json = res.ToDynamicObject();
             if (!(json is string) && !(json is Array) && json.error != null)
             {
                 MessageBox.Show(json.error.ToString());
                 return null;
             }
+
             return json;
         }
         public async Task<dynamic> GetDailyRecommend()

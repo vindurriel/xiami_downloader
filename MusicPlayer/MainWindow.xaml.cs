@@ -49,7 +49,6 @@ namespace MusicPlayer
                         showPage(content, isLeft);
                 }
                 ActionBarService.ContextName = page.ToString();
-                ActionBarService.Refresh();
             }
         }
         void showPage(FrameworkElement content, bool isLeft = true)
@@ -107,7 +106,6 @@ namespace MusicPlayer
             ActionBarService.RegisterContext("2", list_search, "SelectCount");
             ActionBarService.RegisterContext("3", list_download, "SelectCount");
             ActionBarService.RegisterContext("4", list_complete, "SelectCount");
-            ActionBarService.RegisterContext("5", configPage, "IsDirty");
         }
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {

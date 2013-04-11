@@ -123,12 +123,14 @@ public class XiamiSearchProvider : ISearchProvider
         var musicType = EnumMusicType.song;
         Enum.TryParse(t.ToString(), out musicType);
         int page = 1;
+        if (key=="me")
+                key="lib";
         while (true)
         {
             dynamic obj = null;
             if (key == "daily")
                 obj = await XiamiClient.GetDefault().GetDailyRecommend();
-            else if (key == "me" || key == "lib")
+            else if (key == "lib")
                 obj = await XiamiClient.GetDefault().GetUserMusic(t, page);
             else
                 throw new Exception("user:" + key + " is not supported");
@@ -152,10 +154,17 @@ public class XiamiSearchProvider : ISearchProvider
                 break;
             }
             Artwork.MessageBus.MessageBus.Instance.Publish(sr);
+            if (key == "lib" && t=="song")
+            {
+                foreach (Song item in sr.Items)
+                {
+                    item.InFav = true;
+                }
+            }
             SearchManager.notifyState(sr);
-            page++;
             if (obj.more != "true")
                 break;
+            page++;
         }
     }
 
@@ -188,7 +197,7 @@ public class XiamiSearchProvider : ISearchProvider
         ///////////////
         //if (json == null) return null;
         string typestr = type.ToString();
-        dynamic obj =await XiamiClient.GetDefault().Call_xiami_api(string.Format("Search.{0}s", typestr),
+        dynamic obj = await XiamiClient.GetDefault().Call_xiami_api(string.Format("Search.{0}s", typestr),
             string.Format("\"key={0}\"", keyword),
             string.Format("page={0}", page));
         if (obj == null) return null;

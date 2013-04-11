@@ -19,11 +19,11 @@ namespace MusicPlayer
         public virtual string StrValue { get; set; }
         public string DisplayName { get; set; }
         public abstract FrameworkElement UI { get; }
-        public virtual void Save()
+        protected virtual void Save()
         {
             Global.AppSettings[Key] = StrValue;
         }
-        public virtual void Load()
+        protected virtual void Load()
         {
             StrValue = Global.AppSettings[Key];
         }
@@ -33,11 +33,24 @@ namespace MusicPlayer
             Key = key;
             DisplayName = displayname;
         }
+        protected void onUICreated()
+        {
+            Global.ListenToEvent(Key, LoadValue);
+        }
+        protected virtual void LoadValue(string value)
+        {
+            Load();
+        }
     }
     public class LabelConfigItem : ConfigItem
     {
-        public LabelConfigItem(string g, string k, string n) : base(g, k, n) { }
-        TextBlock ui = new TextBlock();
+        public LabelConfigItem(string g, string k, string n)
+            : base(g, k, n)
+        {
+            ui = new TextBlock();
+            onUICreated();
+        }
+        TextBlock ui;
         public override FrameworkElement UI
         {
             get { return ui; }
@@ -56,8 +69,14 @@ namespace MusicPlayer
     }
     public class InputConfigItem : ConfigItem
     {
-        public InputConfigItem(string g, string k, string n) : base(g, k, n) { }
-        TextBox ui = new TextBox();
+        public InputConfigItem(string g, string k, string n)
+            : base(g, k, n)
+        {
+            ui = new TextBox();
+            onUICreated();
+            ui.TextChanged += (s, e) => Save();
+        }
+        TextBox ui;
         public override FrameworkElement UI
         {
             get { return ui; }
@@ -76,11 +95,22 @@ namespace MusicPlayer
     }
     public class PasswordConfigItem : ConfigItem
     {
-        public PasswordConfigItem(string g, string k, string n) : base(g, k, n) { }
-        PasswordBox ui = new PasswordBox();
+        public PasswordConfigItem(string g, string k, string n)
+            : base(g, k, n)
+        {
+            ui = new PasswordBox();
+            onUICreated();
+            ui.PasswordChanged += (s, e) => Save();
+        }
+        PasswordBox ui;
         public override FrameworkElement UI
         {
             get { return ui; }
+        }
+        protected override void Load()
+        {
+            if (Global.AppSettings[Key] != ui.Password)
+                ui.Password = Global.AppSettings[Key];
         }
         public override string StrValue
         {
@@ -96,8 +126,13 @@ namespace MusicPlayer
     }
     public class ToggleConfigItem : ConfigItem
     {
-        public ToggleConfigItem(string g, string k, string n) : base(g, k, n) { }
-        ToggleSwitch ui = new ToggleSwitch();
+        public ToggleConfigItem(string g, string k, string n)
+            : base(g, k, n)
+        {
+            ui = new ToggleSwitch(); onUICreated();
+            ui.IsOnChanged += (s, e) => Save();
+        }
+        ToggleSwitch ui;
         public override FrameworkElement UI
         {
             get { return ui; }
@@ -119,12 +154,14 @@ namespace MusicPlayer
         public ComboConfigItem(string g, string k, string n)
             : base(g, k, n)
         {
+            ui = new ComboBox();
             ui.ItemsSource = Global.ValueOptions[Key];
             ui.DisplayMemberPath = "Key";
             ui.SelectedValuePath = "Value";
-
+            onUICreated();
+            ui.SelectionChanged += (s, e) => Save();
         }
-        ComboBox ui = new ComboBox();
+        ComboBox ui;
         public override FrameworkElement UI
         {
             get { return ui; }
@@ -140,27 +177,17 @@ namespace MusicPlayer
                 ui.SelectedValue = value;
             }
         }
-        private void comboSelect(ComboBox c, string s)
-        {
-
-            bool selected = false;
-            foreach (ComboBoxItem item in c.Items)
-            {
-                if (item.Tag.ToString() == s)
-                {
-                    c.SelectedItem = item;
-                    selected = true;
-                    break;
-                }
-            }
-            if (!selected && c.Items.Count > 0)
-                c.SelectedIndex = 0;
-        }
     }
     public class ColorConfigItem : ConfigItem
     {
-        public ColorConfigItem(string g, string k, string n) : base(g, k, n) { }
-        ColorPicker.ColorPicker ui = new ColorPicker.ColorPicker();
+        public ColorConfigItem(string g, string k, string n)
+            : base(g, k, n)
+        {
+            ui = new ColorPicker.ColorPicker();
+            onUICreated();
+            ui.SelectedColorChanged += (s, e) => Save();
+        }
+        ColorPicker.ColorPicker ui;
         public override FrameworkElement UI
         {
             get { return ui; }
@@ -180,8 +207,8 @@ namespace MusicPlayer
 
     public class ButtonConfigItem : ConfigItem
     {
-        public ButtonConfigItem(string g, string k, string n, Action<object, RoutedEventArgs> clickEvent)
-            : base(g, k, n)
+        public ButtonConfigItem(string g, string n, Action<object, RoutedEventArgs> clickEvent)
+            : base(g, null, n)
         {
             this.DisplayName = null;
             ui = new Button { Content = n };
@@ -192,11 +219,11 @@ namespace MusicPlayer
         {
             get { return ui; }
         }
-        public override void Load()
+        protected override void Load()
         {
         }
-        public override void Save()
+        protected override void Save()
         {
-        } 
+        }
     }
 }

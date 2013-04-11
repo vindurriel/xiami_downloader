@@ -11,8 +11,7 @@ namespace Jean_Doe.MusicControl
         public AlbumViewModel(Album a):base(a)
         {
             album = a;
-            ImageSource = "/Jean_Doe.MusicControl;component/Resources/album.png";
-            typecolor = "#c3b775";
+            TypeImage = ImageSource = "/Jean_Doe.MusicControl;component/Resources/album.png";
         }
         public string AlbumName { get { return album.Description; } }
         public string ArtistName { get { return album.ArtistName; } }

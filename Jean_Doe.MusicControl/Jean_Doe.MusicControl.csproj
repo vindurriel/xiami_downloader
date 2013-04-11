@@ -209,7 +209,7 @@
     <Resource Include="Resources\stop.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\nocover.png" />
+    <Resource Include="Resources\song.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Messages\" />

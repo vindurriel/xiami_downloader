@@ -14,17 +14,6 @@ namespace MusicPlayer
     /// </summary>
     public partial class ActionBar : IActionBar
     {
-        public double MaxLength
-        {
-            get { return (double)GetValue(MaxLengthProperty); }
-            set { SetValue(MaxLengthProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for MaxLength.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty MaxLengthProperty =
-            DependencyProperty.Register("MaxLength", typeof(double), typeof(ActionBar), new PropertyMetadata(150.0));
-
-
         public int MaxItemCount
         {
             get { return (int)GetValue(MaxItemCountProperty); }
@@ -33,7 +22,7 @@ namespace MusicPlayer
 
         // Using a DependencyProperty as the backing store for MaxItemCount.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty MaxItemCountProperty =
-            DependencyProperty.Register("MaxItemCount", typeof(int), typeof(ActionBar), new PropertyMetadata(5));
+            DependencyProperty.Register("MaxItemCount", typeof(int), typeof(ActionBar), new PropertyMetadata(7));
 
         public ActionBar()
         {
@@ -55,6 +44,8 @@ namespace MusicPlayer
             if (sel == null) return;
             more_actions.IsOpen = false;
             sel.Action(sel, null);
+            if (sel != open_more && sel != close_more)
+                ActionBarService.Refresh();
         }
         ObservableCollection<CharmAction> source1 = new ObservableCollection<CharmAction>();
         ObservableCollection<CharmAction> source2 = new ObservableCollection<CharmAction>();
@@ -92,6 +83,8 @@ namespace MusicPlayer
         CharmAction close_more;
         private void more_Click_1(object sender, RoutedEventArgs e)
         {
+            var ui=list.ItemContainerGenerator.ContainerFromItem(sender) as UIElement;
+            more_actions.PlacementTarget = ui;
             more_actions.IsOpen = true;
             source1.Remove(open_more);
             source1.Add(close_more);

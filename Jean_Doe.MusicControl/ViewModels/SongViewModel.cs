@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Controls;
 using Jean_Doe.Common;
+using System.Collections.Generic;
 namespace Jean_Doe.MusicControl
 {
     public class SongViewModel : MusicViewModel, IHasArtist, IHasAlbum
@@ -23,6 +24,11 @@ namespace Jean_Doe.MusicControl
         {
             get { return song.HasLrc; }
             set { song.HasLrc = value; Notify("HasLrc"); }
+        }
+        public bool InFav
+        {
+            get { return song.InFav; }
+            set { song.InFav = value; Notify("InFav"); }
         }
         public bool HasMp3
         {
@@ -79,15 +85,35 @@ namespace Jean_Doe.MusicControl
                 RunProgramHelper.RunProgram("explorer.exe", string.Format("/select, \"{0}\"", filename));
             }
         }
+        public static void ClearFav()
+        {
+            foreach (var item in cache)
+            {
+                item.Value.InFav = false;
+            }
+        }
+        static Dictionary<string, SongViewModel> cache = new Dictionary<string, SongViewModel>();
+        public static SongViewModel Get(Song song)
+        {
+            var id = song.Id;
+            if (!cache.ContainsKey(id))
+            {
+                cache[id] = new SongViewModel(song);
+            }
+            if (song.InFav)
+            {
+                cache[id].InFav = true;
+            }
+            return cache[id];
+        }
         public SongViewModel(Song song)
             : base(song)
         {
             this.song = song;
-            typecolor = "#d20101";
-            ImageSource = "/Jean_Doe.MusicControl;component/Resources/nocover.png";
+            TypeImage = ImageSource = "/Jean_Doe.MusicControl;component/Resources/song.png";
             var art = System.IO.Path.Combine(Global.BasePath, "cache", AlbumId + ".art");
             if (File.Exists(art))
-                ImageSource = art;                
+                ImageSource = art;
         }
         Song song;
         public Song Song

@@ -107,9 +107,7 @@
         <Popup x:Name="more_actions"
                PopupAnimation="Slide"
                Placement="Top"
-               HorizontalOffset="-60"
                Focusable="True"
-               PlacementTarget="{Binding ElementName=holder}"
                >
             <ListView x:Name="menu"
                       ItemContainerStyle="{StaticResource itemStyle}"

@@ -24,7 +24,8 @@ namespace Jean_Doe.Common
         {
             if (string.IsNullOrEmpty(input)) return;
             state = EnumSearchState.Started;
-            notifyState(new SearchResult { Keyword = input, SearchType = t });
+            var searchInfo = new SearchResult { Keyword = input, SearchType = t };
+            notifyState(searchInfo);
             ISearchProvider provider = null;
             var re_source = new Regex(@"(source:\s*(\w+))");
             var m = re_source.Match(input);
@@ -51,7 +52,7 @@ namespace Jean_Doe.Common
                 notifyState(sr);
             }
             state = EnumSearchState.Finished;
-            notifyState();
+            notifyState(searchInfo);
         }
 
         public static void Cancel()

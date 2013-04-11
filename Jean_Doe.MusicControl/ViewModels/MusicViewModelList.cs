@@ -36,11 +36,8 @@ namespace Jean_Doe.MusicControl
                 case EnumMusicType.collect:
                     s = new CollectViewModel(music as Collection);
                     break;
-                case EnumMusicType.song:
-                    s = new SongViewModel(music as Song);
-                    break;
                 default:
-                    s = new MusicViewModel(music as Song);
+                    s = SongViewModel.Get(music as Song);
                     break;
             }
             if(s == null) return;

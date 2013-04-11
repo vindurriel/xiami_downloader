@@ -171,8 +171,8 @@
                     <DockPanel Grid.Row="1">
                         <controls:CompleteSongListControl x:Name="list_complete" />
                     </DockPanel>
-                    <Grid x:Name="lrc" Margin="0,-10,0,0">
-                        <controls:LyricControl HorizontalAlignment="Center"  Grid.Row="1" x:Name="lyricShow"  MaxHeight="{Binding ActualHeight,ElementName=lrc}"/>
+                    <Grid x:Name="lrc" Margin="30,-10,0,0">
+                        <controls:LyricControl HorizontalAlignment="Left"  Grid.Row="1" x:Name="lyricShow"  MaxHeight="{Binding ActualHeight,ElementName=lrc}"/>
                     </Grid>
                     <Slider Background="{DynamicResource darkBrush}" Foreground="{DynamicResource skinBrush}" x:Name="slider" Margin="-30,-40,-30,20" VerticalAlignment="Top" />
                     <GridSplitter Grid.Row="0" Background="#01000000" Height="45"   VerticalAlignment="Bottom" HorizontalAlignment="Stretch" />

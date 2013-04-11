@@ -338,28 +338,26 @@ namespace Jean_Doe.MusicControl
 
         protected void btn_fav_Click(object sender, RoutedEventArgs e)
         {
-            var ids = SelectedSongs.Select(x => x.Id).ToList();
             var tasks = new List<Task>();
-            var token = new System.Threading.CancellationTokenSource();
-            foreach (var id in ids)
+            foreach (var item in SelectedSongs)
             {
+                item.InFav = true;
                 Task.Run(async () =>
                 {
-                    await XiamiClient.GetDefault().Fav_Song(id);
-                }, token.Token);
+                    await XiamiClient.GetDefault().Fav_Song(item.Id);
+                });
             }
         }
         protected void btn_unfav_Click(object sender, RoutedEventArgs e)
         {
-            var ids = SelectedSongs.Select(x => x.Id).ToList();
             var tasks = new List<Task>();
-            var token = new System.Threading.CancellationTokenSource();
-            foreach (var id in ids)
+            foreach (var item in SelectedSongs)
             {
+                item.InFav = false;
                 Task.Run(async () =>
-                {
-                    await XiamiClient.GetDefault().Unfav_Song(id);
-                }, token.Token);
+              {
+                  await XiamiClient.GetDefault().Unfav_Song(item.Id);
+              });
             }
         }
 
@@ -395,7 +393,7 @@ namespace Jean_Doe.MusicControl
         protected bool IsType<TInterface>(object source) where TInterface : IHasMusicPart
         {
             var s = (source as SongListControl);
-            return s.SelectedItems.Count()>0 && s.SelectedItems.All(x => x is TInterface);
+            return s.SelectedItems.Count() > 0 && s.SelectedItems.All(x => x is TInterface);
         }
         private void ApplySort()
         {
@@ -437,6 +435,16 @@ namespace Jean_Doe.MusicControl
 
         private void btn_more_Click_1(object sender, RoutedEventArgs e)
         {
+        }
+        protected static bool canFav(object o)
+        {
+            var s = (o as SongListControl).SelectedSongs;
+            return s.Count() > 0 && s.Any(x => !x.InFav);
+        }
+        protected static bool canUnfav(object o)
+        {
+            var s = (o as SongListControl).SelectedSongs;
+            return s.Count() > 0 && s.Any(x => x.InFav);
         }
     }
 }

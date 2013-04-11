@@ -48,17 +48,17 @@
         <DataTemplate x:Key="downloadingTemplate">
             <Grid Width="220" Height="70">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Image TargetUpdated="Image_SourceUpdated_1" Width="60" Height="60"  
-                       VerticalAlignment="Top"
+                <Image TargetUpdated="Image_SourceUpdated_1" Width="60" Height="60" VerticalAlignment="Top"
                         Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                        Stretch="Uniform"/>
+                        Stretch="Uniform" />
+
                 <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10,0">
-                    <TextBlock Text="{Binding Name}" FontSize="18" Style="{StaticResource label_base}"/>
-                    <TextBlock Style="{StaticResource label_base}"  Text="{Binding ArtistName}" />
-                    <Grid  MinWidth="100">
+                    <TextBlock Text="{Binding Name}" FontSize="18" Style="{StaticResource label_base}" />
+                    <TextBlock Style="{StaticResource label_base}" Text="{Binding ArtistName}" />
+                    <Grid MinWidth="100">
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition Height='Auto' />
@@ -73,11 +73,11 @@
                                     <Setter Property='Fill' Value='{DynamicResource lightBrush}' />
                                 </Style>
                             </Grid.Resources>
-                            <Grid  >
-                                <Rectangle   x:Name="mp3Indicator"  
-                                Opacity='{Binding HasMp3,Converter={StaticResource bool2opa}}' />
-                                <Rectangle 
-                                    Width="{Binding  ElementName=mp3Indicator,Path=ActualWidth}" HorizontalAlignment="Left">
+                            <Grid>
+                                <Rectangle x:Name="mp3Indicator"
+                                        Opacity='{Binding HasMp3,Converter={StaticResource bool2opa}}' />
+                                <Rectangle Width="{Binding  ElementName=mp3Indicator,Path=ActualWidth}"
+                                        HorizontalAlignment="Left">
                                     <Rectangle.RenderTransform>
                                         <ScaleTransform ScaleX="{Binding Percent}" />
                                     </Rectangle.RenderTransform>
@@ -91,16 +91,17 @@
         <DataTemplate x:Key="completeTemplate">
             <Grid Width="220" Height="70">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Image IsHitTestVisible="False" TargetUpdated="Image_SourceUpdated_1" Width="60" Height="60"  
+                <Image IsHitTestVisible="False" TargetUpdated="Image_SourceUpdated_1" Width="60" Height="60"
                         Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                        Stretch="Uniform" VerticalAlignment="Top"/>
+                        Stretch="Uniform" VerticalAlignment="Top" />
+
                 <StackPanel IsHitTestVisible="False" Grid.Column="1" VerticalAlignment="Top" Margin="10,0">
-                    <TextBlock Text="{Binding Name}" FontSize="18"  Style="{DynamicResource label_base}"/>
-                    <TextBlock Style="{StaticResource label_base}"   Text="{Binding ArtistName}" />
-                    <TextBlock Style="{StaticResource label_base}"   Text="{Binding AlbumName}" />
+                    <TextBlock Text="{Binding Name}" FontSize="18" Style="{DynamicResource label_base}" />
+                    <TextBlock Style="{StaticResource label_base}" Text="{Binding ArtistName}" />
+                    <TextBlock Style="{StaticResource label_base}" Text="{Binding AlbumName}" />
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -108,58 +109,56 @@
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
         </Grid.RowDefinitions>
-        <ToggleButton
-            Grid.RowSpan="2"
-            Margin="0,0,5,0" Padding="0"
-            FontSize="10"
-            Background="{DynamicResource skinBrush}" Foreground="White"
-            Visibility="{Binding ItemsCount,ElementName=me,Converter={StaticResource int2vis}}"
-            Height="30" Width="30"  MinWidth="0"
-            Style="{StaticResource toggleStyle}"
-           VerticalAlignment="Top"    FontFamily="Segoe UI Symbol"    x:Name="btn_more" Content="&#xE16E;"/>
-        <DockPanel Margin="6,0,0,10" Grid.Column="1"  LastChildFill="False"
-                   Height="30"
-                   Visibility="{Binding IsChecked,ElementName=btn_more,Converter={StaticResource bool2vis}}">
-            <ComboBox    x:Name="combo_sort"  >
+        <ToggleButton Grid.RowSpan="2" Margin="0,0,5,0" Padding="0" FontSize="10"
+                Background="{DynamicResource skinBrush}" Foreground="White"
+                Visibility="{Binding ItemsCount,ElementName=me,Converter={StaticResource int2vis}}" Height="30"
+                Width="30" MinWidth="0" Style="{StaticResource toggleStyle}" VerticalAlignment="Top"
+                FontFamily="Segoe UI Symbol" x:Name="btn_more" Content="&#xE16E;" />
+        <DockPanel Margin="6,0,0,10" Grid.Column="1" LastChildFill="False" Height="30"
+                Visibility="{Binding IsChecked,ElementName=btn_more,Converter={StaticResource bool2vis}}">
+            <ComboBox x:Name="combo_sort">
                 <ComboBoxItem Tag="Default_Asc" IsSelected="True">无排序</ComboBoxItem>
                 <ComboBoxItem Tag="Date_Dsc">最近下载</ComboBoxItem>
                 <ComboBoxItem Tag="Date_Asc">最早下载</ComboBoxItem>
                 <ComboBoxItem Tag="Name_Asc">名称升序</ComboBoxItem>
                 <ComboBoxItem Tag="Name_Dsc">名称降序</ComboBoxItem>
             </ComboBox>
-            <Grid  Margin="10,0"    x:Name="part_filter"  >
-                <TextBox VerticalContentAlignment="Center"  Foreground="White"  BorderThickness="0" Width="200" x:Name="input_filter" Background="#555"/>
-                <TextBlock VerticalAlignment="Center" Margin="3" x:Name="mask_filter" Text="输入字符以过滤"  IsHitTestVisible="False" Foreground="{DynamicResource lightBrush}"  />
+            <Grid Margin="10,0" x:Name="part_filter">
+                <TextBox VerticalContentAlignment="Center" Foreground="White" BorderThickness="0" Width="200"
+                        x:Name="input_filter" Background="#555" />
+                <TextBlock VerticalAlignment="Center" Margin="3" x:Name="mask_filter" Text="输入字符以过滤"
+                        IsHitTestVisible="False" Foreground="{DynamicResource lightBrush}" />
             </Grid>
-            <Button Visibility="Collapsed" x:Name="btn_search" Click="btn_search_click"  Content="没有？在网上搜索一下" Padding="5,0"  />
+            <Button Visibility="Collapsed" x:Name="btn_search" Click="btn_search_click" Content="没有？在网上搜索一下"
+                    Padding="5,0" />
         </DockPanel>
-        <TextBlock Grid.Column="1" Grid.Row="1" x:Name="emptyText" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource label_base}" Margin="5,10,0,0" >列表为空</TextBlock>
-        <ListView Grid.Column="1" Grid.Row="1" ItemTemplate="{StaticResource completeTemplate}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-            BorderThickness="0" 
-            Background="Transparent" 
-            PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" 
-            PreviewMouseMove="List_MouseMove"
-                  ItemsSource="{Binding}"
-            x:Name="listView" Foreground="White" SelectionMode="Extended" >
+        <TextBlock Grid.Column="1" Grid.Row="1" x:Name="emptyText" FontSize="20" HorizontalAlignment="Left"
+                VerticalAlignment="Top" Style="{StaticResource label_base}" Margin="5,10,0,0">列表为空</TextBlock>
+        <ListView Grid.Column="1" Grid.Row="1" ItemTemplate="{StaticResource completeTemplate}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" Background="Transparent"
+                PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"
+                ItemsSource="{Binding}" x:Name="listView" Foreground="White" SelectionMode="Extended">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Style.Triggers>
                         <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                             <BeginStoryboard>
                                 <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0" EasingFunction="{StaticResource easeFunc}"
-                                            To="1" />
-                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"   Duration="0:0:0.2"   EasingFunction="{StaticResource easeFunc}"
-                                            To="1" />
-                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)" Duration="0:0:0.2"   EasingFunction="{StaticResource easeFunc}"
-                                            To="1" />
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0"
+                                            EasingFunction="{StaticResource easeFunc}" To="1" />
+                                    <DoubleAnimation
+                                            Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"
+                                            Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="1" />
+                                    <DoubleAnimation
+                                            Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"
+                                            Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="1" />
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
@@ -168,10 +167,12 @@
                                 <Storyboard>
                                     <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="1"
                                             To="0" />
-                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"   Duration="0:0:0.2"   EasingFunction="{StaticResource easeFunc}"
-                                            To="0" />
-                                    <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)" Duration="0:0:0.2"   EasingFunction="{StaticResource easeFunc}"
-                                            To="0" />
+                                    <DoubleAnimation
+                                            Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"
+                                            Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="0" />
+                                    <DoubleAnimation
+                                            Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"
+                                            Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="0" />
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
@@ -179,73 +180,84 @@
                     <Setter Property="RenderTransform">
                         <Setter.Value>
                             <TransformGroup>
-                                <ScaleTransform ScaleX="0" ScaleY="0"/>
+                                <ScaleTransform ScaleX="0" ScaleY="0" />
                             </TransformGroup>
                         </Setter.Value>
                     </Setter>
-                    <EventSetter Event="MouseDoubleClick" Handler="item_double_click"/>
-                    <Setter Property="RenderTransformOrigin" Value=".5,.5"/>
-                    <Setter Property="Margin" Value="5,0,5,10"/>
-                    <Setter Property="Padding" Value="15"/>
+                    <EventSetter Event="MouseDoubleClick" Handler="item_double_click" />
+                    <Setter Property="RenderTransformOrigin" Value=".5,.5" />
+                    <Setter Property="Margin" Value="5,0,5,10" />
+                    <Setter Property="Padding" Value="15" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListViewItem}">
                                 <Grid Background="Black" x:Name="root" RenderTransformOrigin=".5,.5">
                                     <Grid.RenderTransform>
                                         <TransformGroup>
-                                            <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                            <ScaleTransform ScaleX="1" ScaleY="1" />
                                         </TransformGroup>
                                     </Grid.RenderTransform>
-                                    <Rectangle x:Name="normal"  Fill="{Binding LogoColor}" />
-                                    <Rectangle x:Name="mouseover" Opacity="0" StrokeThickness="4" Stroke="{Binding TypeColor}"/>
+                                    <Rectangle x:Name="normal" Fill="{Binding LogoColor}" />
+
+                                    <Rectangle x:Name="mouseover" Opacity="0" StrokeThickness="4"
+                                            Stroke="{DynamicResource skinBrush}" />
                                     <Grid x:Name="pressed" Opacity="0">
-                                        <Border BorderThickness="4" BorderBrush="{Binding TypeColor}" />
-                                        <TextBlock Text="&#x25E5;" FontFamily="Segoe UI Symbol" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-15,0,0" FontSize="45" Foreground="{Binding TypeColor}"/>
-                                        <TextBlock Text="&#xE001;"  FontFamily="Segoe UI Symbol" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="15" Foreground="White"/>
+                                        <Border BorderThickness="4" BorderBrush="{DynamicResource skinBrush}" />
+                                        <!--<Grid x:Name="corner" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+                                            <Path Data="M 0,0 L 40,30 0,30 Z" Fill="{DynamicResource skinBrush}" />
+                                        </Grid>-->
+                                        <Grid x:Name="corner_select" HorizontalAlignment="Right" VerticalAlignment="Top">
+                                            <Path Data="M 0,0 L 40,0 40,30 Z" Fill="{DynamicResource skinBrush}" />
+                                            <TextBlock Margin="20,0,0,0" Text="&#xE0A5;" VerticalAlignment="Top"
+                                                    HorizontalAlignment="Left" FontFamily="Segoe UI Symbol"
+                                                    Foreground="{Binding LogoColor}" />
+                                            <TextBlock Visibility="{Binding InFav,Converter={StaticResource bool2vis}}"
+                                                    Margin="20,0,0,0" Text="&#xE0A5;" VerticalAlignment="Top"
+                                                    HorizontalAlignment="Left" FontFamily="Segoe UI Symbol"
+                                                    Foreground="White" />
+                                            <!--<TextBlock HorizontalAlignment="Right" Text="&#xE001;"
+                                                    FontFamily="Segoe UI Symbol" Foreground="White" />-->
+                                        </Grid>
                                     </Grid>
-                                    <ContentPresenter Margin="{TemplateBinding Padding}"/>
+                                    <ContentPresenter Margin="{TemplateBinding Padding}" />
                                     <VisualStateManager.VisualStateGroups>
                                         <VisualStateGroup x:Name="CommonStates">
-                                            <VisualState x:Name="Normal"/>
+                                            <VisualState x:Name="Normal" />
                                             <VisualState x:Name="MouseOver">
                                                 <Storyboard>
-                                                    <DoubleAnimation 
-                                                        Storyboard.TargetName="mouseover" 
-                                                        Storyboard.TargetProperty="Opacity" 
-                                                        Duration="0:0:0.2" To="1"/>
+                                                    <DoubleAnimation Storyboard.TargetName="mouseover"
+                                                            Storyboard.TargetProperty="Opacity" Duration="0:0:0.2"
+                                                            To="1" />
                                                 </Storyboard>
                                             </VisualState>
-                                            <VisualState x:Name="Disabled"/>
+                                            <VisualState x:Name="Disabled" />
                                         </VisualStateGroup>
                                         <VisualStateGroup x:Name="SelectionStates">
                                             <VisualStateGroup.Transitions>
                                                 <VisualTransition To="Unselected" GeneratedDuration="0:0:0.1" />
-                                                <VisualTransition To="Selected" GeneratedDuration="0:0:0.1"/>
+                                                <VisualTransition To="Selected" GeneratedDuration="0:0:0.1" />
                                             </VisualStateGroup.Transitions>
                                             <VisualState x:Name="Selected">
                                                 <Storyboard>
-                                                    <DoubleAnimation 
-                                                        Storyboard.TargetName="pressed" 
-                                                        Storyboard.TargetProperty="Opacity" 
-                                                        Duration="0:0:0.2" To="1"/>
-                                                    <DoubleAnimation 
-                                                        Storyboard.TargetName="root"
-                                                        Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"   Duration="0"  
-                                                        To="0.95" />
-                                                    <DoubleAnimation 
-                                                        Storyboard.TargetName="root"
-                                                        Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"   Duration="0" 
-                                                        To="0.95" />
+                                                    <DoubleAnimation Storyboard.TargetName="pressed"
+                                                            Storyboard.TargetProperty="Opacity" Duration="0:0:0.2"
+                                                            To="1" />
+                                                    <DoubleAnimation Storyboard.TargetName="root"
+                                                            Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"
+                                                            Duration="0" To="0.95" />
+                                                    <DoubleAnimation Storyboard.TargetName="root"
+                                                            Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"
+                                                            Duration="0" To="0.95" />
                                                 </Storyboard>
                                             </VisualState>
-                                            <VisualState x:Name="Unselected"/>
+                                            <VisualState x:Name="Unselected" />
                                         </VisualStateGroup>
                                         <VisualStateGroup x:Name="FocusStates">
-                                            <VisualState x:Name="Focused"/>
+                                            <VisualState x:Name="Focused" />
                                         </VisualStateGroup>
                                         <VisualStateGroup x:Name="ValidationStates">
-                                            <VisualState x:Name="InvalidFocused"/>
-                                            <VisualState x:Name="InvalidUnfocused"/>
+                                            <VisualState x:Name="InvalidFocused" />
+                                            <VisualState x:Name="InvalidUnfocused" />
                                         </VisualStateGroup>
                                     </VisualStateManager.VisualStateGroups>
                                 </Grid>
@@ -256,7 +268,7 @@
             </ListView.ItemContainerStyle>
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel   HorizontalAlignment="Left" Orientation="Horizontal" />
+                    <WrapPanel HorizontalAlignment="Left" Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
         </ListView>

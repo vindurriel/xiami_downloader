@@ -35,25 +35,22 @@ namespace MusicPlayer
         {
             IsLoggedIn = !string.IsNullOrEmpty(s);
         }
-        private async void btn_login_Click(object sender, RoutedEventArgs e)
-        {
-            await XiamiClient.GetDefault().Login();
-        }
         private async void btn_user_song_Click(object sender, RoutedEventArgs e)
         {
-            await SearchManager.Search("user:me", EnumSearchType.song);
+            Jean_Doe.MusicControl.SongViewModel.ClearFav();
+            await SearchManager.Search("user:lib", EnumSearchType.song);
         }
         private async void btn_user_artist_Click(object sender, RoutedEventArgs e)
         {
-            await SearchManager.Search("user:me", EnumSearchType.artist);
+            await SearchManager.Search("user:lib", EnumSearchType.artist);
         }
         private async void btn_user_album_Click(object sender, RoutedEventArgs e)
         {
-            await SearchManager.Search("user:me", EnumSearchType.album);
+            await SearchManager.Search("user:lib", EnumSearchType.album);
         }
         private async void btn_user_collect_Click(object sender, RoutedEventArgs e)
         {
-            await SearchManager.Search("user:me", EnumSearchType.collect);
+            await SearchManager.Search("user:lib", EnumSearchType.collect);
         }
         private async void btn_user_daily_Click(object sender, RoutedEventArgs e)
         {

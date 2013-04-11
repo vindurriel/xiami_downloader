@@ -35,7 +35,13 @@ namespace Jean_Doe.Common
             get { return artistId; }
             set { artistId = value; }
         }
-
+        private bool inFav = false;
+        [XmlAttribute]
+        public bool InFav
+        {
+            get { return inFav; }
+            set { inFav = value; }
+        }
         private bool hasLrc;
         [XmlAttribute]
         public bool HasLrc
@@ -78,6 +84,8 @@ namespace Jean_Doe.Common
         }
         #endregion
         #region Properties
+        [XmlIgnore]
+        public bool InLib { get; set; }
         [XmlIgnore]
         public string Logo { get { return UrlArt; } set { UrlArt = value; } }
         [XmlIgnore]

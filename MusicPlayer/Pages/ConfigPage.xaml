@@ -1,10 +1,6 @@
-﻿<UserControl x:Class="MusicPlayer.ConfigPage"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             FontSize="15"
-             xmlns:controls="http://jean.doe/controls"
-             x:Name="me"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<UserControl x:Class="MusicPlayer.ConfigPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib" FontSize="15" xmlns:controls="http://jean.doe/controls"
+        x:Name="me" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -14,13 +10,12 @@
             </ResourceDictionary.MergedDictionaries>
             <sys:Double x:Key="lineHeight">30</sys:Double>
             <Thickness x:Key="lineMargin">0,5</Thickness>
-            <Style TargetType="ListView" >
+            <Style TargetType="ListView">
                 <Setter Property="Background" Value="#01000000" />
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Foreground" Value="{Binding Foreground,ElementName=me}" />
             </Style>
             <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-                <EventSetter Event="TextBox.TextChanged" Handler="input_TextChanged" />
                 <Setter Property="MinWidth" Value="100" />
                 <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
                 <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -30,7 +25,6 @@
                 <Setter Property="Height" Value="{StaticResource lineHeight}" />
             </Style>
             <Style TargetType="PasswordBox" BasedOn="{StaticResource {x:Type PasswordBox}}">
-                <EventSetter Event="PasswordBox.PasswordChanged" Handler="pass_PasswordChanged" />
                 <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
                 <Setter Property="MinWidth" Value="100" />
                 <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -40,7 +34,6 @@
                 <Setter Property="Height" Value="{StaticResource lineHeight}" />
             </Style>
             <Style TargetType="controls:ToggleSwitch">
-                <EventSetter Event="IsOnChanged" Handler="toggle_changed" />
                 <Setter Property="Height" Value="{StaticResource lineHeight}" />
                 <Setter Property="OnColor" Value="{DynamicResource skinBrush}" />
                 <Setter Property="OffColor" Value="{DynamicResource selectBrush}" />
@@ -48,11 +41,11 @@
                 <Setter Property="HorizontalAlignment" Value="Left" />
             </Style>
             <Style TargetType="controls:ColorPicker">
-                <EventSetter Event="SelectedColorChanged" Handler="color_colorskin_SelectedColorChanged" />
-                <Setter Property="ShowRgbSliders" Value="False"/>
+                <Setter Property="ShowRgbSliders" Value="False" />
             </Style>
             <Style TargetType="TextBlock">
                 <Setter Property="FontSize" Value="15" />
+                <Setter Property="Foreground" Value="{Binding Foreground,ElementName=me}" />
                 <Setter Property="HorizontalAlignment" Value="Left" />
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
@@ -76,21 +69,21 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                <Grid  x:Name="root">
-                                    <Border BorderBrush="White" BorderThickness="0,0,1,0"/>
-                                    <Path Opacity="0" Data="M 0,10 L 10,0 10,20 Z" Fill="White" x:Name="pressed" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                                    <ContentPresenter  x:Name="content" Margin="{TemplateBinding Padding}" />
+                                <Grid x:Name="root">
+                                    <Border BorderBrush="White" BorderThickness="0,0,1,0" />
+                                    <Path Opacity="0" Data="M 0,10 L 10,0 10,20 Z" Fill="White" x:Name="pressed"
+                                            HorizontalAlignment="Right" VerticalAlignment="Center" />
+                                    <ContentPresenter x:Name="content" Margin="{TemplateBinding Padding}" />
                                     <VisualStateManager.VisualStateGroups>
                                         <VisualStateGroup x:Name="SelectionStates">
                                             <VisualState x:Name="Selected">
                                                 <Storyboard>
-                                                    <DoubleAnimation 
-                                                        Storyboard.TargetName="pressed" 
-                                                        Storyboard.TargetProperty="Opacity" 
-                                                        Duration="0:0:0.1" To="1"/>
+                                                    <DoubleAnimation Storyboard.TargetName="pressed"
+                                                            Storyboard.TargetProperty="Opacity" Duration="0:0:0.1"
+                                                            To="1" />
                                                 </Storyboard>
                                             </VisualState>
-                                            <VisualState x:Name="Unselected"/>
+                                            <VisualState x:Name="Unselected" />
                                         </VisualStateGroup>
                                     </VisualStateManager.VisualStateGroups>
                                 </Grid>
@@ -100,7 +93,8 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <ListView Margin="-3,0,0,0" ItemsSource="{Binding SourceItem,ElementName=me}" Grid.Column="1" SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Auto">
+        <ListView Margin="-3,0,0,0" ItemsSource="{Binding SourceItem,ElementName=me}" Grid.Column="1"
+                SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="Padding" Value="20,10" />
@@ -109,7 +103,7 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListViewItem}">
                                 <Border BorderBrush="White" BorderThickness="1,0,0,0">
-                                    <ContentPresenter  x:Name="content" Margin="{TemplateBinding Padding}" />
+                                    <ContentPresenter x:Name="content" Margin="{TemplateBinding Padding}" />
                                 </Border>
                             </ControlTemplate>
                         </Setter.Value>
@@ -125,130 +119,18 @@
                                 <Setter Property="Padding" Value="10,5" />
                             </Style>
                             <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
-                                <EventSetter Event="ComboBox.SelectionChanged" Handler="combo_SelectionChanged" />
                                 <Setter Property="HorizontalContentAlignment" Value="Left" />
                                 <Setter Property="HorizontalAlignment" Value="Left" />
-                                <Setter Property="SelectedValuePath" Value="Value" />
-                                <Setter Property="DisplayMemberPath" Value="Key" />
                                 <Setter Property="Margin" Value="{StaticResource lineMargin}" />
                                 <Setter Property="Height" Value="{StaticResource lineHeight}" />
                             </Style>
                         </DockPanel.Resources>
-                        <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center"  Width="100" TextWrapping="Wrap" />
-                        <ContentControl Content="{Binding UI}"/>
+                        <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center" Width="100"
+                                TextWrapping="Wrap" />
+                        <ContentControl Content="{Binding UI}" />
                     </DockPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
     </Grid>
 </UserControl>
-<!--<ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0">
-            <StackPanel>
-                <StackPanel.Resources>
-                </StackPanel.Resources>
-                <Label>下载</Label>
-                <TextBlock Text="下载位置" />
-                <Grid Margin="{StaticResource lineMargin}" HorizontalAlignment="Left"
-                  Height="{StaticResource lineHeight}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock x:Name="label_downloadfolder"
-                               FontSize="20"
-                           MinWidth="100"
-                           Margin="0"
-                           Height="{StaticResource lineHeight}"
-                           HorizontalAlignment="Stretch"
-                           VerticalAlignment="Center"
-                           Background="#555" />
-                    <Button x:Name="btn_browse"
-                        Click="btn_browse_Click"
-                        Content="浏览"
-                        MinWidth="80"
-                        Margin="2,0,0,0"
-                        Padding="5,2"
-                        MinHeight="{StaticResource lineHeight}"
-                        Grid.Column="1" />
-                    <FrameworkElement Width="2" />
-                </Grid>
-                <TextBlock Text="同时下载数量" />
-                <ComboBox x:Name="combo_maxconnection">
-                    <ComboBoxItem Content="10"
-                              Tag="10" />
-                    <ComboBoxItem Content="20"
-                              Tag="20" />
-                    <ComboBoxItem Content="不限制"
-                              Tag="9999" />
-                </ComboBox>
-                <TextBlock Text="歌曲名称规则" />
-                <ComboBox x:Name="combo_songnamepattern">
-                    <ComboBoxItem Content="艺术家 - 歌曲名 - 专辑名"
-                              Tag="%ArtistName - %Name - %AlbumName" />
-                    <ComboBoxItem Content="歌曲名 - 歌曲ID"
-                              Tag="%Name - %Id" />
-                    <ComboBoxItem Content="艺术家 - 歌曲名"
-                              Tag="%ArtistName - %Name" />
-                </ComboBox>
-                <TextBlock Text="目录名称规则" />
-                <ComboBox x:Name="combo_folderpattern">
-                    <ComboBoxItem Content="不建立目录"
-                              Tag="" />
-                    <ComboBoxItem Content="艺术家\专辑"
-                              Tag="%ArtistName\%AlbumName" />
-                    <ComboBoxItem Content="仅专辑"
-                              Tag="%AlbumName" />
-                    <ComboBoxItem Content="仅艺术家"
-                              Tag="%ArtistName" />
-                </ComboBox>
-                <Label>外观</Label>
-                <TextBlock Text="边界停靠" />
-                <controls:ToggleSwitch x:Name="toggle_enablemagnet"/>
-                <TextBlock Text="显示正在播放" />
-                <controls:ToggleSwitch x:Name="toggle_shownowplaying"/>
-                <TextBlock Text="显示歌词" />
-                <controls:ToggleSwitch x:Name="toggle_showlyric" />
-                <TextBlock Text="主题颜色" />
-                <Button Width="auto"
-                    x:Name="btn_skin"
-                    HorizontalAlignment="Left"
-                    MinWidth="0"
-                    Click="btn_skin_click"
-                    Padding="0"
-                    Margin="0,10">
-                    <DockPanel>
-                        <Rectangle Width="40" Height="30" Fill="{DynamicResource skinBrush}"/>
-                        <Rectangle Width="40" Height="30">
-                            <Rectangle.Fill>
-                                <SolidColorBrush Color="{Binding SelectedColor,ElementName=color_colorskin}" />
-                            </Rectangle.Fill>
-                        </Rectangle>
-                    </DockPanel>
-                </Button>
-                <Popup x:Name="pop_skin"
-                   IsOpen="False"
-                   PopupAnimation="Slide"
-                   StaysOpen="False"
-                   Placement="Left"
-                   PlacementTarget="{Binding ElementName=btn_skin}"
-                   AllowsTransparency="True">
-                    <Border Background="Black" Padding="10">
-                        <controls:ColorPicker FontSize="10" ShowRgbSliders="False"
-                                          x:Name="color_colorskin"></controls:ColorPicker>
-                    </Border>
-                </Popup>
-                <TextBlock Text="下一首模式" />
-                <ComboBox x:Name="combo_playnextmode">
-                    <ComboBoxItem Content="顺序"
-                              Tag="Sequential" />
-                    <ComboBoxItem Content="随机"
-                              Tag="Random" />
-                    <ComboBoxItem Content="单曲循环"
-                              Tag="Repeat" />
-                </ComboBox>
-                <Label>虾米账号</Label>
-                <TextBox x:Name="input_xiami_username"/>
-                <PasswordBox x:Name="pass_xiami_password"/>
-                <Button x:Name="btn_xiami_login" Width="70" HorizontalAlignment="Left" Margin="0,5">登录</Button>
-            </StackPanel>
-        </ScrollViewer>-->

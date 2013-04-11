@@ -74,6 +74,7 @@
     <Compile Include="Global.cs" />
     <Compile Include="Dom\IMusic.cs" />
     <Compile Include="Messages\MsgSetBusy.cs" />
+    <Compile Include="Messages\MsgUpdateFav.cs" />
     <Compile Include="Mp3Player.cs" />
     <Compile Include="NetAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
