@@ -90,6 +90,7 @@ namespace MusicPlayer
         {
             if (trayIcon == null) return;
             if (Global.AppSettings["ShowNowPlaying"] == "0") return;
+            if (WindowState != WindowState.Minimized) return;
             var now = list_complete.NowPlaying;
             balloonTip = new MyBalloonTip();
             balloonTip.ViewModel = now;

@@ -48,7 +48,7 @@ namespace MusicPlayer
                 new ComboConfigItem("下载","MaxConnection","同时下载数量"),
                 new ToggleConfigItem("外观","EnableMagnet","边界停靠"),
                 new ColorConfigItem("外观","ColorSkin","主题颜色"),
-                new ToggleConfigItem("外观","ShowNowPlaying","显示正在播放"),
+                new ToggleConfigItem("外观","ShowNowPlaying","最小化时显示正在播放"),
                 new ToggleConfigItem("外观","ShowLyric","显示歌词"),       
                 new ComboConfigItem("播放","PlayNextMode","下一首模式"),
                 new InputConfigItem("虾米账户","xiami_username","用户名"),

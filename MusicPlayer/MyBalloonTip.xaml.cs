@@ -1,6 +1,8 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using Jean_Doe.Common;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -23,37 +25,25 @@ namespace MusicPlayer
         {
             InitializeComponent();
             grid.MouseEnter += grid_MouseEnter;
-            grid.MouseLeave += grid_MouseLeave_1;
+            grid.MouseLeave += grid_MouseLeave;
             grid.MouseMove += OnGridMouseMove;
-            grid.MouseLeftButtonUp += OnGridMouseLeftButtonUp;
             TaskbarIcon.AddBalloonClosingHandler(this, OnBalloonClosing);
-        }
-
-        void OnGridMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            var win = Artwork.DataBus.DataBus.Get("MainWindow") as Window;
-            if (win == null) return;
-            if (win.WindowState == WindowState.Minimized)
-                win.WindowState = WindowState.Normal;
         }
 
         void OnGridMouseMove(object sender, MouseEventArgs e)
         {
         }
+        bool isChangingSong;
         private void grid_MouseEnter(object sender, MouseEventArgs e)
         {
-            //if we're already running the fade-out animation, do not interrupt anymore
-            //(makes things too complicated for the sample)
-
-            //the tray icon assigned this attached property to simplify access
-            //btn_close.Visibility = Visibility.Visible;
-            //btn_next.Visibility = Visibility.Visible;
-            //btn_play.Visibility = Visibility.Visible;
             TaskBarIcon.ResetBalloonCloseTimer();
         }
-        private void grid_MouseLeave_1(object sender, MouseEventArgs e)
+        CancellationTokenSource tokensource = new CancellationTokenSource();
+        private async void grid_MouseLeave(object sender, MouseEventArgs e)
         {
-            //btn_close.Visibility = Visibility.Hidden;
+            if (isChangingSong) return;
+            await Task.Delay(1000);
+            TaskBarIcon.CloseBalloon();
         }
         /// <summary>
         /// By subscribing to the <see cref="TaskbarIcon.BalloonClosingEvent"/>
@@ -69,10 +59,23 @@ namespace MusicPlayer
         /// Resolves the <see cref="TaskbarIcon"/> that displayed
         /// the balloon and requests a close action.
         /// </summary>
-        private void imgClose_MouseDown(object sender, RoutedEventArgs e)
+        private void btn_close_click(object sender, RoutedEventArgs e)
         {
             //the tray icon assigned this attached property to simplify access
             e.Handled = true;
+            TaskBarIcon.CloseBalloon();
+        }
+        private async void btn_view_click(object sender, RoutedEventArgs e)
+        {
+            //the tray icon assigned this attached property to simplify access
+            var win = Artwork.DataBus.DataBus.Get("MainWindow") as Window;
+            if (win != null)
+            {
+                win.WindowState = WindowState.Normal;
+                win.Topmost = true;
+                await Task.Delay(1000);
+                win.Topmost = false;
+            }
             TaskBarIcon.CloseBalloon();
         }
         TaskbarIcon _parent;
@@ -102,11 +105,23 @@ namespace MusicPlayer
         }
         private void btn_next_click(object sender, RoutedEventArgs e)
         {
+            isChangingSong = true;
+            Task.Run(() =>
+            {
+                Task.Delay(500).Wait();
+                isChangingSong = false;
+            });
             Mp3Player.Next();
         }
         private void btn_play_click(object sender, RoutedEventArgs e)
         {
             (sender as Button).Content = "\xE102";
+            isChangingSong = true;
+            Task.Run(() =>
+            {
+                Task.Delay(500).Wait();
+                isChangingSong = false;
+            });
             Mp3Player.PauseResume();
         }
 

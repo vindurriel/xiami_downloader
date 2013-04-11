@@ -17,6 +17,7 @@
             </Style>
             <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
                 <Setter Property="MinWidth" Value="100" />
+                <Setter Property="Padding" Value="5,0" />
                 <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
                 <Setter Property="HorizontalContentAlignment" Value="Left" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -26,6 +27,7 @@
             </Style>
             <Style TargetType="PasswordBox" BasedOn="{StaticResource {x:Type PasswordBox}}">
                 <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
+                <Setter Property="Padding" Value="5,0" />
                 <Setter Property="MinWidth" Value="100" />
                 <Setter Property="HorizontalContentAlignment" Value="Left" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />

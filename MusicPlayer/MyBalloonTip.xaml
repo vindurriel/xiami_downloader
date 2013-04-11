@@ -134,7 +134,7 @@
                 LastChildFill="False" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                 <DockPanel.Resources>
                     <Style TargetType="Button" BasedOn="{StaticResource AppBarButtonStyle}">
-                        <Setter Property="Visibility" Value="{Binding IsMouseOver,ElementName=grid,Converter={StaticResource bool2vis}}" />
+                        <!--<Setter Property="Visibility" Value="{Binding IsMouseOver,ElementName=grid,Converter={StaticResource bool2vis}}" />-->
                     </Style>
                     <Style TargetType="Viewbox">
                         <Setter Property="Width" Value="35" />
@@ -148,7 +148,7 @@
                     <Button x:Name="btn_next" Content="&#xE101;" Click="btn_next_click" />
                 </Viewbox>
                 <Viewbox>
-                    <Button x:Name="btn_close" Click="imgClose_MouseDown" Content="&#xE10a;" />
+                    <Button x:Name="btn_close" Click="btn_view_click" Content="&#xE1AA;" />
                 </Viewbox>
             </DockPanel>
         </Grid>
