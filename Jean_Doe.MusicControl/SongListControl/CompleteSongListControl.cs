@@ -49,7 +49,7 @@ namespace Jean_Doe.MusicControl
             var cmd = File.ReadAllText(e.FullPath);
             if (cmd == "next")
                 UIHelper.RunOnUI(() => btn_next_Click(null, null));
-            else if(cmd=="pause")
+            else if (cmd == "pause")
                 UIHelper.RunOnUI(() => btn_play_Click(null, null));
 
         }
@@ -112,16 +112,16 @@ namespace Jean_Doe.MusicControl
                         return false;
                     }),
                     new CharmAction("正在播放",this.btn_show_Click,isNowPlayingNotSelected),  
-                    new CharmAction("查看歌词",this.btn_lrc_Click,(s)=>{return IsOnlyType<SongViewModel>(s) && (s as SongListControl).SelectedSongs.First().HasLrc;}),  
                     new CharmAction("下一首",this.btn_next_Click,isNowPlayingSelected),    
+                    new CharmAction("收藏该歌曲",this.btn_fav_Click,canFav),
+                    new CharmAction("不再收藏该歌曲",this.btn_unfav_Click,canUnfav),
                     new CharmAction("查看专辑歌曲",link_album,IsOnlyType<IHasAlbum>),
                     new CharmAction("查看歌手歌曲",link_artist,IsOnlyType<IHasArtist>),
                     new CharmAction("存为播放列表",this.btn_save_playlist_Click,s=>(s as CompleteSongListControl).SelectedSongs.Count()>1),
                     new CharmAction("复制文件到剪贴板",this.btn_copy_Click,defaultActionValidate),
                     new CharmAction("打开文件所在位置",this.btn_open_click,IsOnlyType<IHasMusicPart>),
                     new CharmAction("在浏览器中打开",this.btn_browse_Click,IsOnlyType<IHasMusicPart>),
-                    new CharmAction("收藏该歌曲",this.btn_fav_Click,canFav),
-                    new CharmAction("不再收藏该歌曲",this.btn_unfav_Click,canUnfav),
+
                     new CharmAction("删除",this.btn_remove_complete_Click,defaultActionValidate),
                 };
         }
@@ -140,12 +140,6 @@ namespace Jean_Doe.MusicControl
             if (list.NowPlaying == null) return false;
             var song = list.SelectedSongs.FirstOrDefault();
             return !Object.ReferenceEquals(list.NowPlaying, song);
-        }
-        void btn_lrc_Click(object sender, RoutedEventArgs e)
-        {
-            var song=this.SelectedSongs.First();
-            var lrcPath = Path.Combine(Global.BasePath, "cache", song.Id + ".lrc");
-            RunProgramHelper.RunProgram("notepad.exe", lrcPath);
         }
 
         void btn_show_Click(object sender, RoutedEventArgs e)
