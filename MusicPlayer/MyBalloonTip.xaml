@@ -10,7 +10,7 @@
         <Color x:Key="co">Black</Color>
         <Style TargetType="ScrollViewer" x:Key="scrollstyle">
             <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
-            <Setter Property="VerticalScrollBarVisibility" Value="Hidden" /> 
+            <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
             <Setter Property="Grid.Column" Value="1" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="10,0,0,0" />
@@ -94,7 +94,8 @@
                     <Setter Property="Margin" Value="2" />
                     <Setter Property="Height" Value="25" />
                     <Setter Property="Padding" Value="0" />
-                    <Setter Property="Visibility" Value="{Binding IsMouseOver,ElementName=grid,Converter={StaticResource bool2vis}}" />
+                    <Setter Property="Visibility"
+                            Value="{Binding IsMouseOver,ElementName=grid,Converter={StaticResource bool2vis}}" />
                 </Style>
             </Grid.Resources>
             <Grid.ColumnDefinitions>
@@ -105,21 +106,26 @@
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Image   IsHitTestVisible="False" Width="60" Height="60" Source="{Binding ImageSource}"
-                    Stretch="Uniform" VerticalAlignment="Top" />
+            <Grid Width="60" Height="60" VerticalAlignment="Top">
+                <Border BorderBrush="White" BorderThickness="3">
+                    <Image IsHitTestVisible="False" Source="{Binding ImageSource}" Stretch="Uniform"
+                            VerticalAlignment="Top" />
+                </Border>
+            </Grid>
             <ScrollViewer Grid.Column="1" Grid.RowSpan="2" Style="{StaticResource scrollstyle}" VerticalAlignment="Top">
                 <StackPanel>
                     <TextBlock Text="{Binding Name}" Style="{DynamicResource label_base}" />
                     <TextBlock Text="{Binding ArtistName}" Opacity="0.8" Style="{DynamicResource label_base}" />
-                </StackPanel> 
+                </StackPanel>
             </ScrollViewer>
-            <Grid Grid.Row="1" Margin="0,0,0,-15">
+            <Grid Grid.Row="1" Margin="0,0,0,-25">
                 <Button x:Name="btn_play" HorizontalAlignment="Left" VerticalAlignment="Bottom" Content="&#xE103;"
                         Click="btn_play_click" />
                 <Button x:Name="btn_next" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="&#xE101;"
                         Click="btn_next_click" />
             </Grid>
-            <Button Margin="0,-20,-20,0" x:Name="btn_close" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Click="btn_view_click" Content="&#xE1AA;" />
+            <Button Margin="0,-20,-20,0" x:Name="btn_close" Grid.Column="1" HorizontalAlignment="Right"
+                    VerticalAlignment="Top" Click="btn_view_click" Content="&#xE1AA;" />
         </Grid>
     </Grid>
 </UserControl>
