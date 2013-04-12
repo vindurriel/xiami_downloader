@@ -21,7 +21,7 @@ namespace Jean_Doe.MusicControl
             Info.Url = (Info.Entity as SongViewModel).UrlMp3;
             await base.Download();
         }
-       
+
         public override void Process()
         {
             base.Process();
@@ -35,13 +35,21 @@ namespace Jean_Doe.MusicControl
                     Directory.CreateDirectory(folder);
                 var mp3 = Path.Combine(folder, item.FileNameBase + ".mp3");
                 File.Copy(Info.FileName, mp3, true);
-                if (item.Song.WriteId3) {
+                if (item.Song.WriteId3)
+                {
                     var id3 = TagLib.File.Create(mp3);
                     id3.Tag.Clear();
                     id3.Tag.Album = item.AlbumName;
                     id3.Tag.Performers = new string[] { item.ArtistName };
                     id3.Tag.AlbumArtists = new string[] { item.ArtistName };
                     id3.Tag.Title = item.Name;
+                    try
+                    {
+                        id3.Tag.Lyrics = File.ReadAllText(Path.Combine(folder, item.FileNameBase + ".lrc"));
+                    }
+                    catch (Exception)
+                    {
+                    }
                     id3.Tag.Comment = item.Id;
                     if (item.TrackNo > 0)
                         id3.Tag.Track = (uint)item.TrackNo;
