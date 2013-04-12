@@ -3,6 +3,7 @@ using Jean_Doe.Common;
 using System.Collections.Generic;
 using System.Collections;
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 public class XiamiSearchProvider : ISearchProvider
 {
@@ -130,6 +131,8 @@ public class XiamiSearchProvider : ISearchProvider
             dynamic obj = null;
             if (key == "daily")
                 obj = await XiamiClient.GetDefault().GetDailyRecommend();
+            else if (key == "guess")
+                obj = await XiamiClient.GetDefault().GetGuess();
             else if (key == "lib")
                 obj = await XiamiClient.GetDefault().GetUserMusic(t, page);
             else
@@ -137,7 +140,7 @@ public class XiamiSearchProvider : ISearchProvider
             if (obj == null) break;
             var items = new List<IMusic>();
             var list = obj[musicType.ToString() + "s"];
-            if (list == null || list.Count == 0) break;
+            if (list == null) break;
             foreach (dynamic item in list)
             {
                 try

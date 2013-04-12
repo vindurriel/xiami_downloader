@@ -29,7 +29,17 @@ sealed class DynamicJsonConverter : JavaScriptConverter
 public sealed class DynamicJsonObject : DynamicObject
 {
     private readonly IDictionary<string, object> _dictionary;
+    public DynamicJsonObject(IDictionary<string, DynamicJsonObject> dic)
+    {
+        if (_dictionary == null)
+            throw new ArgumentNullException("dictionary");
+        _dictionary = new Dictionary<string, object>();
+        foreach (var item in dic)
+        {
+            _dictionary[item.Key] = item.Value;
+        }
 
+    }
     public DynamicJsonObject(IDictionary<string, object> dictionary)
     {
         if (dictionary == null)

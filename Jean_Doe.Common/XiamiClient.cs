@@ -47,10 +47,15 @@ namespace Jean_Doe.Common
 
             return json;
         }
+        public async Task<dynamic> GetGuess()
+        {
+            dynamic json = await Call_xiami_api("Recommend.getSongList"); //DailySongs
+            var res=new DynamicJsonObject(new Dictionary<string,object>{{"songs",json}});
+            return res;
+        }
         public async Task<dynamic> GetDailyRecommend()
         {
-            dynamic json = await Call_xiami_api("Recommend.DailySongs"); //DailySongs
-            return json;
+            return await Call_xiami_api("Recommend.DailySongs"); //DailySongs
         }
         public async Task<dynamic> GetUserMusic(string t, int page)
         {

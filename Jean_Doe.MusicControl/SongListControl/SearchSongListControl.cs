@@ -18,7 +18,7 @@ namespace Jean_Doe.MusicControl
         {
             MessageBus.Instance.Subscribe(this);
             Items.CollectionChanged += Items_CollectionChanged;
-
+            listView.ItemTemplate = this.Resources["searchTemplate"] as DataTemplate;
         }
         private double maxPlayTimes = 1;
 

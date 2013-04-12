@@ -39,10 +39,9 @@ namespace MusicPlayer
             TaskBarIcon.ResetBalloonCloseTimer();
         }
         CancellationTokenSource tokensource = new CancellationTokenSource();
-        private async void grid_MouseLeave(object sender, MouseEventArgs e)
+        private void grid_MouseLeave(object sender, MouseEventArgs e)
         {
             if (isChangingSong) return;
-            await Task.Delay(1000);
             TaskBarIcon.CloseBalloon();
         }
         /// <summary>
@@ -69,14 +68,12 @@ namespace MusicPlayer
         {
             //the tray icon assigned this attached property to simplify access
             var win = Artwork.DataBus.DataBus.Get("MainWindow") as Window;
-            if (win != null)
-            {
-                win.WindowState = WindowState.Normal;
-                win.Topmost = true;
-                await Task.Delay(1000);
-                win.Topmost = false;
-            }
+            if (win == null) return;
+            win.WindowState = WindowState.Normal;
+            win.Topmost = true;
             TaskBarIcon.CloseBalloon();
+            await Task.Delay(1000);
+            win.Topmost = false;
         }
         TaskbarIcon _parent;
         public TaskbarIcon TaskBarIcon

@@ -46,6 +46,7 @@ namespace Jean_Doe.MusicControl
         public string ArtistName { get { return song.ArtistName; } }
         public string ArtistId { get { return song.ArtistId; } }
         public string AlbumId { get { return song.AlbumId; } }
+        public string Description { get { return song.Description; } }
         public string UrlMp3 { get { return song.UrlMp3; } }
         public string UrlArt { get { return song.UrlArt; } }
         public string UrlLrc { get { return song.UrlLrc; } set { song.UrlLrc = value; } }
