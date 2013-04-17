@@ -1,9 +1,11 @@
 ﻿using Jean_Doe.Common;
+using System.Collections.Generic;
 public interface IMusic
 {
     string Logo { get; set; }
     string Id { get; set; }
     string Name { get; set; }
+    Dictionary<string,object>  JsonObject { get; set; }
     EnumMusicType Type { get; }
     void CreateFromJson(dynamic obj);
 }

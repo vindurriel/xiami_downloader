@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace Jean_Doe.MusicControl
 {
-    public class CollectViewModel : MusicViewModel, IHasCollection
+    public class CollectViewModel : MusicViewModel
     {
         Collection collect;
         public CollectViewModel(Collection a)
@@ -15,14 +14,6 @@ namespace Jean_Doe.MusicControl
             collect = a;
             TypeImage = ImageSource = "/Jean_Doe.MusicControl;component/Resources/collect.png";
         }
-        public string CollectionId
-        {
-            get { return collect.Id; }
-        }
-
-        public string CollectionName
-        {
-            get { return collect.Name; }
-        }
+        public string ArtistName { get { return collect.Get("user_name"); } }
     }
 }

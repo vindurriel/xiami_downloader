@@ -51,10 +51,10 @@ namespace Jean_Doe.MusicControl
                 UIHelper.RunOnUI(() => btn_next_Click(null, null));
             else if (cmd == "pause")
                 UIHelper.RunOnUI(() => btn_play_Click(null, null));
-
+            UIHelper.RunOnUI(() => ActionBarService.Refresh());
         }
 
-        void Mp3Player_SongChanged(object sender, Mp3Player.SongChangedEventArgs e)
+        void Mp3Player_SongChanged(object sender, SongChangedEventArgs e)
         {
             NowPlaying = Items.FirstOrDefault(x => x.Id == e.Id) as SongViewModel;
             ActionBarService.Refresh();
@@ -116,7 +116,7 @@ namespace Jean_Doe.MusicControl
                     new CharmAction("收藏该歌曲",this.btn_fav_Click,canFav),
                     new CharmAction("不再收藏该歌曲",this.btn_unfav_Click,canUnfav),
                     new CharmAction("查看专辑歌曲",link_album,IsOnlyType<IHasAlbum>),
-                    new CharmAction("查看歌手歌曲",link_artist,IsOnlyType<IHasArtist>),
+                    new CharmAction("查看艺术家歌曲",link_artist,IsOnlyType<IHasArtist>),
                     new CharmAction("存为播放列表",this.btn_save_playlist_Click,s=>(s as CompleteSongListControl).SelectedSongs.Count()>1),
                     new CharmAction("复制文件到剪贴板",this.btn_copy_Click,defaultActionValidate),
                     new CharmAction("打开文件所在位置",this.btn_open_click,IsOnlyType<IHasMusicPart>),
@@ -154,6 +154,7 @@ namespace Jean_Doe.MusicControl
             if (!string.IsNullOrEmpty(item.Song.FilePath))
             {
                 Mp3Player.Play(item.Song.FilePath, item.Id);
+                ActionBarService.Refresh();
             }
         }
 

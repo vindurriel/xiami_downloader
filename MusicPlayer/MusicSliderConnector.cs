@@ -52,14 +52,14 @@ namespace MusicPlayer
             Mp3Player.CurrentTime = TimeSpan.FromSeconds(e.NewValue);
         }
 
-        void Mp3Player_TimeChanged(object sender, Mp3Player.TimeChangedEventArgs e)
+        void Mp3Player_TimeChanged(object sender, TimeChangedEventArgs e)
         {
             da.To = e.Current.TotalSeconds;
             anim.Begin();
         }
         Storyboard anim;
         DoubleAnimation da;
-        void Mp3Player_SongChanged(object sender, Mp3Player.SongChangedEventArgs e)
+        void Mp3Player_SongChanged(object sender, SongChangedEventArgs e)
         {
             _slider.Visibility = Visibility.Visible;
             da.To = 0;

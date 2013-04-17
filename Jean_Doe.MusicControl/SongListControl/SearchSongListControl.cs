@@ -111,7 +111,7 @@ namespace Jean_Doe.MusicControl
                new CharmAction("收藏该歌曲",this.btn_fav_Click,canFav),
                new CharmAction("不再收藏该歌曲",this.btn_unfav_Click,canUnfav),
                new CharmAction("查看专辑的歌曲",link_album,IsOnlyType<IHasAlbum>),
-               new CharmAction("查看精选集的歌曲",link_collection,IsOnlyType<IHasCollection>),
+               new CharmAction("查看精选集的歌曲",link_collection,IsOnlyType<CollectViewModel>),
                new CharmAction("查看艺术家的相似艺人",link_similar_artist,IsOnlyType<IHasArtist>),
                new CharmAction("查看艺术家的歌曲",link_artist,IsOnlyType<IHasArtist>),
                new CharmAction("查看艺术家的专辑",link_artist_album,IsOnlyType<IHasArtist>),

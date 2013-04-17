@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Jean_Doe.Common
 {
-    public class MusicFactory
+    public static class MusicFactory
     {
         public static IMusic CreateFromJson(dynamic obj, EnumMusicType type)
         {

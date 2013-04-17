@@ -86,11 +86,10 @@ namespace MusicPlayer
         {
         }
 
-        void OnMp3PlayerSongChanged(object sender, Mp3Player.SongChangedEventArgs e)
+        void OnMp3PlayerSongChanged(object sender, SongChangedEventArgs e)
         {
             if (trayIcon == null) return;
             if (Global.AppSettings["ShowNowPlaying"] == "0") return;
-            if (WindowState != WindowState.Minimized) return; 
             var now = list_complete.NowPlaying;
             balloonTip = new MyBalloonTip();
             balloonTip.ViewModel = now;

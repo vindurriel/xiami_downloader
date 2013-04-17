@@ -246,9 +246,9 @@ namespace Jean_Doe.MusicControl
         }
         protected virtual async void link_collection(object sender, RoutedEventArgs e)
         {
-            var t = listView.SelectedItems.OfType<IHasCollection>().FirstOrDefault();
+            var t = listView.SelectedItems.OfType<CollectViewModel>().FirstOrDefault();
             if (t == null) return;
-            await SearchManager.Search("collect:" + t.CollectionId, EnumSearchType.song);
+            await SearchManager.Search("collect:" + t.Id, EnumSearchType.song);
         }
 
         protected virtual void go_song(object sender, RoutedEventArgs e)
@@ -385,12 +385,12 @@ namespace Jean_Doe.MusicControl
         {
             return (s as SongListControl).SelectedItems.Any();
         }
-        protected bool IsOnlyType<TInterface>(object source) where TInterface : IHasMusicPart
+        protected bool IsOnlyType<TInterface>(object source) where TInterface : class
         {
             var s = (source as SongListControl);
             return s.SelectedItems.Count(x => x is TInterface) == 1;
         }
-        protected bool IsType<TInterface>(object source) where TInterface : IHasMusicPart
+        protected bool IsType<TInterface>(object source) where TInterface : class
         {
             var s = (source as SongListControl);
             return s.SelectedItems.Count() > 0 && s.SelectedItems.All(x => x is TInterface);

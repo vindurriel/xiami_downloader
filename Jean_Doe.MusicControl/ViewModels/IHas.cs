@@ -17,9 +17,4 @@ namespace Jean_Doe.MusicControl
         string AlbumId { get; }
         string AlbumName { get; }
     }
-    public interface IHasCollection : IHasMusicPart
-    {
-        string CollectionId { get; }
-        string CollectionName { get; }
-    }
 }

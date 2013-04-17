@@ -130,11 +130,13 @@ public class XiamiSearchProvider : ISearchProvider
         {
             dynamic obj = null;
             if (key == "daily")
-                obj = await XiamiClient.GetDefault().GetDailyRecommend();
+                obj = await XiamiClient.GetDefault().Call_xiami_api("Recommend.DailySongs"); 
             else if (key == "guess")
                 obj = await XiamiClient.GetDefault().GetGuess();
             else if (key == "lib")
                 obj = await XiamiClient.GetDefault().GetUserMusic(t, page);
+            else if (key == "collect_recommend")
+                obj = await XiamiClient.GetDefault().Call_xiami_api("Collects.recommend");
             else
                 throw new Exception("user:" + key + " is not supported");
             if (obj == null) break;

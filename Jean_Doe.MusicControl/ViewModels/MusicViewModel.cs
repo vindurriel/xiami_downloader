@@ -13,7 +13,7 @@ namespace Jean_Doe.MusicControl
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
         #endregion
-        IMusic music;
+        protected IMusic music;
         private string imageSrc;
         public string ImageSource
         {

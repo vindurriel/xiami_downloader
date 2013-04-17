@@ -28,8 +28,6 @@ namespace Jean_Doe.MusicControl
             try
             {
                 var item = Info.Entity as SongViewModel;
-                if (item == null)
-                    throw new Exception("item is null");
                 var folder = Path.Combine(Global.AppSettings["DownloadFolder"], item.Dir);
                 if (folder != null && !Directory.Exists(folder))
                     Directory.CreateDirectory(folder);
@@ -55,8 +53,15 @@ namespace Jean_Doe.MusicControl
                         id3.Tag.Track = (uint)item.TrackNo;
                     if (item.ImageSource != null)
                     {
-                        var pic = new TagLib.Picture(item.ImageSource);
-                        id3.Tag.Pictures = new TagLib.IPicture[] { pic };
+                        try
+                        {
+                            id3.Tag.Pictures = new TagLib.IPicture[] { new TagLib.Picture(item.ImageSource) };
+                        }
+                        catch (Exception e)
+                        {
+                            NotifyError(e);
+                        }
+
                     }
                     id3.Save();
                 }

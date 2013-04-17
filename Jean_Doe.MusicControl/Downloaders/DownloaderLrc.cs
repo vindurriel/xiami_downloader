@@ -30,7 +30,7 @@ namespace Jean_Doe.MusicControl
 				Info.Url = item.UrlLrc;
 				if(string.IsNullOrEmpty(Info.Url))
 				{
-					throw new Exception("no lyrics");
+                    return;
 				}
 			}
 			catch(Exception e)

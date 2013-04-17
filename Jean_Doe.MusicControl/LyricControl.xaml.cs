@@ -34,7 +34,7 @@ namespace Jean_Doe.MusicControl
             }
         }
         bool isworking;
-        void OnMp3PlayerTimeChanged(object sender, Mp3Player.TimeChangedEventArgs e)
+        void OnMp3PlayerTimeChanged(object sender, TimeChangedEventArgs e)
         {
             if (timelist == null || timelist.Length == 0) return;
             var t = e.Current;
@@ -70,7 +70,7 @@ namespace Jean_Doe.MusicControl
 
         ObservableCollection<LyricViewModel> source = new ObservableCollection<LyricViewModel>();
         double[] timelist = null;
-        void OnMp3PlayerSongChanged(object sender, Mp3Player.SongChangedEventArgs e)
+        void OnMp3PlayerSongChanged(object sender, SongChangedEventArgs e)
         {
             var lrcPath = Path.Combine(Global.BasePath, "cache", e.Id + ".lrc");
             var s = LyricViewModel.LoadLrcFile(lrcPath);

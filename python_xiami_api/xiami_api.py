@@ -36,10 +36,6 @@ def get_api_signature(dic,secret):
 	res+=secret
 	return md5(res)
 def api_get(method,params={}):
-	f=cwd("access_token")
-	if not os.path.isfile(f):
-		die("file access_token not found in %s. Get new token first."%cwd())
-	access_token=file(f,'r').read()
 	url_api="http://api.xiami.com/api"
 	dic={
 		"method":method,
@@ -49,15 +45,18 @@ def api_get(method,params={}):
 	for k,v in params.iteritems():
 		dic[k]=v
 	dic["api_sig"]=get_api_signature(dic,client_secret)
+	access_token=""
+	f=cwd("access_token")
+	if os.path.isfile(f):
+		access_token=file(f,'r').read()
 	dic["access_token"]=access_token
 	resp=r.get(url_api,params=dic)
 	json=resp.json()
-	if json['err']:
+	if "err" in json and json["err"]:
 		die(json['err'])
+	if 'error' in json and json["error"]:
+		die(json['error'])
 	return json['data']
-# access_token,refresh_token=get_new_token(username,password)
-# dailysongs= api_get("Recommend.DailySongs")
-# print len(dailysongs['data']['songs'])
 def print_json(what):
 	import json
 	print json.dumps(what)

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Jean_Doe.Common;
-internal static class MusicHelper
+public  static class MusicHelper
 {
 	public static void LoadMusicInfoFromJson(IMusic m, dynamic obj)
 	{
@@ -8,7 +8,12 @@ internal static class MusicHelper
 		m.Name = Get(obj,  type + "_name", "name","title" );
 		m.Id = Get(obj, type + "_id", "id","obj_id" );
 		m.Logo = StringHelper.EscapeUrl(Get(obj, type + "_logo", "logo","album_logo" ));
+        m.JsonObject = obj as Dictionary<string, object>;
 	}
+    public static string Get(this IMusic m, params string[] props)
+    {
+        return Get(m.JsonObject, props);
+    }
     public static string Get(dynamic obj, params string[] props)
     {
         object res = null;

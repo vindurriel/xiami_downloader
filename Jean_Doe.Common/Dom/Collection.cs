@@ -1,4 +1,5 @@
 ﻿using Jean_Doe.Common;
+using System.Collections.Generic;
 public class Collection : IMusic
 {
     public string Logo
@@ -30,4 +31,5 @@ public class Collection : IMusic
         if (string.IsNullOrEmpty(Id))
             Id = MusicHelper.Get(obj, "list_id");
     }
+    public Dictionary<string, object> JsonObject { get; set; }
 }

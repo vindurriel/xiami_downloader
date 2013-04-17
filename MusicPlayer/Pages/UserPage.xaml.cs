@@ -60,11 +60,16 @@ namespace MusicPlayer
         {
             await SearchManager.Search("user:guess", EnumSearchType.song);
         }
+        private async void btn_collect_recommend_Click(object sender, RoutedEventArgs e)
+        {
+            await SearchManager.Search("user:collect_recommend", EnumSearchType.collect);
+        }
         public IEnumerable<CharmAction> ProvideActions()
         {
             return new List<CharmAction>{
             new CharmAction("今日推荐歌单",btn_user_daily_Click,(s)=>IsLoggedIn),
             new CharmAction("猜你喜欢",btn_user_guess_Click,(s)=>IsLoggedIn),
+            new CharmAction("推荐精选集",btn_collect_recommend_Click,(s)=>IsLoggedIn),
             new CharmAction("收藏的歌曲",btn_user_song_Click,(s)=>IsLoggedIn),
             new CharmAction("收藏的艺术家",btn_user_artist_Click,(s)=>IsLoggedIn),
             new CharmAction("收藏的专辑",btn_user_album_Click,(s)=>IsLoggedIn),

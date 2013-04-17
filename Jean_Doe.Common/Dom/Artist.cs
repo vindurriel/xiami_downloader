@@ -1,4 +1,5 @@
 ﻿using Jean_Doe.Common;
+using System.Collections.Generic;
 public class Artist : IMusic
 {
     public string Logo
@@ -32,4 +33,5 @@ public class Artist : IMusic
         if (!string.IsNullOrEmpty(AlbumCount))
             AlbumCount += "张专辑";
     }
+    public Dictionary<string, object> JsonObject { get; set; }
 }

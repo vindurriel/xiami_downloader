@@ -85,6 +85,8 @@ namespace Jean_Doe.Common
         #endregion
         #region Properties
         [XmlIgnore]
+        public Dictionary<string, object> JsonObject { get; set; }
+        [XmlIgnore]
         public string Description { get; set; }
         [XmlIgnore]
         public string Logo { get { return UrlArt; } set { UrlArt = value; } }

@@ -7,12 +7,13 @@ public class Album : IMusic
         get;
         set;
     }
-    public string Description { get; set; }
+
     public string Id
     {
         get;
         set;
     }
+    public Dictionary<string, object> JsonObject { get; set; }
     public string ArtistId { get; set; }
     public string ArtistName { get; set; }
     public string Name
@@ -27,7 +28,6 @@ public class Album : IMusic
     public void CreateFromJson(dynamic obj)
     {
         MusicHelper.LoadMusicInfoFromJson(this, obj);
-        Description = MusicHelper.Get(obj, "gmt_publish");
         ArtistId = MusicHelper.Get(obj, "artist_id");
         ArtistName = MusicHelper.Get(obj, "artist_name");
     }
