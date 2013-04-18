@@ -30,6 +30,8 @@ namespace Jean_Doe.MusicControl
 				Info.Url = item.UrlLrc;
 				if(string.IsNullOrEmpty(Info.Url))
 				{
+                    State = EnumDownloadState.Error;
+                    NotifyState();
                     return;
 				}
 			}
