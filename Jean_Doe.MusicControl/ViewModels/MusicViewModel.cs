@@ -32,6 +32,13 @@ namespace Jean_Doe.MusicControl
         {
             music = m;
         }
+        private bool canAnimate = true;
+
+        public bool CanAnimate
+        {
+            get { return canAnimate; }
+            set { canAnimate = value; }
+        }
         private string searchStr = null;
 
         public string SearchStr

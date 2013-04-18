@@ -129,11 +129,10 @@ namespace Jean_Doe.Common
             ArtistId = MusicHelper.Get(obj, "artist_id");
             ArtistName = MusicHelper.Get(obj, "artist_name", "name");
             AlbumId = MusicHelper.Get(obj, "album_id");
-            AlbumName = MusicHelper.Get(obj,  "album_name", "name");
+            AlbumName = MusicHelper.Get(obj, "album_name", "name");
             UrlMp3 = StringHelper.EscapeUrl(MusicHelper.Get(obj, "location", "song_location", "listen_file"));
             UrlLrc = StringHelper.EscapeUrl(MusicHelper.Get(obj, "lyric", "song_lyric"));
-            Description = MusicHelper.Get(obj, "reason","description");
-            Description = System.Text.RegularExpressions.Regex.Replace(Description, @"^.*「(.*?)」.*$", "你喜欢 $1");
+            Description = MusicHelper.Get(obj, "reason", "description");
             WriteId3 = true;
         }
     }

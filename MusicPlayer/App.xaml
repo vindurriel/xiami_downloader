@@ -21,7 +21,7 @@
                     <SolidColorBrush  x:Key='skinBrush' Color="{DynamicResource skinColor}" />
                     <SolidColorBrush x:Key="ColorSkin"
                                      Color="Black" />
-                    <QuadraticEase x:Key="easeFunc"
+                    <QuinticEase  x:Key="easeFunc" 
                                    EasingMode="EaseOut" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>

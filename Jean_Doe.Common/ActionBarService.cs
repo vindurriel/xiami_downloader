@@ -45,7 +45,7 @@ namespace Jean_Doe.Common
                 validActions = Actions[ContextName].Where(x => x.Validate(Contexts[ContextName])).ToList();
                 actionBar.ValidActions(validActions);
             }
-            actionBar.IsOpen = validActions.Count > 0;
+            actionBar.IsOpen = validActions.Count > 0; 
         }
         static Dictionary<string, object> Contexts = new Dictionary<string, object>();
         static IActionBar actionBar;

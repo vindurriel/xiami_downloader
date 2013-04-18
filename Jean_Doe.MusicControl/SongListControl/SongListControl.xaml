@@ -30,7 +30,6 @@
                             Stretch="Uniform" />
                 </Border>
             </Grid>
-          
         </DataTemplate>
         <Style TargetType="ScrollViewer" x:Key="scrollstyle">
             <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
@@ -39,76 +38,128 @@
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="10,0,0,0" />
             <Setter Property="IsHitTestVisible"
-                    Value="{Binding IsSelected,RelativeSource={RelativeSource AncestorType=ListViewItem}}" />
+                    Value="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListViewItem}}" />
+        </Style>
+        <Style TargetType="Rectangle" x:Key="triggerStyle">
+            <EventSetter Event="MouseMove" Handler="toggle_detail" />
+            <EventSetter Event="MouseEnter" Handler="toggle_detail" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="Fill" Value="#01000000" />
+            <Setter Property="IsHitTestVisible"
+                    Value="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListViewItem}}" />
         </Style>
         <DataTemplate x:Key="downloadingTemplate">
             <Grid Width="220" Height="70">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <ContentControl Content="{Binding}" ContentTemplate="{StaticResource t_image}" />
-                <ScrollViewer Style="{StaticResource scrollstyle}">
-                    <StackPanel>
-                        <TextBlock Text="{Binding Name}" Style="{DynamicResource label_base}" />
-                        <TextBlock Text="{Binding ArtistName}" Opacity="0.8" Style="{DynamicResource label_base}" />
-                        <Grid MinWidth="100" Margin="0,2,0,0">
-                            <!--下载状态-->
-                            <Grid.Resources>
-                                <Style TargetType='Rectangle'>
-                                    <Setter Property='MinWidth' Value='80' />
-                                    <Setter Property='Height' Value='4' />
-                                    <Setter Property='Margin' Value='0,0,3,0' />
-                                    <Setter Property='Fill' Value='{DynamicResource lightBrush}' />
-                                </Style>
-                            </Grid.Resources>
-                            <Rectangle x:Name="mp3Indicator"
-                                    Opacity='{Binding HasMp3,Converter={StaticResource bool2opa}}' />
-                            <Rectangle Width="{Binding  ElementName=mp3Indicator,Path=ActualWidth}"
-                                    HorizontalAlignment="Left">
-                                <Rectangle.RenderTransform>
-                                    <ScaleTransform ScaleX="{Binding Percent}" />
-                                </Rectangle.RenderTransform>
-                            </Rectangle>
-                        </Grid>
-                        <TextBlock Text="{Binding Status}" Opacity="0.5"
-                                Visibility="{Binding IsSelected,RelativeSource={RelativeSource AncestorType=ListViewItem},Converter={StaticResource bool2vis}}"
-                                Style="{DynamicResource label_base}" />
-                    </StackPanel>
-                </ScrollViewer>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="70" />
+                </Grid.RowDefinitions>
+                <Grid x:Name="detail" Height="0">
+                    <ScrollViewer Style="{StaticResource scrollstyle}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Status}" Opacity="0.5" Style="{DynamicResource label_base}" />
+
+                        </StackPanel>
+                    </ScrollViewer>
+                    <Rectangle Grid.ColumnSpan="2" Style="{StaticResource triggerStyle}" VerticalAlignment="Bottom" />
+                </Grid>
+                <Grid Grid.Row="1" Height="70">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource t_image}" />
+                    <ScrollViewer Grid.Column="1" Style="{StaticResource scrollstyle}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}" FontSize="18" TextWrapping="NoWrap"
+                                    TextTrimming="CharacterEllipsis" Style="{DynamicResource label_base}" />
+                            <TextBlock Text="{Binding ArtistName}" Opacity="0.8" TextWrapping="NoWrap"
+                                    TextTrimming="CharacterEllipsis" Style="{DynamicResource label_base}" />
+                            <Grid MinWidth="100" Margin="0,2,0,0">
+                                <!--下载状态-->
+                                <Grid.Resources>
+                                    <Style TargetType='Rectangle'>
+                                        <Setter Property='MinWidth' Value='80' />
+                                        <Setter Property='Height' Value='4' />
+                                        <Setter Property='Margin' Value='0,0,3,0' />
+                                        <Setter Property='Fill' Value='{DynamicResource lightBrush}' />
+                                    </Style>
+                                </Grid.Resources>
+                                <Rectangle x:Name="mp3Indicator"
+                                        Opacity='{Binding HasMp3,Converter={StaticResource bool2opa}}' />
+                                <Rectangle Width="{Binding  ElementName=mp3Indicator,Path=ActualWidth}"
+                                        HorizontalAlignment="Left">
+                                    <Rectangle.RenderTransform>
+                                        <ScaleTransform ScaleX="{Binding Percent}" />
+                                    </Rectangle.RenderTransform>
+                                </Rectangle>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                    <Rectangle Grid.ColumnSpan="2" Style="{StaticResource triggerStyle}" VerticalAlignment="Top" />
+                </Grid>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="searchTemplate">
             <Grid Width="220" Height="70">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <ContentControl Content="{Binding}" ContentTemplate="{StaticResource t_image}" />
-                <ScrollViewer Style="{StaticResource scrollstyle}">
-                    <StackPanel>
-                        <TextBlock Text="{Binding Name}" Style="{DynamicResource label_base}" />
-                        <TextBlock Text="{Binding ArtistName}" Opacity="0.8" Style="{DynamicResource label_base}" />
-                        <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{StaticResource label_base}" />
-                        <TextBlock Text="{Binding Description}" Opacity="0.5" Style="{StaticResource label_base}" />
-                    </StackPanel>
-                </ScrollViewer>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="70" />
+                </Grid.RowDefinitions>
+                <Grid x:Name="detail" Height="0">
+                    <ScrollViewer Style="{StaticResource scrollstyle}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Description}" Opacity="0.5" Style="{StaticResource label_base}" />
+                        </StackPanel>
+                    </ScrollViewer>
+                    <Rectangle Grid.ColumnSpan="2" Style="{StaticResource triggerStyle}" VerticalAlignment="Bottom" />
+                </Grid>
+                <Grid Grid.Row="1" Height="70">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource t_image}" />
+                    <ScrollViewer Grid.Column="1" Style="{StaticResource scrollstyle}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}" FontSize="18" Style="{DynamicResource label_base}" />
+                            <TextBlock Text="{Binding ArtistName}" Opacity="0.8" Style="{DynamicResource label_base}" />
+                            <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{StaticResource label_base}" />
+                        </StackPanel>
+                    </ScrollViewer>
+                    <Rectangle Grid.ColumnSpan="2" Style="{StaticResource triggerStyle}" VerticalAlignment="Top" />
+                </Grid>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="completeTemplate">
             <Grid Width="220" Height="70">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <ContentControl Content="{Binding}" ContentTemplate="{StaticResource t_image}" />
-                <ScrollViewer Style="{StaticResource scrollstyle}">
-                    <StackPanel>
-                        <TextBlock Text="{Binding Name}" FontSize="18" Style="{DynamicResource label_base}" />
-                        <TextBlock Text="{Binding ArtistName}" Opacity="0.8" Style="{DynamicResource label_base}" />
-                        <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{StaticResource label_base}" />
-                    </StackPanel>
-                </ScrollViewer>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="70" />
+                </Grid.RowDefinitions>
+                <Grid x:Name="j" Height="0">
+                    <ScrollViewer Style="{StaticResource scrollstyle}">
+                        <StackPanel>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                    <Rectangle Grid.ColumnSpan="2" Style="{StaticResource triggerStyle}" VerticalAlignment="Bottom" />
+                </Grid>
+                <Grid Grid.Row="1" Height="70">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource t_image}" />
+                    <ScrollViewer Grid.Column="1" Style="{StaticResource scrollstyle}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}" FontSize="18" Style="{DynamicResource label_base}" />
+                            <TextBlock Text="{Binding ArtistName}" Opacity="0.8" Style="{DynamicResource label_base}" />
+                            <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{StaticResource label_base}" />
+                        </StackPanel>
+                    </ScrollViewer>
+                    <Rectangle Grid.ColumnSpan="2" Style="{StaticResource triggerStyle}" VerticalAlignment="Top" />
+                </Grid>
             </Grid>
         </DataTemplate>
         <SolidColorBrush Color='{DynamicResource skinColor}' Opacity="0.2" x:Key='skinBrushFade' />

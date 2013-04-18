@@ -446,5 +446,33 @@ namespace Jean_Doe.MusicControl
             var s = (o as SongListControl).SelectedSongs;
             return s.Count() > 0 && s.Any(x => x.InFav);
         }
+        bool showDetail = false;
+        T GetParentOf<T>(DependencyObject o) where T : class
+        {
+            if (o == null) return null;
+            var p = System.Windows.Media.VisualTreeHelper.GetParent(o);
+            if (p == null) return null;
+            if (p is T) return p as T;
+            return GetParentOf<T>(p);
+        }
+        private void toggle_detail(object sender, MouseEventArgs e)
+        {
+            var music = (sender as FrameworkElement).DataContext as MusicViewModel;
+            if (!music.CanAnimate) return;
+            music.CanAnimate = false;
+            showDetail = !showDetail;
+            var to = showDetail ? 71.0 : 0.0;
+            var g = GetParentOf<Grid>(sender as FrameworkElement);
+            var s = g.FindName("detail") as FrameworkElement;
+            if (s == null) { music.CanAnimate = true; return; }
+            var sb = new Storyboard();
+            var da = new DoubleAnimation(to, new Duration(TimeSpan.FromSeconds(1)));
+            da.EasingFunction = new QuinticEase { EasingMode = EasingMode.EaseOut };
+            Storyboard.SetTarget(da, s);
+            Storyboard.SetTargetProperty(da, new PropertyPath("Height"));
+            sb.Children.Add(da);
+            sb.Completed += (d, ef) => music.CanAnimate = true;
+            sb.Begin();
+        }
     }
 }

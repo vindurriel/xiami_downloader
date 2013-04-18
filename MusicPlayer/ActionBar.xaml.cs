@@ -52,6 +52,7 @@ namespace MusicPlayer
         void IActionBar.ValidActions(IEnumerable<CharmAction> actions)
         {
             more_actions.IsOpen = false;
+            
             source1.Clear();
             source2.Clear();
             var c = actions.Count();
