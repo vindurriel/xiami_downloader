@@ -446,31 +446,37 @@ namespace Jean_Doe.MusicControl
             var s = (o as SongListControl).SelectedSongs;
             return s.Count() > 0 && s.Any(x => x.InFav);
         }
-        bool showDetail = false;
-        T GetParentOf<T>(DependencyObject o) where T : class
+        T GetParentOf<T>(DependencyObject o, string name) where T : class
         {
             if (o == null) return null;
             var p = System.Windows.Media.VisualTreeHelper.GetParent(o);
             if (p == null) return null;
-            if (p is T) return p as T;
-            return GetParentOf<T>(p);
+            if (p is T && (p as FrameworkElement).Name == name) return p as T;
+            return GetParentOf<T>(p, name);
         }
         private void toggle_detail(object sender, MouseEventArgs e)
         {
             var music = (sender as FrameworkElement).DataContext as MusicViewModel;
             if (!music.CanAnimate) return;
             music.CanAnimate = false;
-            showDetail = !showDetail;
-            var to = showDetail ? 71.0 : 0.0;
-            var g = GetParentOf<Grid>(sender as FrameworkElement);
-            var s = g.FindName("detail") as FrameworkElement;
-            if (s == null) { music.CanAnimate = true; return; }
+            music.IsDetailShown = !music.IsDetailShown;
+            var root = GetParentOf<Grid>(sender as FrameworkElement, "root");
+            var main = root.FindName("main") as FrameworkElement;
+            var detail = root.FindName("detail") as FrameworkElement;
+            var to = music.IsDetailShown ? 0 : 70;
+            var to2 = !music.IsDetailShown ? 15 : 70;
             var sb = new Storyboard();
             var da = new DoubleAnimation(to, new Duration(TimeSpan.FromSeconds(1)));
-            da.EasingFunction = new QuinticEase { EasingMode = EasingMode.EaseOut };
-            Storyboard.SetTarget(da, s);
+            var da2 = new DoubleAnimation(to2, new Duration(TimeSpan.FromSeconds(1)));
+            detail.Height = 15;
+            var ease = new QuinticEase { EasingMode = EasingMode.EaseOut };
+            da.EasingFunction = da2.EasingFunction = ease;
+            Storyboard.SetTarget(da, main);
             Storyboard.SetTargetProperty(da, new PropertyPath("Height"));
+            Storyboard.SetTarget(da2, detail);
+            Storyboard.SetTargetProperty(da2, new PropertyPath("Height"));
             sb.Children.Add(da);
+            sb.Children.Add(da2);
             sb.Completed += (d, ef) => music.CanAnimate = true;
             sb.Begin();
         }

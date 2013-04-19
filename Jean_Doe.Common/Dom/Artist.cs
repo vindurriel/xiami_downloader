@@ -33,5 +33,5 @@ public class Artist : IMusic
         if (!string.IsNullOrEmpty(AlbumCount))
             AlbumCount += "张专辑";
     }
-    public Dictionary<string, object> JsonObject { get; set; }
+    public dynamic  JsonObject { get; set; }
 }

@@ -1,4 +1,12 @@
-﻿<controls:ResizeWindow xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:my="clr-namespace:MusicPlayer" xmlns:controls="http://jean.doe/controls" xmlns:common="clr-namespace:Jean_Doe.Common;assembly=Jean_Doe.Common" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="MusicPlayer.MainWindow" WindowStyle="None" Foreground="{DynamicResource lightBrush}" AllowsTransparency="True" Background="#01ffffff" Icon="Resources/icon.ico" SnapsToDevicePixels="True" FontSize="15" ResizeMode="CanResizeWithGrip" x:Name="me" MinHeight="480" SizeToContent="Manual" MinWidth="640" FontFamily="/xiami;component/Resources/#Soho Gothic Pro Light" Title="虾米下载" BorderWidth="5">
+﻿<controls:ResizeWindow xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:my="clr-namespace:MusicPlayer"
+        xmlns:controls="http://jean.doe/controls" xmlns:common="clr-namespace:Jean_Doe.Common;assembly=Jean_Doe.Common"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+        x:Class="MusicPlayer.MainWindow" WindowStyle="None" Foreground="{DynamicResource lightBrush}"
+        AllowsTransparency="True" Background="#01ffffff" Icon="Resources/icon.ico" SnapsToDevicePixels="True"
+        FontSize="15" ResizeMode="CanResizeWithGrip" x:Name="me" MinHeight="480" SizeToContent="Manual" MinWidth="640"
+        FontFamily="/xiami;component/Resources/#Soho Gothic Pro Light" Title="虾米下载" BorderWidth="5">
     <controls:ResizeWindow.Resources>
         <controls:BoolToVisibilityConverter x:Key="bool2vis" />
         <Storyboard x:Key="Maximize">
@@ -8,14 +16,16 @@
             <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetProperty="Height" />
         </Storyboard>
         <Storyboard x:Key="SlideInRight">
-            <ThicknessAnimation Duration="0:0:.2" Storyboard.TargetProperty="Margin" From="30,0,-30,0" To="0" EasingFunction="{StaticResource easeFunc}" />
+            <ThicknessAnimation Duration="0:0:.2" Storyboard.TargetProperty="Margin" From="30,0,-30,0" To="0"
+                    EasingFunction="{StaticResource easeFunc}" />
             <DoubleAnimation Duration="0:0:.1" Storyboard.TargetProperty="Opacity" From="0" To="1" />
             <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="IsHitTestVisible">
                 <DiscreteBooleanKeyFrame KeyTime="0" Value="True" />
             </BooleanAnimationUsingKeyFrames>
         </Storyboard>
         <Storyboard x:Key="SlideInLeft">
-            <ThicknessAnimation Duration="0:0:.2" Storyboard.TargetProperty="Margin" From="-30,0,30,0" To="0" EasingFunction="{StaticResource easeFunc}" />
+            <ThicknessAnimation Duration="0:0:.2" Storyboard.TargetProperty="Margin" From="-30,0,30,0" To="0"
+                    EasingFunction="{StaticResource easeFunc}" />
             <DoubleAnimation Duration="0:0:.1" Storyboard.TargetProperty="Opacity" From="0" To="1" />
             <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="IsHitTestVisible">
                 <DiscreteBooleanKeyFrame KeyTime="0" Value="True" />
@@ -28,10 +38,12 @@
             </BooleanAnimationUsingKeyFrames>
         </Storyboard>
         <Storyboard x:Key="anim_show_more" Storyboard.TargetName="navi">
-            <DoubleAnimation Storyboard.TargetProperty="Height" Duration="0:0:0.2" To="80" EasingFunction="{StaticResource easeFunc}" />
+            <DoubleAnimation Storyboard.TargetProperty="Height" Duration="0:0:0.2" To="80"
+                    EasingFunction="{StaticResource easeFunc}" />
         </Storyboard>
         <Storyboard x:Key="anim_hide_more" Storyboard.TargetName="navi">
-            <DoubleAnimation Storyboard.TargetProperty="Height" Duration="0:0:0.2" To="50" EasingFunction="{StaticResource easeFunc}" />
+            <DoubleAnimation Storyboard.TargetProperty="Height" Duration="0:0:0.2" To="50"
+                    EasingFunction="{StaticResource easeFunc}" />
         </Storyboard>
         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
             <Setter Property="MinWidth" Value="80" />
@@ -110,20 +122,26 @@
                     <ToggleButton>
                         <DockPanel HorizontalAlignment="Center">
                             <TextBlock Text="&#xE11a;" Style="{StaticResource glyph}" />
-                            <TextBlock Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_search}" Text="{Binding ItemsCount, ElementName=list_search, StringFormat=\{0\}}" />
+                            <TextBlock
+                                    Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_search}"
+                                    Text="{Binding ItemsCount, ElementName=list_search, StringFormat=\{0\}}" />
                         </DockPanel>
                     </ToggleButton>
                     <ToggleButton>
                         <DockPanel HorizontalAlignment="Center">
                             <TextBlock Text="&#xE118;" Style="{StaticResource glyph}" />
-                            <TextBlock Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_download}" Text="{Binding ItemsCount, ElementName=list_download, StringFormat= \{0\}}" />
+                            <TextBlock
+                                    Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_download}"
+                                    Text="{Binding ItemsCount, ElementName=list_download, StringFormat= \{0\}}" />
                         </DockPanel>
                     </ToggleButton>
 
                     <ToggleButton>
                         <DockPanel HorizontalAlignment="Center">
                             <TextBlock Text="&#xE142;" Style="{StaticResource glyph}" />
-                            <TextBlock Visibility="{Binding ItemsCount, Converter={StaticResource int2vis}, ElementName=list_complete}" Text="{Binding ItemsCount, ElementName=list_complete, StringFormat=\{0\}}" />
+                            <TextBlock
+                                    Visibility="{Binding ItemsCount, Converter={StaticResource int2vis}, ElementName=list_complete}"
+                                    Text="{Binding ItemsCount, ElementName=list_complete, StringFormat=\{0\}}" />
                         </DockPanel>
                     </ToggleButton>
                     <ToggleButton>
@@ -156,7 +174,8 @@
                 <Grid x:Name="page1" Opacity="0" IsHitTestVisible="false">
                     <DockPanel>
                         <controls:SearchControl Margin="0,10" DockPanel.Dock="Top" x:Name="searchKeywordControl" />
-                        <TextBlock Text="" x:Name="text_search" Foreground="{DynamicResource skinBrush}" DockPanel.Dock="Top" Margin="5" FontSize="20" Visibility="Collapsed" />
+                        <TextBlock Text="" x:Name="text_search" Foreground="{DynamicResource skinBrush}"
+                                DockPanel.Dock="Top" Margin="5" FontSize="20" Visibility="Collapsed" />
                         <controls:SearchSongListControl x:Name="list_search" DockPanel.Dock="Top" />
                     </DockPanel>
                 </Grid>
@@ -164,18 +183,24 @@
                     <controls:DownloadSongListControl x:Name="list_download" />
                 </Grid>
                 <Grid x:Name="page3" Opacity="0" IsHitTestVisible="false">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <DockPanel Grid.Row="1">
-                        <controls:CompleteSongListControl x:Name="list_complete" />
-                    </DockPanel>
-                    <Grid x:Name="lrc" Margin="30,-10,0,0">
-                        <controls:LyricControl HorizontalAlignment="Left"  Grid.Row="1" x:Name="lyricShow"  MaxHeight="{Binding ActualHeight,ElementName=lrc}"/>
+                    <Grid Margin="0,-30,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <DockPanel Grid.Row="1">
+                            <controls:CompleteSongListControl x:Name="list_complete" />
+                        </DockPanel>
+                        <Grid x:Name="lrc" Margin="30,-5,0,0">
+                            <controls:LyricControl HorizontalAlignment="Left" x:Name="lyricShow"
+                                    MaxHeight="{Binding ActualHeight,ElementName=lrc}" />
+                        </Grid>
+                        <GridSplitter Height="30"   Background="#01ffffff" VerticalAlignment="Bottom"
+                                HorizontalAlignment="Stretch" />
+
+                        <Slider Background="{DynamicResource darkBrush}" Foreground="{DynamicResource skinBrush}"
+                                Height="20" x:Name="slider" Margin="-30,-10,-30,20" VerticalAlignment="Top" />
                     </Grid>
-                    <Slider Background="{DynamicResource darkBrush}" Foreground="{DynamicResource skinBrush}" x:Name="slider" Margin="-30,-40,-30,20" VerticalAlignment="Top" />
-                    <GridSplitter Grid.Row="0" Background="#01000000" Height="45"   VerticalAlignment="Bottom" HorizontalAlignment="Stretch" />
                 </Grid>
                 <Grid x:Name="page4" Opacity="0" IsHitTestVisible="false">
                     <Grid.ColumnDefinitions>
@@ -186,10 +211,12 @@
                 </Grid>
             </Grid>
             <Grid x:Name="footer" Grid.Row="2">
-                <controls:ProgressBar x:Name="busyIndicator" Foreground="{DynamicResource skinBrush}" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Stretch" IsIndeterminate="False" ItemWidth="5" />
+                <controls:ProgressBar x:Name="busyIndicator" Foreground="{DynamicResource skinBrush}" Margin="0"
+                        VerticalAlignment="Center" HorizontalAlignment="Stretch" IsIndeterminate="False" ItemWidth="5" />
             </Grid>
         </Grid>
         <my:ActionBar Height="50" x:Name="charmBar" Background="Black" VerticalAlignment="Bottom" />
-        <controls:TitleBar FontSize="20" HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Width="150" Height="50" x:Name="titleBar" />
+        <controls:TitleBar FontSize="20" HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Width="150"
+                Height="50" x:Name="titleBar" />
     </Grid>
 </controls:ResizeWindow>

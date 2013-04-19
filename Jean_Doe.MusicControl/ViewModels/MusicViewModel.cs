@@ -59,7 +59,16 @@ namespace Jean_Doe.MusicControl
             }
         }
 
+        public bool HasDetail { get { return !string.IsNullOrEmpty(Description); } }
+        public bool IsDetailShown { get; set; }
         public virtual string Name { get { return music.Name; } }
+        public virtual string Description
+        {
+            get
+            {
+                return music.Get("reason", "description");
+            }
+        }
         public virtual string Id { get { return music.Id; } }
         public virtual string Logo { get { return music.Logo; } }
         public virtual EnumMusicType Type { get { return music.Type; } }

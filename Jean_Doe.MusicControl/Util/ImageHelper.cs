@@ -11,7 +11,8 @@ namespace Jean_Doe.MusicControl
     public class ImageHelper
     {
         static Dictionary<string, string> dic = new Dictionary<string, string>();
-        static double lumosity = 80;
+        static double lumosity = 100;
+        static double saturation = 80;
         public static string defaultColor;
         public static string DefaultColor
         {
@@ -40,6 +41,7 @@ namespace Jean_Doe.MusicControl
                 }
                 var hsl = (HSLColor)bmp.GetPixel(0, 0);
                 hsl.Luminosity = lumosity;
+                hsl.Saturation = saturation;
                 var c = (System.Windows.Media.Color)hsl;
                 dic[path] = c.ToString();
             }

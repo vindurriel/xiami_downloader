@@ -13,7 +13,7 @@ public class Album : IMusic
         get;
         set;
     }
-    public Dictionary<string, object> JsonObject { get; set; }
+    public dynamic  JsonObject { get; set; }
     public string ArtistId { get; set; }
     public string ArtistName { get; set; }
     public string Name
