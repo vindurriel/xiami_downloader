@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 namespace Jean_Doe.MusicControl
@@ -154,31 +155,63 @@ namespace Jean_Doe.MusicControl
                 ActionBarService.Refresh();
             }
         }
-        static System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex("^(\\d+) (\\d+) (\\d+)$");
+        Regex reg = new Regex("^(\\d+)$");
+        Regex reg_ids = new Regex("^(\\d+) (\\d+) (\\d+)$");
         void btn_import_click(object sender, RoutedEventArgs e)
         {
             var dir = Global.AppSettings["DownloadFolder"];
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 var songs = new List<IMusic>();
-                var files = Directory.EnumerateFiles(dir, "*.mp3").ToArray();
                 var i = 0;
-                foreach (var item in files)
+                foreach (var item in Directory.EnumerateFiles(dir, "*.mp3"))
                 {
                     try
                     {
-                        var mp3 = TagLib.File.Create(item).Tag;
-                        if (mp3.Comment == null) return;
-                        var m = reg.Match(mp3.Comment);
-                        if (!m.Success) continue;
+                        var mp3 = TagLib.File.Create(item);
+                        var tags = mp3.Tag;
+                        if (tags.Comment == null) continue;
+                        var id = "";
+                        var artistid = "";
+                        var albumid = "";
+                        var logo = "";
+                        var m = reg_ids.Match(tags.Comment);
+                        if (!m.Success)
+                        {
+                            m = reg.Match(tags.Comment);
+                            if (!m.Success) continue;
+                            id = m.Groups[1].Value;
+                            var obj = await XiamiClient.GetDefault().Call_xiami_api("Songs.detail", "id=" + id);
+                            artistid = MusicHelper.Get(obj["song"], "artist_id");
+                            albumid = MusicHelper.Get(obj["song"], "album_id");
+                            logo = StringHelper.EscapeUrl(MusicHelper.Get(obj["song"], "logo"));
+                            tags.Comment = string.Join(" ", new[] { id, artistid, albumid });
+                            mp3.Save();
+                        }
+                        else
+                        {
+                            id = m.Groups[1].Value;
+                            artistid = m.Groups[2].Value;
+                            albumid = m.Groups[3].Value;
+                        }
+                        var art = System.IO.Path.Combine(Global.BasePath, "cache", albumid + ".art");
+                        if (!File.Exists(art))
+                        {
+                            if (string.IsNullOrEmpty(logo))
+                            {
+                                var obj = await XiamiClient.GetDefault().Call_xiami_api("Songs.detail", "id=" + id);
+                                logo = StringHelper.EscapeUrl(MusicHelper.Get(obj["song"], "logo"));
+                            }
+                            await new System.Net.WebClient().DownloadFileTaskAsync(logo, art);
+                        }
                         var song = new Song
                         {
-                            Id = m.Groups[1].Value,
-                            ArtistId = m.Groups[2].Value,
-                            AlbumId = m.Groups[3].Value,
-                            Name = mp3.Title,
-                            ArtistName = mp3.FirstPerformer,
-                            AlbumName = mp3.Album,
+                            Id = id,
+                            ArtistId = artistid,
+                            AlbumId = albumid,
+                            Name = tags.Title,
+                            ArtistName = tags.FirstPerformer,
+                            AlbumName = tags.Album,
                             FilePath = item,
                         };
                         songs.Add(song);
@@ -188,7 +221,7 @@ namespace Jean_Doe.MusicControl
                     {
 
                     }
-                    if (i == 10)
+                    if (i == 1)
                     {
                         Items.AddItems(songs);
                         songs.Clear();
@@ -244,7 +277,6 @@ namespace Jean_Doe.MusicControl
             Playlist.Clear();
             foreach (var item in SelectedSongs)
             {
-                if (!item.HasMp3) continue;
                 Playlist.Add(string.Format("#EXTINF:{0}", item.Id));
                 if (string.IsNullOrEmpty(item.Song.FilePath))
                     Playlist.Add(System.IO.Path.Combine(".", item.Dir, item.FileNameBase + ".mp3"));
@@ -283,7 +315,7 @@ namespace Jean_Doe.MusicControl
                 default:
                     break;
             }
-            if (item == null || !item.HasMp3 || string.IsNullOrEmpty(item.Song.FilePath)) return;
+            if (item == null || string.IsNullOrEmpty(item.Song.FilePath)) return;
             message.Next = item.Song.FilePath;
             message.Id = item.Id;
             SelectedSongs = new SongViewModel[] { item };

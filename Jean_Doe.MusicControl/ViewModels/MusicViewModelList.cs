@@ -8,11 +8,12 @@ namespace Jean_Doe.MusicControl
 {
     public class MusicViewModelList : ObservableCollection<MusicViewModel>
     {
-        public void AddItems(IEnumerable<IMusic> list, bool toFront = false)
+        public void AddItems(IEnumerable<IMusic> inlist, bool toFront = false)
         {
-            int count = list.Count();
+            int count = inlist.Count();
             if (count == 0) return;
             int s = 1000 / count;
+            var list = inlist.ToArray();
             Task.Run(() =>
             {
                 foreach (IMusic music in list)
@@ -44,12 +45,12 @@ namespace Jean_Doe.MusicControl
             if (s is SongViewModel)
             {
                 var dup = this.FirstOrDefault(x => x.Id == s.Id) as SongViewModel;
+                if (dup != null)
+                {
+                    return;
+                }
                 UIHelper.WaitOnUI(() =>
                 {
-                    if (dup != null)
-                    {
-                        Remove(dup);
-                    }
                     if (toFront)
                         Insert(0, s);
                     else

@@ -79,7 +79,7 @@ namespace Jean_Doe.MusicControl
         public void Open()
         {
             if (!CanOpen) return;
-            var filename = System.IO.Path.Combine(Global.AppSettings["DownloadFolder"], Dir, FileNameBase + ".mp3");
+            var filename = song.FilePath;
             if (File.Exists(filename))
             {
                 RunProgramHelper.RunProgram("explorer.exe", string.Format("/select, \"{0}\"", filename));
@@ -116,7 +116,7 @@ namespace Jean_Doe.MusicControl
                 ImageSource = art;
             else if (File.Exists(song.FilePath))
             {
-                
+
             }
         }
         Song song;
@@ -158,14 +158,7 @@ namespace Jean_Doe.MusicControl
         {
             get
             {
-                return HasMp3 && HasArt;
-            }
-        }
-        public bool Done
-        {
-            get
-            {
-                return HasMp3;
+                return true;
             }
         }
     }
