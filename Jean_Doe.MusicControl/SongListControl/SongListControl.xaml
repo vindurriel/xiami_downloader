@@ -50,7 +50,7 @@
             <Setter Property="Visibility" Value="{Binding HasDetail,Converter={StaticResource bool2vis}}" />
         </Style>
         <DataTemplate x:Key="searchTemplate">
-            <Grid Width="220" Height="70">
+            <Grid Width="220" Height="70" >
                 <Grid Margin="0,0,0,-15" x:Name="root" ClipToBounds="True">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />

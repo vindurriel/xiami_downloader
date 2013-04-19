@@ -48,7 +48,7 @@ namespace Jean_Doe.MusicControl
                     catch (Exception)
                     {
                     }
-                    id3.Tag.Comment = item.Id;
+                    id3.Tag.Comment = string.Join(" ", new[] { item.Id, item.ArtistId, item.AlbumId });
                     if (item.TrackNo > 0)
                         id3.Tag.Track = (uint)item.TrackNo;
                     if (item.ImageSource != null)

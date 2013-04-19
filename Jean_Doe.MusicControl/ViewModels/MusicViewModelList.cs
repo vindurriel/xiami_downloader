@@ -8,24 +8,24 @@ namespace Jean_Doe.MusicControl
 {
     public class MusicViewModelList : ObservableCollection<MusicViewModel>
     {
-        public void AddItems(IEnumerable<IMusic> list)
+        public void AddItems(IEnumerable<IMusic> list, bool toFront = false)
         {
             int count = list.Count();
             if (count == 0) return;
             int s = 1000 / count;
-            Task.Run(new System.Action(() =>
+            Task.Run(() =>
             {
                 foreach (IMusic music in list)
                 {
-                    addItem(music);
+                    addItem(music, toFront);
                     Thread.Sleep(s);
                 }
-            }));
+            });
         }
-        void addItem(IMusic music)
+        void addItem(IMusic music, bool toFront)
         {
             MusicViewModel s = null;
-            switch(music.Type)
+            switch (music.Type)
             {
                 case EnumMusicType.album:
                     s = new AlbumViewModel(music as Album);
@@ -40,12 +40,27 @@ namespace Jean_Doe.MusicControl
                     s = SongViewModel.Get(music as Song);
                     break;
             }
-            if(s == null) return;
-
-            UIHelper.WaitOnUI(new System.Action(() =>
+            if (s == null) return;
+            if (s is SongViewModel)
+            {
+                var dup = this.FirstOrDefault(x => x.Id == s.Id) as SongViewModel;
+                UIHelper.WaitOnUI(() =>
+                {
+                    if (dup != null)
+                    {
+                        Remove(dup);
+                    }
+                    if (toFront)
+                        Insert(0, s);
+                    else
+                        Add(s);
+                });
+                return;
+            }
+            UIHelper.WaitOnUI(() =>
             {
                 Add(s);
-            }));
+            });
         }
         public string SavePath { get; set; }
         public void Save()
@@ -61,9 +76,9 @@ namespace Jean_Doe.MusicControl
             {
                 songs = PersistHelper.Load<Songs>(SavePath);
             });
-            if (songs == null) 
+            if (songs == null)
                 return;
-            if(Count>0)
+            if (Count > 0)
                 Clear();
             AddItems(songs);
         }

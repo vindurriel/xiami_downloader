@@ -84,16 +84,14 @@ namespace Jean_Doe.MusicControl
             var item = message.Item as SongViewModel;
             if (item == null || !item.HasMp3)
                 return;
-            var dup = Items.FirstOrDefault(x => x.Id == item.Id) as SongViewModel;
-            if (dup != null)
-                Remove(dup);
-            Insert(0, item);
+            Items.AddItems(new List<IMusic> { item.Song }, true);
         }
 
         public IEnumerable<CharmAction> ProvideActions()
         {
             return new List<CharmAction> 
                 {   
+                    new CharmAction("导入",this.btn_import_click,s=>true),
                     new CharmAction("取消选择",this.btn_cancel_selection_Click,defaultActionValidate),
                     new CharmAction("播放",this.btn_play_Click,(s)=>{
                         if (SelectCount == 0)
@@ -150,15 +148,57 @@ namespace Jean_Doe.MusicControl
         protected override void btn_play_Click(object sender, RoutedEventArgs e)
         {
             var item = SelectedSongs.FirstOrDefault();
-            if (item == null || !item.HasMp3) return;
             if (!string.IsNullOrEmpty(item.Song.FilePath))
             {
                 Mp3Player.Play(item.Song.FilePath, item.Id);
                 ActionBarService.Refresh();
             }
         }
+        static System.Text.RegularExpressions.Regex reg = new System.Text.RegularExpressions.Regex("^(\\d+) (\\d+) (\\d+)$");
+        void btn_import_click(object sender, RoutedEventArgs e)
+        {
+            var dir = Global.AppSettings["DownloadFolder"];
+            Task.Run(() =>
+            {
+                var songs = new List<IMusic>();
+                var files = Directory.EnumerateFiles(dir, "*.mp3").ToArray();
+                var i = 0;
+                foreach (var item in files)
+                {
+                    try
+                    {
+                        var mp3 = TagLib.File.Create(item).Tag;
+                        if (mp3.Comment == null) return;
+                        var m = reg.Match(mp3.Comment);
+                        if (!m.Success) continue;
+                        var song = new Song
+                        {
+                            Id = m.Groups[1].Value,
+                            ArtistId = m.Groups[2].Value,
+                            AlbumId = m.Groups[3].Value,
+                            Name = mp3.Title,
+                            ArtistName = mp3.FirstPerformer,
+                            AlbumName = mp3.Album,
+                            FilePath = item,
+                        };
+                        songs.Add(song);
+                        i += 1;
+                    }
+                    catch (Exception ex)
+                    {
 
+                    }
+                    if (i == 10)
+                    {
+                        Items.AddItems(songs);
+                        songs.Clear();
+                        i = 0;
+                    }
+                }
+                Items.AddItems(songs);
+            });
 
+        }
         void btn_save_playlist_Click(object sender, RoutedEventArgs e)
         {
             if (!SelectedSongs.Any())

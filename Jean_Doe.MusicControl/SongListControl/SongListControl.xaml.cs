@@ -42,6 +42,13 @@ namespace Jean_Doe.MusicControl
                 items.Insert(index, song);
             }));
         }
+        public virtual void Move(int old, int newi)
+        {
+            UIHelper.RunOnUI(new Action(() =>
+            {
+                items.Move(old, newi);
+            }));
+        }
         public void Remove(SongViewModel song)
         {
             UIHelper.RunOnUI(() =>
