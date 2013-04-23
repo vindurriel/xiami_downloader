@@ -119,6 +119,13 @@ namespace Jean_Doe.MusicControl
 
             }
         }
+        public override string Description
+        {
+            get
+            {
+                return song.Description;
+            }
+        }
         Song song;
         public Song Song
         {

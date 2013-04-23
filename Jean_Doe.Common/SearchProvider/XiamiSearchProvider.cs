@@ -5,6 +5,9 @@ using System.Collections;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
+using CsQuery;
+using System.IO;
 public class XiamiSearchProvider : ISearchProvider
 {
     public Regex Pattern
@@ -66,7 +69,7 @@ public class XiamiSearchProvider : ISearchProvider
                 items = GetSongsOfArtist(json);
                 break;
             case EnumSearchType.collect_song:
-                items = GetSongsOfCollect(json);
+                items = await GetSongsOfCollect(json);
                 break;
             case EnumSearchType.artist_artist:
                 items = GetSimilarsOfArtist(json);
@@ -124,13 +127,13 @@ public class XiamiSearchProvider : ISearchProvider
         var musicType = EnumMusicType.song;
         Enum.TryParse(t.ToString(), out musicType);
         int page = 1;
-        if (key=="me")
-                key="lib";
+        if (key == "me")
+            key = "lib";
         while (true)
         {
             dynamic obj = null;
             if (key == "daily")
-                obj = await XiamiClient.GetDefault().Call_xiami_api("Recommend.DailySongs"); 
+                obj = await XiamiClient.GetDefault().Call_xiami_api("Recommend.DailySongs");
             else if (key == "guess")
                 obj = await XiamiClient.GetDefault().GetGuess();
             else if (key == "lib")
@@ -159,7 +162,7 @@ public class XiamiSearchProvider : ISearchProvider
                 break;
             }
             Artwork.MessageBus.MessageBus.Instance.Publish(sr);
-            if (key == "lib" && t=="song")
+            if (key == "lib" && t == "song")
             {
                 foreach (Song item in sr.Items)
                 {
@@ -296,15 +299,40 @@ public class XiamiSearchProvider : ISearchProvider
         catch { }
         return items;
     }
-    static List<IMusic> GetSongsOfCollect(string json)
+    static async Task<List<IMusic>> GetSongsOfCollect(string json)
     {
         var items = new List<IMusic>();
         try
         {
             var obj = json.ToDynamicObject().collect;
+            string url = XiamiUrl.GoCollect(obj.id);
+            var tmp = Path.Combine(Global.BasePath, "collect_page.html");
+            if (File.Exists(tmp))
+            {
+                File.Delete(tmp);
+            }
+            await new System.Net.WebClient().DownloadFileTaskAsync(url, tmp);
+            var doc = CQ.CreateFromFile(tmp);
+            var dic = new Dictionary<string, string>();
+            foreach (var x in CQ.Create(doc["li[class^=\"totle_\"]"]))
+            {
+                var item = CQ.Create(x);
+                var desc = item[".s_quote strong"];
+                if (desc.Length==0) continue;
+                var id = x.Id.Substring(6);
+                dic[id] = desc.Text();
+            }
             foreach (var x in obj.songs)
             {
-                items.Add(MusicFactory.CreateFromJson(x, EnumMusicType.song));
+                string id = x.song_id;
+                var description = "";
+                if (dic.ContainsKey(id))
+                {
+                    description = dic[id];
+                }
+                Song song = MusicFactory.CreateFromJson(x, EnumMusicType.song);
+                song.Description = description;
+                items.Add(song);
             }
         }
         catch { }

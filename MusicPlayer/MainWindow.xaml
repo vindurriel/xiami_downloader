@@ -191,11 +191,11 @@
                         <DockPanel Grid.Row="1">
                             <controls:CompleteSongListControl x:Name="list_complete" />
                         </DockPanel>
-                        <Grid x:Name="lrc" Margin="30,-5,0,0">
+                        <Grid x:Name="lrc" Margin="30,0,0,0">
                             <controls:LyricControl HorizontalAlignment="Left" x:Name="lyricShow"
                                     MaxHeight="{Binding ActualHeight,ElementName=lrc}" />
                         </Grid>
-                        <GridSplitter Height="30"   Background="#01ffffff" VerticalAlignment="Bottom"
+                        <GridSplitter Height="40"   Background="#01ffffff" VerticalAlignment="Bottom"
                                 HorizontalAlignment="Stretch" />
 
                         <Slider Background="{DynamicResource darkBrush}" Foreground="{DynamicResource skinBrush}"

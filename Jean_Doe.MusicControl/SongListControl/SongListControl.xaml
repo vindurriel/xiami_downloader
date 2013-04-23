@@ -50,7 +50,7 @@
             <Setter Property="Visibility" Value="{Binding HasDetail,Converter={StaticResource bool2vis}}" />
         </Style>
         <DataTemplate x:Key="searchTemplate">
-            <Grid Width="220" Height="70" >
+            <Grid Width="220" Height="70">
                 <Grid Margin="0,0,0,-15" x:Name="root" ClipToBounds="True">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
@@ -64,7 +64,7 @@
                         <ContentControl Content="{Binding}" ContentTemplate="{StaticResource t_image}" />
                         <ScrollViewer Grid.Column="1" Style="{StaticResource scrollstyle}">
                             <StackPanel>
-                                <TextBlock Text="{Binding Name}"  Style="{DynamicResource label_base}" />
+                                <TextBlock Text="{Binding Name}" Style="{DynamicResource label_base}" />
                                 <TextBlock Text="{Binding ArtistName}" Opacity="0.8"
                                         Style="{DynamicResource label_base}" />
                                 <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{StaticResource label_base}" />
@@ -102,8 +102,8 @@
                         <ContentControl Content="{Binding}" ContentTemplate="{StaticResource t_image}" />
                         <ScrollViewer Grid.Column="1" Style="{StaticResource scrollstyle}">
                             <StackPanel>
-                                <TextBlock Text="{Binding Name}"   TextWrapping="NoWrap"
-                                        TextTrimming="CharacterEllipsis" Style="{DynamicResource label_base}" />
+                                <TextBlock Text="{Binding Name}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"
+                                        Style="{DynamicResource label_base}" />
                                 <TextBlock Text="{Binding ArtistName}" Opacity="0.8" TextWrapping="NoWrap"
                                         TextTrimming="CharacterEllipsis" Style="{DynamicResource label_base}" />
                                 <Grid MinWidth="100" Margin="0,2,0,0">
@@ -159,7 +159,7 @@
                         <ContentControl Content="{Binding}" ContentTemplate="{StaticResource t_image}" />
                         <ScrollViewer Grid.Column="1" Style="{StaticResource scrollstyle}">
                             <StackPanel>
-                                <TextBlock Text="{Binding Name}"  Style="{DynamicResource label_base}" />
+                                <TextBlock Text="{Binding Name}" Style="{DynamicResource label_base}" />
                                 <TextBlock Text="{Binding ArtistName}" Opacity="0.8"
                                         Style="{DynamicResource label_base}" />
                                 <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{StaticResource label_base}" />
@@ -174,11 +174,13 @@
                         </Border>
                         <ScrollViewer Style="{StaticResource scrollstyle}">
                             <StackPanel>
+                                <TextBlock Text="{Binding Description}" Opacity="0.5"
+                                        Style="{DynamicResource label_base}" />
                             </StackPanel>
                         </ScrollViewer>
                     </DockPanel>
                 </Grid>
-            </Grid>
+            </Grid> 
         </DataTemplate>
         <SolidColorBrush Color='{DynamicResource skinColor}' Opacity="0.2" x:Key='skinBrushFade' />
     </UserControl.Resources>
