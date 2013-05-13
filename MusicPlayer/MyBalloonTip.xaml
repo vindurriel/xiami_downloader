@@ -7,7 +7,6 @@
             <Setter Property="FontSize" Value="16" />
         </Style>
         <BooleanToVisibilityConverter x:Key="bool2vis" />
-        <Color x:Key="co">Black</Color>
         <Style TargetType="ScrollViewer" x:Key="scrollstyle">
             <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
             <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
@@ -16,7 +15,7 @@
             <Setter Property="Margin" Value="10,0,0,0" />
         </Style>
         <Style x:Key="AppBarButtonStyle" TargetType="ButtonBase">
-            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
             <Setter Property="FontFamily" Value="Segoe UI Symbol" />
             <Setter Property="FontWeight" Value="Normal" />
@@ -26,7 +25,8 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="ButtonBase">
                         <Grid x:Name="root" Opacity="0.5">
-                            <Ellipse x:Name="bg" Stroke="White" StrokeThickness="2" Fill="#01000000" />
+                            <Ellipse x:Name="bg" Stroke="{DynamicResource lightBrush}" StrokeThickness="2"
+                                    Fill="#01000000" />
                             <ContentPresenter x:Name="Content" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
@@ -41,8 +41,6 @@
                                         <Storyboard>
                                             <DoubleAnimation Storyboard.TargetName="root" Duration="0:0:0.0"
                                                     Storyboard.TargetProperty="Opacity" To="1" />
-                                            <ColorAnimation Storyboard.TargetName="bg" Duration="0:0:0"
-                                                    Storyboard.TargetProperty="(Fill).(Color)" To="#000000" />
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Disabled" />
@@ -57,7 +55,7 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="FontSize" Value="16" />
-            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
             <Setter Property="TextWrapping" Value="WrapWithOverflow" />
         </Style>
         <Storyboard x:Key="FadeIn">
@@ -85,7 +83,7 @@
             <BeginStoryboard Storyboard="{StaticResource FadeOut}" x:Name="FadeOut_BeginStoryboard" />
         </EventTrigger>
     </UserControl.Triggers>
-    <Grid x:Name="grid" Background="{Binding LogoColor}">
+    <Grid x:Name="grid" Background="{DynamicResource darkBrush}">
         <Grid Width="220" Height="70" Margin="15">
             <Grid.Resources>
                 <Style TargetType="Button" BasedOn="{StaticResource AppBarButtonStyle}">
@@ -107,7 +105,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid Width="60" Height="60" VerticalAlignment="Top">
-                <Border BorderBrush="White" BorderThickness="3">
+                <Border BorderBrush="{DynamicResource lightBrush}" BorderThickness="3">
                     <Image IsHitTestVisible="False" Source="{Binding ImageSource}" Stretch="Uniform"
                             VerticalAlignment="Top" />
                 </Border>

@@ -92,7 +92,6 @@ namespace Jean_Doe.MusicControl
         {
             return new List<CharmAction> 
                 {   
-                    new CharmAction("导入",this.btn_import_click,s=>true),
                     new CharmAction("取消选择",this.btn_cancel_selection_Click,defaultActionValidate),
                     new CharmAction("播放",this.btn_play_Click,(s)=>{
                         if (SelectCount == 0)
@@ -110,7 +109,7 @@ namespace Jean_Doe.MusicControl
                             return true;
                         return false;
                     }),
-                    new CharmAction("正在播放",this.btn_show_Click,isNowPlayingNotSelected),  
+                    new CharmAction("选中正在播放",this.btn_show_Click,isNowPlayingNotSelected),  
                     new CharmAction("下一首",this.btn_next_Click,isNowPlayingSelected),    
                     new CharmAction("收藏该歌曲",this.btn_fav_Click,canFav),
                     new CharmAction("不再收藏该歌曲",this.btn_unfav_Click,canUnfav),
@@ -120,8 +119,8 @@ namespace Jean_Doe.MusicControl
                     new CharmAction("复制文件到剪贴板",this.btn_copy_Click,defaultActionValidate),
                     new CharmAction("打开文件所在位置",this.btn_open_click,IsOnlyType<IHasMusicPart>),
                     new CharmAction("在浏览器中打开",this.btn_browse_Click,IsOnlyType<IHasMusicPart>),
-
                     new CharmAction("删除",this.btn_remove_complete_Click,defaultActionValidate),
+                    new CharmAction("导入",this.btn_import_click,defaultActionValidate),
                 };
         }
 
@@ -138,7 +137,7 @@ namespace Jean_Doe.MusicControl
             var list = s as CompleteSongListControl;
             if (list.NowPlaying == null) return false;
             var song = list.SelectedSongs.FirstOrDefault();
-            return !Object.ReferenceEquals(list.NowPlaying, song);
+            return song != null && !Object.ReferenceEquals(list.NowPlaying, song);
         }
 
         void btn_show_Click(object sender, RoutedEventArgs e)

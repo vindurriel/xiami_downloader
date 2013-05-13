@@ -8,10 +8,9 @@
         <Setter Property="MinHeight" Value="0" />
         <Setter Property="Width" Value="Auto" />
         <Setter Property="Height" Value="Auto" />
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="BorderBrush" Value="Black" />
+        <Setter Property="Background" Value="{DynamicResource darkBrush}" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
@@ -37,11 +36,13 @@
                             <Border x:Name="OverRect" BorderBrush="{TemplateBinding BorderBrush}"
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     Background="{TemplateBinding Background}" />
-                            <Border x:Name="CheckRect" Background="{DynamicResource skinBrush}" Opacity="0" />
-                            <Border x:Name="Border">
-                                <Path Data="M0,0L3.5,3 7,0z" Fill="{TemplateBinding Foreground}"
-                                        HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <Path Data="M0,0L3.5,3 7,0z" Fill="{TemplateBinding Foreground}"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <Border x:Name="CheckRect" Background="{DynamicResource skinBrush}" Opacity="0">
+                                <Path Data="M0,0L3.5,3 7,0z" Fill="White" HorizontalAlignment="Center"
+                                        VerticalAlignment="Center" />
                             </Border>
+
                         </Grid>
                     </DockPanel>
                 </ControlTemplate>
@@ -52,7 +53,7 @@
                 <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
             </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#888888" />
+                <Setter Property="Background" Value="{DynamicResource selectBrush}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -76,8 +77,8 @@
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type ComboBoxItem}">
-                    <Setter Property="Background" Value="#333333" />
-                    <Setter Property="Foreground" Value="#bbbbbb" />
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
                     <Setter Property="BorderThickness" Value="0" />
                     <Setter Property="HorizontalContentAlignment"
                             Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource TemplatedParent}}" />
@@ -103,8 +104,8 @@
                 </Style>
             </Setter.Value>
         </Setter>
-        <Setter Property="Foreground" Value="#bbbbbb" />
-        <Setter Property="Background" Value="#444444" />
+        <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
+        <Setter Property="Background" Value="{DynamicResource darkBrush}" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="1" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -123,16 +124,15 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                         <Grid>
-                            <Border x:Name="Border" BorderBrush="#00000000" BorderThickness="1"
-                                    Background="{TemplateBinding Background}">
+                            <Border x:Name="Border">
                                 <Popup x:Name="PART_Popup" AllowsTransparency="False" Focusable="False"
                                         IsOpen="{TemplateBinding IsDropDownOpen}"
                                         PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}"
                                         Placement="Bottom">
-                                    <Border x:Name="DropDownBorder" MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                    <Border x:Name="DropDownBorder" Background="{DynamicResource selectBrush}"
+                                            MaxHeight="{TemplateBinding MaxDropDownHeight}"
                                             MinWidth="{Binding ActualWidth, ElementName=Border}"
-                                            BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
-                                            BorderThickness="1">
+                                            BorderBrush="{DynamicResource selectBrush}" BorderThickness="1">
                                         <ScrollViewer x:Name="DropDownScrollViewer" VerticalScrollBarVisibility="Hidden">
                                             <Grid RenderOptions.ClearTypeHint="Enabled">
                                                 <Canvas HorizontalAlignment="Left" Height="0" VerticalAlignment="Top"
@@ -179,22 +179,16 @@
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
-                        <MultiTrigger>
+                        <!--<MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsSelectionBoxHighlighted" Value="True" />
                                 <Condition Property="IsDropDownOpen" Value="False" />
                             </MultiTrigger.Conditions>
                             <Setter Property="Foreground" Value="White" />
-                        </MultiTrigger>
-                        <!--<Trigger Property="IsSelectionBoxHighlighted"
-                                 Value="True">
-                            <Setter Property="Background"
-                                    TargetName="SelectedItemBorder"
-                                    Value="{DynamicResource skinBrush}" />
-                        </Trigger>-->
+                        </MultiTrigger>-->
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" TargetName="SelectedItemBorder" Value="#888888" />
-                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="Background" TargetName="SelectedItemBorder"
+                                    Value="{DynamicResource selectBrush}" />
                         </Trigger>
                         <Trigger Property="HasItems" Value="False">
                             <Setter Property="MinHeight" TargetName="DropDownBorder" Value="50" />
@@ -241,9 +235,8 @@
                                                 Placement="Bottom">
                                             <Border x:Name="DropDownBorder"
                                                     MinWidth="{Binding ActualWidth, ElementName=root}"
-                                                    BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
-                                                    BorderThickness="1"
-                                                    Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                                                    BorderBrush="{DynamicResource selectBrush}" BorderThickness="1"
+                                                    Background="{DynamicResource selectBrush}">
                                                 <ScrollViewer x:Name="DropDownScrollViewer">
                                                     <Grid RenderOptions.ClearTypeHint="Enabled">
                                                         <Canvas HorizontalAlignment="Left" Height="0"
@@ -272,12 +265,11 @@
                                         <TextBox x:Name="PART_EditableTextBox"
                                                 HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                 IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}"
-                                                SelectionBrush="{DynamicResource skinBrush}" CaretBrush="White"
-                                                Foreground="White" BorderThickness="1" BorderBrush="#888"
+                                                SelectionBrush="{DynamicResource skinBrush}"
                                                 VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
                                             <TextBox.Style>
                                                 <Style TargetType="{x:Type TextBox}">
-                                                    <Setter Property="Background" Value="#555" />
+                                                    <Setter Property="Background" Value="#01ffffff" />
                                                     <Setter Property="OverridesDefaultStyle" Value="True" />
                                                     <Setter Property="AllowDrop" Value="True" />
                                                     <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -296,7 +288,12 @@
                                                     </Setter>
                                                     <Style.Triggers>
                                                         <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter Property="Background" Value="#888888" />
+                                                            <Setter Property="Background"
+                                                                    Value="{DynamicResource selectBrush}" />
+                                                        </Trigger>
+                                                        <Trigger Property="IsFocused" Value="True">
+                                                            <Setter Property="Background"
+                                                                    Value="{DynamicResource selectBrush}" />
                                                         </Trigger>
                                                     </Style.Triggers>
                                                 </Style>
@@ -314,7 +311,6 @@
                                     </ListView>
                                 </Grid>
                             </Border>
-
                             <ControlTemplate.Triggers>
                                 <Trigger Property="HasItems" Value="False">
                                     <Setter Property="MinHeight" TargetName="DropDownBorder" Value="50" />
@@ -345,7 +341,4 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <!--<Style TargetType="ComboBox"
-           x:Key="comboStyle"
-           BasedOn="{StaticResource {x:Type ComboBox}}" />-->
 </ResourceDictionary>

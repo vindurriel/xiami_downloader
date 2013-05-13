@@ -5,44 +5,41 @@
         <Style x:Key="itemStyle" TargetType="{x:Type ListBoxItem}">
             <Setter Property="Margin" Value="0" />
             <Setter Property="Padding" Value="20,10" />
-            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontFamily" Value="Segoe UI Symbol" />
+            <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
             <EventSetter Event="UIElement.MouseLeftButtonUp" Handler="charmBarAct" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                        <Border x:Name="Border" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
-                            <Border.Background>
-                                <SolidColorBrush x:Name="BorderBg" Color="#00000000" />
-                            </Border.Background>
-                            <ContentPresenter />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Trigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard Storyboard.TargetName="BorderBg">
-                                            <ColorAnimation Storyboard.TargetProperty="Color" Duration="0:0:0.2"
-                                                    To="#333" />
+                        <Grid x:Name="Border" Background="Transparent" SnapsToDevicePixels="True">
+                            <Rectangle x:Name="OverRect" Opacity="0" Fill="{DynamicResource darkBrush}" />
+                            <ContentPresenter Margin="{TemplateBinding Padding}" />
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition GeneratedDuration="0:0:0.2" To="MouseOver" />
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames
+                                                    Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                    Storyboard.TargetName="OverRect">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0.5" />
+                                            </DoubleAnimationUsingKeyFrames>
                                         </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.EnterActions>
-                                <Trigger.ExitActions>
-                                    <BeginStoryboard>
-                                        <Storyboard Storyboard.TargetName="BorderBg">
-                                            <ColorAnimation Storyboard.TargetProperty="Color" Duration="0:0:0.2"
-                                                    To="#00000000" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.ExitActions>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled"></VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
         <DataTemplate x:Key="itemTemplate">
             <Grid>
-                <TextBlock Foreground="White" FontFamily="Segoe UI Symbol" Text="{Binding Label}" />
+                <TextBlock Text="{Binding Label}" />
             </Grid>
         </DataTemplate>
     </Expander.Resources>
@@ -95,9 +92,9 @@
         </ListView>
         <FrameworkElement x:Name="holder" />
         <Popup x:Name="more_actions" PopupAnimation="Slide" Placement="Top" Focusable="True">
-            <ListView x:Name="menu" ItemContainerStyle="{StaticResource itemStyle}"
+            <ListView x:Name="menu"  ItemContainerStyle="{StaticResource itemStyle}"
                     ItemTemplate="{StaticResource itemTemplate}" ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                    BorderThickness="0" Background="Transparent" SelectionMode="Single"></ListView>
+                    BorderThickness="0" Background="{DynamicResource selectBrush}" SelectionMode="Single"></ListView>
         </Popup>
     </DockPanel>
 </Expander>

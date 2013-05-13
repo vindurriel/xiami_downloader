@@ -25,7 +25,7 @@ namespace Jean_Doe.MusicControl
             get { return song.HasLrc; }
             set { song.HasLrc = value; Notify("HasLrc"); }
         }
-        public bool InFav
+        public new bool InFav
         {
             get { return song.InFav; }
             set { song.InFav = value; Notify("InFav"); }
@@ -110,7 +110,7 @@ namespace Jean_Doe.MusicControl
             : base(song)
         {
             this.song = song;
-            TypeImage = ImageSource = "/Jean_Doe.MusicControl;component/Resources/song.png";
+            TypeImage = "\xE102";
             var art = System.IO.Path.Combine(Global.BasePath, "cache", AlbumId + ".art");
             if (File.Exists(art))
                 ImageSource = art;

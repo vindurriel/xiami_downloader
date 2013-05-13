@@ -24,6 +24,10 @@ namespace Jean_Doe.MusicControl
                 LogoColor = ImageHelper.GetAverageColor(value);
             }
         }
+        public bool InFav
+        {
+            get { return false; }
+        }
         protected string typeImage;
         public string TypeImage { get { return typeImage; } set { typeImage = value; Notify("TypeImage"); } }
         protected string logoColor = ImageHelper.DefaultColor;

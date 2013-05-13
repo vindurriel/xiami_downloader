@@ -12,7 +12,7 @@ namespace Jean_Doe.MusicControl
             : base(a)
         {
             collect = a;
-            TypeImage = ImageSource = "/Jean_Doe.MusicControl;component/Resources/collect.png";
+            TypeImage = "\xE142";
         }
         public string ArtistName { get { return collect.Get("user_name"); } }
         public string Description { get { return collect.Get("description"); } }

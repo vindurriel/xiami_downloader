@@ -12,6 +12,7 @@ using Artwork.MessageBus;
 using Jean_Doe.Common;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 namespace Jean_Doe.MusicControl
 {
     /// <summary>
@@ -67,10 +68,33 @@ namespace Jean_Doe.MusicControl
             var res = items.FirstOrDefault(x => x.Id == id) as SongViewModel;
             return res;
         }
+        private childItem FindVisualChild<childItem>(DependencyObject obj) where childItem : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is childItem)
+                {
+                    return (childItem)child;
+                }
+                else
+                {
+                    childItem childOfChild = FindVisualChild<childItem>(child);
+                    if (childOfChild != null)
+                    {
+                        return childOfChild;
+                    }
+                }
+            }
+            return null;
+        }  
         public void Clear()
         {
             UIHelper.RunOnUI(new Action(() =>
             {
+                var s = FindVisualChild<ScrollViewer>(listView);
+                if (s != null)
+                    s.ScrollToTop();
                 items.Clear();
             }));
         }
@@ -112,6 +136,13 @@ namespace Jean_Doe.MusicControl
             }
         }
         #endregion
+        private string theme;
+
+        public string ThemeColor
+        {
+            get { return theme; }
+            set { theme = value; Notify("ThemeColor"); }
+        }
         public ListView ListView { get { return listView; } }
         MusicViewModelList items;
         public MusicViewModelList Items { get { return items; } }
@@ -146,16 +177,20 @@ namespace Jean_Doe.MusicControl
                 return listView.SelectedItems.OfType<MusicViewModel>();
             }
         }
+        public void OnTheme(string s)
+        {
+            ThemeColor = ImageHelper.RefreshDefaultColor();
+        }
         public SongListControl()
         {
             InitializeComponent();
+            Global.ListenToEvent("Theme", OnTheme);
             input_filter.TextChanged += (s, e) =>
             {
                 if (!string.IsNullOrEmpty(input_filter.Text))
                     mask_filter.Visibility = Visibility.Collapsed;
 
             };
-            input_filter.TextChanged += input_filter_TextChanged;
             input_filter.GotFocus += (s, e) =>
                 {
                     mask_filter.Visibility = Visibility.Collapsed;
@@ -181,18 +216,19 @@ namespace Jean_Doe.MusicControl
             foreach (var item in (sender as ICollectionView))
             {
                 i++;
+                break;
             }
             emptyText.Visibility = i > 0 ? Visibility.Collapsed : Visibility.Visible;
         }
-
-        void input_filter_TextChanged(object sender, TextChangedEventArgs e)
+        void btn_filter_click(object sender, RoutedEventArgs e)
         {
             filter_text = input_filter.Text.ToLower();
             Source.Refresh();
             var i = 0;
             foreach (var item in Source)
             {
-                i++;
+                i = 1;
+                break;
             }
             btn_search.Visibility = (i == 0 && !string.IsNullOrEmpty(filter_text)) ? Visibility.Visible : Visibility.Collapsed;
         }
@@ -470,12 +506,12 @@ namespace Jean_Doe.MusicControl
             var root = GetParentOf<Grid>(sender as FrameworkElement, "root");
             var main = root.FindName("main") as FrameworkElement;
             var detail = root.FindName("detail") as FrameworkElement;
-            var to = music.IsDetailShown ? 0 : 70;
-            var to2 = !music.IsDetailShown ? 15 : 70;
+            var to = music.IsDetailShown ? 0 : 60;
+            var to2 = !music.IsDetailShown ? 5 : 60;
             var sb = new Storyboard();
-            var da = new DoubleAnimation(to, new Duration(TimeSpan.FromSeconds(1)));
-            var da2 = new DoubleAnimation(to2, new Duration(TimeSpan.FromSeconds(1)));
-            detail.Height = 15;
+            var da = new DoubleAnimation(to, new Duration(TimeSpan.FromSeconds(.5)));
+            var da2 = new DoubleAnimation(to2, new Duration(TimeSpan.FromSeconds(.5)));
+            detail.Height = 5;
             var ease = new QuinticEase { EasingMode = EasingMode.EaseOut };
             da.EasingFunction = da2.EasingFunction = ease;
             Storyboard.SetTarget(da, main);

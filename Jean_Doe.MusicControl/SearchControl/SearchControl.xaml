@@ -36,7 +36,7 @@
             <!--search box-->
             <Grid Grid.Column="1" Margin="10,0">
                 <local:HistorySearch  x:Name="hs" HorizontalContentAlignment="Left" />
-                <TextBlock x:Name="mask_filter"  VerticalAlignment="Center" Margin="3" Text="输入字符以搜索"  IsHitTestVisible="False" Foreground="{DynamicResource lightBrush}"  />
+                <TextBlock x:Name="mask_filter" Background="Transparent" Opacity=".5"  VerticalAlignment="Center" Margin="3" Text="输入字符以搜索"  IsHitTestVisible="False" Foreground="{DynamicResource lightBrush}"  />
             </Grid>
             <!--button search-->
             <Button x:Name="btn_search"

@@ -2,6 +2,8 @@
                     xmlns:my="clr-namespace:Jean_Doe.MusicControl"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <my:DoubleToTimeSpanConverter x:Key="double2timespan"/>
+    <SolidColorBrush x:Key="GlyphBrush" Color="#444" />
+
     <Style x:Key="SliderButtonStyle" TargetType="{x:Type RepeatButton}">
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="OverridesDefaultStyle" Value="true"/>
@@ -317,7 +319,6 @@
     <SolidColorBrush x:Key="LightBorderBrush" Color="#AAA" />
 
     <!-- Miscellaneous Brushes -->
-    <SolidColorBrush x:Key="GlyphBrush" Color="#444" />
 
     <SolidColorBrush x:Key="LightColorBrush" Color="#DDD" />
 </ResourceDictionary>

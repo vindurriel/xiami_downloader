@@ -52,36 +52,36 @@ namespace Jean_Doe.MusicControl
             }
             foreach (var item in e.NewItems.OfType<SongViewModel>())
             {
-                if (item.PlayTimes == 0)
-                {
-                    var bw1 = new BackgroundWorker();
-                    bw1.DoWork += async (a, b) =>
-                        {
-                            var times = await NetAccess.GetPlayTimes(item.Id);
-                            if (times != 0)
-                                UIHelper.RunOnUI(() =>
-                                {
-                                    if (times > MaxPlayTimes)
-                                        MaxPlayTimes = times;
-                                    item.PlayTimes = times;
-                                });
-                        };
-                    bw1.RunWorkerAsync();
-                }
-                if (item.TrackNo == 0)
-                {
-                    var bw2 = new BackgroundWorker();
-                    bw2.DoWork += async (a, b) =>
-                    {
-                        var trackNo = await NetAccess.GetTrackNo(item.Id, item.AlbumId);
-                        if (trackNo != 0)
-                            UIHelper.RunOnUI(() =>
-                            {
-                                item.TrackNo = trackNo;
-                            });
-                    };
-                    bw2.RunWorkerAsync();
-                }
+                //if (item.PlayTimes == 0)
+                //{
+                //    var bw1 = new BackgroundWorker();
+                //    bw1.DoWork += async (a, b) =>
+                //        {
+                //            var times = await NetAccess.GetPlayTimes(item.Id);
+                //            if (times != 0)
+                //                UIHelper.RunOnUI(() =>
+                //                {
+                //                    if (times > MaxPlayTimes)
+                //                        MaxPlayTimes = times;
+                //                    item.PlayTimes = times;
+                //                });
+                //        };
+                //    bw1.RunWorkerAsync();
+                //}
+                //if (item.TrackNo == 0)
+                //{
+                //    var bw2 = new BackgroundWorker();
+                //    bw2.DoWork += async (a, b) =>
+                //    {
+                //        var trackNo = await NetAccess.GetTrackNo(item.Id, item.AlbumId);
+                //        if (trackNo != 0)
+                //            UIHelper.RunOnUI(() =>
+                //            {
+                //                item.TrackNo = trackNo;
+                //            });
+                //    };
+                //    bw2.RunWorkerAsync();
+                //}
             }
         }
         public void Handle(MsgSearchStateChanged message)

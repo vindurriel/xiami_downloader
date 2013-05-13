@@ -11,7 +11,7 @@ namespace Jean_Doe.MusicControl
         public AlbumViewModel(Album a):base(a)
         {
             album = a;
-            TypeImage = ImageSource = "/Jean_Doe.MusicControl;component/Resources/album.png";
+            TypeImage = "\xE1d2";
         }
         public string AlbumName { get { return album.Name; } }
         public string ArtistName { get { return album.ArtistName; } }

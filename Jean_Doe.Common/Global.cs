@@ -28,6 +28,7 @@ namespace Jean_Doe.Common
             {"xiami_nick_name",""},
             {"ShowNowPlaying","1"},
             {"ShowLyric","1"},
+            {"Theme","#333 #eee #000"},
         };
         public static Dictionary<string, Dictionary<string, string>> ValueOptions = new Dictionary<string, Dictionary<string, string>>
         {
@@ -35,6 +36,10 @@ namespace Jean_Doe.Common
                 {"10","10"},
                 {"20","20"},
                 {"不限制","9999"},
+            }},
+            {"Theme", new Dictionary<string,string>{
+                {"明亮","#eee #333 #fff"},
+                {"黑暗","#333 #eee #000"},
             }},
             {"SongnamePattern", new Dictionary<string,string>{
                 {"艺术家 - 歌曲名 - 专辑名","%ArtistName - %Name - %AlbumName"},

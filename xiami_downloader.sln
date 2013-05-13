@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicPlayer", "MusicPlayer\MusicPlayer.csproj", "{FA0502AD-7D36-4C1E-87BF-8B7CEC375033}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jean_Doe.Music.Console", "Jean_Doe.Music.Console\Jean_Doe.Music.Console.csproj", "{987E510B-EFB2-46ED-A9B4-96569973C0A7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jean_Doe.Downloader", "Jean_Doe.Downloader\Jean_Doe.Downloader.csproj", "{1596E7B4-B8B9-42F7-B4BA-F7A4F16D67E5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jean_Doe.Common", "Jean_Doe.Common\Jean_Doe.Common.csproj", "{16BFCCC4-6A14-41C7-A16A-66A744E4D004}"
@@ -39,20 +37,6 @@ Global
 		{FA0502AD-7D36-4C1E-87BF-8B7CEC375033}.Release|x64.ActiveCfg = Release|x86
 		{FA0502AD-7D36-4C1E-87BF-8B7CEC375033}.Release|x86.ActiveCfg = Release|x86
 		{FA0502AD-7D36-4C1E-87BF-8B7CEC375033}.Release|x86.Build.0 = Release|x86
-		{987E510B-EFB2-46ED-A9B4-96569973C0A7}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{987E510B-EFB2-46ED-A9B4-96569973C0A7}.Debug|ARM.ActiveCfg = Debug|x86
-		{987E510B-EFB2-46ED-A9B4-96569973C0A7}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{987E510B-EFB2-46ED-A9B4-96569973C0A7}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{987E510B-EFB2-46ED-A9B4-96569973C0A7}.Debug|x64.ActiveCfg = Debug|x86
-		{987E510B-EFB2-46ED-A9B4-96569973C0A7}.Debug|x86.ActiveCfg = Debug|x86
-		{987E510B-EFB2-46ED-A9B4-96569973C0A7}.Debug|x86.Build.0 = Debug|x86
-		{987E510B-EFB2-46ED-A9B4-96569973C0A7}.Release|Any CPU.ActiveCfg = Release|x86
-		{987E510B-EFB2-46ED-A9B4-96569973C0A7}.Release|ARM.ActiveCfg = Release|x86
-		{987E510B-EFB2-46ED-A9B4-96569973C0A7}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{987E510B-EFB2-46ED-A9B4-96569973C0A7}.Release|Mixed Platforms.Build.0 = Release|x86
-		{987E510B-EFB2-46ED-A9B4-96569973C0A7}.Release|x64.ActiveCfg = Release|x86
-		{987E510B-EFB2-46ED-A9B4-96569973C0A7}.Release|x86.ActiveCfg = Release|x86
-		{987E510B-EFB2-46ED-A9B4-96569973C0A7}.Release|x86.Build.0 = Release|x86
 		{1596E7B4-B8B9-42F7-B4BA-F7A4F16D67E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1596E7B4-B8B9-42F7-B4BA-F7A4F16D67E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1596E7B4-B8B9-42F7-B4BA-F7A4F16D67E5}.Debug|ARM.ActiveCfg = Debug|Any CPU

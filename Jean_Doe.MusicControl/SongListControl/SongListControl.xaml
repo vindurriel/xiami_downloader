@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
-        xmlns:my='clr-namespace:Jean_Doe.MusicControl' x:Name="me">
+        Foreground="{DynamicResource lightBrush}" xmlns:my='clr-namespace:Jean_Doe.MusicControl' x:Name="me">
     <UserControl.Resources>
         <my:IntToVisibilityConverter x:Key="int2vis" />
         <my:BoolToOpacityConverter x:Key='bool2opa' />
@@ -24,16 +24,28 @@
             <TextBlock Text="{Binding Date, StringFormat={}{0:yyyy/MM/dd HH:mm:ss}}" Style="{StaticResource label_base}" />
         </DataTemplate>
         <DataTemplate x:Key="t_image">
-            <Grid VerticalAlignment="Top" Margin="0" Width="60" Height="60">
-                <Border BorderBrush="White" BorderThickness="3">
-                    <Image Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                            Stretch="Uniform" />
+            <Grid VerticalAlignment="Top" Width="60" Height="60">
+                <Border BorderBrush="{DynamicResource lightBrush}" BorderThickness="3">
+                    <Grid>
+                        <TextBlock FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Text="{Binding TypeImage}" FontFamily="Segoe UI Symbol" />
+                        <Image
+                                Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
+                                Stretch="Uniform" />
+                        <Grid Margin="3,0,0,0" Visibility="{Binding InFav,Converter={StaticResource bool2vis}}"
+                                x:Name="corner_select" HorizontalAlignment="Left" VerticalAlignment="Top">
+                            <Path Stroke="{DynamicResource lightBrush}" StrokeThickness="3"
+                                    Data="M 0,0 L 10,0 10,20 5,15 0,20 Z" Fill="{DynamicResource skinBrush}" />
+                        </Grid>
+                    </Grid>
                 </Border>
             </Grid>
         </DataTemplate>
         <Style TargetType="ScrollViewer" x:Key="scrollstyle">
             <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
             <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Height" Value="45" />
             <Setter Property="Grid.Column" Value="1" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="10,0,0,0" />
@@ -43,20 +55,20 @@
         <Style TargetType="Border" x:Key="triggerStyle">
             <EventSetter Event="MouseMove" Handler="toggle_detail" />
             <EventSetter Event="MouseEnter" Handler="toggle_detail" />
-            <Setter Property="Height" Value="15" />
+            <Setter Property="Height" Value="5" />
             <Setter Property="Background" Value="#01000000" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="IsHitTestVisible" Value="{Binding HasDetail}" />
             <Setter Property="Visibility" Value="{Binding HasDetail,Converter={StaticResource bool2vis}}" />
         </Style>
         <DataTemplate x:Key="searchTemplate">
-            <Grid Width="220" Height="70">
-                <Grid Margin="0,0,0,-15" x:Name="root" ClipToBounds="True">
+            <Grid Width="220" Height="60">
+                <Grid Margin="0,0,0,-5" x:Name="root" ClipToBounds="True">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    <Grid x:Name="main" Height="70">
+                    <Grid x:Name="main" Height="60">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
@@ -71,11 +83,10 @@
                             </StackPanel>
                         </ScrollViewer>
                     </Grid>
-                    <DockPanel Grid.Row="1" x:Name="detail" Height="15">
+                    <DockPanel Grid.Row="1" x:Name="detail" Height="5">
                         <Border DockPanel.Dock="Top" Style="{StaticResource triggerStyle}" VerticalAlignment="Top">
-                            <TextBlock x:Name="detail_indicator" Text="&#xE0c2;" LineHeight="15"
-                                    VerticalAlignment="Center" LineStackingStrategy="BlockLineHeight"
-                                    FontFamily="Segoe UI Symbol" Foreground="White" />
+                            <TextBlock x:Name="detail_indicator" Text="&#xE0c2;" LineHeight="5" VerticalAlignment="Top"
+                                    LineStackingStrategy="BlockLineHeight" FontSize="10" FontFamily="Segoe UI Symbol" />
                         </Border>
                         <ScrollViewer Style="{StaticResource scrollstyle}">
                             <StackPanel>
@@ -88,19 +99,20 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="downloadingTemplate">
-            <Grid Width="220" Height="70">
-                <Grid Margin="0,0,0,-15" x:Name="root" ClipToBounds="True">
+            <Grid Width="220" Height="60">
+                <Grid Margin="0,0,0,-5" x:Name="root" ClipToBounds="True">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    <Grid x:Name="main" Height="70">
+                    <Grid x:Name="main" Height="60">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <ContentControl Content="{Binding}" ContentTemplate="{StaticResource t_image}" />
-                        <ScrollViewer Grid.Column="1" Style="{StaticResource scrollstyle}">
+                        <ScrollViewer Grid.Column="1" Style="{StaticResource scrollstyle}"
+                                Height="{Binding ActualHeight,ElementName=root}">
                             <StackPanel>
                                 <TextBlock Text="{Binding Name}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"
                                         Style="{DynamicResource label_base}" />
@@ -128,12 +140,11 @@
                             </StackPanel>
                         </ScrollViewer>
                     </Grid>
-                    <DockPanel Grid.Row="1" x:Name="detail" Height="15">
+                    <DockPanel Grid.Row="1" x:Name="detail" Height="5">
                         <Border DockPanel.Dock="Top" Visibility="Visible" IsHitTestVisible="True"
                                 Style="{StaticResource triggerStyle}" VerticalAlignment="Top">
-                            <TextBlock x:Name="detail_indicator" Text="&#xE0c2;" LineHeight="15"
-                                    VerticalAlignment="Center" LineStackingStrategy="BlockLineHeight"
-                                    FontFamily="Segoe UI Symbol" Foreground="White" />
+                            <TextBlock x:Name="detail_indicator" Text="&#xE0c2;" LineHeight="5" VerticalAlignment="Top"
+                                    LineStackingStrategy="BlockLineHeight" FontSize="10" FontFamily="Segoe UI Symbol" />
                         </Border>
                         <ScrollViewer Style="{StaticResource scrollstyle}">
                             <StackPanel>
@@ -145,13 +156,13 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="completeTemplate">
-            <Grid Width="220" Height="70">
-                <Grid Margin="0,0,0,-15" x:Name="root" ClipToBounds="True">
+            <Grid Width="220" Height="60">
+                <Grid Margin="0,0,0,-5" x:Name="root" ClipToBounds="True">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    <Grid x:Name="main" Height="70">
+                    <Grid x:Name="main" Height="60">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
@@ -166,11 +177,10 @@
                             </StackPanel>
                         </ScrollViewer>
                     </Grid>
-                    <DockPanel Grid.Row="1" x:Name="detail" Height="15">
+                    <DockPanel Grid.Row="1" x:Name="detail" Height="5">
                         <Border DockPanel.Dock="Top" Style="{StaticResource triggerStyle}" VerticalAlignment="Top">
-                            <TextBlock x:Name="detail_indicator" Text="&#xE0c2;" LineHeight="15"
-                                    VerticalAlignment="Center" LineStackingStrategy="BlockLineHeight"
-                                    FontFamily="Segoe UI Symbol" Foreground="White" />
+                            <TextBlock x:Name="detail_indicator" Text="&#xE0c2;" LineHeight="5" VerticalAlignment="Top"
+                                    LineStackingStrategy="BlockLineHeight" FontSize="10" FontFamily="Segoe UI Symbol" />
                         </Border>
                         <ScrollViewer Style="{StaticResource scrollstyle}">
                             <StackPanel>
@@ -180,9 +190,8 @@
                         </ScrollViewer>
                     </DockPanel>
                 </Grid>
-            </Grid> 
+            </Grid>
         </DataTemplate>
-        <SolidColorBrush Color='{DynamicResource skinColor}' Opacity="0.2" x:Key='skinBrushFade' />
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -193,12 +202,12 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <ToggleButton Grid.RowSpan="2" Margin="0,0,5,0" Padding="0" FontSize="10"
-                Background="{DynamicResource skinBrush}" Foreground="White"
+        <ToggleButton Grid.RowSpan="2" Margin="0,0,5,0" Padding="0" FontSize="15" Background="Transparent"
+                Foreground="{DynamicResource skinBrush}"
                 Visibility="{Binding ItemsCount,ElementName=me,Converter={StaticResource int2vis}}" Height="30"
                 Width="30" MinWidth="0" Style="{StaticResource toggleStyle}" VerticalAlignment="Top"
                 FontFamily="Segoe UI Symbol" x:Name="btn_more" Content="&#xE16E;" />
-        <DockPanel Margin="6,0,0,10" Grid.Column="1" LastChildFill="False" Height="30"
+        <DockPanel Margin="6,0,0,10" Grid.Column="1" LastChildFill="False"
                 Visibility="{Binding IsChecked,ElementName=btn_more,Converter={StaticResource bool2vis}}">
             <ComboBox x:Name="combo_sort">
                 <ComboBoxItem Tag="Default_Asc" IsSelected="True">无排序</ComboBoxItem>
@@ -208,20 +217,20 @@
                 <ComboBoxItem Tag="Name_Dsc">名称降序</ComboBoxItem>
             </ComboBox>
             <Grid Margin="10,0" x:Name="part_filter">
-                <TextBox VerticalContentAlignment="Center" Foreground="White" BorderThickness="0" Width="200"
-                        x:Name="input_filter" Background="#555" />
+                <TextBox VerticalContentAlignment="Center" Background="{DynamicResource selectBrush}"
+                        Foreground="{DynamicResource lightBrush}" BorderThickness="0" Width="200" x:Name="input_filter" />
                 <TextBlock VerticalAlignment="Center" Margin="3" x:Name="mask_filter" Text="输入字符以过滤"
                         IsHitTestVisible="False" Foreground="{DynamicResource lightBrush}" />
             </Grid>
-            <Button Visibility="Collapsed" x:Name="btn_search" Click="btn_search_click" Content="没有？在网上搜索一下"
-                    Padding="5,0" />
+            <Button x:Name="btn_filter" Click="btn_filter_click" Content="过滤" VerticalContentAlignment="Center" />
+            <Button Visibility="Collapsed" x:Name="btn_search" Click="btn_search_click" Content="没有？在网上搜索一下" />
         </DockPanel>
         <TextBlock Grid.Column="1" Grid.Row="1" x:Name="emptyText" FontSize="20" HorizontalAlignment="Left"
                 VerticalAlignment="Top" Style="{StaticResource label_base}" Margin="5,10,0,0">列表为空</TextBlock>
         <ListView Grid.Column="1" Grid.Row="1" ItemTemplate="{StaticResource completeTemplate}"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" Background="Transparent"
                 PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"
-                ItemsSource="{Binding}" x:Name="listView" Foreground="White" SelectionMode="Extended">
+                ItemsSource="{Binding}" x:Name="listView" SelectionMode="Extended">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Style.Triggers>
@@ -262,9 +271,10 @@
                         </Setter.Value>
                     </Setter>
                     <EventSetter Event="MouseDoubleClick" Handler="item_double_click" />
-                    <Setter Property="RenderTransformOrigin" Value=".5,.5" />
-                    <Setter Property="Margin" Value="5,0,5,10" />
-                    <Setter Property="Padding" Value="15" />
+                    <Setter Property="RenderTransformOrigin" Value="0,0" />
+                    <Setter Property="Margin" Value="0,0,5,5" />
+                    <Setter Property="Padding" Value="9,5,5,5" />
+                    <Setter Property="Foreground" Value="{Binding Foreground,ElementName=me}" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListViewItem}">
@@ -274,27 +284,12 @@
                                             <ScaleTransform ScaleX="1" ScaleY="1" />
                                         </TransformGroup>
                                     </Grid.RenderTransform>
-                                    <Rectangle x:Name="normal" Fill="{Binding LogoColor}" />
-
-                                    <Rectangle x:Name="mouseover" Opacity="0" StrokeThickness="4"
-                                            Stroke="{DynamicResource skinBrush}" />
+                                    <Border x:Name="normal" Background="{Binding ThemeColor,ElementName=me}" />
+                                    <Border x:Name="mouseover" Opacity="0" Background="{DynamicResource selectBrush}" />
                                     <Grid x:Name="pressed" Opacity="0">
-                                        <Border BorderThickness="4" BorderBrush="{DynamicResource skinBrush}" />
-                                        <!--<Grid x:Name="corner" HorizontalAlignment="Left" VerticalAlignment="Bottom">
-                                            <Path Data="M 0,0 L 40,30 0,30 Z" Fill="{DynamicResource skinBrush}" />
-                                        </Grid>-->
-                                        <Grid x:Name="corner_select" HorizontalAlignment="Right" VerticalAlignment="Top">
-                                            <Path Data="M 0,0 L 40,0 40,30 Z" Fill="{DynamicResource skinBrush}" />
-                                            <TextBlock Margin="20,0,0,0" Text="&#xE0A5;" VerticalAlignment="Top"
-                                                    HorizontalAlignment="Left" FontFamily="Segoe UI Symbol"
-                                                    Foreground="{Binding LogoColor}" />
-                                            <TextBlock Visibility="{Binding InFav,Converter={StaticResource bool2vis}}"
-                                                    Margin="20,0,0,0" Text="&#xE0A5;" VerticalAlignment="Top"
-                                                    HorizontalAlignment="Left" FontFamily="Segoe UI Symbol"
-                                                    Foreground="White" />
-                                            <!--<TextBlock HorizontalAlignment="Right" Text="&#xE001;"
-                                                    FontFamily="Segoe UI Symbol" Foreground="White" />-->
-                                        </Grid>
+                                        <Border BorderThickness="4,0,0,0" BorderBrush="{DynamicResource skinBrush}">
+                                            <Border Background="{DynamicResource selectBrush}" Opacity=".5" />
+                                        </Border>
                                     </Grid>
                                     <ContentPresenter Margin="{TemplateBinding Padding}" />
                                     <VisualStateManager.VisualStateGroups>
@@ -304,7 +299,7 @@
                                                 <Storyboard>
                                                     <DoubleAnimation Storyboard.TargetName="mouseover"
                                                             Storyboard.TargetProperty="Opacity" Duration="0:0:0.2"
-                                                            To="1" />
+                                                            To=".5" />
                                                 </Storyboard>
                                             </VisualState>
                                             <VisualState x:Name="Disabled" />
@@ -319,12 +314,12 @@
                                                     <DoubleAnimation Storyboard.TargetName="pressed"
                                                             Storyboard.TargetProperty="Opacity" Duration="0:0:0.2"
                                                             To="1" />
-                                                    <DoubleAnimation Storyboard.TargetName="root"
+                                                    <!--<DoubleAnimation Storyboard.TargetName="root"
                                                             Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"
                                                             Duration="0" To="0.95" />
                                                     <DoubleAnimation Storyboard.TargetName="root"
                                                             Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"
-                                                            Duration="0" To="0.95" />
+                                                            Duration="0" To="0.95" />-->
                                                 </Storyboard>
                                             </VisualState>
                                             <VisualState x:Name="Unselected" />

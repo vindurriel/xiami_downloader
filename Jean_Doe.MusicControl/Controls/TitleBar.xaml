@@ -13,7 +13,7 @@
                     <Style x:Key="glyph" TargetType="TextBlock">
                         <Setter Property="HorizontalAlignment" Value="Stretch"/>
                         <Setter Property="VerticalAlignment" Value="Stretch"/>
-                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Foreground" Value="{DynamicResource lightBrush}"/>
                         <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
                     </Style>
                     <Style x:Key="StyleWindowButton"

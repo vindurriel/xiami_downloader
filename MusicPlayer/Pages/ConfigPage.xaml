@@ -22,8 +22,9 @@
                 <Setter Property="HorizontalContentAlignment" Value="Left" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="HorizontalAlignment" Value="Left" />
-                <Setter Property="Background" Value="#555" />
+                <Setter Property="Background" Value="{DynamicResource selectBrush}" />
                 <Setter Property="Height" Value="{StaticResource lineHeight}" />
+                <Setter Property="BorderThickness" Value="0" />
             </Style>
             <Style TargetType="PasswordBox" BasedOn="{StaticResource {x:Type PasswordBox}}">
                 <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
@@ -32,13 +33,13 @@
                 <Setter Property="HorizontalContentAlignment" Value="Left" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="HorizontalAlignment" Value="Left" />
-                <Setter Property="Background" Value="#555" />
+                <Setter Property="Background" Value="{DynamicResource selectBrush}" />
+                <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Height" Value="{StaticResource lineHeight}" />
             </Style>
             <Style TargetType="controls:ToggleSwitch">
                 <Setter Property="Height" Value="{StaticResource lineHeight}" />
-                <Setter Property="OnColor" Value="{DynamicResource skinBrush}" />
-                <Setter Property="OffColor" Value="{DynamicResource selectBrush}" />
+                <Setter Property="BgColor" Value="{DynamicResource lightBrush}" />
                 <Setter Property="SkinColor" Value="{DynamicResource skinBrush}" />
                 <Setter Property="HorizontalAlignment" Value="Left" />
             </Style>
@@ -61,52 +62,45 @@
         <ListView x:Name="list_groups" FontSize="20" ItemsSource="{Binding SourceGroup,ElementName=me}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="true">
-                            <Setter Property="Foreground" Value="White" />
-                        </Trigger>
-                    </Style.Triggers>
-                    <Setter Property="Padding" Value="20,10,50,10" />
-                    <Setter Property="Foreground" Value="#aaa" />
+                    <Setter Property="Padding" Value="10,10,50,10" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                <Grid x:Name="root">
-                                    <Border BorderBrush="White" BorderThickness="0,0,0,0" />
-                                    <Grid Opacity="0" x:Name="pressed" >
-                                        <!--<Path Data="M 0,10 L 10,0 10,20 Z" Fill="White" HorizontalAlignment="Right"
-                                                VerticalAlignment="Center" />-->
-                                    </Grid>
-                                    <ContentPresenter x:Name="content" Margin="{TemplateBinding Padding}" />
+                                <DockPanel x:Name="root"  >
+                                    <Rectangle x:Name="line" Width="4" Opacity="0" Fill="{DynamicResource skinBrush}" DockPanel.Dock="Left" />
+                                    <ContentPresenter x:Name="content" Opacity="0.7" Margin="{TemplateBinding Padding}" />
                                     <VisualStateManager.VisualStateGroups>
                                         <VisualStateGroup x:Name="SelectionStates">
                                             <VisualState x:Name="Selected">
                                                 <Storyboard>
-                                                    <DoubleAnimation Storyboard.TargetName="pressed"
+                                                    <DoubleAnimation Storyboard.TargetName="content"
                                                             Storyboard.TargetProperty="Opacity" Duration="0:0:0.1"
                                                             To="1" />
+                                                    <DoubleAnimation Storyboard.TargetName="line"
+                                                            Storyboard.TargetProperty="Opacity"
+                                                            Duration="0:0:0.1" To="1" />
                                                 </Storyboard>
                                             </VisualState>
                                             <VisualState x:Name="Unselected" />
                                         </VisualStateGroup>
                                     </VisualStateManager.VisualStateGroups>
-                                </Grid>
+                                </DockPanel>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <ListView Margin="0,0,0,0" ItemsSource="{Binding SourceItem,ElementName=me}"  Grid.Column="1"
+        <ListView Margin="0,0,0,0" ItemsSource="{Binding SourceItem,ElementName=me}" Grid.Column="1"
                 SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="Padding" Value="20,10" />
-                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                <Border BorderBrush="White" BorderThickness="0,0,0,0" >
+                                <Border BorderThickness="0">
                                     <ContentPresenter x:Name="content" Margin="{TemplateBinding Padding}" />
                                 </Border>
                             </ControlTemplate>

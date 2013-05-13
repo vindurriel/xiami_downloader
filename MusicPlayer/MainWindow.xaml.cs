@@ -67,6 +67,7 @@ namespace MusicPlayer
             Global.LoadSettings();
             Global.ListenToEvent("EnableMagnet", SetEnableMagnet);
             Global.ListenToEvent("ColorSkin", SetColorSkin);
+            Global.ListenToEvent("Theme", SetTheme);
             Global.ListenToEvent("xiami_avatar", SetAvatar);
             InitializeComponent();
             Artwork.DataBus.DataBus.Set("MainWindow", this);
@@ -123,7 +124,7 @@ namespace MusicPlayer
             catch (Exception ex)
             {
             }
-            
+
             //tag control events
             foreach (var item in headers.Children)
             {
@@ -168,16 +169,16 @@ namespace MusicPlayer
                 this.DisableMagnet();
             }
         }
+        void SetTheme(string s)
+        {
+            var colors = s.Split(" ".ToCharArray());
+            App.Current.Resources["darkBrush"] = new SolidColorBrush { Color = (Color)ColorConverter.ConvertFromString(colors[0]) };
+            App.Current.Resources["lightBrush"] = new SolidColorBrush { Color = (Color)ColorConverter.ConvertFromString(colors[1]) };
+            App.Current.Resources["selectBrush"] = new SolidColorBrush { Color = (Color)ColorConverter.ConvertFromString(colors[2]) };
+        }
         void SetColorSkin(string s)
         {
-            try
-            {
-                App.Current.Resources["skinBrush"] = new SolidColorBrush
-                {
-                    Color = (Color)ColorConverter.ConvertFromString(s)
-                };
-            }
-            catch { }
+            App.Current.Resources["skinBrush"] = new SolidColorBrush { Color = (Color)ColorConverter.ConvertFromString(s) };
         }
         void SetAvatar(string s)
         {
@@ -220,7 +221,7 @@ namespace MusicPlayer
                     {
                         Page = 2;
                     });
-                    MessageBus.Instance.Publish(new MsgSetBusy(this,true));
+                    MessageBus.Instance.Publish(new MsgSetBusy(this, true));
                     break;
                 case EnumSearchState.Cancelling:
                 case EnumSearchState.Finished:
@@ -228,7 +229,7 @@ namespace MusicPlayer
                     {
                         Page = 2;
                     });
-                    MessageBus.Instance.Publish(new MsgSetBusy(this,false));
+                    MessageBus.Instance.Publish(new MsgSetBusy(this, false));
                     break;
                 default:
                     break;

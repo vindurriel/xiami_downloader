@@ -185,7 +185,12 @@ namespace MusicPlayer
         {
             ui = new ColorPicker.ColorPicker();
             onUICreated();
-            ui.SelectedColorChanged += (s, e) => Save();
+            ui.PreviewMouseLeftButtonUp += OnUiMouseLeftButtonUp;
+        }
+
+        void OnUiMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Save();
         }
         ColorPicker.ColorPicker ui;
         public override FrameworkElement UI

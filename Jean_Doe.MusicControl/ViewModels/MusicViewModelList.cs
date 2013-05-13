@@ -10,6 +10,7 @@ namespace Jean_Doe.MusicControl
     {
         public void AddItems(IEnumerable<IMusic> inlist, bool toFront = false)
         {
+            canSave = false;
             int count = inlist.Count();
             if (count == 0) return;
             int s = 1000 / count;
@@ -21,8 +22,18 @@ namespace Jean_Doe.MusicControl
                     addItem(music, toFront);
                     Thread.Sleep(s);
                 }
+                canSave = true;
+                Save();
             });
         }
+        public new void Remove(MusicViewModel item)
+        {
+            canSave = false;
+            base.Remove(item);
+            canSave = true;
+            Save();
+        }
+        bool canSave = false;
         void addItem(IMusic music, bool toFront)
         {
             MusicViewModel s = null;
@@ -66,22 +77,23 @@ namespace Jean_Doe.MusicControl
         public string SavePath { get; set; }
         public void Save()
         {
+            if (!canSave) return;
             var songs = new Songs();
             songs.AddRange(this.OfType<SongViewModel>().Select(x => x.Song));
             PersistHelper.Save(songs, SavePath);
         }
+        Songs tmpSongs;
         public async Task Load()
         {
-            Songs songs = null;
             await Task.Run(() =>
             {
-                songs = PersistHelper.Load<Songs>(SavePath);
+                tmpSongs = PersistHelper.Load<Songs>(SavePath);
             });
-            if (songs == null)
+            if (tmpSongs == null || tmpSongs.Count == 0)
                 return;
             if (Count > 0)
                 Clear();
-            AddItems(songs);
+            AddItems(tmpSongs);
         }
     }
 }

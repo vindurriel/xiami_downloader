@@ -67,7 +67,7 @@ namespace Jean_Doe.Common
             else
             {
                 timer.Start();
-                waveOutDevice.Play();
+                Task.Run(() => waveOutDevice.Play());
                 if (SongChanged != null && waveStream != null)
                     SongChanged(null, new SongChangedEventArgs { Total = waveStream.TotalTime, Id = _id });
             }
@@ -114,7 +114,7 @@ namespace Jean_Doe.Common
             {
                 return;
             }
-            waveOutDevice.Play();
+            Task.Run(() => waveOutDevice.Play()); 
             timer.Start();
         }
         static string _id = null;

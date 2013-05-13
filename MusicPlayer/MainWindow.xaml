@@ -53,7 +53,7 @@
         </Style>
         <Style x:Key="{x:Type ResizeGrip}" TargetType="{x:Type ResizeGrip}">
             <Setter Property="OverridesDefaultStyle" Value="true" />
-            <Setter Property="Foreground" Value="#555" />
+            <Setter Property="Foreground" Value="{DynamicResource selectBrush}" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -76,7 +76,11 @@
         <controls:IntToBoolConverter x:Key="int2bool" />
     </controls:ResizeWindow.Resources>
     <Grid>
-        <Border x:Name="border" BorderBrush="Black" Background="{DynamicResource darkBrush}" BorderThickness="2" />
+        <Border x:Name="border"  Background="{DynamicResource darkBrush}" BorderThickness="0">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="1" Direction="-90" Opacity="0.5"  Color="Black"  BlurRadius="5" />
+            </Border.Effect>
+        </Border>
         <Grid Margin="2,2,2,50">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -110,7 +114,7 @@
                 <DockPanel Grid.Column="1" x:Name="headers">
                     <DockPanel.Resources>
                         <Style TargetType="ToggleButton" BasedOn="{StaticResource toggleStyle}">
-                            <Setter Property="Background" Value="{DynamicResource darkBrush}" />
+                            <Setter Property="Background" Value="{DynamicResource selectBrush}" />
                         </Style>
                     </DockPanel.Resources>
                     <ToggleButton MinWidth="0" Padding="0,0,0,0">
@@ -150,13 +154,13 @@
                         </DockPanel>
                     </ToggleButton>
                 </DockPanel>
-                <Grid Grid.Column="2" Background="Black">
-                    <Grid Background="{DynamicResource lightBrush}" MouseLeftButtonDown="btn_move_MouseDown">
+                <Grid Grid.Column="2" Background="{DynamicResource selectBrush}">
+                    <Grid MouseLeftButtonDown="btn_move_MouseDown" Background="{DynamicResource darkBrush}">
                         <Grid.Style>
                             <Style TargetType="Grid">
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Opacity" Value=".5" />
+                                        <Setter Property="Opacity" Value="1" />
                                     </Trigger>
                                     <Trigger Property="IsMouseOver" Value="False">
                                         <Setter Property="Opacity" Value="0" />
@@ -195,7 +199,7 @@
                             <controls:LyricControl HorizontalAlignment="Left" x:Name="lyricShow"
                                     MaxHeight="{Binding ActualHeight,ElementName=lrc}" />
                         </Grid>
-                        <GridSplitter Height="40"   Background="#01ffffff" VerticalAlignment="Bottom"
+                        <GridSplitter Height="40" Background="#01ffffff" VerticalAlignment="Bottom"
                                 HorizontalAlignment="Stretch" />
 
                         <Slider Background="{DynamicResource darkBrush}" Foreground="{DynamicResource skinBrush}"
@@ -215,7 +219,8 @@
                         VerticalAlignment="Center" HorizontalAlignment="Stretch" IsIndeterminate="False" ItemWidth="5" />
             </Grid>
         </Grid>
-        <my:ActionBar Height="50" x:Name="charmBar" Background="Black" VerticalAlignment="Bottom" />
+        <my:ActionBar Height="50" Margin="2" x:Name="charmBar" Background="{DynamicResource selectBrush}"
+                VerticalAlignment="Bottom" />
         <controls:TitleBar FontSize="20" HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Width="150"
                 Height="50" x:Name="titleBar" />
     </Grid>

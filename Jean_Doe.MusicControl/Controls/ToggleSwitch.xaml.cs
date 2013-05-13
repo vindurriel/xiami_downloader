@@ -37,7 +37,6 @@ namespace Jean_Doe.MusicControl
         public ToggleSwitch()
         {
             InitializeComponent();
-            BgColor = OffColor;
             toggle.Click += toggle_Click;
         }
         void toggle_Click(object sender, RoutedEventArgs e)
@@ -81,34 +80,6 @@ namespace Jean_Doe.MusicControl
         // Using a DependencyProperty as the backing store for SkinColor.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SkinColorProperty =
             DependencyProperty.Register("SkinColor", typeof(Brush), typeof(ToggleSwitch), new PropertyMetadata(Brushes.Red));
-
-
-
-        public Brush OnColor
-        {
-            get { return (Brush)GetValue(OnColorProperty); }
-            set { SetValue(OnColorProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for OnColor.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty OnColorProperty =
-            DependencyProperty.Register("OnColor", typeof(Brush), typeof(ToggleSwitch), new PropertyMetadata(Brushes.SkyBlue));
-
-
-
-        public Brush OffColor
-        {
-            get { return (Brush)GetValue(OffColorProperty); }
-            set { SetValue(OffColorProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for OffColor.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty OffColorProperty =
-            DependencyProperty.Register("OffColor", typeof(Brush), typeof(ToggleSwitch), new PropertyMetadata(Brushes.Gray));
-
-
-
-
     }
 
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Jean_Doe.Common;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -13,6 +14,13 @@ namespace Jean_Doe.MusicControl
         static Dictionary<string, string> dic = new Dictionary<string, string>();
         static double lumosity = 100;
         static double saturation = 80;
+        public static string RefreshDefaultColor()
+        {
+            var hsl = (HSLColor)(System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(Global.AppSettings["Theme"].Split()[0]);
+            hsl.Luminosity = hsl.Luminosity < 128 ? hsl.Luminosity  : hsl.Luminosity;
+            defaultColor = ((System.Windows.Media.Color)hsl).ToString();
+            return defaultColor;
+        }
         public static string defaultColor;
         public static string DefaultColor
         {
@@ -20,9 +28,7 @@ namespace Jean_Doe.MusicControl
             {
                 if (string.IsNullOrEmpty(defaultColor))
                 {
-                    var hsl = (HSLColor)Color.Black;
-                    hsl.Luminosity = lumosity;
-                    defaultColor = ((System.Windows.Media.Color)hsl).ToString();
+                    RefreshDefaultColor();
                 }
                 return defaultColor;
             }
@@ -55,7 +61,6 @@ namespace Jean_Doe.MusicControl
         private double hue = 1.0;
         private double saturation = 1.0;
         private double luminosity = 1.0;
-
         private const double scale = 240.0;
 
         public double Hue
@@ -157,6 +162,10 @@ namespace Jean_Doe.MusicControl
             hslColor.luminosity = color.GetBrightness();
             hslColor.saturation = color.GetSaturation();
             return hslColor;
+        }
+        public static implicit operator HSLColor(System.Windows.Media.Color c)
+        {
+            return (HSLColor)Color.FromArgb(c.R, c.G, c.B);
         }
         #endregion
 
