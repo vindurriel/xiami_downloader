@@ -221,7 +221,7 @@
         </Grid>
         <my:ActionBar Height="50" Margin="2" x:Name="charmBar" Background="{DynamicResource selectBrush}"
                 VerticalAlignment="Bottom" />
-        <controls:TitleBar FontSize="20" HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Width="150"
+        <controls:TitleBar Visibility="Collapsed" FontSize="20" HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Width="150"
                 Height="50" x:Name="titleBar" />
     </Grid>
 </controls:ResizeWindow>

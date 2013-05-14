@@ -13,6 +13,7 @@ using Jean_Doe.Common;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Linq.Expressions;
 namespace Jean_Doe.MusicControl
 {
     /// <summary>
@@ -20,6 +21,45 @@ namespace Jean_Doe.MusicControl
     /// </summary>
     public partial class SongListControl : INotifyPropertyChanged
     {
+        public SongListControl()
+        {
+            InitializeComponent();
+            Global.ListenToEvent("Theme", OnTheme);
+            input_filter.TextChanged += (s, e) =>
+            {
+                if (!string.IsNullOrEmpty(input_filter.Text))
+                    mask_filter.Visibility = Visibility.Collapsed;
+            };
+            input_filter.GotFocus += (s, e) =>
+            {
+                mask_filter.Visibility = Visibility.Collapsed;
+            };
+            input_filter.LostFocus += (s, e) =>
+            {
+                mask_filter.Visibility = string.IsNullOrEmpty(input_filter.Text) ? Visibility.Visible : Visibility.Collapsed;
+            };
+            combo_sort.SelectionChanged += (s, e) => ApplySort();
+            items = new MusicViewModelList();
+            items.CollectionChanged += items_CollectionChanged;
+            Source = new ListCollectionView(items);
+            //CollectionViewSource.GetDefaultView(items);
+            listView.DataContext = Source;
+            listView.SelectionChanged += OnSelectionChanged;
+            timer_itemCount.Tick += OnTimer_itemCountTick;
+            timer_itemCount.Start(); timer_itemCount.IsEnabled = true;
+            timer_itemCount.Interval = TimeSpan.FromSeconds(1);
+        }
+        void OnTimer_itemCountTick(object sender, EventArgs e)
+        {
+            ItemsCount = Source.Count;
+            emptyText.Visibility = ItemsCount > 0 ? Visibility.Collapsed : Visibility.Visible;
+            btn_search.Visibility = (ItemsCount == 0 && !string.IsNullOrEmpty(filter_text)) ? Visibility.Visible : Visibility.Collapsed;
+        }
+        void items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            ItemsCount = Source.Count;
+            Save();
+        }
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected void Notify(string prop)
@@ -87,7 +127,7 @@ namespace Jean_Doe.MusicControl
                 }
             }
             return null;
-        }  
+        }
         public void Clear()
         {
             UIHelper.RunOnUI(new Action(() =>
@@ -181,58 +221,28 @@ namespace Jean_Doe.MusicControl
         {
             ThemeColor = ImageHelper.RefreshDefaultColor();
         }
-        public SongListControl()
-        {
-            InitializeComponent();
-            Global.ListenToEvent("Theme", OnTheme);
-            input_filter.TextChanged += (s, e) =>
-            {
-                if (!string.IsNullOrEmpty(input_filter.Text))
-                    mask_filter.Visibility = Visibility.Collapsed;
 
-            };
-            input_filter.GotFocus += (s, e) =>
-                {
-                    mask_filter.Visibility = Visibility.Collapsed;
-                };
-            input_filter.LostFocus += (s, e) =>
-            {
-                mask_filter.Visibility = string.IsNullOrEmpty(input_filter.Text) ? Visibility.Visible : Visibility.Collapsed;
-            };
-            combo_sort.SelectionChanged += (s, e) => ApplySort();
-            MessageBus.Instance.Subscribe(this);
-            items = new MusicViewModelList();
-            items.CollectionChanged += items_CollectionChanged;
-            Source = CollectionViewSource.GetDefaultView(items);
-            Source.Filter = filter;
-            Source.CollectionChanged += Source_CollectionChanged;
-            listView.DataContext = Source;
-            listView.SelectionChanged += dataGrid_SelectionChanged;
-        }
-
-        void Source_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            var i = 0;
-            foreach (var item in (sender as ICollectionView))
-            {
-                i++;
-                break;
-            }
-            emptyText.Visibility = i > 0 ? Visibility.Collapsed : Visibility.Visible;
-        }
         void btn_filter_click(object sender, RoutedEventArgs e)
         {
-            filter_text = input_filter.Text.ToLower();
-            Source.Refresh();
-            var i = 0;
-            foreach (var item in Source)
+            if (string.IsNullOrWhiteSpace(input_filter.Text))
             {
-                i = 1;
-                break;
-            }
-            btn_search.Visibility = (i == 0 && !string.IsNullOrEmpty(filter_text)) ? Visibility.Visible : Visibility.Collapsed;
+                Source.Filter = null;
+                return;
+            };
+            filter_text = input_filter.Text.ToLower();
+            Source.Filter = filter;
         }
-        public ICollectionView Source { get; set; }
+        bool filter(object sender)
+        {
+            var music = sender as MusicViewModel;
+            if (music == null)
+            {
+                return false;
+            };
+            return music.SearchStr.Contains(filter_text);
+        }
+
+        public ListCollectionView Source { get; set; }
         public void UnselectAll()
         {
             listView.UnselectAll();
@@ -340,16 +350,10 @@ namespace Jean_Doe.MusicControl
                 go_collect(music, null);
             }
         }
+        DispatcherTimer timer_itemCount = new DispatcherTimer();
+       
 
-        void items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            UIHelper.RunOnUI(new Action(() =>
-            {
-                ItemsCount = Items.Count;
-            }));
-            Save();
-        }
-        void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UIHelper.RunOnUI(new Action(() =>
           {
@@ -456,19 +460,6 @@ namespace Jean_Doe.MusicControl
             }
         }
         string filter_text = "";
-        bool filter(object sender)
-        {
-            if (string.IsNullOrWhiteSpace(input_filter.Text))
-            {
-                return true;
-            };
-            var music = sender as MusicViewModel;
-            if (music == null)
-            {
-                return false;
-            };
-            return music.SearchStr.Contains(filter_text);
-        }
 
         private void item_double_click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {

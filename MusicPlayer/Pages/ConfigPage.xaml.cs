@@ -14,7 +14,7 @@ namespace MusicPlayer
     /// <summary>
     /// Interaction logic for ConfigWindow.xaml
     /// </summary>
-    public partial class ConfigPage:INotifyPropertyChanged
+    public partial class ConfigPage : INotifyPropertyChanged
     {
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -31,6 +31,7 @@ namespace MusicPlayer
         {
             get { return sourceGroup; }
         }
+        Dictionary<string, List<ConfigItem>> groups = new Dictionary<string, List<ConfigItem>>();
         private ObservableCollection<ConfigItem> sourceItem = new ObservableCollection<ConfigItem>();
 
         public ObservableCollection<ConfigItem> SourceItem
@@ -56,6 +57,12 @@ namespace MusicPlayer
                 new PasswordConfigItem("虾米账户","xiami_password","密码"),
                 new ButtonConfigItem("虾米账户","登录",btn_xiami_login_Click),
             };
+            foreach (var item in Configs)
+            {
+                if (!groups.ContainsKey(item.GroupName))
+                    groups[item.GroupName] = new List<ConfigItem>();
+                groups[item.GroupName].Add(item);
+            }
             foreach (var item in Configs.Select(x => x.GroupName).Distinct())
             {
                 SourceGroup.Add(item);
@@ -66,10 +73,15 @@ namespace MusicPlayer
         void OnList_groupsSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SourceItem.Clear();
-            foreach (var item in Configs.Where(x => x.GroupName == list_groups.SelectedItem.ToString()))
+            var key = list_groups.SelectedItem.ToString();
+            if (!groups.ContainsKey(key)) return;
+            Task.Run(() =>
             {
-                SourceItem.Add(item);
-            }
+                foreach (var item in groups[key])
+                {
+                    UIHelper.WaitOnUI(() => SourceItem.Add(item));
+                }
+            });
         }
 
         private async void btn_xiami_login_Click(object sender, RoutedEventArgs e)

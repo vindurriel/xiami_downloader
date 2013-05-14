@@ -4,24 +4,46 @@ using Jean_Doe.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Collections.Concurrent;
 namespace Jean_Doe.MusicControl
 {
     public class MusicViewModelList : ObservableCollection<MusicViewModel>
     {
+        ConcurrentQueue<IMusic> queue = new ConcurrentQueue<IMusic>();
         public void AddItems(IEnumerable<IMusic> inlist, bool toFront = false)
         {
             canSave = false;
             int count = inlist.Count();
             if (count == 0) return;
+            if (count > 30) count = 30;
             int s = 1000 / count;
-            var list = inlist.ToArray();
             Task.Run(() =>
             {
-                foreach (IMusic music in list)
+                try
                 {
-                    addItem(music, toFront);
-                    Thread.Sleep(s);
+                    foreach (var item in inlist)
+                    {
+                        queue.Enqueue(item);
+                    }
+                    for (int i = 0; i < count; i++)
+                    {
+                        IMusic item = null;
+                        if (!queue.TryDequeue(out item)) break;
+                        addItem(item, toFront);
+                        Thread.Sleep(s);
+                    }
+                    while (true)
+                    {
+                        IMusic item = null;
+                        if (!queue.TryDequeue(out item)) break;
+                        addItem(item, toFront);
+                    }
                 }
+                catch (System.Exception e)
+                {
+
+                }
+                 
                 canSave = true;
                 Save();
             });
@@ -35,6 +57,18 @@ namespace Jean_Doe.MusicControl
         }
         bool canSave = false;
         void addItem(IMusic music, bool toFront)
+        {
+            MusicViewModel vm = createViewModel(music);
+            if (vm == null) return;
+            UIHelper.WaitOnUI(() =>
+            {
+                if (toFront)
+                    Insert(0, vm);
+                else
+                    Add(vm);
+            });
+        }
+        private MusicViewModel createViewModel(IMusic music)
         {
             MusicViewModel s = null;
             switch (music.Type)
@@ -50,29 +84,18 @@ namespace Jean_Doe.MusicControl
                     break;
                 default:
                     s = SongViewModel.Get(music as Song);
+
                     break;
             }
-            if (s == null) return;
             if (s is SongViewModel)
             {
                 var dup = this.FirstOrDefault(x => x.Id == s.Id) as SongViewModel;
                 if (dup != null)
                 {
-                    return;
+                    return null;
                 }
-                UIHelper.WaitOnUI(() =>
-                {
-                    if (toFront)
-                        Insert(0, s);
-                    else
-                        Add(s);
-                });
-                return;
             }
-            UIHelper.WaitOnUI(() =>
-            {
-                Add(s);
-            });
+            return s;
         }
         public string SavePath { get; set; }
         public void Save()

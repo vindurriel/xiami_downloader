@@ -58,7 +58,8 @@
             <Setter Property="Height" Value="5" />
             <Setter Property="Background" Value="#01000000" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="IsHitTestVisible" Value="{Binding HasDetail}" />
+            <Setter Property="IsHitTestVisible"
+                    Value="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListViewItem}}" />
             <Setter Property="Visibility" Value="{Binding HasDetail,Converter={StaticResource bool2vis}}" />
         </Style>
         <DataTemplate x:Key="searchTemplate">
@@ -237,8 +238,10 @@
                         <EventTrigger RoutedEvent="FrameworkElement.Loaded">
                             <BeginStoryboard>
                                 <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="0"
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="0"
                                             EasingFunction="{StaticResource easeFunc}" To="1" />
+                                    <ThicknessAnimation Storyboard.TargetProperty="Margin" Duration="0:0:0.2" From="0"
+                                            EasingFunction="{StaticResource easeFunc}" To="0,0,5,5" />
                                     <DoubleAnimation
                                             Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"
                                             Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="1" />
@@ -271,9 +274,10 @@
                         </Setter.Value>
                     </Setter>
                     <EventSetter Event="MouseDoubleClick" Handler="item_double_click" />
-                    <Setter Property="RenderTransformOrigin" Value="0,0" />
-                    <Setter Property="Margin" Value="0,0,5,5" />
+                    <Setter Property="Margin" Value="20,0,-15,5" />
+                    <Setter Property="Opacity" Value="0" />
                     <Setter Property="Padding" Value="9,5,5,5" />
+                    <Setter Property="RenderTransformOrigin" Value=".5,.5" />
                     <Setter Property="Foreground" Value="{Binding Foreground,ElementName=me}" />
                     <Setter Property="Template">
                         <Setter.Value>

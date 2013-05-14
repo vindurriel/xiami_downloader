@@ -24,7 +24,7 @@ namespace MusicPlayer
 
             anim = new Storyboard();
             da = new DoubleAnimation();
-            da.Duration = new Duration(TimeSpan.FromMilliseconds(Mp3Player.RefreshInterval/5));
+            da.Duration = new Duration(TimeSpan.FromMilliseconds(Mp3Player.RefreshInterval / 5));
             da.EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut };
             Storyboard.SetTarget(da, _slider);
             Storyboard.SetTargetProperty(da, new PropertyPath("Value"));
@@ -41,9 +41,9 @@ namespace MusicPlayer
 
         void slider_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            anim.Pause();
             _slider.ValueChanged -= slider_ValueChanged;
             _slider.ValueChanged += slider_ValueChanged;
-            anim.Pause();
             Mp3Player.TimeChanged -= Mp3Player_TimeChanged;
         }
 
@@ -62,9 +62,12 @@ namespace MusicPlayer
         void Mp3Player_SongChanged(object sender, SongChangedEventArgs e)
         {
             _slider.Visibility = Visibility.Visible;
-            da.To = 0;
-            anim.Begin();
-            _slider.Maximum = e.Total.TotalSeconds;
+            if (_slider.Maximum != e.Total.TotalSeconds)
+            {
+                da.To = 0;
+                anim.Begin();
+                _slider.Maximum = e.Total.TotalSeconds;
+            }
         }
     }
 }

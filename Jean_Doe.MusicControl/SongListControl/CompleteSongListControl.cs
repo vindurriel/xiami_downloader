@@ -161,8 +161,8 @@ namespace Jean_Doe.MusicControl
             var dir = Global.AppSettings["DownloadFolder"];
             Task.Run(async () =>
             {
-                var songs = new List<IMusic>();
-                var i = 0;
+                var buffer = new List<IMusic>();
+                int bufferLength = 10;
                 foreach (var item in Directory.EnumerateFiles(dir, "*.mp3"))
                 {
                     try
@@ -213,21 +213,22 @@ namespace Jean_Doe.MusicControl
                             AlbumName = tags.Album,
                             FilePath = item,
                         };
-                        songs.Add(song);
-                        i += 1;
+                        buffer.Add(song);
                     }
                     catch (Exception ex)
                     {
-
                     }
-                    if (i == 1)
+                    if (buffer.Count == bufferLength)
                     {
+                        var songs = new List<IMusic>();
+                        songs.AddRange(buffer);
                         Items.AddItems(songs);
-                        songs.Clear();
-                        i = 0;
+                        buffer.Clear();
                     }
                 }
-                Items.AddItems(songs);
+                if (buffer.Count > 0)
+                    Items.AddItems(buffer);
+
             });
 
         }

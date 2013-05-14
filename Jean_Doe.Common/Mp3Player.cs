@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Threading;
 namespace Jean_Doe.Common
 {
@@ -16,31 +17,31 @@ namespace Jean_Doe.Common
     }
     public class Mp3Player
     {
-        static IWavePlayer waveOutDevice = new WaveOut();
-        static WaveStream waveStream;
+        static IWavePlayer device = new WaveOut { DesiredLatency = 300, NumberOfBuffers = 4 };
+        static WaveStream stream;
         public static event EventHandler<TimeChangedEventArgs> TimeChanged;
         public static event EventHandler<SongChangedEventArgs> SongChanged;
         private static double refreshInterval = 1000.0;
-
         public static double RefreshInterval
         {
             get { return refreshInterval; }
-            set { refreshInterval = value; }
         }
-        static DispatcherTimer timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(RefreshInterval) };
-        public static bool IsPlaying { get { return waveOutDevice != null && waveOutDevice.PlaybackState == PlaybackState.Playing; } }
+        static Timer timer = null;
+        public static bool IsPlaying { get { return device != null && device.PlaybackState == PlaybackState.Playing; } }
         public static TimeSpan CurrentTime
         {
-            get { return waveStream != null ? waveStream.CurrentTime : TimeSpan.Zero; }
+            get { return stream != null ? stream.CurrentTime : TimeSpan.Zero; }
             set
             {
-                if (waveStream != null)
-                    waveStream.CurrentTime = value;
+                if (stream != null)
+                    stream.CurrentTime = value;
             }
         }
         static Mp3Player()
         {
-            timer.Tick += timer_Tick;
+            timer = new Timer(RefreshInterval);
+            timer.Elapsed += timer_Tick;
+            Task.Run(() => timer.Start());
         }
         public static void Next()
         {
@@ -54,22 +55,20 @@ namespace Jean_Doe.Common
         }
         public static void PauseResume()
         {
-            if (waveStream == null) return;
-            if (waveStream.Length <= waveStream.Position)
+            if (stream == null) return;
+            if (stream.Length < stream.Position)
             {
                 CurrentTime = TimeSpan.Zero;
             }
             else if (IsPlaying)
             {
-                waveOutDevice.Pause();
-                timer.Stop();
+                device.Pause();
             }
             else
             {
-                timer.Start();
-                Task.Run(() => waveOutDevice.Play());
-                if (SongChanged != null && waveStream != null)
-                    SongChanged(null, new SongChangedEventArgs { Total = waveStream.TotalTime, Id = _id });
+                device.Play();
+                if (SongChanged != null && stream != null)
+                    SongChanged(null, new SongChangedEventArgs { Total = stream.TotalTime, Id = _id });
             }
         }
         public static void Play(string filepath, string id)
@@ -88,36 +87,41 @@ namespace Jean_Doe.Common
         }
         static void timer_Tick(object sender, EventArgs e)
         {
-            if (waveStream.Length <= waveStream.Position)
+            if (stream == null)
+                return;
+            if (stream.Length < stream.Position)
             {
                 Next();
             }
-            if (TimeChanged != null && waveStream != null)
-                TimeChanged(null, new TimeChangedEventArgs { Current = waveStream.CurrentTime });
+            if (TimeChanged != null)
+                UIHelper.RunOnUI(() =>
+                {
+                    TimeChanged(null, new TimeChangedEventArgs { Current = stream.CurrentTime });
+                });
+
         }
 
         static void play(string filepath)
         {
             if (IsPlaying)
             {
-                waveOutDevice.Pause();
-                timer.Stop();
+                device.Pause();
             }
             try
             {
-                waveStream = CreateInputStream(filepath);
-                waveOutDevice.Init(waveStream);
-                if (SongChanged != null && waveStream != null)
-                    SongChanged(null, new SongChangedEventArgs { Total = waveStream.TotalTime, Id = _id });
+                stream = CreateInputStream(filepath);
+                device.Init(stream);
+                if (SongChanged != null && stream != null)
+                    SongChanged(null, new SongChangedEventArgs { Total = stream.TotalTime, Id = _id });
             }
             catch (Exception)
             {
                 return;
             }
-            Task.Run(() => waveOutDevice.Play()); 
-            timer.Start();
+            device.Play();
         }
-        static string _id = null;
+
+        static string _id;
 
         static WaveStream CreateInputStream(string fileName)
         {
