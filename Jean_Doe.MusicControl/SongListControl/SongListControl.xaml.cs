@@ -29,6 +29,17 @@ namespace Jean_Doe.MusicControl
             {
                 if (!string.IsNullOrEmpty(input_filter.Text))
                     mask_filter.Visibility = Visibility.Collapsed;
+                lastFilter = input_filter.Text;
+                Task.Run(() =>
+                {
+                    var thisFilter = lastFilter;
+                    System.Threading.Thread.Sleep(1000);
+                    if (thisFilter != lastFilter) return;
+                    UIHelper.RunOnUI(() =>
+                    {
+                        btn_filter_click(null, null);
+                    });
+                });
             };
             input_filter.GotFocus += (s, e) =>
             {
@@ -49,6 +60,7 @@ namespace Jean_Doe.MusicControl
             timer_itemCount.Start(); timer_itemCount.IsEnabled = true;
             timer_itemCount.Interval = TimeSpan.FromSeconds(1);
         }
+        string lastFilter = "";
         void OnTimer_itemCountTick(object sender, EventArgs e)
         {
             ItemsCount = Source.Count;
@@ -224,13 +236,11 @@ namespace Jean_Doe.MusicControl
 
         void btn_filter_click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(input_filter.Text))
-            {
-                Source.Filter = null;
-                return;
-            };
+            var obj=new Object();
+            MessageBus.Instance.Publish(new MsgSetBusy(obj,true));
             filter_text = input_filter.Text.ToLower();
             Source.Filter = filter;
+            MessageBus.Instance.Publish(new MsgSetBusy(obj,false));
         }
         bool filter(object sender)
         {
@@ -351,7 +361,7 @@ namespace Jean_Doe.MusicControl
             }
         }
         DispatcherTimer timer_itemCount = new DispatcherTimer();
-       
+
 
         void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {

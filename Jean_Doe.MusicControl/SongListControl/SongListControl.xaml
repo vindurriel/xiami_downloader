@@ -223,7 +223,7 @@
                 <TextBlock VerticalAlignment="Center" Margin="3" x:Name="mask_filter" Text="输入字符以过滤"
                         IsHitTestVisible="False" Foreground="{DynamicResource lightBrush}" />
             </Grid>
-            <Button x:Name="btn_filter" Click="btn_filter_click" Content="过滤" VerticalContentAlignment="Center" />
+            <!--<Button x:Name="btn_filter" Click="btn_filter_click" Content="过滤" VerticalContentAlignment="Center" />-->
             <Button Visibility="Collapsed" x:Name="btn_search" Click="btn_search_click" Content="没有？在网上搜索一下" />
         </DockPanel>
         <TextBlock Grid.Column="1" Grid.Row="1" x:Name="emptyText" FontSize="20" HorizontalAlignment="Left"

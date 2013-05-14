@@ -68,7 +68,10 @@ namespace Jean_Doe.Common
             {
                 device.Play();
                 if (SongChanged != null && stream != null)
-                    SongChanged(null, new SongChangedEventArgs { Total = stream.TotalTime, Id = _id });
+                    UIHelper.RunOnUI(() =>
+                    {
+                        SongChanged(null, new SongChangedEventArgs { Total = stream.TotalTime, Id = _id });
+                    });
             }
         }
         public static void Play(string filepath, string id)
@@ -85,13 +88,17 @@ namespace Jean_Doe.Common
                 play(filepath);
             }
         }
+        static bool inChange = false;
         static void timer_Tick(object sender, EventArgs e)
         {
             if (stream == null)
                 return;
             if (stream.Length < stream.Position)
             {
+                if (inChange) return;
+                inChange = true;
                 Next();
+                inChange = false;
             }
             if (TimeChanged != null)
                 UIHelper.RunOnUI(() =>
@@ -112,7 +119,10 @@ namespace Jean_Doe.Common
                 stream = CreateInputStream(filepath);
                 device.Init(stream);
                 if (SongChanged != null && stream != null)
-                    SongChanged(null, new SongChangedEventArgs { Total = stream.TotalTime, Id = _id });
+                    UIHelper.RunOnUI(() =>
+               {
+                   SongChanged(null, new SongChangedEventArgs { Total = stream.TotalTime, Id = _id });
+               });
             }
             catch (Exception)
             {
