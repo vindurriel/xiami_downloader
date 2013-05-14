@@ -12,36 +12,39 @@ using System.Windows.Controls;
 using System.Windows;
 namespace Jean_Doe.MusicControl
 {
-    public class DownloadSongListControl : SongListControl,IActionProvider,
+    public class DownloadSongListControl : SongListControl,
+        IActionProvider,
         IHandle<MsgDownloadProgressChanged>,
         IHandle<MsgDownloadStateChanged>
     {
         public DownloadSongListControl()
         {
             listView.ItemTemplate = this.Resources["downloadingTemplate"] as DataTemplate;
-            Items.CollectionChanged+=Items_CollectionChanged;
+            Items.CollectionChanged += Items_CollectionChanged;
+            MessageBus.Instance.Subscribe(this);
         }
 
         void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add) {
+            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
+            {
                 foreach (var item in e.NewItems.OfType<SongViewModel>())
                 {
                     item.PrepareDownload();
                 }
             }
         }
-        public  void AddAndStart(SongViewModel song)
+        public void AddAndStart(SongViewModel song)
         {
-			Add(song);
+            Add(song);
             song.PrepareDownload();
-            DownloadManager.Instance.StartByTag(new [] { song.Id });
+            DownloadManager.Instance.StartByTag(new[] { song.Id });
         }
         public void Handle(MsgDownloadProgressChanged message)
         {
             var id = message.Id;
             var item = GetItemById(id);
-            if(item == null) return;
+            if (item == null) return;
             UIHelper.RunOnUI(new Action(() =>
             {
                 item.SetProgress(message.Percent);
@@ -50,16 +53,16 @@ namespace Jean_Doe.MusicControl
         public void Handle(MsgDownloadStateChanged message)
         {
             var item = message.Item as SongViewModel;
-            if(item == null) return;
-            if(item.HasMp3)
+            if (item == null) return;
+            if (item.HasMp3)
             {
                 Remove(item);
                 return;
             }
             var msg = message.Message;
-            if(msg == null)
+            if (msg == null)
             {
-                switch(message.State)
+                switch (message.State)
                 {
                     case EnumDownloadState.StandBy:
                         msg = "停止";
@@ -93,14 +96,14 @@ namespace Jean_Doe.MusicControl
         {
             return new List<CharmAction> 
                 { 
-                    new CharmAction("取消选择",this.btn_cancel_selection_Click,defaultActionValidate),
-                    new CharmAction("开始",this.btn_download_start_Click,defaultActionValidate),
-                    new CharmAction("暂停",this.btn_cancel_Click,defaultActionValidate),
-                    new CharmAction("删除",this.btn_remove_Click,defaultActionValidate),
-                    new CharmAction("完成",this.btn_complete_Click,defaultActionValidate),
-                    new CharmAction("查看专辑歌曲",link_album,IsOnlyType<IHasAlbum>),
-                    new CharmAction("查看歌手歌曲",link_artist,IsOnlyType<IHasArtist>),
-                    new CharmAction("在浏览器中打开",this.btn_browse_Click,IsOnlyType<IHasMusicPart>),
+                    new CharmAction("取消选择","\xE10E",this.btn_cancel_selection_Click,defaultActionValidate),
+                    new CharmAction("开始","\xE118",this.btn_download_start_Click,defaultActionValidate),
+                    new CharmAction("暂停","\xE15B",this.btn_cancel_Click,defaultActionValidate),
+                    new CharmAction("删除","\xE106",this.btn_remove_Click,defaultActionValidate),
+                    new CharmAction("完成","\xE10B",this.btn_complete_Click,defaultActionValidate),
+                    new CharmAction("查看专辑歌曲","\xE1d2",link_album,IsOnlyType<IHasAlbum>),
+                    new CharmAction("查看艺术家歌曲","\xE181",link_artist,IsOnlyType<IHasArtist>),
+                    new CharmAction("在浏览器中打开","\xE12B",this.btn_browse_Click,IsOnlyType<IHasMusicPart>),
                 };
         }
 

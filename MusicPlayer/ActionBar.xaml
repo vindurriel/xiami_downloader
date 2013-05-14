@@ -7,6 +7,11 @@
             <Setter Property="Padding" Value="20,10" />
             <Setter Property="FontFamily" Value="Segoe UI Symbol" />
             <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
+            <Setter Property="ToolTipService.ToolTip">
+                <Setter.Value>
+                    <ToolTip Content="{Binding Label}" />
+                </Setter.Value>
+            </Setter>
             <EventSetter Event="UIElement.MouseLeftButtonUp" Handler="charmBarAct" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -39,7 +44,16 @@
         </Style>
         <DataTemplate x:Key="itemTemplate">
             <Grid>
-                <TextBlock Text="{Binding Label}" />
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Icon}" />
+                <!--<TextBlock Grid.Column="1" Text="{Binding Label}" Margin="5,0,0,0" />-->
             </Grid>
         </DataTemplate>
     </Expander.Resources>

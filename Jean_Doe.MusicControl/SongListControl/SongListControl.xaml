@@ -142,8 +142,8 @@
                         </ScrollViewer>
                     </Grid>
                     <DockPanel Grid.Row="1" x:Name="detail" Height="5">
-                        <Border DockPanel.Dock="Top" Visibility="Visible" IsHitTestVisible="True"
-                                Style="{StaticResource triggerStyle}" VerticalAlignment="Top">
+                        <Border DockPanel.Dock="Top" Visibility="Visible" Style="{StaticResource triggerStyle}"
+                                VerticalAlignment="Top">
                             <TextBlock x:Name="detail_indicator" Text="&#xE0c2;" LineHeight="5" VerticalAlignment="Top"
                                     LineStackingStrategy="BlockLineHeight" FontSize="10" FontFamily="Segoe UI Symbol" />
                         </Border>

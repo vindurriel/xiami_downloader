@@ -17,7 +17,7 @@ namespace Jean_Doe.Common
     }
     public class Mp3Player
     {
-        static IWavePlayer device = new WaveOut { DesiredLatency = 300, NumberOfBuffers = 4 };
+        static IWavePlayer device = new WaveOut { DesiredLatency = 400, NumberOfBuffers = 4 };
         static WaveStream stream;
         public static event EventHandler<TimeChangedEventArgs> TimeChanged;
         public static event EventHandler<SongChangedEventArgs> SongChanged;

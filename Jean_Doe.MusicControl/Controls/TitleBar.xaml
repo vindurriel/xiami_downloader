@@ -34,19 +34,17 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="min"
+            <!--<Button x:Name="min"
                     Style="{DynamicResource StyleWindowButton}"
                     Click="BtnMinimizeClick">
                 <TextBlock Text="&#xE0A1;" Style="{StaticResource glyph}"/>
-                <!--<Image Source="/Jean_Doe.MusicControl;component/Resources/min.png"  
-                       Effect="{StaticResource shadow}"></Image>-->
             </Button>
             <Button x:Name="max" Grid.Column="1"
                     Style="{DynamicResource StyleWindowButton}"
                     Click="BtnMaximizeClick">
                 <TextBlock Text="&#xE0a0;" Style="{StaticResource glyph}"/>
 
-            </Button>
+            </Button>-->
             <Button x:Name="close" Grid.Column="2"
                     Style="{DynamicResource StyleWindowButton}"
                     Click="BtnCloseClick">

@@ -18,10 +18,10 @@ namespace Jean_Doe.MusicControl
     {
         public CompleteSongListControl()
         {
-            MessageBus.Instance.Subscribe(this);
             Mp3Player.SongChanged += Mp3Player_SongChanged;
             Items.CollectionChanged += Items_CollectionChanged;
             watcher = CreateWatcher();
+            MessageBus.Instance.Subscribe(this);
         }
         static FileSystemWatcher watcher;
         FileSystemWatcher CreateWatcher()
@@ -92,8 +92,8 @@ namespace Jean_Doe.MusicControl
         {
             return new List<CharmAction> 
                 {   
-                    new CharmAction("取消选择",this.btn_cancel_selection_Click,defaultActionValidate),
-                    new CharmAction("播放",this.btn_play_Click,(s)=>{
+                    new CharmAction("取消选择","\xE10E",this.btn_cancel_selection_Click,defaultActionValidate),
+                    new CharmAction("播放","\xE102",this.btn_play_Click,(s)=>{
                         if (SelectCount == 0)
                             return false;
                         if (!Mp3Player.IsPlaying) 
@@ -102,25 +102,25 @@ namespace Jean_Doe.MusicControl
                             return true;
                         return false;
                     }),
-                    new CharmAction("暂停",this.btn_play_Click,(s)=>{
+                    new CharmAction("暂停","\xE103",this.btn_play_Click,(s)=>{
                         if (SelectCount == 0)
                             return false;
                         if (isNowPlayingSelected(s) && Mp3Player.IsPlaying)
                             return true;
                         return false;
                     }),
-                    new CharmAction("选中正在播放",this.btn_show_Click,isNowPlayingNotSelected),  
-                    new CharmAction("下一首",this.btn_next_Click,isNowPlayingSelected),    
-                    new CharmAction("收藏该歌曲",this.btn_fav_Click,canFav),
-                    new CharmAction("不再收藏该歌曲",this.btn_unfav_Click,canUnfav),
-                    new CharmAction("查看专辑歌曲",link_album,IsOnlyType<IHasAlbum>),
-                    new CharmAction("查看艺术家歌曲",link_artist,IsOnlyType<IHasArtist>),
-                    new CharmAction("存为播放列表",this.btn_save_playlist_Click,s=>(s as CompleteSongListControl).SelectedSongs.Count()>1),
-                    new CharmAction("复制文件到剪贴板",this.btn_copy_Click,defaultActionValidate),
-                    new CharmAction("打开文件所在位置",this.btn_open_click,IsOnlyType<IHasMusicPart>),
-                    new CharmAction("在浏览器中打开",this.btn_browse_Click,IsOnlyType<IHasMusicPart>),
-                    new CharmAction("删除",this.btn_remove_complete_Click,defaultActionValidate),
-                    new CharmAction("导入",this.btn_import_click,defaultActionValidate),
+                    new CharmAction("选中正在播放","\xE18B",this.btn_show_Click,isNowPlayingNotSelected),  
+                    new CharmAction("下一首","\xE101",this.btn_next_Click,isNowPlayingSelected),    
+                    new CharmAction("收藏该歌曲","\xE0A5",this.btn_fav_Click,canFav),
+                    new CharmAction("不再收藏该歌曲","\xE007",this.btn_unfav_Click,canUnfav),
+                    new CharmAction("查看专辑歌曲","\xE1d2",link_album,IsOnlyType<IHasAlbum>),
+                    new CharmAction("查看艺术家歌曲","\xE181",link_artist,IsOnlyType<IHasArtist>),
+                    new CharmAction("存为播放列表","\xE14C",this.btn_save_playlist_Click,s=>(s as CompleteSongListControl).SelectedSongs.Count()>1),
+                    new CharmAction("复制文件到剪贴板","\xE16F",this.btn_copy_Click,defaultActionValidate),
+                    new CharmAction("打开文件所在位置","\xE1A5",this.btn_open_click,IsOnlyType<IHasMusicPart>),
+                    new CharmAction("在浏览器中打开","\xE12B",this.btn_browse_Click,IsOnlyType<IHasMusicPart>),
+                    new CharmAction("删除","\xE106",this.btn_remove_complete_Click,defaultActionValidate),
+                    new CharmAction("导入","\xE150",this.btn_import_click,defaultActionValidate),
                 };
         }
 

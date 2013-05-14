@@ -12,18 +12,26 @@ namespace Jean_Doe.Common
         {
             get { return label; }
             set { label = value; Notify("Label"); }
+        } private string icon;
+
+        public string Icon
+        {
+            get { return icon; }
+            set { icon = value; Notify("Icon"); }
         }
 
         public Action<object, System.Windows.RoutedEventArgs> Action { get; set; }
-        public CharmAction(string l, Action<object, RoutedEventArgs> a)
+        public CharmAction(string l, string i, Action<object, RoutedEventArgs> a)
         {
             Label = l;
+            Icon = i;
             Action = a;
             Validate = (s) => { return (s is bool) && (bool)s; };
         }
-        public CharmAction(string l, Action<object, RoutedEventArgs> a, Func<object, bool> v)
+        public CharmAction(string l, string i, Action<object, RoutedEventArgs> a, Func<object, bool> v)
         {
             Label = l;
+            Icon = i;
             Action = a;
             Validate = v;
         }

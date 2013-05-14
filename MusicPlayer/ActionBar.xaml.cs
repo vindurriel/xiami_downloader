@@ -27,8 +27,8 @@ namespace MusicPlayer
         public ActionBar()
         {
             InitializeComponent();
-            open_more = new CharmAction("\xE0C2", more_Click_1);
-            close_more = new CharmAction("\xE0C2", more_Click_2);
+            open_more = new CharmAction("更多","\xE0C2", more_Click_1);
+            close_more = new CharmAction("更少","\xE0C2", more_Click_2);
             list.ItemsSource = source1;
             menu.ItemsSource = source2;
             more_actions.LostFocus += (s, e) =>
