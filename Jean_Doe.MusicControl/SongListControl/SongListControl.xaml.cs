@@ -14,7 +14,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Linq.Expressions;
-using DataVirtualization;
 namespace Jean_Doe.MusicControl
 {
     /// <summary>
@@ -41,9 +40,17 @@ namespace Jean_Doe.MusicControl
         protected ListView listView;
         private void initTimer()
         {
-            timer_itemCount.Tick += OnTimer_itemCountTick;
-            timer_itemCount.Start(); timer_itemCount.IsEnabled = true;
-            timer_itemCount.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += OnTimerTick;
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Start();
+        }
+        bool isDirty;
+        void items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            ItemsCount = listView.Items.Count;
+            emptyText.Visibility = ItemsCount > 0 ? Visibility.Collapsed : Visibility.Visible;
+            btn_search.Visibility = (ItemsCount == 0 && !string.IsNullOrEmpty(filter_text)) ? Visibility.Visible : Visibility.Collapsed;
+            isDirty = true;
         }
 
         private void initInputFilter()
@@ -74,17 +81,12 @@ namespace Jean_Doe.MusicControl
             };
         }
         string lastFilter = "";
-        void OnTimer_itemCountTick(object sender, EventArgs e)
+        void OnTimerTick(object sender, EventArgs e)
         {
-            ItemsCount = listView.Items.Count;
-            emptyText.Visibility = ItemsCount > 0 ? Visibility.Collapsed : Visibility.Visible;
-            btn_search.Visibility = (ItemsCount == 0 && !string.IsNullOrEmpty(filter_text)) ? Visibility.Visible : Visibility.Collapsed;
-        }
-        void items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            ItemsCount = this.listView.Items.Count;
+
             Save();
         }
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected void Notify(string prop)
@@ -274,11 +276,15 @@ namespace Jean_Doe.MusicControl
         public string SavePath { get { return Items.SavePath; } set { Items.SavePath = value; } }
         public virtual void Save()
         {
-            items.Save();
+            if (isDirty)
+            {
+                items.Save();
+                isDirty = false;
+            }
         }
         public virtual void Load()
         {
-            Task.Run(async () => { await items.Load(); });
+            Task.Run(async () => {await items.Load(); });
         }
 
         protected virtual void btn_open_click(object sender, RoutedEventArgs e)
@@ -373,7 +379,7 @@ namespace Jean_Doe.MusicControl
                 go_collect(music, null);
             }
         }
-        DispatcherTimer timer_itemCount = new DispatcherTimer();
+        DispatcherTimer timer = new DispatcherTimer();
 
 
         void OnSelectionChanged(object sender, SelectionChangedEventArgs e)

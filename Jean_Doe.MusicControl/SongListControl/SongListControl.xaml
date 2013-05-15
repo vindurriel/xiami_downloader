@@ -207,8 +207,6 @@
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="0"
                                     EasingFunction="{StaticResource easeFunc}" To="1" />
-                            <ThicknessAnimation Storyboard.TargetProperty="Margin" Duration="0:0:0.2" From="0"
-                                    EasingFunction="{StaticResource easeFunc}" To="0,0,5,5" />
                             <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"
                                     Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="1" />
                             <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"
@@ -219,9 +217,9 @@
                 <EventTrigger RoutedEvent="FrameworkElement.Unloaded">
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="1" To="0" />
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="1" To="0" />
                             <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"
-                                    Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="0" />
+                                    Duration="0:0:0.5" EasingFunction="{StaticResource easeFunc}" To="0" />
                             <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"
                                     Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="0" />
                         </Storyboard>
@@ -236,7 +234,7 @@
                 </Setter.Value>
             </Setter>
             <EventSetter Event="MouseDoubleClick" Handler="item_double_click" />
-            <Setter Property="Margin" Value="20,0,-15,5" />
+            <Setter Property="Margin" Value="0,0,5,5" />
             <Setter Property="Opacity" Value="0" />
             <Setter Property="Padding" Value="9,5,5,5" />
             <Setter Property="RenderTransformOrigin" Value=".5,.5" />
@@ -305,8 +303,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <ToggleButton   Grid.RowSpan="2" Margin="0,0,5,0" Padding="0" FontSize="15"
-                Background="Transparent" Click="btn_more_Click" Foreground="{DynamicResource skinBrush}"
+        <ToggleButton Grid.RowSpan="2" Margin="0,0,5,0" Padding="0" FontSize="15" Background="Transparent"
+                Click="btn_more_Click" Foreground="{DynamicResource skinBrush}"
                 Visibility="{Binding ItemsCount,ElementName=me,Converter={StaticResource int2vis}}" Height="30"
                 Width="30" MinWidth="0" Style="{StaticResource toggleStyle}" VerticalAlignment="Top"
                 FontFamily="Segoe UI Symbol" x:Name="btn_more" Content="&#xE16E;" />
@@ -331,19 +329,37 @@
         <TextBlock Grid.Column="1" Grid.Row="1" x:Name="emptyText" FontSize="20" HorizontalAlignment="Left"
                 VerticalAlignment="Top" Style="{DynamicResource label_base}" Margin="5,10,0,0">列表为空</TextBlock>
         <ListView x:Name="virtualView" Visibility="Collapsed" Grid.Column="1" Grid.Row="1"
-                ItemTemplate="{StaticResource completeTemplate}" VirtualizingPanel.VirtualizationMode="Standard"
-                VirtualizingPanel.IsVirtualizing="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                BorderThickness="0" Background="Transparent"
-                PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"
-                ItemsSource="{Binding}" SelectionMode="Extended" ItemContainerStyle="{StaticResource lviStyle}"
-                ItemsPanel="{StaticResource vsp}">
-        </ListView>
-        <ListView x:Name="wrapView" Grid.Column="1" Grid.Row="1" ItemTemplate="{StaticResource completeTemplate}"
                 VirtualizingPanel.VirtualizationMode="Standard" VirtualizingPanel.IsVirtualizing="True"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" Background="Transparent"
                 PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"
-                ItemsSource="{Binding}" SelectionMode="Extended" ItemContainerStyle="{StaticResource lviStyle}"
-                ItemsPanel="{StaticResource wrap}">
+                ItemContainerStyle="{StaticResource lviStyle}" ItemsSource="{Binding}" SelectionMode="Extended"
+                ItemsPanel="{StaticResource vsp}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Height="60"  Margin="0,0,0,0" x:Name="root" ClipToBounds="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <ContentControl Content="{Binding}" ContentTemplate="{StaticResource t_image}" />
+                        <ScrollViewer Grid.Column="1" Style="{StaticResource scrollstyle}">
+                            <StackPanel>
+                                <TextBlock Text="{Binding Name}" Style="{DynamicResource label_base}" />
+                                <TextBlock Text="{Binding ArtistName}" Opacity="0.8"
+                                        Style="{DynamicResource label_base}" />
+                                <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{DynamicResource label_base}" />
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ListView x:Name="wrapView" Grid.Column="1" Grid.Row="1" VirtualizingPanel.VirtualizationMode="Standard"
+                VirtualizingPanel.IsVirtualizing="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                BorderThickness="0" Background="Transparent"
+                PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"
+                ItemTemplate="{StaticResource completeTemplate}" ItemsSource="{Binding}" SelectionMode="Extended"
+                ItemContainerStyle="{StaticResource lviStyle}" ItemsPanel="{StaticResource wrap}">
         </ListView>
     </Grid>
 </UserControl>

@@ -40,7 +40,7 @@ namespace Jean_Doe.MusicControl
                         if (!queue.TryDequeue(out item)) break;
                         addItem(item, toFront);
                         buffer++;
-                        if (buffer == 10)
+                        if (buffer == 100)
                         {
                             Thread.Sleep(100);
                             buffer = 0;
@@ -49,7 +49,7 @@ namespace Jean_Doe.MusicControl
                 }
                 catch (System.Exception e)
                 {
-
+                    var x = e.StackTrace;
                 }
 
                 canSave = true;
@@ -70,13 +70,21 @@ namespace Jean_Doe.MusicControl
             if (s == null) return;
             UIHelper.WaitOnUI(() =>
             {
+                if (s is SongViewModel)
+                {
+                    var dup = this.IndexOf(s);
+                    if (dup != -1)
+                    {
+                        Move(dup, toFront ? 0 : this.Count - 1);
+                        return;
+                    }
+                }
                 if (toFront)
                     Insert(0, s);
                 else
                     Add(s);
             });
         }
-
         private MusicViewModel createViewModel(IMusic music, bool toFront)
         {
             MusicViewModel s = null;
@@ -95,18 +103,7 @@ namespace Jean_Doe.MusicControl
                     s = SongViewModel.Get(music as Song);
                     break;
             }
-            if (s is SongViewModel)
-            {
-                var dup = this.FirstOrDefault(x => x.Id == s.Id) as SongViewModel;
-                if (dup != null)
-                {
-                    UIHelper.WaitOnUI(() =>
-                    {
-                        Move(this.IndexOf(dup), toFront ? 0 : this.Count - 1);
-                    });
-                    s = null;
-                }
-            }
+
             return s;
         }
         public string SavePath { get; set; }
@@ -120,10 +117,7 @@ namespace Jean_Doe.MusicControl
         Songs tmpSongs;
         public async Task Load()
         {
-            await Task.Run(() =>
-            {
-                tmpSongs = PersistHelper.Load<Songs>(SavePath);
-            });
+            await Task.Run(() => tmpSongs = PersistHelper.Load<Songs>(SavePath));
             if (tmpSongs == null || tmpSongs.Count == 0)
                 return;
             if (Count > 0)

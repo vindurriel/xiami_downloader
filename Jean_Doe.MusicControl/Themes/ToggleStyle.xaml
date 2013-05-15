@@ -43,24 +43,19 @@
                                 </VisualState>
                             </VisualStateGroup>
                             <VisualStateGroup x:Name="CommonStates">
-                                <VisualStateGroup.Transitions>
-                                    <VisualTransition GeneratedDuration="0:0:0.2" To="MouseOver" />
-                                </VisualStateGroup.Transitions>
                                 <VisualState x:Name="Normal" />
                                 <VisualState x:Name="MouseOver">
                                     <Storyboard>
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                Storyboard.TargetName="OverRect">
-                                            <EasingDoubleKeyFrame KeyTime="0" Value="1" />
-                                        </DoubleAnimationUsingKeyFrames>
+                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                Duration="0:0:0.2" To="1" Storyboard.TargetName="OverRect">
+                                        </DoubleAnimation>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <Storyboard>
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                Storyboard.TargetName="OverRect">
-                                            <EasingDoubleKeyFrame KeyTime="0" Value="1" />
-                                        </DoubleAnimationUsingKeyFrames>
+                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                Duration="0:0:0" To="1" Storyboard.TargetName="PressRect">
+                                        </DoubleAnimation>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Disabled"></VisualState>
@@ -69,11 +64,11 @@
                         <Border BorderThickness="0" CornerRadius="0" x:Name="round" />
                         <Grid>
                             <Grid x:Name="NormalRect">
-                                <Border Background="{TemplateBinding Background}" CornerRadius="{Binding CornerRadius,ElementName=round}"
-                                        BorderThickness="0" />
+                                <Border Background="{TemplateBinding Background}"
+                                        CornerRadius="{Binding CornerRadius,ElementName=round}" BorderThickness="0" />
                             </Grid>
                             <Grid x:Name="OverRect" Opacity="0">
-                                <Border Opacity="0.5" Background="{DynamicResource darkBrush}"
+                                <Border Opacity=".8" Background="{DynamicResource selectBrush}"
                                         CornerRadius="{Binding CornerRadius,ElementName=round}" BorderThickness="0" />
                             </Grid>
                             <Grid x:Name="PressRect" Opacity="0">

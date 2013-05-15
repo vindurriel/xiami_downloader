@@ -264,6 +264,13 @@ namespace Jean_Doe.MusicControl
             foreach (var item in list)
             {
                 Remove(item);
+                try
+                {
+                    File.Delete(item.Song.FilePath);
+                }
+                catch (Exception)
+                {
+                }
             }
         }
         void btn_copy_Click(object sender, RoutedEventArgs e)
