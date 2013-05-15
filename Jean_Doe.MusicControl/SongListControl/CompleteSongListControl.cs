@@ -66,7 +66,7 @@ namespace Jean_Doe.MusicControl
             if (e.Action != System.Collections.Specialized.NotifyCollectionChangedAction.Add) return;
             foreach (var item in e.NewItems.OfType<SongViewModel>())
             {
-                var file = Path.Combine(Global.BasePath, "cache", item.Id + ".mp3");
+                var file = item.Song.FilePath;
                 if (File.Exists(file))
                 {
                     var date = new FileInfo(file).LastWriteTime;
@@ -221,14 +221,24 @@ namespace Jean_Doe.MusicControl
                     if (buffer.Count == bufferLength)
                     {
                         var songs = new List<IMusic>();
+                        foreach (var s in buffer.OfType<Song>())
+                        {
+                            SongViewModel.Get(s).HasMp3 = true;
+                        }
                         songs.AddRange(buffer);
                         Items.AddItems(songs);
+
                         buffer.Clear();
                     }
                 }
                 if (buffer.Count > 0)
+                {
+                    foreach (var s in buffer.OfType<Song>())
+                    {
+                        SongViewModel.Get(s).HasMp3 = true;
+                    }
                     Items.AddItems(buffer);
-
+                }
             });
 
         }

@@ -5,13 +5,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
         Foreground="{DynamicResource lightBrush}" xmlns:my='clr-namespace:Jean_Doe.MusicControl' x:Name="me">
     <UserControl.Resources>
-        <my:IntToVisibilityConverter x:Key="int2vis" />
-        <my:BoolToOpacityConverter x:Key='bool2opa' />
-        <my:BoolToVisibilityConverter x:Key="bool2vis" />
-        <my:DivideConverter x:Key="divconv" />
-        <Storyboard x:Key="FadeOut">
-            <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="1" To="0" />
-        </Storyboard>
         <Style TargetType="TextBlock" x:Key="label_base">
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Left" />
@@ -20,8 +13,22 @@
             <Setter Property="LineStackingStrategy" Value="BlockLineHeight" />
             <Setter Property="TextWrapping" Value="WrapWithOverflow" />
         </Style>
+        <my:IntToVisibilityConverter x:Key="int2vis" />
+        <my:BoolToOpacityConverter x:Key='bool2opa' />
+        <my:BoolToVisibilityConverter x:Key="bool2vis" />
+        <my:DivideConverter x:Key="divconv" />
+        <ItemsPanelTemplate x:Key="wrap">
+            <WrapPanel HorizontalAlignment="Left" Orientation="Horizontal" />
+        </ItemsPanelTemplate>
+        <ItemsPanelTemplate x:Key="vsp">
+            <VirtualizingStackPanel HorizontalAlignment="Left" VerticalAlignment="Top" />
+        </ItemsPanelTemplate>
+        <Storyboard x:Key="FadeOut">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="1" To="0" />
+        </Storyboard>
         <DataTemplate x:Key="dateTemplate">
-            <TextBlock Text="{Binding Date, StringFormat={}{0:yyyy/MM/dd HH:mm:ss}}" Style="{StaticResource label_base}" />
+            <TextBlock Text="{Binding Date, StringFormat={}{0:yyyy/MM/dd HH:mm:ss}}"
+                    Style="{DynamicResource label_base}" />
         </DataTemplate>
         <DataTemplate x:Key="t_image">
             <Grid VerticalAlignment="Top" Width="60" Height="60">
@@ -80,7 +87,7 @@
                                 <TextBlock Text="{Binding Name}" Style="{DynamicResource label_base}" />
                                 <TextBlock Text="{Binding ArtistName}" Opacity="0.8"
                                         Style="{DynamicResource label_base}" />
-                                <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{StaticResource label_base}" />
+                                <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{DynamicResource label_base}" />
                             </StackPanel>
                         </ScrollViewer>
                     </Grid>
@@ -92,7 +99,7 @@
                         <ScrollViewer Style="{StaticResource scrollstyle}">
                             <StackPanel>
                                 <TextBlock Text="{Binding Description}" Opacity="0.5"
-                                        Style="{StaticResource label_base}" />
+                                        Style="{DynamicResource label_base}" />
                             </StackPanel>
                         </ScrollViewer>
                     </DockPanel>
@@ -174,7 +181,7 @@
                                 <TextBlock Text="{Binding Name}" Style="{DynamicResource label_base}" />
                                 <TextBlock Text="{Binding ArtistName}" Opacity="0.8"
                                         Style="{DynamicResource label_base}" />
-                                <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{StaticResource label_base}" />
+                                <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{DynamicResource label_base}" />
                             </StackPanel>
                         </ScrollViewer>
                     </Grid>
@@ -193,18 +200,113 @@
                 </Grid>
             </Grid>
         </DataTemplate>
+        <Style TargetType="ListViewItem" x:Key="lviStyle">
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="0"
+                                    EasingFunction="{StaticResource easeFunc}" To="1" />
+                            <ThicknessAnimation Storyboard.TargetProperty="Margin" Duration="0:0:0.2" From="0"
+                                    EasingFunction="{StaticResource easeFunc}" To="0,0,5,5" />
+                            <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"
+                                    Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="1" />
+                            <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"
+                                    Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="1" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="FrameworkElement.Unloaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="1" To="0" />
+                            <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"
+                                    Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="0" />
+                            <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"
+                                    Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="0" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="0" ScaleY="0" />
+                    </TransformGroup>
+                </Setter.Value>
+            </Setter>
+            <EventSetter Event="MouseDoubleClick" Handler="item_double_click" />
+            <Setter Property="Margin" Value="20,0,-15,5" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Padding" Value="9,5,5,5" />
+            <Setter Property="RenderTransformOrigin" Value=".5,.5" />
+            <Setter Property="Foreground" Value="{Binding Foreground,ElementName=me}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                        <Grid Background="Black" x:Name="root" RenderTransformOrigin=".5,.5">
+                            <Grid.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                                </TransformGroup>
+                            </Grid.RenderTransform>
+                            <Border x:Name="normal" Background="{Binding ThemeColor,ElementName=me}" />
+                            <Border x:Name="mouseover" Opacity="0" Background="{DynamicResource selectBrush}" />
+                            <Grid x:Name="pressed" Opacity="0">
+                                <Border BorderThickness="4,0,0,0" BorderBrush="{DynamicResource skinBrush}">
+                                    <Border Background="{DynamicResource selectBrush}" Opacity=".5" />
+                                </Border>
+                            </Grid>
+                            <ContentPresenter Margin="{TemplateBinding Padding}" />
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="MouseOver">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="mouseover"
+                                                    Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" To=".5" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled" />
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="SelectionStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition To="Unselected" GeneratedDuration="0:0:0.1" />
+                                        <VisualTransition To="Selected" GeneratedDuration="0:0:0.1" />
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="Selected">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="pressed"
+                                                    Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" To="1" />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unselected" />
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="FocusStates">
+                                    <VisualState x:Name="Focused" />
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="ValidationStates">
+                                    <VisualState x:Name="InvalidFocused" />
+                                    <VisualState x:Name="InvalidUnfocused" />
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
-            <ColumnDefinition />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <ToggleButton Grid.RowSpan="2" Margin="0,0,5,0" Padding="0" FontSize="15" Background="Transparent"
-                Foreground="{DynamicResource skinBrush}"
+        <ToggleButton   Grid.RowSpan="2" Margin="0,0,5,0" Padding="0" FontSize="15"
+                Background="Transparent" Click="btn_more_Click" Foreground="{DynamicResource skinBrush}"
                 Visibility="{Binding ItemsCount,ElementName=me,Converter={StaticResource int2vis}}" Height="30"
                 Width="30" MinWidth="0" Style="{StaticResource toggleStyle}" VerticalAlignment="Top"
                 FontFamily="Segoe UI Symbol" x:Name="btn_more" Content="&#xE16E;" />
@@ -213,9 +315,9 @@
             <ComboBox x:Name="combo_sort">
                 <ComboBoxItem Tag="Default_Asc" IsSelected="True">无排序</ComboBoxItem>
                 <ComboBoxItem Tag="Date_Dsc">最近下载</ComboBoxItem>
-                <ComboBoxItem Tag="Date_Asc">最早下载</ComboBoxItem>
                 <ComboBoxItem Tag="Name_Asc">名称升序</ComboBoxItem>
-                <ComboBoxItem Tag="Name_Dsc">名称降序</ComboBoxItem>
+                <ComboBoxItem Tag="AlbumName_Asc">专辑升序</ComboBoxItem>
+                <ComboBoxItem Tag="ArtistName_Asc">艺术家升序</ComboBoxItem>
             </ComboBox>
             <Grid Margin="10,0" x:Name="part_filter">
                 <TextBox VerticalContentAlignment="Center" Background="{DynamicResource selectBrush}"
@@ -227,126 +329,21 @@
             <Button Visibility="Collapsed" x:Name="btn_search" Click="btn_search_click" Content="没有？在网上搜索一下" />
         </DockPanel>
         <TextBlock Grid.Column="1" Grid.Row="1" x:Name="emptyText" FontSize="20" HorizontalAlignment="Left"
-                VerticalAlignment="Top" Style="{StaticResource label_base}" Margin="5,10,0,0">列表为空</TextBlock>
-        <ListView Grid.Column="1" Grid.Row="1" ItemTemplate="{StaticResource completeTemplate}"
+                VerticalAlignment="Top" Style="{DynamicResource label_base}" Margin="5,10,0,0">列表为空</TextBlock>
+        <ListView x:Name="virtualView" Visibility="Collapsed" Grid.Column="1" Grid.Row="1"
+                ItemTemplate="{StaticResource completeTemplate}" VirtualizingPanel.VirtualizationMode="Standard"
+                VirtualizingPanel.IsVirtualizing="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                BorderThickness="0" Background="Transparent"
+                PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"
+                ItemsSource="{Binding}" SelectionMode="Extended" ItemContainerStyle="{StaticResource lviStyle}"
+                ItemsPanel="{StaticResource vsp}">
+        </ListView>
+        <ListView x:Name="wrapView" Grid.Column="1" Grid.Row="1" ItemTemplate="{StaticResource completeTemplate}"
+                VirtualizingPanel.VirtualizationMode="Standard" VirtualizingPanel.IsVirtualizing="True"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" Background="Transparent"
                 PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"
-                ItemsSource="{Binding}" x:Name="listView" SelectionMode="Extended">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="{x:Type ListViewItem}">
-                    <Style.Triggers>
-                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="0"
-                                            EasingFunction="{StaticResource easeFunc}" To="1" />
-                                    <ThicknessAnimation Storyboard.TargetProperty="Margin" Duration="0:0:0.2" From="0"
-                                            EasingFunction="{StaticResource easeFunc}" To="0,0,5,5" />
-                                    <DoubleAnimation
-                                            Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"
-                                            Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="1" />
-                                    <DoubleAnimation
-                                            Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"
-                                            Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="1" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                        <EventTrigger RoutedEvent="FrameworkElement.Unloaded">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="1"
-                                            To="0" />
-                                    <DoubleAnimation
-                                            Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"
-                                            Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="0" />
-                                    <DoubleAnimation
-                                            Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"
-                                            Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="0" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                    </Style.Triggers>
-                    <Setter Property="RenderTransform">
-                        <Setter.Value>
-                            <TransformGroup>
-                                <ScaleTransform ScaleX="0" ScaleY="0" />
-                            </TransformGroup>
-                        </Setter.Value>
-                    </Setter>
-                    <EventSetter Event="MouseDoubleClick" Handler="item_double_click" />
-                    <Setter Property="Margin" Value="20,0,-15,5" />
-                    <Setter Property="Opacity" Value="0" />
-                    <Setter Property="Padding" Value="9,5,5,5" />
-                    <Setter Property="RenderTransformOrigin" Value=".5,.5" />
-                    <Setter Property="Foreground" Value="{Binding Foreground,ElementName=me}" />
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                <Grid Background="Black" x:Name="root" RenderTransformOrigin=".5,.5">
-                                    <Grid.RenderTransform>
-                                        <TransformGroup>
-                                            <ScaleTransform ScaleX="1" ScaleY="1" />
-                                        </TransformGroup>
-                                    </Grid.RenderTransform>
-                                    <Border x:Name="normal" Background="{Binding ThemeColor,ElementName=me}" />
-                                    <Border x:Name="mouseover" Opacity="0" Background="{DynamicResource selectBrush}" />
-                                    <Grid x:Name="pressed" Opacity="0">
-                                        <Border BorderThickness="4,0,0,0" BorderBrush="{DynamicResource skinBrush}">
-                                            <Border Background="{DynamicResource selectBrush}" Opacity=".5" />
-                                        </Border>
-                                    </Grid>
-                                    <ContentPresenter Margin="{TemplateBinding Padding}" />
-                                    <VisualStateManager.VisualStateGroups>
-                                        <VisualStateGroup x:Name="CommonStates">
-                                            <VisualState x:Name="Normal" />
-                                            <VisualState x:Name="MouseOver">
-                                                <Storyboard>
-                                                    <DoubleAnimation Storyboard.TargetName="mouseover"
-                                                            Storyboard.TargetProperty="Opacity" Duration="0:0:0.2"
-                                                            To=".5" />
-                                                </Storyboard>
-                                            </VisualState>
-                                            <VisualState x:Name="Disabled" />
-                                        </VisualStateGroup>
-                                        <VisualStateGroup x:Name="SelectionStates">
-                                            <VisualStateGroup.Transitions>
-                                                <VisualTransition To="Unselected" GeneratedDuration="0:0:0.1" />
-                                                <VisualTransition To="Selected" GeneratedDuration="0:0:0.1" />
-                                            </VisualStateGroup.Transitions>
-                                            <VisualState x:Name="Selected">
-                                                <Storyboard>
-                                                    <DoubleAnimation Storyboard.TargetName="pressed"
-                                                            Storyboard.TargetProperty="Opacity" Duration="0:0:0.2"
-                                                            To="1" />
-                                                    <!--<DoubleAnimation Storyboard.TargetName="root"
-                                                            Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"
-                                                            Duration="0" To="0.95" />
-                                                    <DoubleAnimation Storyboard.TargetName="root"
-                                                            Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"
-                                                            Duration="0" To="0.95" />-->
-                                                </Storyboard>
-                                            </VisualState>
-                                            <VisualState x:Name="Unselected" />
-                                        </VisualStateGroup>
-                                        <VisualStateGroup x:Name="FocusStates">
-                                            <VisualState x:Name="Focused" />
-                                        </VisualStateGroup>
-                                        <VisualStateGroup x:Name="ValidationStates">
-                                            <VisualState x:Name="InvalidFocused" />
-                                            <VisualState x:Name="InvalidUnfocused" />
-                                        </VisualStateGroup>
-                                    </VisualStateManager.VisualStateGroups>
-                                </Grid>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel HorizontalAlignment="Left" Orientation="Horizontal" />
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
+                ItemsSource="{Binding}" SelectionMode="Extended" ItemContainerStyle="{StaticResource lviStyle}"
+                ItemsPanel="{StaticResource wrap}">
         </ListView>
     </Grid>
 </UserControl>

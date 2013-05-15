@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         x:Class="MusicPlayer.MainWindow" WindowStyle="None" Foreground="{DynamicResource lightBrush}"
         AllowsTransparency="True" Background="#01ffffff" Icon="Resources/icon.ico" SnapsToDevicePixels="True"
-        FontSize="15" ResizeMode="CanResizeWithGrip" x:Name="me" MinHeight="480" SizeToContent="Manual" MinWidth="640"
+        FontSize="15" ResizeMode="CanResizeWithGrip" x:Name="me" MinHeight="480" SizeToContent="Manual" MinWidth="350"
         FontFamily="/xiami;component/Resources/#Soho Gothic Pro Light" Title="虾米下载" BorderWidth="5">
     <controls:ResizeWindow.Resources>
         <controls:BoolToVisibilityConverter x:Key="bool2vis" />
@@ -76,9 +76,9 @@
         <controls:IntToBoolConverter x:Key="int2bool" />
     </controls:ResizeWindow.Resources>
     <Grid>
-        <Border x:Name="border"  Background="{DynamicResource darkBrush}" BorderThickness="0">
+        <Border x:Name="border" Background="{DynamicResource darkBrush}" BorderThickness="0">
             <Border.Effect>
-                <DropShadowEffect ShadowDepth="1" Direction="-90" Opacity="0.5"  Color="Black"  BlurRadius="5" />
+                <DropShadowEffect ShadowDepth="1" Direction="-90" Opacity="0.5" Color="Black" BlurRadius="5" />
             </Border.Effect>
         </Border>
         <Grid Margin="2,2,2,50">
@@ -90,7 +90,6 @@
             <!--navigation-->
             <Grid x:Name="navi" HorizontalAlignment="Stretch" Height="50">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
@@ -111,19 +110,19 @@
                         <Setter Property="FontSize" Value="15" />
                     </Style>
                 </Grid.Resources>
-                <DockPanel Grid.Column="1" x:Name="headers">
+                <DockPanel Grid.Column="1" x:Name="headers" LastChildFill="True">
                     <DockPanel.Resources>
                         <Style TargetType="ToggleButton" BasedOn="{StaticResource toggleStyle}">
                             <Setter Property="Background" Value="{DynamicResource selectBrush}" />
                         </Style>
                     </DockPanel.Resources>
-                    <ToggleButton MinWidth="0" Padding="0,0,0,0">
+                    <ToggleButton MinWidth="0" Padding="0,0,0,0" Tag="1">
                         <Grid Width="50">
                             <Image Source="Resources/user.png" Stretch="UniformToFill" />
                             <Image Source="{Binding Avatar,ElementName=me}" Stretch="UniformToFill" />
                         </Grid>
                     </ToggleButton>
-                    <ToggleButton>
+                    <ToggleButton Tag="2">
                         <DockPanel HorizontalAlignment="Center">
                             <TextBlock Text="&#xE11a;" Style="{StaticResource glyph}" />
                             <TextBlock
@@ -131,7 +130,7 @@
                                     Text="{Binding ItemsCount, ElementName=list_search, StringFormat=\{0\}}" />
                         </DockPanel>
                     </ToggleButton>
-                    <ToggleButton>
+                    <ToggleButton Tag="3">
                         <DockPanel HorizontalAlignment="Center">
                             <TextBlock Text="&#xE118;" Style="{StaticResource glyph}" />
                             <TextBlock
@@ -140,7 +139,7 @@
                         </DockPanel>
                     </ToggleButton>
 
-                    <ToggleButton>
+                    <ToggleButton Tag="4">
                         <DockPanel HorizontalAlignment="Center">
                             <TextBlock Text="&#xE142;" Style="{StaticResource glyph}" />
                             <TextBlock
@@ -148,28 +147,33 @@
                                     Text="{Binding ItemsCount, ElementName=list_complete, StringFormat=\{0\}}" />
                         </DockPanel>
                     </ToggleButton>
-                    <ToggleButton>
+                    <Button x:Name="btn_close" Background="Transparent" Foreground="White" MinWidth="0" Width="50" Margin="0" Height="50" Click="btn_close_Click" DockPanel.Dock="Right">
+                        <TextBlock Text="&#xe0e1;" Style="{StaticResource glyph}" />
+                    </Button>
+                    <!--<controls:TitleBar DockPanel.Dock="Right" FontSize="20" HorizontalAlignment="Right" Margin="2"
+                          Width="150" Height="50" x:Name="titleBar" />-->
+                    <ToggleButton DockPanel.Dock="Right" Tag="5">
                         <DockPanel HorizontalAlignment="Center">
                             <TextBlock Text="&#xE115;" Style="{StaticResource glyph}" />
                         </DockPanel>
                     </ToggleButton>
-                </DockPanel>
-                <Grid Grid.Column="2" Background="{DynamicResource selectBrush}">
-                    <Grid MouseLeftButtonDown="btn_move_MouseDown" Background="{DynamicResource darkBrush}">
-                        <Grid.Style>
-                            <Style TargetType="Grid">
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Opacity" Value="1" />
-                                    </Trigger>
-                                    <Trigger Property="IsMouseOver" Value="False">
-                                        <Setter Property="Opacity" Value="0" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Grid.Style>
+                    <Grid Background="{DynamicResource selectBrush}">
+                        <Grid MouseLeftButtonDown="btn_move_MouseDown" Background="{DynamicResource darkBrush}">
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Opacity" Value="1" />
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="False">
+                                            <Setter Property="Opacity" Value="0" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+                        </Grid>
                     </Grid>
-                </Grid>
+                </DockPanel>
             </Grid>
             <Grid x:Name="contents" Grid.Row="1" Margin="30,30,30,0">
                 <Grid x:Name="page5" Opacity="0" IsHitTestVisible="false">
@@ -221,7 +225,6 @@
         </Grid>
         <my:ActionBar Height="50" Margin="2" x:Name="charmBar" Background="{DynamicResource selectBrush}"
                 VerticalAlignment="Bottom" />
-        <controls:TitleBar  FontSize="20" HorizontalAlignment="Right" Margin="2" VerticalAlignment="Top" Width="150"
-                Height="50" x:Name="titleBar" />
+
     </Grid>
 </controls:ResizeWindow>

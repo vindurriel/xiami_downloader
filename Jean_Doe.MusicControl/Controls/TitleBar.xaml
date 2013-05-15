@@ -1,40 +1,33 @@
-﻿<UserControl x:Class="Jean_Doe.MusicControl.TitleBar"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             x:Name="me"
-             mc:Ignorable="d">
+﻿<UserControl x:Class="Jean_Doe.MusicControl.TitleBar" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" x:Name="me" mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/TouchButtonStyle.xaml" />
                 <ResourceDictionary>
                     <Style x:Key="glyph" TargetType="TextBlock">
-                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                        <Setter Property="VerticalAlignment" Value="Stretch"/>
-                        <Setter Property="Foreground" Value="{DynamicResource lightBrush}"/>
-                        <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="VerticalAlignment" Value="Stretch" />
+                        <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
+                        <Setter Property="FontFamily" Value="Segoe UI Symbol" />
                     </Style>
-                    <Style x:Key="StyleWindowButton"
-           BasedOn="{StaticResource {x:Type Button}}"
-           TargetType="Button">
-                        <Setter Property="Background"
-                Value="Transparent" />
-                        <Setter Property="Foreground"
-                Value="{DynamicResource darkBrush}" /> 
+                    <Style x:Key="StyleWindowButton" BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Foreground" Value="{DynamicResource darkBrush}" />
                     </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <!--<Button x:Name="min"
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <!--<Button x:Name="min"
                     Style="{DynamicResource StyleWindowButton}"
                     Click="BtnMinimizeClick">
                 <TextBlock Text="&#xE0A1;" Style="{StaticResource glyph}"/>
@@ -45,10 +38,8 @@
                 <TextBlock Text="&#xE0a0;" Style="{StaticResource glyph}"/>
 
             </Button>-->
-            <Button x:Name="close" Grid.Column="2"
-                    Style="{DynamicResource StyleWindowButton}"
-                    Click="BtnCloseClick">
-                <TextBlock Text="&#xe0e1;" Style="{StaticResource glyph}"/>
-            </Button>
-        </Grid>
+        <Button x:Name="close" Grid.Column="2" Style="{DynamicResource StyleWindowButton}" Click="BtnCloseClick">
+            <TextBlock Text="&#xe0e1;" Style="{StaticResource glyph}" />
+        </Button>
+    </Grid>
 </UserControl>

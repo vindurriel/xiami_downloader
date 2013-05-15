@@ -36,9 +36,10 @@ namespace Jean_Doe.MusicControl
         }
         public void AddAndStart(SongViewModel song)
         {
-            Add(song);
-            song.PrepareDownload();
-            DownloadManager.Instance.StartByTag(new[] { song.Id });
+            Items.Add(song);
+            var hasWork = DownloadManager.Instance.StartByTag(new[] { song.Id });
+            if (!hasWork)
+                MessageBus.Instance.Publish(new MsgDownloadStateChanged { Id = song.Id, Item = song, State = EnumDownloadState.Success });
         }
         public void Handle(MsgDownloadProgressChanged message)
         {

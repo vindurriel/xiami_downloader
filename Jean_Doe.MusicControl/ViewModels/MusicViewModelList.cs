@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Concurrent;
+using System;
 namespace Jean_Doe.MusicControl
 {
     public class MusicViewModelList : ObservableCollection<MusicViewModel>
@@ -32,18 +33,25 @@ namespace Jean_Doe.MusicControl
                         addItem(item, toFront);
                         Thread.Sleep(s);
                     }
+                    int buffer = 0;
                     while (true)
                     {
                         IMusic item = null;
                         if (!queue.TryDequeue(out item)) break;
                         addItem(item, toFront);
+                        buffer++;
+                        if (buffer == 10)
+                        {
+                            Thread.Sleep(100);
+                            buffer = 0;
+                        }
                     }
                 }
                 catch (System.Exception e)
                 {
 
                 }
-                 
+
                 canSave = true;
                 Save();
             });
@@ -58,17 +66,18 @@ namespace Jean_Doe.MusicControl
         bool canSave = false;
         void addItem(IMusic music, bool toFront)
         {
-            MusicViewModel vm = createViewModel(music);
-            if (vm == null) return;
+            MusicViewModel s = createViewModel(music, toFront);
+            if (s == null) return;
             UIHelper.WaitOnUI(() =>
             {
                 if (toFront)
-                    Insert(0, vm);
+                    Insert(0, s);
                 else
-                    Add(vm);
+                    Add(s);
             });
         }
-        private MusicViewModel createViewModel(IMusic music)
+
+        private MusicViewModel createViewModel(IMusic music, bool toFront)
         {
             MusicViewModel s = null;
             switch (music.Type)
@@ -84,7 +93,6 @@ namespace Jean_Doe.MusicControl
                     break;
                 default:
                     s = SongViewModel.Get(music as Song);
-
                     break;
             }
             if (s is SongViewModel)
@@ -92,7 +100,11 @@ namespace Jean_Doe.MusicControl
                 var dup = this.FirstOrDefault(x => x.Id == s.Id) as SongViewModel;
                 if (dup != null)
                 {
-                    return null;
+                    UIHelper.WaitOnUI(() =>
+                    {
+                        Move(this.IndexOf(dup), toFront ? 0 : this.Count - 1);
+                    });
+                    s = null;
                 }
             }
             return s;

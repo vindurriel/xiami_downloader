@@ -14,6 +14,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Linq.Expressions;
+using DataVirtualization;
 namespace Jean_Doe.MusicControl
 {
     /// <summary>
@@ -25,6 +26,28 @@ namespace Jean_Doe.MusicControl
         {
             InitializeComponent();
             Global.ListenToEvent("Theme", OnTheme);
+            initInputFilter();
+            initTimer();
+            combo_sort.SelectionChanged += (s, e) => ApplySort();
+            items = new MusicViewModelList();
+            items.CollectionChanged += items_CollectionChanged;
+            Source = new ListCollectionView(items);
+            virtualView.DataContext = Source;
+            wrapView.DataContext = items;
+            virtualView.SelectionChanged += OnSelectionChanged;
+            wrapView.SelectionChanged += OnSelectionChanged;
+            listView = wrapView;
+        }
+        protected ListView listView;
+        private void initTimer()
+        {
+            timer_itemCount.Tick += OnTimer_itemCountTick;
+            timer_itemCount.Start(); timer_itemCount.IsEnabled = true;
+            timer_itemCount.Interval = TimeSpan.FromSeconds(1);
+        }
+
+        private void initInputFilter()
+        {
             input_filter.TextChanged += (s, e) =>
             {
                 if (!string.IsNullOrEmpty(input_filter.Text))
@@ -49,27 +72,17 @@ namespace Jean_Doe.MusicControl
             {
                 mask_filter.Visibility = string.IsNullOrEmpty(input_filter.Text) ? Visibility.Visible : Visibility.Collapsed;
             };
-            combo_sort.SelectionChanged += (s, e) => ApplySort();
-            items = new MusicViewModelList();
-            items.CollectionChanged += items_CollectionChanged;
-            Source = new ListCollectionView(items);
-            //CollectionViewSource.GetDefaultView(items);
-            listView.DataContext = Source;
-            listView.SelectionChanged += OnSelectionChanged;
-            timer_itemCount.Tick += OnTimer_itemCountTick;
-            timer_itemCount.Start(); timer_itemCount.IsEnabled = true;
-            timer_itemCount.Interval = TimeSpan.FromSeconds(1);
         }
         string lastFilter = "";
         void OnTimer_itemCountTick(object sender, EventArgs e)
         {
-            ItemsCount = Source.Count;
+            ItemsCount = listView.Items.Count;
             emptyText.Visibility = ItemsCount > 0 ? Visibility.Collapsed : Visibility.Visible;
             btn_search.Visibility = (ItemsCount == 0 && !string.IsNullOrEmpty(filter_text)) ? Visibility.Visible : Visibility.Collapsed;
         }
         void items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            ItemsCount = Source.Count;
+            ItemsCount = this.listView.Items.Count;
             Save();
         }
         #region INotifyPropertyChanged
@@ -236,11 +249,11 @@ namespace Jean_Doe.MusicControl
 
         void btn_filter_click(object sender, RoutedEventArgs e)
         {
-            var obj=new Object();
-            MessageBus.Instance.Publish(new MsgSetBusy(obj,true));
+            var obj = new Object();
+            MessageBus.Instance.Publish(new MsgSetBusy(obj, true));
             filter_text = input_filter.Text.ToLower();
             Source.Filter = filter;
-            MessageBus.Instance.Publish(new MsgSetBusy(obj,false));
+            MessageBus.Instance.Publish(new MsgSetBusy(obj, false));
         }
         bool filter(object sender)
         {
@@ -452,22 +465,45 @@ namespace Jean_Doe.MusicControl
             var s = (source as SongListControl);
             return s.SelectedItems.Count() > 0 && s.SelectedItems.All(x => x is TInterface);
         }
+        class Sorter : System.Collections.IComparer
+        {
+            private string propName;
+            public string PropertyName
+            {
+                get { return propName; }
+                set
+                {
+                    propName = value; info = typeof(SongViewModel).GetProperty(PropertyName);
+                }
+            }
+            public bool IsAsc { get; set; }
+            System.Reflection.PropertyInfo info;
+            public int Compare(object x, object y)
+            {
+                var vx = info.GetValue(x) as IComparable;
+                var vy = info.GetValue(y) as IComparable;
+                var res = vx.CompareTo(vy);
+                return IsAsc ? res : -res;
+            }
+        }
         private void ApplySort()
         {
             var tag = (combo_sort.SelectedItem as ComboBoxItem).Tag.ToString();
             if (tag == "Default_Asc")
             {
-                Source.SortDescriptions.Clear();
+                Source.CustomSort = null;
+                //Source.SortDescriptions.Clear();
                 return;
             }
             var prop = tag.Split("_".ToCharArray())[0];
             var order = tag.Split("_".ToCharArray())[1];
-            using (Source.DeferRefresh())
-            {
-                Source.SortDescriptions.Clear();
-                Source.SortDescriptions.Add(new SortDescription(prop,
-                    order == "Asc" ? ListSortDirection.Ascending : ListSortDirection.Descending));
-            }
+            Source.CustomSort = new Sorter { PropertyName = prop, IsAsc = order == "Asc" };
+            //using (Source.DeferRefresh())
+            //{
+            //    Source.SortDescriptions.Clear();
+            //    Source.SortDescriptions.Add(new SortDescription(prop,
+            //        order == "Asc" ? ListSortDirection.Ascending : ListSortDirection.Descending));
+            //}
         }
         string filter_text = "";
 
@@ -477,9 +513,6 @@ namespace Jean_Doe.MusicControl
             ActionBarService.Refresh();
         }
 
-        private void btn_more_Click_1(object sender, RoutedEventArgs e)
-        {
-        }
         protected static bool canFav(object o)
         {
             var s = (o as SongListControl).SelectedSongs;
@@ -523,6 +556,14 @@ namespace Jean_Doe.MusicControl
             sb.Children.Add(da2);
             sb.Completed += (d, ef) => music.CanAnimate = true;
             sb.Begin();
+        }
+        bool more_on = false;
+        private void btn_more_Click(object sender, RoutedEventArgs e)
+        {
+            more_on = !more_on;
+            listView = more_on ? virtualView : wrapView;
+            virtualView.Visibility = more_on ? Visibility.Visible : Visibility.Collapsed;
+            wrapView.Visibility = !more_on ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }

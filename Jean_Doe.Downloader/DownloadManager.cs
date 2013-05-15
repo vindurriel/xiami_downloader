@@ -72,18 +72,23 @@ namespace Jean_Doe.Downloader
         }
         #endregion
         #region public control methods
-        public void StartByTag(string[] taglist)
+        public bool StartByTag(string[] taglist)
         {
             startSpin();
+            bool hasWork = false;
             foreach (var tag in taglist)
             {
                 if (!tags.ContainsKey(tag))
                     continue;
+                hasWork = true;
                 foreach (var id in tags[tag])
                 {
                     start(id);
                 }
             }
+            if (hasWork)
+                startSpin();
+            return hasWork;
         }
         public void StopByTag(string[] taglist)
         {
@@ -130,7 +135,7 @@ namespace Jean_Doe.Downloader
             if (!dt.IsEnabled)
             {
                 dt.Start();
-                MessageBus.Instance.Publish(new MsgSetBusy(this,true));
+                MessageBus.Instance.Publish(new MsgSetBusy(this, true));
             }
         }
         void endSpin()
@@ -138,7 +143,7 @@ namespace Jean_Doe.Downloader
             if (dt.IsEnabled)
             {
                 dt.Stop();
-                MessageBus.Instance.Publish(new MsgSetBusy(this,false));
+                MessageBus.Instance.Publish(new MsgSetBusy(this, false));
 
             }
         }

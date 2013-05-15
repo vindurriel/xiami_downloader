@@ -13,6 +13,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Linq;
 namespace MusicPlayer
 {
     /// <summary>
@@ -35,12 +36,9 @@ namespace MusicPlayer
                 if (value == page) return;
                 bool isLeft = value > page;
                 page = value;
-                int i = 1;
-                foreach (var item in headers.Children)
+                foreach (var header in headers.Children.OfType<ToggleButton>())
                 {
-                    var header = item as ToggleButton;
-                    header.IsChecked = i == page;
-                    i += 1;
+                    header.IsChecked = header.Tag.ToString() == page.ToString();
                 }
                 if (contents.Children.Count > page - 1)
                 {
@@ -132,7 +130,7 @@ namespace MusicPlayer
                 if (header != null)
                     header.Click += (s, a) =>
                     {
-                        Page = headers.Children.IndexOf(s as UIElement) + 1;
+                        Page = int.Parse((s as ToggleButton).Tag.ToString());
                     };
 
             }
@@ -277,5 +275,10 @@ namespace MusicPlayer
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
         #endregion
+
+        private void btn_close_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }
