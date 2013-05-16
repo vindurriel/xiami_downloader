@@ -51,13 +51,6 @@
                                         </DoubleAnimation>
                                     </Storyboard>
                                 </VisualState>
-                                <VisualState x:Name="Pressed">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                Duration="0:0:0" To="1" Storyboard.TargetName="PressRect">
-                                        </DoubleAnimation>
-                                    </Storyboard>
-                                </VisualState>
                                 <VisualState x:Name="Disabled"></VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
@@ -68,14 +61,14 @@
                                         CornerRadius="{Binding CornerRadius,ElementName=round}" BorderThickness="0" />
                             </Grid>
                             <Grid x:Name="OverRect" Opacity="0">
-                                <Border Opacity=".8" Background="{DynamicResource selectBrush}"
+                                <Border Opacity=".5" Background="{DynamicResource skinBrush}"
                                         CornerRadius="{Binding CornerRadius,ElementName=round}" BorderThickness="0" />
                             </Grid>
                             <Grid x:Name="PressRect" Opacity="0">
                                 <Border Background="{DynamicResource darkBrush}"
                                         CornerRadius="{Binding CornerRadius,ElementName=round}"
                                         VerticalAlignment="Stretch" />
-                                <Rectangle Height="4" VerticalAlignment="Top" Fill="{DynamicResource skinBrush}" />
+                                <!--<Rectangle Height="4" VerticalAlignment="Top" Fill="{DynamicResource skinBrush}" />-->
                             </Grid>
                             <Grid Margin="{TemplateBinding Padding}">
                                 <ContentPresenter x:Name="content" Content="{TemplateBinding Content}"

@@ -105,9 +105,9 @@
             </Setter.Value>
         </Setter>
         <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
-        <Setter Property="Background" Value="{DynamicResource darkBrush}" />
+        <Setter Property="Background" Value="{DynamicResource selectBrush}" />
         <Setter Property="Margin" Value="0" />
-        <Setter Property="Padding" Value="1" />
+        <Setter Property="Padding" Value="0" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
@@ -115,8 +115,8 @@
         <Setter Property="ScrollViewer.PanningMode" Value="Both" />
         <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="BorderBrush" Value="#888888" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
@@ -154,7 +154,8 @@
                                 <FrameworkElement DockPanel.Dock="Right"
                                         Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
                                 <FrameworkElement DockPanel.Dock="Right" Width="2" />
-                                <Border x:Name="SelectedItemBorder" Background="Transparent" Padding="2">
+                                <Border x:Name="SelectedItemBorder" BorderThickness="0"
+                                        BorderBrush="{TemplateBinding BorderBrush}" Background="Transparent" Padding="2">
                                     <ContentPresenter ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                             Content="{TemplateBinding SelectionBoxItem}"
                                             ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
@@ -187,8 +188,7 @@
                             <Setter Property="Foreground" Value="White" />
                         </MultiTrigger>-->
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" TargetName="SelectedItemBorder"
-                                    Value="{DynamicResource selectBrush}" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource skinBrush}" />
                         </Trigger>
                         <Trigger Property="HasItems" Value="False">
                             <Setter Property="MinHeight" TargetName="DropDownBorder" Value="50" />
@@ -219,7 +219,6 @@
         <Style.Triggers>
             <Trigger Property="IsEditable" Value="True">
                 <Setter Property="IsTabStop" Value="False" />
-                <Setter Property="Padding" Value="1" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ComboBox}">
@@ -314,6 +313,9 @@
                             <ControlTemplate.Triggers>
                                 <Trigger Property="HasItems" Value="False">
                                     <Setter Property="MinHeight" TargetName="DropDownBorder" Value="50" />
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="BorderBrush" Value="{DynamicResource skinBrush}" />
                                 </Trigger>
                                 <Trigger Property="IsEnabled" Value="False">
                                     <Setter Property="Foreground"

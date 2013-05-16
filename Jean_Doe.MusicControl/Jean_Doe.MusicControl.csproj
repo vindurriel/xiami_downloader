@@ -41,6 +41,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Jean_Doe.Reference\Artwork.Bus.dll</HintPath>
     </Reference>
+    <Reference Include="GongSolutions.Wpf.DragDrop, Version=0.1.3.6, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Jean_Doe.Reference\GongSolutions.Wpf.DragDrop.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -135,6 +139,7 @@
     <Compile Include="Util\AfterDownloadManager.cs" />
     <Compile Include="Util\ImageHelper.cs" />
     <Compile Include="Util\ListViewExtension.cs" />
+    <Compile Include="Util\ShuffleHelper.cs" />
     <Compile Include="Util\SongViewModelExtentions.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="SongListControl\CompleteSongListControl.cs" />
@@ -186,6 +191,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

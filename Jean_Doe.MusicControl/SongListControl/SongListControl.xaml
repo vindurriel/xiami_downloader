@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
+        xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
         Foreground="{DynamicResource lightBrush}" xmlns:my='clr-namespace:Jean_Doe.MusicControl' x:Name="me">
     <UserControl.Resources>
         <Style TargetType="TextBlock" x:Key="label_base">
@@ -69,6 +70,23 @@
                     Value="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListViewItem}}" />
             <Setter Property="Visibility" Value="{Binding HasDetail,Converter={StaticResource bool2vis}}" />
         </Style>
+        <DataTemplate x:Key="listTemplate">
+            <Grid Height="60" Margin="0,0,0,0" x:Name="root" ClipToBounds="True">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <ContentControl Content="{Binding}" ContentTemplate="{StaticResource t_image}" />
+                <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                    <DockPanel RenderOptions.ClearTypeHint="Enabled" RenderOptions.EdgeMode="Aliased">
+                        <TextBlock Text="{Binding Name}" Style="{DynamicResource label_base}" />
+                        <TextBlock Text=" - " Style="{DynamicResource label_base}" />
+                        <TextBlock Text="{Binding ArtistName}" Opacity="0.8" Style="{DynamicResource label_base}" />
+                    </DockPanel>
+                    <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{DynamicResource label_base}" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
         <DataTemplate x:Key="searchTemplate">
             <Grid Width="220" Height="60">
                 <Grid Margin="0,0,0,-5" x:Name="root" ClipToBounds="True">
@@ -93,8 +111,9 @@
                     </Grid>
                     <DockPanel Grid.Row="1" x:Name="detail" Height="5">
                         <Border DockPanel.Dock="Top" Style="{StaticResource triggerStyle}" VerticalAlignment="Top">
-                            <TextBlock x:Name="detail_indicator" Text="&#xE0c2;" LineHeight="5" VerticalAlignment="Top"
-                                    LineStackingStrategy="BlockLineHeight" FontSize="10" FontFamily="Segoe UI Symbol" />
+                            <Line x:Name="detail_indicator" RenderOptions.EdgeMode="Aliased" X2="25"
+                                    Stroke="{DynamicResource lightBrush}" VerticalAlignment="Top" StrokeThickness="5"
+                                    StrokeDashArray="1,1" />
                         </Border>
                         <ScrollViewer Style="{StaticResource scrollstyle}">
                             <StackPanel>
@@ -151,8 +170,9 @@
                     <DockPanel Grid.Row="1" x:Name="detail" Height="5">
                         <Border DockPanel.Dock="Top" Visibility="Visible" Style="{StaticResource triggerStyle}"
                                 VerticalAlignment="Top">
-                            <TextBlock x:Name="detail_indicator" Text="&#xE0c2;" LineHeight="5" VerticalAlignment="Top"
-                                    LineStackingStrategy="BlockLineHeight" FontSize="10" FontFamily="Segoe UI Symbol" />
+                            <Line x:Name="detail_indicator" RenderOptions.EdgeMode="Aliased" X2="25"
+                                    Stroke="{DynamicResource lightBrush}" VerticalAlignment="Top" StrokeThickness="5"
+                                    StrokeDashArray="1,1" />
                         </Border>
                         <ScrollViewer Style="{StaticResource scrollstyle}">
                             <StackPanel>
@@ -187,8 +207,9 @@
                     </Grid>
                     <DockPanel Grid.Row="1" x:Name="detail" Height="5">
                         <Border DockPanel.Dock="Top" Style="{StaticResource triggerStyle}" VerticalAlignment="Top">
-                            <TextBlock x:Name="detail_indicator" Text="&#xE0c2;" LineHeight="5" VerticalAlignment="Top"
-                                    LineStackingStrategy="BlockLineHeight" FontSize="10" FontFamily="Segoe UI Symbol" />
+                            <Line x:Name="detail_indicator" RenderOptions.EdgeMode="Aliased" X2="25"
+                                    Stroke="{DynamicResource lightBrush}" VerticalAlignment="Top" StrokeThickness="5"
+                                    StrokeDashArray="1,1" />
                         </Border>
                         <ScrollViewer Style="{StaticResource scrollstyle}">
                             <StackPanel>
@@ -296,67 +317,66 @@
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="30" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <ToggleButton Grid.RowSpan="2" Margin="0,0,5,0" Padding="0" FontSize="15" Background="Transparent"
-                Click="btn_more_Click" Foreground="{DynamicResource skinBrush}"
-                Visibility="{Binding ItemsCount,ElementName=me,Converter={StaticResource int2vis}}" Height="30"
-                Width="30" MinWidth="0" Style="{StaticResource toggleStyle}" VerticalAlignment="Top"
-                FontFamily="Segoe UI Symbol" x:Name="btn_more" Content="&#xE16E;" />
-        <DockPanel Margin="6,0,0,10" Grid.Column="1" LastChildFill="False"
-                Visibility="{Binding IsChecked,ElementName=btn_more,Converter={StaticResource bool2vis}}">
-            <ComboBox x:Name="combo_sort">
-                <ComboBoxItem Tag="Default_Asc" IsSelected="True">无排序</ComboBoxItem>
-                <ComboBoxItem Tag="Date_Dsc">最近下载</ComboBoxItem>
-                <ComboBoxItem Tag="Name_Asc">名称升序</ComboBoxItem>
-                <ComboBoxItem Tag="AlbumName_Asc">专辑升序</ComboBoxItem>
-                <ComboBoxItem Tag="ArtistName_Asc">艺术家升序</ComboBoxItem>
-            </ComboBox>
-            <Grid Margin="10,0" x:Name="part_filter">
-                <TextBox VerticalContentAlignment="Center" Background="{DynamicResource selectBrush}"
-                        Foreground="{DynamicResource lightBrush}" BorderThickness="0" Width="200" x:Name="input_filter" />
-                <TextBlock VerticalAlignment="Center" Margin="3" x:Name="mask_filter" Text="输入字符以过滤"
-                        IsHitTestVisible="False" Foreground="{DynamicResource lightBrush}" />
-            </Grid>
-            <!--<Button x:Name="btn_filter" Click="btn_filter_click" Content="过滤" VerticalContentAlignment="Center" />-->
-            <Button Visibility="Collapsed" x:Name="btn_search" Click="btn_search_click" Content="没有？在网上搜索一下" />
+        <DockPanel LastChildFill="False" Margin="5,0,0,0">
+            <TextBlock FontSize="20" FontFamily="Segoe UI Symbol" Text="&#xE154;" />
+            <my:ToggleSwitch x:Name="btn_more" BgColor="{DynamicResource lightBrush}" IsOnChanged="btn_more_Click"
+                    SkinColor="Transparent" Height="20" Margin="2,0" VerticalAlignment="Center" />
+            <TextBlock FontSize="20" FontFamily="Segoe UI Symbol" Text="&#xE14C;" />
+            <DockPanel Margin="6,0,0,0" LastChildFill="False"
+                    Visibility="{Binding IsOn,ElementName=btn_more,Converter={StaticResource bool2vis}}">
+                <ComboBox x:Name="combo_sort">
+                    <ComboBoxItem Tag="Default_Asc" IsSelected="True">无排序</ComboBoxItem>
+                    <ComboBoxItem Tag="Date_Dsc">最近下载</ComboBoxItem>
+                    <ComboBoxItem Tag="Name_Asc">名称升序</ComboBoxItem>
+                    <ComboBoxItem Tag="AlbumName_Asc">专辑升序</ComboBoxItem>
+                    <ComboBoxItem Tag="ArtistName_Asc">艺术家升序</ComboBoxItem>
+                </ComboBox>
+                <Grid Margin="10,0" x:Name="part_filter">
+                    <TextBox VerticalContentAlignment="Center" Background="{DynamicResource selectBrush}"
+                            Foreground="{DynamicResource lightBrush}" BorderThickness="0" Width="200"
+                            x:Name="input_filter" />
+                    <TextBlock VerticalAlignment="Center" Margin="3" x:Name="mask_filter" Text="输入字符以过滤"
+                            IsHitTestVisible="False" Foreground="{DynamicResource lightBrush}" />
+                </Grid>
+                <!--<Button x:Name="btn_filter" Click="btn_filter_click" Content="过滤" VerticalContentAlignment="Center" />-->
+                <Button Visibility="Collapsed" x:Name="btn_search" Click="btn_search_click" Content="没有？在网上搜索一下" />
+            </DockPanel>
         </DockPanel>
-        <TextBlock Grid.Column="1" Grid.Row="1" x:Name="emptyText" FontSize="20" HorizontalAlignment="Left"
-                VerticalAlignment="Top" Style="{DynamicResource label_base}" Margin="5,10,0,0">列表为空</TextBlock>
-        <ListView x:Name="virtualView" Visibility="Collapsed" Grid.Column="1" Grid.Row="1"
-                VirtualizingPanel.VirtualizationMode="Standard" VirtualizingPanel.IsVirtualizing="True"
+        <TextBlock Grid.ColumnSpan="2" Grid.Row="1" x:Name="emptyText" FontSize="20" HorizontalAlignment="Left"
+                VerticalAlignment="Top" Style="{DynamicResource label_base}" Margin="10,10,0,0">列表为空</TextBlock>
+        <DockPanel x:Name="virtualPart" Visibility="Collapsed" Grid.Row="1">
+            <ListView x:Name="virtualView" Grid.Row="1" VirtualizingPanel.VirtualizationMode="Standard"
+                    VirtualizingPanel.IsVirtualizing="True" ScrollViewer.IsDeferredScrollingEnabled="True"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" Background="Transparent"
+                    PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"
+                    ItemContainerStyle="{StaticResource lviStyle}" ItemsSource="{Binding}" SelectionMode="Extended"
+                    ItemTemplate="{StaticResource listTemplate}" ItemsPanel="{StaticResource vsp}">
+            </ListView>
+        </DockPanel>
+        <Grid Visibility="{Binding Visibility,ElementName=virtualPart}" Grid.Column="1">
+            <TextBlock Margin="10,0" Height="30" Padding="5" Text=":: 播放列表" x:Name="title_playlist"
+                    Visibility="Collapsed" />
+        </Grid>
+        <GridSplitter Grid.RowSpan="2" Background="#01ffffff" Grid.Column="1" Width="20" HorizontalAlignment="Left" />
+        <ListView x:Name="playView" VirtualizingPanel.VirtualizationMode="Standard"
+                Visibility="{Binding Visibility,ElementName=virtualPart}" Grid.Column="1" Grid.Row="1"
+                VirtualizingPanel.IsVirtualizing="True" ScrollViewer.IsDeferredScrollingEnabled="True"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" Background="Transparent"
                 PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"
-                ItemContainerStyle="{StaticResource lviStyle}" ItemsSource="{Binding}" SelectionMode="Extended"
-                ItemsPanel="{StaticResource vsp}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Height="60"  Margin="0,0,0,0" x:Name="root" ClipToBounds="True">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <ContentControl Content="{Binding}" ContentTemplate="{StaticResource t_image}" />
-                        <ScrollViewer Grid.Column="1" Style="{StaticResource scrollstyle}">
-                            <StackPanel>
-                                <TextBlock Text="{Binding Name}" Style="{DynamicResource label_base}" />
-                                <TextBlock Text="{Binding ArtistName}" Opacity="0.8"
-                                        Style="{DynamicResource label_base}" />
-                                <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{DynamicResource label_base}" />
-                            </StackPanel>
-                        </ScrollViewer>
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
+                ItemContainerStyle="{StaticResource lviStyle}" ItemsSource="{Binding}" SelectionMode="Single"
+                dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True"
+                ItemTemplate="{StaticResource listTemplate}" ItemsPanel="{StaticResource vsp}">
         </ListView>
-        <ListView x:Name="wrapView" Grid.Column="1" Grid.Row="1" VirtualizingPanel.VirtualizationMode="Standard"
-                VirtualizingPanel.IsVirtualizing="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                BorderThickness="0" Background="Transparent"
+        <ListView x:Name="wrapView" Grid.ColumnSpan="2" Grid.Row="1" VirtualizingPanel.VirtualizationMode="Standard"
+                ScrollViewer.CanContentScroll="True" VirtualizingPanel.IsVirtualizing="True"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" Background="Transparent"
                 PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"
                 ItemTemplate="{StaticResource completeTemplate}" ItemsSource="{Binding}" SelectionMode="Extended"
                 ItemContainerStyle="{StaticResource lviStyle}" ItemsPanel="{StaticResource wrap}">

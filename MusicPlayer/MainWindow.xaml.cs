@@ -130,7 +130,9 @@ namespace MusicPlayer
                 if (header != null)
                     header.Click += (s, a) =>
                     {
-                        Page = int.Parse((s as ToggleButton).Tag.ToString());
+                        var hd = (s as ToggleButton);
+                        hd.IsChecked = true;
+                        Page = int.Parse(hd.Tag.ToString());
                     };
 
             }

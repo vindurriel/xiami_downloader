@@ -22,6 +22,45 @@ namespace Jean_Doe.MusicControl
             Items.CollectionChanged += Items_CollectionChanged;
             watcher = CreateWatcher();
             MessageBus.Instance.Subscribe(this);
+            Global.ListenToEvent("PlayNextMode", OnPlayNextMode);
+            this.PropertyChanged += OnPropertyChanged;
+            title_playlist.Visibility = Visibility.Visible;
+        }
+
+        void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "ItemsCount")
+            {
+                needsRefreshPlaylist = true;
+            }
+            if (e.PropertyName == "NowPlaying")
+            {
+                btn_select_nowplaying_Click(this, null);
+            }
+        }
+        void OnPlayNextMode(string s)
+        {
+            needsRefreshPlaylist = true;
+            ensureRefreshPlayList();
+        }
+        void ensureRefreshPlayList()
+        {
+            if (!needsRefreshPlaylist) return;
+            playView.DataContext = null;
+            playList.Clear();
+            foreach (var item in Source.OfType<SongViewModel>())
+            {
+                playList.Add(item);
+            };
+            if (Global.AppSettings["PlayNextMode"] == "Random")
+                playList.Shuffle();
+            playView.DataContext = playList;
+            needsRefreshPlaylist = false;
+        }
+        protected override void ApplyFilter()
+        {
+            base.ApplyFilter();
+            ensureRefreshPlayList();
         }
         static FileSystemWatcher watcher;
         FileSystemWatcher CreateWatcher()
@@ -109,7 +148,7 @@ namespace Jean_Doe.MusicControl
                             return true;
                         return false;
                     }),
-                    new CharmAction("选中正在播放","\xE18B",this.btn_show_Click,isNowPlayingNotSelected),  
+                    new CharmAction("选中正在播放","\xE18B",this.btn_select_nowplaying_Click,isNowPlayingNotSelected),  
                     new CharmAction("下一首","\xE101",this.btn_next_Click,isNowPlayingSelected),    
                     new CharmAction("收藏该歌曲","\xE0A5",this.btn_fav_Click,canFav),
                     new CharmAction("不再收藏该歌曲","\xE007",this.btn_unfav_Click,canUnfav),
@@ -140,14 +179,24 @@ namespace Jean_Doe.MusicControl
             return song != null && !Object.ReferenceEquals(list.NowPlaying, song);
         }
 
-        void btn_show_Click(object sender, RoutedEventArgs e)
+        void btn_select_nowplaying_Click(object sender, RoutedEventArgs e)
         {
             SelectedSongs = new SongViewModel[] { NowPlaying as SongViewModel };
-            listView.ScrollIntoView(NowPlaying);
+            playView.ScrollToCenterOfView(NowPlaying);
+            listView.ScrollToCenterOfView(NowPlaying);
         }
-        protected override void btn_play_Click(object sender, RoutedEventArgs e)
+        bool needsRefreshPlaylist = false;
+        protected override void item_double_click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            var item = SelectedSongs.FirstOrDefault();
+            btn_play_Click(sender, e);
+            ActionBarService.Refresh();
+        }
+        protected void btn_play_Click(object sender, RoutedEventArgs e)
+        {
+            this.ensureRefreshPlayList();
+            var item = SelectedSongs.FirstOrDefault() ?? Items.OfType<SongViewModel>().FirstOrDefault();
+            if (item == null)
+                return;
             if (!string.IsNullOrEmpty(item.Song.FilePath))
             {
                 Mp3Player.Play(item.Song.FilePath, item.Id);
@@ -261,17 +310,21 @@ namespace Jean_Doe.MusicControl
         void btn_remove_complete_Click(object sender, RoutedEventArgs e)
         {
             var list = SelectedSongs.ToList();
-            foreach (var item in list)
+            Task.Run(() =>
             {
-                Remove(item);
-                try
+                foreach (var item in list)
                 {
-                    File.Delete(item.Song.FilePath);
+                    Remove(item);
+                    try
+                    {
+                        File.Delete(item.Song.FilePath);
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                    System.Threading.Thread.Sleep(10);
                 }
-                catch (Exception)
-                {
-                }
-            }
+            });
         }
         void btn_copy_Click(object sender, RoutedEventArgs e)
         {
@@ -310,20 +363,17 @@ namespace Jean_Doe.MusicControl
         {
             if (Items.Count == 0) return;
             SongViewModel item = null;
-            var now = NowPlaying ?? SelectedSongs.FirstOrDefault() as SongViewModel;
+            var now = NowPlaying ?? SelectedSongs.FirstOrDefault() ?? Items.OfType<SongViewModel>().FirstOrDefault();
             var mode = EnumPlayNextMode.Random;
             Enum.TryParse(Global.AppSettings["PlayNextMode"], out mode);
             switch (mode)
             {
                 case EnumPlayNextMode.Sequential:
-                    int i = Items.IndexOf(now);
-                    if (i == -1 || i >= Items.Count) return;
-                    i = i == Items.Count - 1 ? 0 : i + 1;
-                    item = Items.OfType<SongViewModel>().ToList().ElementAt(i);
-                    break;
                 case EnumPlayNextMode.Random:
-                    var r = new Random().Next(Items.Count);
-                    item = Items.OfType<SongViewModel>().ToList().ElementAt(r);
+                    int i = playList.IndexOf(now);
+                    if (i == -1) return;
+                    i = i == playList.Count - 1 ? 0 : i + 1;
+                    item = playList.ElementAt(i) as SongViewModel;
                     break;
                 case EnumPlayNextMode.Repeat:
                     item = now;
@@ -336,10 +386,11 @@ namespace Jean_Doe.MusicControl
             message.Next = item.Song.FilePath;
             message.Id = item.Id;
             SelectedSongs = new SongViewModel[] { item };
-            listView.ScrollIntoView(item);
+            listView.ScrollToCenterOfView(item);
         }
         void btn_next_Click(object sender, RoutedEventArgs e)
         {
+            ensureRefreshPlayList();
             Mp3Player.Next();
         }
     }

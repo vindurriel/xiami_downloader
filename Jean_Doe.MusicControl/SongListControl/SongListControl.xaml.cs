@@ -35,7 +35,27 @@ namespace Jean_Doe.MusicControl
             wrapView.DataContext = items;
             virtualView.SelectionChanged += OnSelectionChanged;
             wrapView.SelectionChanged += OnSelectionChanged;
-            listView = wrapView;
+            views = new List<ListView> { virtualView, playView, wrapView };
+            foreach (var v in views)
+            {
+                v.SelectionChanged += OnListViewSelectionChanged;
+            }
+            listView = IsDefaultList ? virtualView : wrapView;
+            Loaded += SongListControl_Loaded;
+        }
+        void OnListViewSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var curView = sender as ListView;
+            foreach (var v in views)
+            {
+                if (v == curView) continue;
+                v.SelectedItem = curView.SelectedItem;
+            }
+        }
+        List<ListView> views;
+        void SongListControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            btn_more.IsOn = IsDefaultList;
         }
         protected ListView listView;
         private void initTimer()
@@ -48,8 +68,7 @@ namespace Jean_Doe.MusicControl
         void items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             ItemsCount = listView.Items.Count;
-            emptyText.Visibility = ItemsCount > 0 ? Visibility.Collapsed : Visibility.Visible;
-            btn_search.Visibility = (ItemsCount == 0 && !string.IsNullOrEmpty(filter_text)) ? Visibility.Visible : Visibility.Collapsed;
+
             isDirty = true;
         }
 
@@ -67,7 +86,7 @@ namespace Jean_Doe.MusicControl
                     if (thisFilter != lastFilter) return;
                     UIHelper.RunOnUI(() =>
                     {
-                        btn_filter_click(null, null);
+                        ApplyFilter();
                     });
                 });
             };
@@ -213,13 +232,17 @@ namespace Jean_Doe.MusicControl
         public ListView ListView { get { return listView; } }
         MusicViewModelList items;
         public MusicViewModelList Items { get { return items; } }
+        protected MusicViewModelList playList = new MusicViewModelList();
         private int itemsCount;
         public int ItemsCount
         {
             get { return itemsCount; }
             set
             {
-                itemsCount = value; Notify("ItemsCount");
+                itemsCount = value;
+                emptyText.Visibility = value > 0 ? Visibility.Collapsed : Visibility.Visible;
+                btn_search.Visibility = (value == 0 && !string.IsNullOrEmpty(filter_text)) ? Visibility.Visible : Visibility.Collapsed;
+                Notify("ItemsCount");
             }
         }
         private int selectCount;
@@ -234,7 +257,7 @@ namespace Jean_Doe.MusicControl
             }
             set
             {
-                listView.SelectedItem = value.FirstOrDefault();
+                listView.SelectedItem = playView.SelectedItem = value.FirstOrDefault();
             }
         }
         public IEnumerable<MusicViewModel> SelectedItems
@@ -249,13 +272,11 @@ namespace Jean_Doe.MusicControl
             ThemeColor = ImageHelper.RefreshDefaultColor();
         }
 
-        void btn_filter_click(object sender, RoutedEventArgs e)
+        protected virtual void ApplyFilter()
         {
-            var obj = new Object();
-            MessageBus.Instance.Publish(new MsgSetBusy(obj, true));
             filter_text = input_filter.Text.ToLower();
             Source.Filter = filter;
-            MessageBus.Instance.Publish(new MsgSetBusy(obj, false));
+            ItemsCount = listView.Items.Count;
         }
         bool filter(object sender)
         {
@@ -284,7 +305,7 @@ namespace Jean_Doe.MusicControl
         }
         public virtual void Load()
         {
-            Task.Run(async () => {await items.Load(); });
+            Task.Run(async () => { await items.Load(); });
         }
 
         protected virtual void btn_open_click(object sender, RoutedEventArgs e)
@@ -408,9 +429,6 @@ namespace Jean_Doe.MusicControl
             var img = sender as Image;
             //Show(img);
         }
-        protected virtual void btn_play_Click(object sender, RoutedEventArgs e)
-        {
-        }
 
         protected void btn_fav_Click(object sender, RoutedEventArgs e)
         {
@@ -504,6 +522,7 @@ namespace Jean_Doe.MusicControl
             var prop = tag.Split("_".ToCharArray())[0];
             var order = tag.Split("_".ToCharArray())[1];
             Source.CustomSort = new Sorter { PropertyName = prop, IsAsc = order == "Asc" };
+            ItemsCount = listView.Items.Count;
             //using (Source.DeferRefresh())
             //{
             //    Source.SortDescriptions.Clear();
@@ -513,10 +532,8 @@ namespace Jean_Doe.MusicControl
         }
         string filter_text = "";
 
-        private void item_double_click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        protected virtual void item_double_click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            btn_play_Click(sender, e);
-            ActionBarService.Refresh();
         }
 
         protected static bool canFav(object o)
@@ -529,12 +546,16 @@ namespace Jean_Doe.MusicControl
             var s = (o as SongListControl).SelectedSongs;
             return s.Count() > 0 && s.Any(x => x.InFav);
         }
-        T GetParentOf<T>(DependencyObject o, string name) where T : class
+        protected T GetParentOf<T>(DependencyObject o, string name = null) where T : FrameworkElement
         {
             if (o == null) return null;
             var p = System.Windows.Media.VisualTreeHelper.GetParent(o);
             if (p == null) return null;
-            if (p is T && (p as FrameworkElement).Name == name) return p as T;
+            if (p is T)
+            {
+                if (string.IsNullOrEmpty(name) || (p as T).Name == name)
+                    return p as T;
+            }
             return GetParentOf<T>(p, name);
         }
         private void toggle_detail(object sender, MouseEventArgs e)
@@ -563,13 +584,26 @@ namespace Jean_Doe.MusicControl
             sb.Completed += (d, ef) => music.CanAnimate = true;
             sb.Begin();
         }
-        bool more_on = false;
         private void btn_more_Click(object sender, RoutedEventArgs e)
         {
-            more_on = !more_on;
+            bool more_on = btn_more.IsOn;
+            btn_more.ToolTip = more_on ? "切换到格子" : "切换到列表";
             listView = more_on ? virtualView : wrapView;
-            virtualView.Visibility = more_on ? Visibility.Visible : Visibility.Collapsed;
+            ItemsCount = listView.Items.Count;
+            virtualPart.Visibility = more_on ? Visibility.Visible : Visibility.Collapsed;
             wrapView.Visibility = !more_on ? Visibility.Visible : Visibility.Collapsed;
+            ActionBarService.Refresh();
         }
+
+        public bool IsDefaultList
+        {
+            get { return (bool)GetValue(IsDefaultListProperty); }
+            set { SetValue(IsDefaultListProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsDefaultList.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsDefaultListProperty =
+            DependencyProperty.Register("IsDefaultList", typeof(bool), typeof(SongListControl), new PropertyMetadata(false));
+
     }
 }

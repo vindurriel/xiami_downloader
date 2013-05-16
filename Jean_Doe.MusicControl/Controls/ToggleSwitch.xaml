@@ -58,8 +58,8 @@
                     </Trigger.ExitActions>
                 </Trigger>
             </ControlTemplate.Triggers>
-            <Viewbox SnapsToDevicePixels="True">
-                <Grid  x:Name="part_clipper"  Width="120" Height="40">
+            <Viewbox >
+                <Grid SnapsToDevicePixels="True"  x:Name="part_clipper"  Width="120" Height="40">
                     <Grid.Clip>
                         <RectangleGeometry Rect="0,0,120,40"/>
                     </Grid.Clip>

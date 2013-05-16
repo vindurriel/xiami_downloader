@@ -100,11 +100,11 @@ namespace Jean_Doe.Common
                 Next();
                 inChange = false;
             }
-            if (TimeChanged != null)
-                UIHelper.RunOnUI(() =>
-                {
+            UIHelper.RunOnUI(() =>
+            {
+                if (TimeChanged != null)
                     TimeChanged(null, new TimeChangedEventArgs { Current = stream.CurrentTime });
-                });
+            });
 
         }
 

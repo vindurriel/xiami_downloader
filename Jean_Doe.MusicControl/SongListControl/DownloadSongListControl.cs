@@ -19,7 +19,8 @@ namespace Jean_Doe.MusicControl
     {
         public DownloadSongListControl()
         {
-            listView.ItemTemplate = this.Resources["downloadingTemplate"] as DataTemplate;
+
+            wrapView.ItemTemplate = this.Resources["downloadingTemplate"] as DataTemplate;
             Items.CollectionChanged += Items_CollectionChanged;
             MessageBus.Instance.Subscribe(this);
         }
