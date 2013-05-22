@@ -24,7 +24,8 @@ namespace Jean_Doe.MusicControl
             MessageBus.Instance.Subscribe(this);
             Global.ListenToEvent("PlayNextMode", OnPlayNextMode);
             this.PropertyChanged += OnPropertyChanged;
-            title_playlist.Visibility = Visibility.Visible;
+            combo_sort.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "播放顺序", Tag = "Playlist_Asc" });
+            combo_sort.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "最近下载", Tag = "Date_Dsc" });
         }
 
         void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -46,7 +47,6 @@ namespace Jean_Doe.MusicControl
         void ensureRefreshPlayList()
         {
             if (!needsRefreshPlaylist) return;
-            playView.DataContext = null;
             playList.Clear();
             foreach (var item in Source.OfType<SongViewModel>())
             {
@@ -54,13 +54,28 @@ namespace Jean_Doe.MusicControl
             };
             if (Global.AppSettings["PlayNextMode"] == "Random")
                 playList.Shuffle();
-            playView.DataContext = playList;
             needsRefreshPlaylist = false;
         }
         protected override void ApplyFilter()
         {
             base.ApplyFilter();
             ensureRefreshPlayList();
+        }
+        protected override void ApplySort()
+        {
+            var tag = (combo_sort.SelectedItem as System.Windows.Controls.ComboBoxItem).Tag.ToString();
+            if (tag == "Playlist_Asc")
+            {
+                virtualView.DataContext = playList;
+                GongSolutions.Wpf.DragDrop.DragDrop.SetIsDragSource(virtualView, true);
+                GongSolutions.Wpf.DragDrop.DragDrop.SetIsDropTarget(virtualView, true);
+                return;
+            }
+            GongSolutions.Wpf.DragDrop.DragDrop.SetIsDragSource(virtualView, false);
+            GongSolutions.Wpf.DragDrop.DragDrop.SetIsDropTarget(virtualView, false);
+            virtualView.DataContext = Source;
+            base.ApplySort();
+            btn_select_nowplaying_Click(null, null);
         }
         static FileSystemWatcher watcher;
         FileSystemWatcher CreateWatcher()
@@ -182,7 +197,6 @@ namespace Jean_Doe.MusicControl
         void btn_select_nowplaying_Click(object sender, RoutedEventArgs e)
         {
             SelectedSongs = new SongViewModel[] { NowPlaying as SongViewModel };
-            playView.ScrollToCenterOfView(NowPlaying);
             listView.ScrollToCenterOfView(NowPlaying);
         }
         bool needsRefreshPlaylist = false;
@@ -370,8 +384,9 @@ namespace Jean_Doe.MusicControl
             {
                 case EnumPlayNextMode.Sequential:
                 case EnumPlayNextMode.Random:
+                    if (playList.Count == 0) break;
                     int i = playList.IndexOf(now);
-                    if (i == -1) return;
+                    if (i == -1) i = playList.Count - 1;
                     i = i == playList.Count - 1 ? 0 : i + 1;
                     item = playList.ElementAt(i) as SongViewModel;
                     break;

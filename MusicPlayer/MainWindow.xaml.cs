@@ -282,5 +282,9 @@ namespace MusicPlayer
         {
             Close();
         }
+        private void btn_min_Click(object sender, RoutedEventArgs e)
+        {
+            Handle(new MsgChangeWindowState { State = EnumChangeWindowState.Minimized });
+        }
     }
 }

@@ -152,8 +152,10 @@
                             DockPanel.Dock="Right">
                         <TextBlock Text="&#xe0e1;" Style="{StaticResource glyph}" />
                     </Button>
-                    <!--<controls:TitleBar DockPanel.Dock="Right" FontSize="20" HorizontalAlignment="Right" Margin="2"
-                          Width="150" Height="50" x:Name="titleBar" />-->
+                    <Button x:Name="btn_min" Background="Transparent" Foreground="{DynamicResource lightBrush}"
+                            MinWidth="0" Width="50" Margin="0" Height="50" Click="btn_min_Click" DockPanel.Dock="Right">
+                        <TextBlock Text="&#xE0A1;" Style="{StaticResource glyph}" />
+                    </Button>
                     <ToggleButton DockPanel.Dock="Right" Tag="5">
                         <DockPanel HorizontalAlignment="Center">
                             <TextBlock Text="&#xE115;" Style="{StaticResource glyph}" />
@@ -197,9 +199,9 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <DockPanel Grid.Row="1">
-                            <controls:CompleteSongListControl x:Name="list_complete" IsDefaultList="True"/>
+                            <controls:CompleteSongListControl x:Name="list_complete" IsDefaultList="True" />
                         </DockPanel>
-                        <Grid x:Name="lrc"  >
+                        <Grid x:Name="lrc">
                             <controls:LyricControl Margin="0,-5,0,0" HorizontalAlignment="Left" x:Name="lyricShow"
                                     MaxHeight="{Binding ActualHeight,ElementName=lrc}" />
                         </Grid>
@@ -216,7 +218,7 @@
                     </Grid.ColumnDefinitions>
                     <my:ConfigPage x:Name="configPage" />
                 </Grid>
-               
+
             </Grid>
             <Grid x:Name="footer" Grid.Row="2">
                 <controls:ProgressBar x:Name="busyIndicator" Foreground="{DynamicResource skinBrush}" Margin="0"

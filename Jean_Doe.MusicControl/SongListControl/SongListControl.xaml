@@ -333,7 +333,6 @@
                     Visibility="{Binding IsOn,ElementName=btn_more,Converter={StaticResource bool2vis}}">
                 <ComboBox x:Name="combo_sort">
                     <ComboBoxItem Tag="Default_Asc" IsSelected="True">无排序</ComboBoxItem>
-                    <ComboBoxItem Tag="Date_Dsc">最近下载</ComboBoxItem>
                     <ComboBoxItem Tag="Name_Asc">名称升序</ComboBoxItem>
                     <ComboBoxItem Tag="AlbumName_Asc">专辑升序</ComboBoxItem>
                     <ComboBoxItem Tag="ArtistName_Asc">艺术家升序</ComboBoxItem>
@@ -345,7 +344,6 @@
                     <TextBlock VerticalAlignment="Center" Margin="3" x:Name="mask_filter" Text="输入字符以过滤"
                             IsHitTestVisible="False" Foreground="{DynamicResource lightBrush}" />
                 </Grid>
-                <!--<Button x:Name="btn_filter" Click="btn_filter_click" Content="过滤" VerticalContentAlignment="Center" />-->
                 <Button Visibility="Collapsed" x:Name="btn_search" Click="btn_search_click" Content="没有？在网上搜索一下" />
             </DockPanel>
         </DockPanel>
@@ -360,21 +358,7 @@
                     ItemTemplate="{StaticResource listTemplate}" ItemsPanel="{StaticResource vsp}">
             </ListView>
         </DockPanel>
-        <Grid Visibility="{Binding Visibility,ElementName=virtualPart}" Grid.Column="1">
-            <TextBlock Margin="10,0" Height="30" Padding="5" Text=":: 播放列表" x:Name="title_playlist"
-                    Visibility="Collapsed" />
-        </Grid>
-        <GridSplitter Grid.RowSpan="2" Background="#01ffffff" Grid.Column="1" Width="20" HorizontalAlignment="Left" />
-        <ListView x:Name="playView" VirtualizingPanel.VirtualizationMode="Standard"
-                Visibility="{Binding Visibility,ElementName=virtualPart}" Grid.Column="1" Grid.Row="1"
-                VirtualizingPanel.IsVirtualizing="True" ScrollViewer.IsDeferredScrollingEnabled="True"
-                ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" Background="Transparent"
-                PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"
-                ItemContainerStyle="{StaticResource lviStyle}" ItemsSource="{Binding}" SelectionMode="Single"
-                dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True"
-                ItemTemplate="{StaticResource listTemplate}" ItemsPanel="{StaticResource vsp}">
-        </ListView>
-        <ListView x:Name="wrapView" Grid.ColumnSpan="2" Grid.Row="1" VirtualizingPanel.VirtualizationMode="Standard"
+        <ListView x:Name="wrapView" Grid.Row="1" VirtualizingPanel.VirtualizationMode="Standard"
                 ScrollViewer.CanContentScroll="True" VirtualizingPanel.IsVirtualizing="True"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" Background="Transparent"
                 PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"

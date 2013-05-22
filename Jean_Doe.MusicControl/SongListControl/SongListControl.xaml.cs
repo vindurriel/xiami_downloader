@@ -35,7 +35,7 @@ namespace Jean_Doe.MusicControl
             wrapView.DataContext = items;
             virtualView.SelectionChanged += OnSelectionChanged;
             wrapView.SelectionChanged += OnSelectionChanged;
-            views = new List<ListView> { virtualView, playView, wrapView };
+            views = new List<ListView> { virtualView, wrapView };
             foreach (var v in views)
             {
                 v.SelectionChanged += OnListViewSelectionChanged;
@@ -257,7 +257,7 @@ namespace Jean_Doe.MusicControl
             }
             set
             {
-                listView.SelectedItem = playView.SelectedItem = value.FirstOrDefault();
+                listView.SelectedItem = value.FirstOrDefault();
             }
         }
         public IEnumerable<MusicViewModel> SelectedItems
@@ -510,25 +510,18 @@ namespace Jean_Doe.MusicControl
                 return IsAsc ? res : -res;
             }
         }
-        private void ApplySort()
+        protected virtual void ApplySort()
         {
             var tag = (combo_sort.SelectedItem as ComboBoxItem).Tag.ToString();
             if (tag == "Default_Asc")
             {
                 Source.CustomSort = null;
-                //Source.SortDescriptions.Clear();
                 return;
             }
             var prop = tag.Split("_".ToCharArray())[0];
             var order = tag.Split("_".ToCharArray())[1];
             Source.CustomSort = new Sorter { PropertyName = prop, IsAsc = order == "Asc" };
             ItemsCount = listView.Items.Count;
-            //using (Source.DeferRefresh())
-            //{
-            //    Source.SortDescriptions.Clear();
-            //    Source.SortDescriptions.Add(new SortDescription(prop,
-            //        order == "Asc" ? ListSortDirection.Ascending : ListSortDirection.Descending));
-            //}
         }
         string filter_text = "";
 
