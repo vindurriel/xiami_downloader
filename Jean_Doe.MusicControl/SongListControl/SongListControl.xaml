@@ -33,7 +33,7 @@
         </DataTemplate>
         <DataTemplate x:Key="t_image">
             <Grid VerticalAlignment="Top" Width="60" Height="60">
-                <Border BorderBrush="{DynamicResource lightBrush}" BorderThickness="3">
+                <Border x:Name="border" BorderBrush="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}" BorderThickness="3">
                     <Grid>
                         <TextBlock FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"
                                 Text="{Binding TypeImage}" FontFamily="Segoe UI Symbol" />
@@ -82,8 +82,10 @@
                         <TextBlock Text="{Binding Name}" Style="{DynamicResource label_base}" />
                         <TextBlock Text=" - " Style="{DynamicResource label_base}" />
                         <TextBlock Text="{Binding ArtistName}" Opacity="0.8" Style="{DynamicResource label_base}" />
+                        <TextBlock Text=" - " Style="{DynamicResource label_base}" />
+                        <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{DynamicResource label_base}" />
                     </DockPanel>
-                    <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{DynamicResource label_base}" />
+                        <TextBlock Text="{Binding Description}"  Opacity="0.5" Style="{DynamicResource label_base}" />
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -246,6 +248,9 @@
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>
+                <Trigger Property="IsSelected" Value="true">
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
             </Style.Triggers>
             <Setter Property="RenderTransform">
                 <Setter.Value>
@@ -256,10 +261,11 @@
             </Setter>
             <EventSetter Event="MouseDoubleClick" Handler="item_double_click" />
             <Setter Property="Margin" Value="0,0,5,5" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="Opacity" Value="0" />
-            <Setter Property="Padding" Value="9,5,5,5" />
+            <Setter Property="Padding" Value="5,5,5,5" />
             <Setter Property="RenderTransformOrigin" Value=".5,.5" />
-            <Setter Property="Foreground" Value="{Binding Foreground,ElementName=me}" />
+            <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListViewItem}">
@@ -272,9 +278,7 @@
                             <Border x:Name="normal" Background="{Binding ThemeColor,ElementName=me}" />
                             <Border x:Name="mouseover" Opacity="0" Background="{DynamicResource selectBrush}" />
                             <Grid x:Name="pressed" Opacity="0">
-                                <Border BorderThickness="4,0,0,0" BorderBrush="{DynamicResource skinBrush}">
-                                    <Border Background="{DynamicResource selectBrush}" Opacity=".5" />
-                                </Border>
+                                <Border Background="{DynamicResource skinBrush}"/>
                             </Grid>
                             <ContentPresenter Margin="{TemplateBinding Padding}" />
                             <VisualStateManager.VisualStateGroups>
@@ -283,7 +287,7 @@
                                     <VisualState x:Name="MouseOver">
                                         <Storyboard>
                                             <DoubleAnimation Storyboard.TargetName="mouseover"
-                                                    Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" To=".5" />
+                                                    Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" To="1" />
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Disabled" />

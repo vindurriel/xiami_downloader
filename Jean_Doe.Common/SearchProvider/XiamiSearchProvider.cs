@@ -37,49 +37,69 @@ public class XiamiSearchProvider : ISearchProvider
         Enum.TryParse(t.ToString(), out musicType);
         return await SearchByKey(key, musicType);
     }
+    static void getCollectDetails(string id)
+    {
+        Task.Run(() =>
+        {
+            string url = XiamiUrl.GoCollect(id);
+            var tmp = Path.Combine(Global.BasePath, string.Format("collect.{0}.html", id));
+            if (!File.Exists(tmp))
+            {
+                new System.Net.WebClient().DownloadFile(url, tmp);
+            }
+            var doc = CQ.CreateFromFile(tmp);
+            foreach (var x in CQ.Create(doc["li[class^=\"totle_\"]"]))
+            {
+                var item = CQ.Create(x);
+                var desc = item[".s_quote strong"];
+                if (desc.Length == 0) continue;
+                var song_id = x.Id.Substring(6);
+                var description = desc.Text();
+                UIHelper.RunOnUI(() =>
+                {
+                    Artwork.MessageBus.MessageBus.Instance.Publish(
+                        new MsgSetDescription { Id = song_id, Description = description });
+                });
+
+
+            }
+        });
+    }
     static async Task<SearchResult> getByType(EnumSearchType type, string id)
     {
-        string url = "";
-        if (type != EnumSearchType.song && !type.ToString().Contains("_"))
-        {
-            Enum.TryParse(type.ToString() + "_song", out type);
-        }
-        if (type == EnumSearchType.artist_song)
-            url = XiamiUrl.UrlArtistTopSong(id);
-        else if (type == EnumSearchType.artist_artist)
-            url = XiamiUrl.UrlArtistSimilars(id);
-        else if (type == EnumSearchType.artist_album)
-            url = XiamiUrl.UrlArtistAlbums(id);
-        else
-            url = XiamiUrl.UrlPlaylistByIdAndType(id, type.ToString().Replace("_song", ""));
-        var json = await NetAccess.DownloadStringAsync(url);
-        ///////////////////////////////////////////////////////
-        if (json == null) return null;
         List<IMusic> items = new List<IMusic>();
+        dynamic json = null;
         switch (type)
         {
             case EnumSearchType.song:
+                json = await XiamiClient.GetDefault().Call_xiami_api("Songs.detail", "id=" + id);
                 items = GetSong(json);
                 break;
             case EnumSearchType.album_song:
+                json = await XiamiClient.GetDefault().Call_xiami_api("Albums.detail", "id=" + id);
                 items = GetSongsOfAlbum(json);
                 break;
             case EnumSearchType.artist_song:
-                type = EnumSearchType.artist_song;
+                json = await XiamiClient.GetDefault().Call_xiami_api("Artists.hotSongs", "id=" + id);
                 items = GetSongsOfArtist(json);
                 break;
             case EnumSearchType.collect_song:
-                items = await GetSongsOfCollect(json);
+                json = await XiamiClient.GetDefault().Call_xiami_api("Collects.detail", "id=" + id);
+                getCollectDetails(json.list_id);
+                items = GetSongsOfCollect(json);
                 break;
             case EnumSearchType.artist_artist:
+                json = await NetAccess.DownloadStringAsync(XiamiUrl.UrlArtistSimilars(id));
                 items = GetSimilarsOfArtist(json);
                 break;
             case EnumSearchType.artist_album:
+                json = await XiamiClient.GetDefault().Call_xiami_api("Artists.albums", "id=" + id);
                 items = GetAlbumsOfArtist(json);
                 break;
             default:
                 break;
         }
+        if (json == null) return null;
         if (type.ToString().Contains("_"))
         {
             var duo = type.ToString().Split("_".ToCharArray());
@@ -271,13 +291,12 @@ public class XiamiSearchProvider : ISearchProvider
         catch { }
         return items;
     }
-    static List<IMusic> GetAlbumsOfArtist(string json)
+    static List<IMusic> GetAlbumsOfArtist(dynamic json)
     {
         var items = new List<IMusic>();
         try
         {
-            var obj = json.ToDynamicObject().albums;
-            foreach (var x in obj)
+            foreach (var x in json.albums)
             {
                 items.Add(MusicFactory.CreateFromJson(x, EnumMusicType.album));
             }
@@ -285,13 +304,12 @@ public class XiamiSearchProvider : ISearchProvider
         catch { }
         return items;
     }
-    static List<IMusic> GetSongsOfArtist(string json)
+    static List<IMusic> GetSongsOfArtist(dynamic json)
     {
         var items = new List<IMusic>();
         try
         {
-            var obj = json.ToDynamicObject().songs;
-            foreach (var x in obj)
+            foreach (var x in json.songs)
             {
                 items.Add(MusicFactory.CreateFromJson(x, EnumMusicType.song));
             }
@@ -299,52 +317,28 @@ public class XiamiSearchProvider : ISearchProvider
         catch { }
         return items;
     }
-    static async Task<List<IMusic>> GetSongsOfCollect(string json)
+    static List<IMusic> GetSongsOfCollect(dynamic json)
     {
         var items = new List<IMusic>();
         try
         {
-            var obj = json.ToDynamicObject().collect;
-            string url = XiamiUrl.GoCollect(obj.id);
-            var tmp = Path.Combine(Global.BasePath, "collect_page.html");
-            if (File.Exists(tmp))
-            {
-                File.Delete(tmp);
-            }
-            await new System.Net.WebClient().DownloadFileTaskAsync(url, tmp);
-            var doc = CQ.CreateFromFile(tmp);
-            var dic = new Dictionary<string, string>();
-            foreach (var x in CQ.Create(doc["li[class^=\"totle_\"]"]))
-            {
-                var item = CQ.Create(x);
-                var desc = item[".s_quote strong"];
-                if (desc.Length==0) continue;
-                var id = x.Id.Substring(6);
-                dic[id] = desc.Text();
-            }
-            foreach (var x in obj.songs)
+            foreach (var x in json.songs)
             {
                 string id = x.song_id;
-                var description = "";
-                if (dic.ContainsKey(id))
-                {
-                    description = dic[id];
-                }
                 Song song = MusicFactory.CreateFromJson(x, EnumMusicType.song);
-                song.Description = description;
                 items.Add(song);
             }
         }
         catch { }
         return items;
     }
-    static List<IMusic> GetSongsOfAlbum(string json)
+    static List<IMusic> GetSongsOfAlbum(dynamic json)
     {
         var items = new List<IMusic>();
 
         try
         {
-            dynamic obj = json.ToDynamicObject();
+            dynamic obj = json;
             var album_name = obj.album.title;
             foreach (var x in obj.album.songs)
             {
@@ -356,13 +350,12 @@ public class XiamiSearchProvider : ISearchProvider
         catch { }
         return items;
     }
-    static List<IMusic> GetSong(string json)
+    static List<IMusic> GetSong(dynamic json)
     {
         List<IMusic> res = new List<IMusic>();
-
         try
         {
-            var obj = json.ToDynamicObject().song;
+            var obj = json.song;
             var song = MusicFactory.CreateFromJson(obj, EnumMusicType.song);
             res.Add(song);
         }

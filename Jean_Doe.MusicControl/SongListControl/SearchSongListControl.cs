@@ -12,7 +12,8 @@ using System.Collections.Generic;
 namespace Jean_Doe.MusicControl
 {
     public class SearchSongListControl : SongListControl, IActionProvider,
-        IHandle<MsgSearchStateChanged>
+        IHandle<MsgSearchStateChanged>,
+        IHandle<MsgSetDescription>
     {
         public SearchSongListControl()
         {
@@ -82,5 +83,11 @@ namespace Jean_Doe.MusicControl
             };
         }
 
+        public void Handle(MsgSetDescription message)
+        {
+           var svm= SongViewModel.GetId(message.Id);
+           if (svm == null) return;
+           svm.Description = message.Description;
+        }
     }
 }

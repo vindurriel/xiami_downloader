@@ -93,6 +93,11 @@ namespace Jean_Doe.MusicControl
             }
         }
         static Dictionary<string, SongViewModel> cache = new Dictionary<string, SongViewModel>();
+        public static SongViewModel GetId(string id)
+        {
+            if (string.IsNullOrEmpty(id) || !cache.ContainsKey(id)) return null;
+            return cache[id];
+        }
         public static SongViewModel Get(Song song)
         {
             var id = song.Id;
@@ -103,6 +108,10 @@ namespace Jean_Doe.MusicControl
             if (song.InFav)
             {
                 cache[id].InFav = true;
+            }
+            if (!string.IsNullOrEmpty(song.Description))
+            {
+                cache[id].Description = song.Description;
             }
             return cache[id];
         }
@@ -123,7 +132,13 @@ namespace Jean_Doe.MusicControl
         {
             get
             {
-                return song.Description;
+                return Song.Description;
+            }
+            set
+            {
+                Song.Description = value;
+                Notify("Description");
+                Notify("HasDetail");
             }
         }
         Song song;

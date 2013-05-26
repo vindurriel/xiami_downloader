@@ -72,6 +72,9 @@ namespace Jean_Doe.MusicControl
             {
                 return music.Get("reason", "description");
             }
+            set
+            {
+            }
         }
         public virtual string Id { get { return music.Id; } }
         public virtual string Logo { get { return music.Logo; } }
