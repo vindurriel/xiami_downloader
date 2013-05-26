@@ -335,15 +335,12 @@ public class XiamiSearchProvider : ISearchProvider
     static List<IMusic> GetSongsOfAlbum(dynamic json)
     {
         var items = new List<IMusic>();
-
         try
         {
             dynamic obj = json;
-            var album_name = obj.album.title;
-            foreach (var x in obj.album.songs)
+            foreach (var x in obj.songs)
             {
                 Song a = MusicFactory.CreateFromJson(x, EnumMusicType.song);
-                a.AlbumName = album_name;
                 items.Add(a);
             }
         }
