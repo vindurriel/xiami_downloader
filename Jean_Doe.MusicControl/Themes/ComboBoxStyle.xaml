@@ -8,7 +8,7 @@
         <Setter Property="MinHeight" Value="0" />
         <Setter Property="Width" Value="Auto" />
         <Setter Property="Height" Value="Auto" />
-        <Setter Property="Background" Value="{DynamicResource darkBrush}" />
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
         <Setter Property="Template">
@@ -105,7 +105,7 @@
             </Setter.Value>
         </Setter>
         <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
-        <Setter Property="Background" Value="{DynamicResource selectBrush}" />
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -122,8 +122,9 @@
                 <ControlTemplate TargetType="{x:Type ComboBox}">
                     <Border BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                            Background="Transparent" SnapsToDevicePixels="True">
                         <Grid>
+                            <Border Background="{DynamicResource selectBrush}" Opacity=".3"/>
                             <Border x:Name="Border">
                                 <Popup x:Name="PART_Popup" AllowsTransparency="False" Focusable="False"
                                         IsOpen="{TemplateBinding IsDropDownOpen}"
@@ -154,8 +155,7 @@
                                 <FrameworkElement DockPanel.Dock="Right"
                                         Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
                                 <FrameworkElement DockPanel.Dock="Right" Width="2" />
-                                <Border x:Name="SelectedItemBorder" BorderThickness="0"
-                                        BorderBrush="{TemplateBinding BorderBrush}" Background="Transparent" Padding="2">
+                                <Border x:Name="SelectedItemBorder" Padding="2" Background="{TemplateBinding Background}">
                                     <ContentPresenter ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                             Content="{TemplateBinding SelectionBoxItem}"
                                             ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
@@ -188,7 +188,7 @@
                             <Setter Property="Foreground" Value="White" />
                         </MultiTrigger>-->
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="BorderBrush" Value="{DynamicResource skinBrush}" />
+                            <Setter Property="Background" Value="{DynamicResource selectBrush}" />
                         </Trigger>
                         <Trigger Property="HasItems" Value="False">
                             <Setter Property="MinHeight" TargetName="DropDownBorder" Value="50" />
@@ -226,6 +226,7 @@
                                     BorderThickness="{TemplateBinding BorderThickness}"
                                     Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                                 <Grid x:Name="root">
+                                    <Border Background="{DynamicResource selectBrush}" Opacity=".3"/>
                                     <Border x:Name="Border" BorderBrush="#000000" BorderThickness="0"
                                             Background="{TemplateBinding Background}">
                                         <Popup x:Name="PART_Popup" AllowsTransparency="True" Focusable="False"
@@ -315,7 +316,7 @@
                                     <Setter Property="MinHeight" TargetName="DropDownBorder" Value="50" />
                                 </Trigger>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="BorderBrush" Value="{DynamicResource skinBrush}" />
+                                    <Setter Property="Background" Value="{DynamicResource selectBrush}" />
                                 </Trigger>
                                 <Trigger Property="IsEnabled" Value="False">
                                     <Setter Property="Foreground"

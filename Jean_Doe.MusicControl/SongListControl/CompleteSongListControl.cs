@@ -44,11 +44,13 @@ namespace Jean_Doe.MusicControl
             needsRefreshPlaylist = true;
             ensureRefreshPlayList();
         }
-        void ensureRefreshPlayList()
+        void ensureRefreshPlayList(bool onlySelected = false)
         {
             if (!needsRefreshPlaylist) return;
+            var selSongs = SelectedSongs.ToList();
             playList.Clear();
-            foreach (var item in Source.OfType<SongViewModel>())
+            var list = onlySelected ? selSongs : Source.OfType<SongViewModel>();
+            foreach (var item in list)
             {
                 playList.Add(item);
             };
@@ -61,6 +63,7 @@ namespace Jean_Doe.MusicControl
             base.ApplyFilter();
             ensureRefreshPlayList();
         }
+
         protected override void ApplySort()
         {
             var tag = (combo_sort.SelectedItem as System.Windows.Controls.ComboBoxItem).Tag.ToString();
@@ -197,7 +200,7 @@ namespace Jean_Doe.MusicControl
         void btn_select_nowplaying_Click(object sender, RoutedEventArgs e)
         {
             SelectedSongs = new SongViewModel[] { NowPlaying as SongViewModel };
-            listView.ScrollToCenterOfView(NowPlaying);
+            virtualView.ScrollToCenterOfView(NowPlaying);
         }
         bool needsRefreshPlaylist = false;
         protected override void item_double_click(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -207,7 +210,10 @@ namespace Jean_Doe.MusicControl
         }
         protected void btn_play_Click(object sender, RoutedEventArgs e)
         {
-            this.ensureRefreshPlayList();
+            bool isMultiSel = SelectedSongs.Count() > 1;
+            if (isMultiSel)
+                needsRefreshPlaylist = true;
+            this.ensureRefreshPlayList(isMultiSel);
             var item = SelectedSongs.FirstOrDefault() ?? Items.OfType<SongViewModel>().FirstOrDefault();
             if (item == null)
                 return;

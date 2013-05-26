@@ -250,7 +250,7 @@
             <Setter Property="RenderTransform">
                 <Setter.Value>
                     <TransformGroup>
-                        <ScaleTransform ScaleX="0" ScaleY="0" />
+                        <ScaleTransform ScaleX="1" ScaleY="1" />
                     </TransformGroup>
                 </Setter.Value>
             </Setter>

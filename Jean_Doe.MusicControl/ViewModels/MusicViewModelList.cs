@@ -32,7 +32,7 @@ namespace Jean_Doe.MusicControl
                         if (!queue.TryDequeue(out item)) break;
                         addItem(item, toFront);
                         Thread.Sleep(s);
-                    }
+                    } 
                     int buffer = 0;
                     while (true)
                     {
@@ -40,7 +40,7 @@ namespace Jean_Doe.MusicControl
                         if (!queue.TryDequeue(out item)) break;
                         addItem(item, toFront);
                         buffer++;
-                        if (buffer == 100)
+                        if (buffer == 50)
                         {
                             Thread.Sleep(100);
                             buffer = 0;

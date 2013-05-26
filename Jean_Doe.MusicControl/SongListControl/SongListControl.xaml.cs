@@ -287,6 +287,15 @@ namespace Jean_Doe.MusicControl
             };
             return music.SearchStr.Contains(filter_text);
         }
+        bool filter_select(object sender)
+        {
+            var music = sender as MusicViewModel;
+            if (music == null)
+            {
+                return false;
+            };
+            return SelectedSongs.Contains(music);
+        }
 
         public ListCollectionView Source { get; set; }
         public void UnselectAll()

@@ -28,7 +28,8 @@ namespace Jean_Doe.MusicControl
                     foreach (Match ma in m)
                     {
                         if (!TimeSpan.TryParseExact(ma.Groups[1].Value, @"mm\:ss\.ff", null, out time))
-                            text = ma.Groups[1].Value + text;
+                            if (!TimeSpan.TryParseExact(ma.Groups[1].Value, @"mm\:ss", null, out time))
+                                    text = ma.Groups[1].Value + text;
                         res.Add(new LyricViewModel
                             {
                                 Time = time,
