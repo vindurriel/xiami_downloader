@@ -119,7 +119,7 @@ namespace Jean_Doe.MusicControl
             : base(song)
         {
             this.song = song;
-            TypeImage = "\xE102";
+            TypeImage = "\xE189";
             var art = System.IO.Path.Combine(Global.BasePath, "cache", AlbumId + ".art");
             if (File.Exists(art))
                 ImageSource = art;

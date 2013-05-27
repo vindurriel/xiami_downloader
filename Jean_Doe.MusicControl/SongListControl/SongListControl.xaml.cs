@@ -329,7 +329,10 @@ namespace Jean_Doe.MusicControl
             var t = listView.SelectedItems.OfType<IHasAlbum>().FirstOrDefault();
             if (t == null) return;
             var id = t.AlbumId;
-            await SearchManager.Search("album:" + id, EnumSearchType.song);
+            if (t is AlbumViewModel)
+                await SearchManager.Search("album:" + id, EnumSearchType.song);
+            else
+                await SearchManager.Search("album:" + id, EnumSearchType.all);
             //await SearchManager.GetMusic(t.AlbumId, EnumSearchType.album);
         }
 
@@ -338,7 +341,10 @@ namespace Jean_Doe.MusicControl
             var t = listView.SelectedItems.OfType<IHasArtist>().FirstOrDefault();
 
             if (t == null) return;
-            await SearchManager.Search("artist:" + t.ArtistId, EnumSearchType.song);
+            if (t is ArtistViewModel)
+                await SearchManager.Search("artist:" + t.ArtistId, EnumSearchType.song);
+            else
+                await SearchManager.Search("artist:" + t.ArtistId, EnumSearchType.all);
             //await SearchManager.GetMusic(t.ArtistId, EnumSearchType.artist_song);
         }
         protected virtual async void link_similar_artist(object sender, RoutedEventArgs e)
@@ -536,6 +542,14 @@ namespace Jean_Doe.MusicControl
 
         protected virtual void item_double_click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            var s = SelectedItems.FirstOrDefault();
+            if (s == null) return;
+            if (s is AlbumViewModel)
+                link_album(sender, null);
+            else if (s is CollectViewModel)
+                link_collection(sender, null);
+            else if (s is ArtistViewModel)
+                link_artist(sender, null);
         }
 
         protected static bool canFav(object o)

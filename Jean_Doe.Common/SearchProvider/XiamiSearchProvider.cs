@@ -28,7 +28,8 @@ public class XiamiSearchProvider : ISearchProvider
         if (m.Success)
         {
             var str_type = m.Groups[1].Value + "_" + t.ToString();
-            Enum.TryParse(str_type, out t);
+            if (!Enum.TryParse(str_type, out t))
+                Enum.TryParse(m.Groups[1].Value, out t);
             return await getByType(t, m.Groups[2].Value);
         }
         if (Uri.IsWellFormedUriString(key, UriKind.Absolute))
@@ -75,6 +76,10 @@ public class XiamiSearchProvider : ISearchProvider
                 json = await XiamiClient.GetDefault().Call_xiami_api("Songs.detail", "id=" + id);
                 items = GetSong(json);
                 break;
+            case EnumSearchType.album:
+                json = await XiamiClient.GetDefault().Call_xiami_api("Albums.detail", "id=" + id);
+                items = GetAlbum(json);
+                break;
             case EnumSearchType.album_song:
                 json = await XiamiClient.GetDefault().Call_xiami_api("Albums.detail", "id=" + id);
                 items = GetSongsOfAlbum(json);
@@ -82,6 +87,10 @@ public class XiamiSearchProvider : ISearchProvider
             case EnumSearchType.artist_song:
                 json = await XiamiClient.GetDefault().Call_xiami_api("Artists.hotSongs", "id=" + id);
                 items = GetSongsOfArtist(json);
+                break;
+            case EnumSearchType.artist:
+                json = await XiamiClient.GetDefault().Call_xiami_api("Artists.detail", "id=" + id);
+                items = GetArtist(json);
                 break;
             case EnumSearchType.collect_song:
                 json = await XiamiClient.GetDefault().Call_xiami_api("Collects.detail", "id=" + id);
@@ -277,6 +286,16 @@ public class XiamiSearchProvider : ISearchProvider
         res.Keyword = url;
         return res;
     }
+    static List<IMusic> GetArtist(dynamic json)
+    {
+        var items = new List<IMusic>();
+        try
+        {
+            items.Add(MusicFactory.CreateFromJson(json, EnumMusicType.artist));
+        }
+        catch { }
+        return items;
+    }
     static List<IMusic> GetSimilarsOfArtist(string json)
     {
         var items = new List<IMusic>();
@@ -328,6 +347,16 @@ public class XiamiSearchProvider : ISearchProvider
                 Song song = MusicFactory.CreateFromJson(x, EnumMusicType.song);
                 items.Add(song);
             }
+        }
+        catch { }
+        return items;
+    }
+    static List<IMusic> GetAlbum(dynamic json)
+    {
+        var items = new List<IMusic>();
+        try
+        {
+            items.Add(MusicFactory.CreateFromJson(json, EnumMusicType.album));
         }
         catch { }
         return items;

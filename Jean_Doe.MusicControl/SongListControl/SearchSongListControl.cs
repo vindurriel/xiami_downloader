@@ -32,6 +32,15 @@ namespace Jean_Doe.MusicControl
                 Notify("MaxPlayTimes");
             }
         }
+        protected override void item_double_click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (SelectedSongs.Count() > 0)
+            {
+                btn_download_add_Click(sender, null);
+                return;
+            }
+            base.item_double_click(sender, e);
+        }
         void btn_download_add_Click(object sender, RoutedEventArgs e)
         {
             var list = SelectedSongs.ToList();
@@ -68,16 +77,19 @@ namespace Jean_Doe.MusicControl
         {
             return new List<CharmAction> { 
                new CharmAction("取消选择", "\xE10E",btn_cancel_selection_Click,defaultActionValidate),
-               new CharmAction("下载","\xE118",this.btn_download_add_Click,(s)=>{
-                   return (s as SongListControl).SelectedSongs.Count()>0;
-               }),
+               new CharmAction("下载","\xE118",this.btn_download_add_Click,(s)=>{return (s as SongListControl).SelectedSongs.Count()>0;}),
                new CharmAction("收藏该歌曲","\xE0A5",this.btn_fav_Click,canFav),
                new CharmAction("不再收藏该歌曲","\xE007",this.btn_unfav_Click,canUnfav),
-               new CharmAction("查看专辑的歌曲","\xE1d2",link_album,IsOnlyType<IHasAlbum>),
-               new CharmAction("查看精选集的歌曲","\xE142",link_collection,IsOnlyType<CollectViewModel>),
-               new CharmAction("查看艺术家的歌曲","\xE181",link_artist,IsOnlyType<IHasArtist>),
-               new CharmAction("查看艺术家的相似艺人","\xE181相似",link_similar_artist,IsOnlyType<IHasArtist>),
-               new CharmAction("查看艺术家的专辑","\xE181专辑",link_artist_album,IsOnlyType<IHasArtist>),
+               new CharmAction("查看歌曲的艺术家","\xe13d",link_artist,IsOnlyType<SongViewModel>),
+               new CharmAction("查看歌曲的专辑","\xE1d2",link_album,IsOnlyType<SongViewModel>),
+
+               new CharmAction("查看专辑的歌曲","\xE189",link_album,IsOnlyType<AlbumViewModel>),
+               new CharmAction("查看专辑的艺术家","\xe13d",link_artist,IsOnlyType<AlbumViewModel>),
+               new CharmAction("查看精选集的歌曲","\xE189",link_collection,IsOnlyType<CollectViewModel>),
+
+               new CharmAction("查看艺术家的最受欢迎歌曲","\xE189",link_artist,IsOnlyType<ArtistViewModel>),
+               new CharmAction("查看艺术家的专辑","\xE1d2",link_artist_album,IsOnlyType<ArtistViewModel>),
+               new CharmAction("查看艺术家的相似艺人","\xE125",link_similar_artist,IsOnlyType<ArtistViewModel>),
                new CharmAction("在浏览器中打开","\xE12B",this.btn_browse_Click,IsOnlyType<IHasMusicPart>),
 
             };
@@ -85,9 +97,9 @@ namespace Jean_Doe.MusicControl
 
         public void Handle(MsgSetDescription message)
         {
-           var svm= SongViewModel.GetId(message.Id);
-           if (svm == null) return;
-           svm.Description = message.Description;
+            var svm = SongViewModel.GetId(message.Id);
+            if (svm == null) return;
+            svm.Description = message.Description;
         }
     }
 }

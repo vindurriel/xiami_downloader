@@ -30,8 +30,7 @@ namespace Jean_Doe.Common
             string res = null;
             try
             {
-                var x = await client.GetAsync(url, cancelToken.Token);
-                res = await x.Content.ReadAsStringAsync();
+                res = await client.GetStringAsync(url);
             }
             catch (Exception e)
             {

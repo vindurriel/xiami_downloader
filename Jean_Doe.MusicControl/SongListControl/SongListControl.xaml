@@ -80,9 +80,9 @@
                 <StackPanel Grid.Column="1" Margin="5,0,0,0">
                     <DockPanel RenderOptions.ClearTypeHint="Enabled" RenderOptions.EdgeMode="Aliased">
                         <TextBlock Text="{Binding Name}" Style="{DynamicResource label_base}" />
-                        <TextBlock Text=" - " Style="{DynamicResource label_base}" />
+                        <TextBlock Text="  " Style="{DynamicResource label_base}" />
                         <TextBlock Text="{Binding ArtistName}" Opacity="0.8" Style="{DynamicResource label_base}" />
-                        <TextBlock Text=" - " Style="{DynamicResource label_base}" />
+                        <TextBlock Text="  " Style="{DynamicResource label_base}" />
                         <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{DynamicResource label_base}" />
                     </DockPanel>
                         <TextBlock Text="{Binding Description}" TextWrapping="NoWrap" Height="20" Opacity="0.5" Style="{DynamicResource label_base}" />

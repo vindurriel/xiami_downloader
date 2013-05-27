@@ -12,7 +12,7 @@ namespace Jean_Doe.MusicControl
         public ArtistViewModel(Artist a):base(a)
         {
             artist = a;
-            TypeImage = "\xE181";
+            TypeImage = "\xe13d";
         }
         public string ArtistName { get { return artist.AlbumCount; } }
         public string AlbumName { get { return artist.Description; } }
