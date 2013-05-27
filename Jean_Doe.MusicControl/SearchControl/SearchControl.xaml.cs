@@ -113,6 +113,20 @@ namespace Jean_Doe.MusicControl
                 Jean_Doe.Downloader.Logger.Error(ex);
             }
         }
+        void btn_back_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var i = hs.SelectedIndex;
+                if (i < 0 || i>hs.Items.Count-1) { CanGoBack = false; return; }
+                hs.SelectedIndex = i + 1;
+                btn_search_Click(this, e);
+            }
+            catch (Exception ex)
+            {
+                Jean_Doe.Downloader.Logger.Error(ex);
+            }
+        }
         public void Handle(MsgSearchStateChanged message)
         {
             UIHelper.RunOnUI(new Action(() =>
@@ -120,16 +134,16 @@ namespace Jean_Doe.MusicControl
                 switch (message.State)
                 {
                     case EnumSearchState.Started:
-                        img_search.Visibility = Visibility.Collapsed;
-                        img_stop.Visibility = Visibility.Visible;
+                        CanGoBack = false;
+                        btn_search.Content = "\xe1a4";
                         hs.Text = message.SearchResult.Keyword;
                         combo_xiami_type.SelectedItem = message.SearchResult.SearchType;
                         break;
                     case EnumSearchState.Working:
                         break;
                     default:
-                        img_stop.Visibility = Visibility.Collapsed;
-                        img_search.Visibility = Visibility.Visible;
+                        btn_search.Content = "\xe1a3";
+                        CanGoBack = true;
                         break;
                 }
             }));
@@ -166,5 +180,18 @@ namespace Jean_Doe.MusicControl
             }
             Global.AppSettings["SearchResultType"] = t.ToString();
         }
+
+
+        public bool CanGoBack
+        {
+            get { return (bool)GetValue(CanGoBackProperty); }
+            set { SetValue(CanGoBackProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for CanGoBack.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CanGoBackProperty =
+            DependencyProperty.Register("CanGoBack", typeof(bool), typeof(SearchControl), new PropertyMetadata(false));
+
+
     }
 }

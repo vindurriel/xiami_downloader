@@ -32,19 +32,26 @@
                                         </DoubleAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
-                                <VisualState x:Name="Disabled"></VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)"
+                                                Storyboard.TargetName="content">
+                                            <EasingDoubleKeyFrame KeyTime="0" Value=".3" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Grid>
+                        <Grid x:Name="root">
                             <Border x:Name="NormalRect" Background="{TemplateBinding Background}" Opacity="1"
                                     BorderThickness="0" />
                             <Grid x:Name="OverRect" Opacity="0">
-                                <Border Background="{DynamicResource skinBrush}" />
+                                <Border Background="White" Opacity="0.3"/>
                             </Grid>
                             <Grid x:Name="PressRect" Opacity="0">
                                 <Border Background="{DynamicResource skinBrush}" />
                             </Grid>
-                            <Grid Margin="{TemplateBinding Padding}">
+                            <Grid Margin="{TemplateBinding Padding}" x:Name="content">
                                 <ContentControl Foreground="White" Content="{TemplateBinding Content}"
                                         HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                         VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />

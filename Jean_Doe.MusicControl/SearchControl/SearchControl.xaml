@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:common="clr-namespace:Jean_Doe.Common;assembly=Jean_Doe.Common"
+        xmlns:common="clr-namespace:Jean_Doe.Common;assembly=Jean_Doe.Common" x:Name="me"
         xmlns:local="clr-namespace:Jean_Doe.MusicControl" mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -17,36 +17,20 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Height="28">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Button x:Name="btn_search" Style="{DynamicResource StyleSearchButton}" Width="70" IsDefault="True"
-                    Background="{DynamicResource skinBrush}">
-                <Grid>
-                    <Image Source="../Resources/search.png" x:Name="img_search" Width="20" Height="20" />
-                    <Image Source="../Resources/stop.png" x:Name="img_stop" Visibility="Collapsed" Width="20"
-                            Height="20" />
-                </Grid>
+        <DockPanel LastChildFill="False">
+            <Button x:Name="btn_back" Click="btn_back_Click" Width="30" Content="&#xE0a9;"
+                    IsEnabled="{Binding CanGoBack, ElementName=me}" FontFamily="Segoe UI Symbol" Margin="0,0,5,0" />
+            <Button x:Name="btn_search" Style="{DynamicResource StyleSearchButton}" Width="70" IsDefault="True" FontSize="12" RenderOptions.EdgeMode="Aliased"
+                    FontFamily="Segoe UI Symbol" Content="&#xE1a3;" Background="{DynamicResource skinBrush}">
             </Button>
             <!--search options-->
             <ComboBox x:Name="combo_xiami_type" Grid.Column="1" Margin="5,0" />
             <!--search box-->
-            <Grid Grid.Column="2">
+            <Grid>
                 <local:HistorySearch x:Name="hs" HorizontalContentAlignment="Left" />
                 <TextBlock x:Name="mask_filter" Background="Transparent" Opacity=".5" VerticalAlignment="Center"
                         Margin="3" Text="输入字符以搜索" IsHitTestVisible="False" Foreground="{DynamicResource lightBrush}" />
             </Grid>
-            <!--button search-->
-
-        </Grid>
-        <GridSplitter Width="2" Margin="1" Background='Transparent' HorizontalAlignment="Right" />
+        </DockPanel>
     </Grid>
 </UserControl>
