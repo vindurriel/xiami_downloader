@@ -33,7 +33,9 @@
         </DataTemplate>
         <DataTemplate x:Key="t_image">
             <Grid VerticalAlignment="Top" Width="60" Height="60">
-                <Border x:Name="border" BorderBrush="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}" BorderThickness="3">
+                <Border x:Name="border"
+                        BorderBrush="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
+                        BorderThickness="3">
                     <Grid>
                         <TextBlock FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"
                                 Text="{Binding TypeImage}" FontFamily="Segoe UI Symbol" />
@@ -85,7 +87,19 @@
                         <TextBlock Text="  " Style="{DynamicResource label_base}" />
                         <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{DynamicResource label_base}" />
                     </DockPanel>
-                        <TextBlock Text="{Binding Description}" TextWrapping="NoWrap" Height="20" Opacity="0.5" Style="{DynamicResource label_base}" />
+                    <ProgressBar Maximum="{Binding MaxRec,ElementName=me,Mode=OneWay}" Background="Transparent"
+                            Foreground="{DynamicResource lightBrush}" HorizontalAlignment="Left" BorderThickness="0"
+                            Value="{Binding Recommends,Mode=OneWay}" Width="200" Height="3">
+                        <ProgressBar.ToolTip>
+                            <TextBlock Text="{Binding  Recommends,StringFormat={}{0} 人推荐}" />
+                        </ProgressBar.ToolTip>
+                    </ProgressBar>
+                        <TextBlock Text="{Binding Description}" TextTrimming="WordEllipsis" Height="20" Opacity="0.5"
+                            MaxWidth="200"   Style="{DynamicResource label_base}">
+                        <TextBlock.ToolTip>
+                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap" MaxWidth="400" />
+                        </TextBlock.ToolTip>
+                    </TextBlock>
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -249,7 +263,7 @@
                     </BeginStoryboard>
                 </EventTrigger>
                 <Trigger Property="IsSelected" Value="true">
-                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Foreground" Value="White" />
                 </Trigger>
             </Style.Triggers>
             <Setter Property="RenderTransform">
@@ -278,7 +292,7 @@
                             <Border x:Name="normal" Background="{Binding ThemeColor,ElementName=me}" />
                             <Border x:Name="mouseover" Opacity="0" Background="{DynamicResource selectBrush}" />
                             <Grid x:Name="pressed" Opacity="0">
-                                <Border Background="{DynamicResource skinBrush}"/>
+                                <Border Background="{DynamicResource skinBrush}" />
                             </Grid>
                             <ContentPresenter Margin="{TemplateBinding Padding}" />
                             <VisualStateManager.VisualStateGroups>
@@ -337,6 +351,7 @@
                     Visibility="{Binding IsOn,ElementName=btn_more,Converter={StaticResource bool2vis}}">
                 <ComboBox x:Name="combo_sort">
                     <ComboBoxItem Tag="Default_Asc" IsSelected="True">无排序</ComboBoxItem>
+                    <ComboBoxItem Tag="Recommends_Dsc">推荐数降序</ComboBoxItem>
                     <ComboBoxItem Tag="Name_Asc">名称升序</ComboBoxItem>
                     <ComboBoxItem Tag="AlbumName_Asc">专辑升序</ComboBoxItem>
                     <ComboBoxItem Tag="ArtistName_Asc">艺术家升序</ComboBoxItem>

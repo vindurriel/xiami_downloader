@@ -44,7 +44,15 @@ namespace Jean_Doe.MusicControl
             set { canAnimate = value; }
         }
         private string searchStr = null;
-
+        public double Recommends
+        {
+            get
+            {
+                double res = 0;
+                double.TryParse(MusicHelper.Get(music.JsonObject, "recommends"), out res);
+                return res;
+            }
+        }
         public string SearchStr
         {
             get

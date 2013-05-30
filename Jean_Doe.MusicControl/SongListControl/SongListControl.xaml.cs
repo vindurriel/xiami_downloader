@@ -42,7 +42,10 @@ namespace Jean_Doe.MusicControl
             }
             listView = IsDefaultList ? virtualView : wrapView;
             Loaded += SongListControl_Loaded;
+
         }
+        double maxRec = 1;
+        public double MaxRec { get { return maxRec; } set { maxRec = value; Notify("MaxRec"); } }
         void OnListViewSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var curView = sender as ListView;
@@ -68,8 +71,13 @@ namespace Jean_Doe.MusicControl
         void items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             ItemsCount = listView.Items.Count;
-
             isDirty = true;
+            if (e.NewItems != null)
+                foreach (var item in e.NewItems.OfType<MusicViewModel>())
+                {
+                    if (item.Recommends > MaxRec)
+                        MaxRec = item.Recommends;
+                }
         }
 
         private void initInputFilter()
@@ -182,6 +190,7 @@ namespace Jean_Doe.MusicControl
                 if (s != null)
                     s.ScrollToTop();
                 items.Clear();
+                MaxRec = 1;
             }));
         }
         #endregion
@@ -535,7 +544,8 @@ namespace Jean_Doe.MusicControl
             }
             var prop = tag.Split("_".ToCharArray())[0];
             var order = tag.Split("_".ToCharArray())[1];
-            Source.CustomSort = new Sorter { PropertyName = prop, IsAsc = order == "Asc" };
+            Source.SortDescriptions.Clear();
+            Source.SortDescriptions.Add(new SortDescription(prop, order == "Asc" ? ListSortDirection.Ascending : ListSortDirection.Descending));
             ItemsCount = listView.Items.Count;
         }
         string filter_text = "";
@@ -620,6 +630,5 @@ namespace Jean_Doe.MusicControl
         // Using a DependencyProperty as the backing store for IsDefaultList.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsDefaultListProperty =
             DependencyProperty.Register("IsDefaultList", typeof(bool), typeof(SongListControl), new PropertyMetadata(false));
-
     }
 }

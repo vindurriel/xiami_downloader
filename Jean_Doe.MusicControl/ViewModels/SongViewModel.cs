@@ -141,6 +141,7 @@ namespace Jean_Doe.MusicControl
                 Notify("HasDetail");
             }
         }
+
         Song song;
         public Song Song
         {

@@ -115,6 +115,11 @@ public class XiamiSearchProvider : ISearchProvider
             id = duo[0] + ":" + id;
             Enum.TryParse(duo[1], out type);
         }
+        else
+        {
+            id = type.ToString() + ":" + id;
+            type = EnumSearchType.all;
+        }
         var res = new SearchResult
         {
             Items = items,
