@@ -49,7 +49,7 @@ namespace Jean_Doe.MusicControl
             get
             {
                 double res = 0;
-                double.TryParse(MusicHelper.Get(music.JsonObject, "recommends"), out res);
+                double.TryParse(MusicHelper.Get(music.JsonObject, "recommends","count_likes"), out res);
                 return res;
             }
         }
