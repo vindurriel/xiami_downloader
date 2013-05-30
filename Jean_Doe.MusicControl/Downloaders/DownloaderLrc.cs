@@ -14,7 +14,7 @@ namespace Jean_Doe.MusicControl
 {
     public sealed class DownloaderLrc : Downloader.Downloader
     {
-        public override async Task Download()
+        public override  async Task Download()
         {
 			try
 			{
