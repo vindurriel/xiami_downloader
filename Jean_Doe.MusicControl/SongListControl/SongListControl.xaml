@@ -88,14 +88,15 @@
                         <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{DynamicResource label_base}" />
                     </DockPanel>
                     <ProgressBar Maximum="{Binding MaxRec,ElementName=me,Mode=OneWay}" Background="Transparent"
-                            Foreground="{DynamicResource lightBrush}" HorizontalAlignment="Left" BorderThickness="0"
+                            Foreground="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
+                            HorizontalAlignment="Left" BorderThickness="0"
                             Value="{Binding Recommends,Mode=OneWay}" Width="200" Height="3">
                         <ProgressBar.ToolTip>
                             <TextBlock Text="{Binding  Recommends,StringFormat={}{0} 人推荐}" />
                         </ProgressBar.ToolTip>
                     </ProgressBar>
                         <TextBlock Text="{Binding Description}" TextTrimming="WordEllipsis" Height="20" Opacity="0.5"
-                            MaxWidth="200"   Style="{DynamicResource label_base}">
+                            MaxWidth="400"   Style="{DynamicResource label_base}">
                         <TextBlock.ToolTip>
                             <TextBlock Text="{Binding Description}" TextWrapping="Wrap" MaxWidth="400" />
                         </TextBlock.ToolTip>

@@ -90,7 +90,7 @@ namespace Jean_Doe.MusicControl
                new CharmAction("查看艺术家的最受欢迎歌曲","\xE189",link_artist,IsOnlyType<ArtistViewModel>),
                new CharmAction("查看艺术家的专辑","\xE1d2",link_artist_album,IsOnlyType<ArtistViewModel>),
                new CharmAction("查看艺术家的相似艺人","\xE125",link_similar_artist,IsOnlyType<ArtistViewModel>),
-               new CharmAction("在浏览器中打开","\xE12B",this.btn_browse_Click,IsOnlyType<IHasMusicPart>),
+               new CharmAction("在浏览器中打开","\xE12B",this.btn_browse_Click,IsOnlyType<MusicViewModel>),
 
             };
         }
