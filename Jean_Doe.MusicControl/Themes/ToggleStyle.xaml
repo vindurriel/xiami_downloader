@@ -61,7 +61,7 @@
                                         CornerRadius="{Binding CornerRadius,ElementName=round}" BorderThickness="0" />
                             </Grid>
                             <Grid x:Name="OverRect" Opacity="0">
-                                <Border Opacity=".5" Background="{DynamicResource skinBrush}"
+                                <Border Opacity=".2" Background="{DynamicResource lightBrush}"
                                         CornerRadius="{Binding CornerRadius,ElementName=round}" BorderThickness="0" />
                             </Grid>
                             <Grid x:Name="PressRect" Opacity="0">
