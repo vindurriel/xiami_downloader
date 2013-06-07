@@ -19,9 +19,9 @@
     <Grid Height="28">
         <DockPanel LastChildFill="False">
             <Button x:Name="btn_back" Click="btn_back_Click" Width="30" Content="&#xE0a9;"
-                    IsEnabled="{Binding CanGoBack, ElementName=me}" FontFamily="Segoe UI Symbol" Margin="0,0,5,0" />
+                    IsEnabled="{Binding CanGoBack, ElementName=me}" FontFamily="{DynamicResource font_symbol}" Margin="0,0,5,0" />
             <Button x:Name="btn_search" Style="{DynamicResource StyleSearchButton}" Width="70" IsDefault="True" FontSize="12" RenderOptions.EdgeMode="Aliased"
-                    FontFamily="Segoe UI Symbol" Content="&#xE1a3;" Background="{DynamicResource skinBrush}">
+                    FontFamily="{DynamicResource font_symbol}" Content="&#xE1a3;" Background="{DynamicResource skinBrush}">
             </Button>
             <!--search options-->
             <ComboBox x:Name="combo_xiami_type" Grid.Column="1" Margin="5,0" />

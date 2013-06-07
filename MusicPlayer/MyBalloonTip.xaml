@@ -3,7 +3,7 @@
         xmlns:tb="http://www.hardcodet.net/taskbar" FontFamily="/xiami;component/Resources/#Soho Gothic Pro Light">
     <UserControl.Resources>
         <Style TargetType="TextBlock" x:Key="glyph">
-            <Setter Property="FontFamily" Value="Segoe UI Symbol" />
+            <Setter Property="FontFamily" Value="{DynamicResource font_symbol}" />
             <Setter Property="FontSize" Value="16" />
         </Style>
         <BooleanToVisibilityConverter x:Key="bool2vis" />
@@ -17,7 +17,7 @@
         <Style x:Key="AppBarButtonStyle" TargetType="ButtonBase">
             <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
-            <Setter Property="FontFamily" Value="Segoe UI Symbol" />
+            <Setter Property="FontFamily" Value="{DynamicResource font_symbol}" />
             <Setter Property="FontWeight" Value="Normal" />
             <Setter Property="FontSize" Value="15" />
             <Setter Property="AutomationProperties.ItemType" Value="App Bar Button" />

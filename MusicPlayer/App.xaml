@@ -20,6 +20,7 @@
                     <SolidColorBrush x:Key="lightBrush" />
                     <SolidColorBrush x:Key="selectBrush" />
                     <SolidColorBrush x:Key='skinBrush' />
+                    <FontFamily x:Key="font_symbol">/xiami;component/Resources/#Segoe UI Symbol</FontFamily>
                     <QuinticEase x:Key="easeFunc" EasingMode="EaseOut" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>

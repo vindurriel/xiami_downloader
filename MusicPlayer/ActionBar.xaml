@@ -5,7 +5,7 @@
         <Style x:Key="itemStyle" TargetType="{x:Type ListBoxItem}">
             <Setter Property="Margin" Value="0" />
             <Setter Property="Padding" Value="20,10" />
-            <Setter Property="FontFamily" Value="Segoe UI Symbol" />
+            <Setter Property="FontFamily" Value="{DynamicResource font_symbol}" />
             <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
             <Setter Property="ToolTipService.ToolTip">
                 <Setter.Value>

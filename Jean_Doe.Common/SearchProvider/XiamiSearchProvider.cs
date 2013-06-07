@@ -43,7 +43,7 @@ public class XiamiSearchProvider : ISearchProvider
         Task.Run(() =>
         {
             string url = XiamiUrl.GoCollect(id);
-            var tmp = Path.Combine(Global.BasePath, string.Format("collect.{0}.html", id));
+            var tmp = Path.Combine(Global.BasePath,"cache", string.Format("collect.{0}.html", id));
             if (!File.Exists(tmp))
             {
                 new System.Net.WebClient().DownloadFile(url, tmp);

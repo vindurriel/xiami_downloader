@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
+﻿using Jean_Doe.Common;
+using System.IO;
 using System.Windows;
 
 namespace MusicPlayer
@@ -14,7 +11,9 @@ namespace MusicPlayer
     {
         public App()
         {
-            
+            var folder = Path.Combine(Global.BasePath, "cache");
+            if (!Directory.Exists(folder))
+                Directory.CreateDirectory(folder);
         }
     }
 }

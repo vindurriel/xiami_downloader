@@ -38,7 +38,7 @@
                         BorderThickness="3">
                     <Grid>
                         <TextBlock FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Text="{Binding TypeImage}" FontFamily="Segoe UI Symbol" />
+                                Text="{Binding TypeImage}" FontFamily="{DynamicResource font_symbol}" />
                         <Image
                                 Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
                                 Stretch="Uniform" />
@@ -87,16 +87,30 @@
                         <TextBlock Text="  " Style="{DynamicResource label_base}" />
                         <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{DynamicResource label_base}" />
                     </DockPanel>
-                    <ProgressBar Maximum="{Binding MaxRec,ElementName=me,Mode=OneWay}" Background="Transparent"
-                            Foreground="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
-                            HorizontalAlignment="Left" BorderThickness="0"
-                            Value="{Binding Recommends,Mode=OneWay}" Width="200" Height="3">
-                        <ProgressBar.ToolTip>
-                            <TextBlock Text="{Binding  Recommends,StringFormat={}{0} 人推荐}" />
-                        </ProgressBar.ToolTip>
-                    </ProgressBar>
-                        <TextBlock Text="{Binding Description}" TextTrimming="WordEllipsis" Height="20" Opacity="0.5"
-                            MaxWidth="400"   Style="{DynamicResource label_base}">
+                    <Grid x:Name="part_recommends">
+                        <Rectangle HorizontalAlignment="Left"
+                                Fill="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
+                                Opacity=".1" Width="200" Height="3" />
+                        <Rectangle HorizontalAlignment="Left"
+                                Fill="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
+                                Width="200" Height="3">
+                            <Rectangle.ToolTip>
+                                <TextBlock Text="{Binding  Recommends,StringFormat={}{0} 人推荐}" />
+                            </Rectangle.ToolTip>
+                            <Rectangle.RenderTransform>
+                                <ScaleTransform>
+                                    <ScaleTransform.ScaleX>
+                                        <MultiBinding Converter="{StaticResource divconv}">
+                                            <Binding Path="Recommends" />
+                                            <Binding Path="MaxRec" ElementName="me" />
+                                        </MultiBinding>
+                                    </ScaleTransform.ScaleX>
+                                </ScaleTransform>
+                            </Rectangle.RenderTransform>
+                        </Rectangle>
+                    </Grid>
+                    <TextBlock Text="{Binding Description}" TextTrimming="WordEllipsis" Height="20" Opacity="0.5"
+                            MaxWidth="400" Style="{DynamicResource label_base}">
                         <TextBlock.ToolTip>
                             <TextBlock Text="{Binding Description}" TextWrapping="Wrap" MaxWidth="400" />
                         </TextBlock.ToolTip>
@@ -129,7 +143,7 @@
                     <DockPanel Grid.Row="1" x:Name="detail" Height="5">
                         <Border DockPanel.Dock="Top" Style="{StaticResource triggerStyle}" VerticalAlignment="Top">
                             <Line x:Name="detail_indicator" RenderOptions.EdgeMode="Aliased" X2="25"
-                                    Stroke="{DynamicResource lightBrush}" VerticalAlignment="Top" StrokeThickness="5"
+                                    Stroke="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}" VerticalAlignment="Top" StrokeThickness="5"
                                     StrokeDashArray="1,1" />
                         </Border>
                         <ScrollViewer Style="{StaticResource scrollstyle}">
@@ -188,7 +202,7 @@
                         <Border DockPanel.Dock="Top" Visibility="Visible" Style="{StaticResource triggerStyle}"
                                 VerticalAlignment="Top">
                             <Line x:Name="detail_indicator" RenderOptions.EdgeMode="Aliased" X2="25"
-                                    Stroke="{DynamicResource lightBrush}" VerticalAlignment="Top" StrokeThickness="5"
+                                    Stroke="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}" VerticalAlignment="Top" StrokeThickness="5"
                                     StrokeDashArray="1,1" />
                         </Border>
                         <ScrollViewer Style="{StaticResource scrollstyle}">
@@ -225,7 +239,7 @@
                     <DockPanel Grid.Row="1" x:Name="detail" Height="5">
                         <Border DockPanel.Dock="Top" Style="{StaticResource triggerStyle}" VerticalAlignment="Top">
                             <Line x:Name="detail_indicator" RenderOptions.EdgeMode="Aliased" X2="25"
-                                    Stroke="{DynamicResource lightBrush}" VerticalAlignment="Top" StrokeThickness="5"
+                                    Stroke="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}" VerticalAlignment="Top" StrokeThickness="5"
                                     StrokeDashArray="1,1" />
                         </Border>
                         <ScrollViewer Style="{StaticResource scrollstyle}">
@@ -344,10 +358,10 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <DockPanel LastChildFill="False" Margin="5,0,0,0">
-            <TextBlock FontSize="20" FontFamily="Segoe UI Symbol" Text="&#xE154;" />
+            <TextBlock FontSize="20" FontFamily="{DynamicResource font_symbol}" Text="&#xE154;" />
             <my:ToggleSwitch x:Name="btn_more" BgColor="{DynamicResource lightBrush}" IsOnChanged="btn_more_Click"
                     SkinColor="Transparent" Height="20" Margin="2,0" VerticalAlignment="Center" />
-            <TextBlock FontSize="20" FontFamily="Segoe UI Symbol" Text="&#xE14C;" />
+            <TextBlock FontSize="20" FontFamily="{DynamicResource font_symbol}" Text="&#xE14C;" />
             <DockPanel Margin="6,0,0,0" LastChildFill="False"
                     Visibility="{Binding IsOn,ElementName=btn_more,Converter={StaticResource bool2vis}}">
                 <ComboBox x:Name="combo_sort">
