@@ -182,7 +182,7 @@ namespace MusicPlayer
         }
         void SetAvatar(string s)
         {
-            if (!System.IO.File.Exists(s))
+            if (!System.IO.File.Exists(s) || !XiamiClient.GetDefault().IsLoggedIn)
             {
                 Avatar = null;
                 return;

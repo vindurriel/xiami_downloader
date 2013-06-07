@@ -19,7 +19,10 @@ namespace Jean_Doe.Common
         public static XiamiClient GetDefault()
         {
             if (_inst == null)
+            {
                 _inst = new XiamiClient();
+                _inst.isLoggedIn = File.Exists(Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "access_token"));
+            }
             return _inst;
         }
         public async Task Fav_Song(string songId)
@@ -93,8 +96,14 @@ namespace Jean_Doe.Common
                 var bytes = await new HttpClient().GetByteArrayAsync(avatarUrl);
                 var imgFile = Path.Combine(Global.BasePath, "cache", Global.AppSettings["xiami_uid"] + ".user");
                 File.WriteAllBytes(imgFile, bytes);
+                isLoggedIn = true;
                 Global.AppSettings["xiami_avatar"] = imgFile;
             }
+        }
+        bool isLoggedIn;
+        public bool IsLoggedIn
+        {
+            get { return isLoggedIn;}
         }
     }
 }

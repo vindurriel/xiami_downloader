@@ -1,6 +1,7 @@
 ﻿using Jean_Doe.Common;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Windows;
 
 namespace MusicPlayer
@@ -27,13 +28,13 @@ namespace MusicPlayer
         public void SetNickName(string s)
         {
             if (string.IsNullOrEmpty(s))
-                username.Text = "未登录，请先到设置页面登录。";
+                username.Text = "未登录，请先到设置页面登录虾米账户。";
             else
                 username.Text = "欢迎，" + s;
         }
         public void SetIsLoggedIn(string s)
         {
-            IsLoggedIn = !string.IsNullOrEmpty(s);
+            IsLoggedIn = !string.IsNullOrEmpty(s) && XiamiClient.GetDefault().IsLoggedIn;
         }
         private async void btn_user_song_Click(object sender, RoutedEventArgs e)
         {
@@ -67,9 +68,9 @@ namespace MusicPlayer
         public IEnumerable<CharmAction> ProvideActions()
         {
             return new List<CharmAction>{
-            new CharmAction("今日推荐歌单","\xE19F今日",btn_user_daily_Click,(s)=>IsLoggedIn),
-            new CharmAction("猜你喜欢","\xE19F猜",btn_user_guess_Click,(s)=>IsLoggedIn),
-            new CharmAction("推荐精选集","\xE19F精选集",btn_collect_recommend_Click,(s)=>IsLoggedIn),
+            new CharmAction("今日推荐歌单","\xE19F今日",btn_user_daily_Click,(s)=>true),
+            new CharmAction("猜你喜欢","\xE19F猜",btn_user_guess_Click,(s)=>true),
+            new CharmAction("推荐精选集","\xE19F精选集",btn_collect_recommend_Click,(s)=>true),
             new CharmAction("收藏的歌曲","\xE0A5歌曲",btn_user_song_Click,(s)=>IsLoggedIn),
             new CharmAction("收藏的艺术家","\xE0A5艺术家",btn_user_artist_Click,(s)=>IsLoggedIn),
             new CharmAction("收藏的专辑","\xE0A5专辑",btn_user_album_Click,(s)=>IsLoggedIn),

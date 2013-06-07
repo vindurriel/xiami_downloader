@@ -564,11 +564,13 @@ namespace Jean_Doe.MusicControl
 
         protected static bool canFav(object o)
         {
+            if (!XiamiClient.GetDefault().IsLoggedIn) return false;
             var s = (o as SongListControl).SelectedSongs;
             return s.Count() > 0 && s.Any(x => !x.InFav);
         }
         protected static bool canUnfav(object o)
         {
+            if (!XiamiClient.GetDefault().IsLoggedIn) return false;
             var s = (o as SongListControl).SelectedSongs;
             return s.Count() > 0 && s.Any(x => x.InFav);
         }
