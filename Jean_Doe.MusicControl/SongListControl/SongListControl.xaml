@@ -44,8 +44,10 @@
                                 Stretch="Uniform" />
                         <Grid Margin="3,0,0,0" Visibility="{Binding InFav,Converter={StaticResource bool2vis}}"
                                 x:Name="corner_select" HorizontalAlignment="Left" VerticalAlignment="Top">
-                            <Path Stroke="{DynamicResource lightBrush}" StrokeThickness="3"
-                                    Data="M 0,0 L 10,0 10,20 5,15 0,20 Z" Fill="{DynamicResource skinBrush}" />
+                            <Path
+                                    Stroke="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
+                                    StrokeThickness="3" Data="M 0,0 L 10,0 10,20 5,15 0,20 Z"
+                                    Fill="{DynamicResource skinBrush}" />
                         </Grid>
                     </Grid>
                 </Border>
@@ -88,9 +90,7 @@
                         <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{DynamicResource label_base}" />
                     </DockPanel>
                     <Grid x:Name="part_recommends">
-                        <Rectangle HorizontalAlignment="Left"
-                                Fill="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
-                                Opacity=".1" Width="200" Height="3" />
+                        <Rectangle HorizontalAlignment="Left" Fill="#01000000" Width="200" Height="3" />
                         <Rectangle HorizontalAlignment="Left"
                                 Fill="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
                                 Width="200" Height="3">
@@ -143,8 +143,8 @@
                     <DockPanel Grid.Row="1" x:Name="detail" Height="5">
                         <Border DockPanel.Dock="Top" Style="{StaticResource triggerStyle}" VerticalAlignment="Top">
                             <Line x:Name="detail_indicator" RenderOptions.EdgeMode="Aliased" X2="25"
-                                    Stroke="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}" VerticalAlignment="Top" StrokeThickness="5"
-                                    StrokeDashArray="1,1" />
+                                    Stroke="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
+                                    VerticalAlignment="Top" StrokeThickness="5" StrokeDashArray="1,1" />
                         </Border>
                         <ScrollViewer Style="{StaticResource scrollstyle}">
                             <StackPanel>
@@ -202,8 +202,8 @@
                         <Border DockPanel.Dock="Top" Visibility="Visible" Style="{StaticResource triggerStyle}"
                                 VerticalAlignment="Top">
                             <Line x:Name="detail_indicator" RenderOptions.EdgeMode="Aliased" X2="25"
-                                    Stroke="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}" VerticalAlignment="Top" StrokeThickness="5"
-                                    StrokeDashArray="1,1" />
+                                    Stroke="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
+                                    VerticalAlignment="Top" StrokeThickness="5" StrokeDashArray="1,1" />
                         </Border>
                         <ScrollViewer Style="{StaticResource scrollstyle}">
                             <StackPanel>
@@ -239,8 +239,8 @@
                     <DockPanel Grid.Row="1" x:Name="detail" Height="5">
                         <Border DockPanel.Dock="Top" Style="{StaticResource triggerStyle}" VerticalAlignment="Top">
                             <Line x:Name="detail_indicator" RenderOptions.EdgeMode="Aliased" X2="25"
-                                    Stroke="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}" VerticalAlignment="Top" StrokeThickness="5"
-                                    StrokeDashArray="1,1" />
+                                    Stroke="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
+                                    VerticalAlignment="Top" StrokeThickness="5" StrokeDashArray="1,1" />
                         </Border>
                         <ScrollViewer Style="{StaticResource scrollstyle}">
                             <StackPanel>
