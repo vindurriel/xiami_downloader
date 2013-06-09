@@ -12,7 +12,8 @@
             <Setter Property="FontSize" Value="15" />
             <Setter Property="LineHeight" Value="22" />
             <Setter Property="LineStackingStrategy" Value="BlockLineHeight" />
-            <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+            <Setter Property="TextWrapping" Value="NoWrap" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
         </Style>
         <my:IntToVisibilityConverter x:Key="int2vis" />
         <my:BoolToOpacityConverter x:Key='bool2opa' />
