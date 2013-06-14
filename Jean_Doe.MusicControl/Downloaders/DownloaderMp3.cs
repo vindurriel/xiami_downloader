@@ -16,9 +16,14 @@ namespace Jean_Doe.MusicControl
     {
         public override async Task Download()
         {
-            if (!(Info.Entity is SongViewModel))
+            var song=Info.Entity as SongViewModel;
+            if (song==null)
                 return;
-            Info.Url = (Info.Entity as SongViewModel).UrlMp3;
+            var s =await XiamiClient.GetDefault().Call_xiami_api("Songs.getTrackDetail",
+                "id=" + song.Id,
+                "device_id=android-307320b12d9283df",
+                "quality=h");
+            Info.Url = s.track_url;
             await base.Download();
         }
 

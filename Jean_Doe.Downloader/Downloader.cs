@@ -88,13 +88,16 @@ namespace Jean_Doe.Downloader
 					start = x.Length;
 				}
 				//already downloaded
-				if(start == contentLength)
-				{
-					curBytes = totalBytes = start;
-					OnDownloaded();
-					return;
-				}
-
+                if (start == contentLength)
+                {
+                    curBytes = totalBytes = start;
+                    OnDownloaded();
+                    return;
+                }
+                else 
+                {
+                    start = 0;
+                }
 				var request = WebRequest.CreateHttp(Info.Url);
 				request.Credentials = CredentialCache.DefaultCredentials;
 				if(start > 0)

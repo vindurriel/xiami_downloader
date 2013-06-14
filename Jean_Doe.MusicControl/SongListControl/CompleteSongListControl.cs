@@ -338,6 +338,7 @@ namespace Jean_Doe.MusicControl
                     try
                     {
                         File.Delete(item.Song.FilePath);
+                        File.Delete(Path.Combine(Global.BasePath,"cache",item.Id+".mp3"));
                     }
                     catch (Exception ex)
                     {

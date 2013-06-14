@@ -59,12 +59,12 @@ def api_get(method,params={}):
 	return json['data']
 def print_json(what):
 	import json
-	print json.dumps(what)
+	print json.dumps(what,encoding="gbk")
 def die(why):
-	print_json({"error":why})
 	with file("xiami_api.log",'a') as f:
-	 f.write(why)
+	 f.write(why.encode("gbk"))
 	 f.write("\n")
+	print_json({"error":why})
 	sys.exit(0)
 if __name__ == '__main__':
 	if len(sys.argv)<2:
