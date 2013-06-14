@@ -31,7 +31,7 @@ Members.register
 Members.showUser
 Members.ThirdSsoOauth
 Members.updatePlayTime
-Members.upgrade
+Members.upgrade  level=vip_promote device_id=android
 Mobile.figureImage
 Mobile.getDevice
 Mobile.getBackImage
