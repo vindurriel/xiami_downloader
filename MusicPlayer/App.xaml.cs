@@ -14,6 +14,13 @@ namespace MusicPlayer
             var folder = Path.Combine(Global.BasePath, "cache");
             if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
+            if (File.Exists("needs_update"))
+            {
+                RunProgramHelper.RunProgram("updater.exe", "update");
+                System.Environment.Exit(0);
+            }
+
         }
+       
     }
 }

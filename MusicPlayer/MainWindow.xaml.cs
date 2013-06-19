@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Linq;
+using System.IO;
 namespace MusicPlayer
 {
     /// <summary>
@@ -60,6 +61,7 @@ namespace MusicPlayer
             slideIn.Begin(content, true);
             lastPage = content;
         }
+        static FileSystemWatcher watcher;
         public MainWindow()
         {
             Global.LoadSettings();
@@ -80,8 +82,14 @@ namespace MusicPlayer
             SizeChanged += MainWindow_SizeChanged;
             Mp3Player.SongChanged += OnMp3PlayerSongChanged;
             Global.ListenToEvent("TitleMarquee", SetTitleMarquee);
+            watcher = new FileSystemWatcher(System.AppDomain.CurrentDomain.BaseDirectory, "needs_update") { EnableRaisingEvents = true }; 
+            watcher.Created += OnWatcherCreated;
+            RunProgramHelper.RunProgram("updater.exe", "check");
         }
-
+        void OnWatcherCreated(object sender, FileSystemEventArgs e)
+        {
+            UIHelper.RunOnUI(() => btn_restart.Visibility = Visibility.Visible);
+        }
         void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
         }
@@ -103,6 +111,7 @@ namespace MusicPlayer
         long counter;
         void OnCompositionTargetRendering(object sender, EventArgs e)
         {
+            if (Title.Length < 12) return;
             if (counter % 10 == 9)
             {
                 Title = Title.Substring(1) + Title.Substring(0, 1);
@@ -310,6 +319,16 @@ namespace MusicPlayer
         private void btn_close_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+        private void btn_restart_Click(object sender, RoutedEventArgs e) 
+        {
+            this.Closed += OnClosed;
+            Close();
+        }
+
+        void OnClosed(object sender, EventArgs e)
+        {
+            RunProgramHelper.RunProgram("xiami.exe","");
         }
         private void btn_min_Click(object sender, RoutedEventArgs e)
         {
