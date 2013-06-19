@@ -79,6 +79,7 @@ namespace MusicPlayer
             Artwork.DataBus.DataBus.Set("list_download", list_download);
             SizeChanged += MainWindow_SizeChanged;
             Mp3Player.SongChanged += OnMp3PlayerSongChanged;
+            Global.ListenToEvent("TitleMarquee", SetTitleMarquee);
         }
 
         void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -87,12 +88,26 @@ namespace MusicPlayer
 
         void OnMp3PlayerSongChanged(object sender, SongChangedEventArgs e)
         {
-            if (trayIcon == null) return;
-            if (Global.AppSettings["ShowNowPlaying"] == "0") return;
             var now = list_complete.NowPlaying;
-            balloonTip = new MyBalloonTip();
-            balloonTip.ViewModel = now;
-            trayIcon.ShowCustomBalloon(balloonTip, PopupAnimation.Slide, 3000);
+            Title = string.Format("{0} - {1}      ", now.Name, now.ArtistName);
+            counter = 0;
+            if (trayIcon != null)
+            {
+
+                if (Global.AppSettings["ShowNowPlaying"] == "0") return;
+                balloonTip = new MyBalloonTip();
+                balloonTip.ViewModel = now;
+                trayIcon.ShowCustomBalloon(balloonTip, PopupAnimation.Slide, 3000);
+            }
+        }
+        long counter;
+        void OnCompositionTargetRendering(object sender, EventArgs e)
+        {
+            if (counter % 10 == 9)
+            {
+                Title = Title.Substring(1) + Title.Substring(0, 1);
+            }
+            counter += 1;
         }
         MyBalloonTip balloonTip;
         void OnTrayIconClick(object sender, EventArgs e)
@@ -167,6 +182,20 @@ namespace MusicPlayer
             else
             {
                 this.DisableMagnet();
+            }
+        }
+        void SetTitleMarquee(string s)
+        {
+            if (s == "1")
+            {
+                CompositionTarget.Rendering -= OnCompositionTargetRendering;
+                CompositionTarget.Rendering += OnCompositionTargetRendering;
+            }
+            else
+            {
+                if (list_complete.NowPlaying != null)
+                    Title = string.Format("{0} - {1}      ", list_complete.NowPlaying.Name, list_complete.NowPlaying.ArtistName);
+                CompositionTarget.Rendering -= OnCompositionTargetRendering;
             }
         }
         void SetTheme(string s)

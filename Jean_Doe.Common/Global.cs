@@ -28,6 +28,7 @@ namespace Jean_Doe.Common
             {"xiami_nick_name",""},
             {"ShowNowPlaying","1"},
             {"ShowLyric","1"},
+            {"TitleMarquee","1"},
             {"Theme","#333 #eee #000"},
         };
         public static Dictionary<string, Dictionary<string, string>> ValueOptions = new Dictionary<string, Dictionary<string, string>>
