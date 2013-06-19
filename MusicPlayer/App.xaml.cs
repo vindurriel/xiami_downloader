@@ -1,5 +1,6 @@
 ﻿using Jean_Doe.Common;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace MusicPlayer
@@ -16,11 +17,16 @@ namespace MusicPlayer
                 Directory.CreateDirectory(folder);
             if (File.Exists("needs_update"))
             {
-                RunProgramHelper.RunProgram("updater.exe", "update");
+                RunProgramHelper.RunProgram("XiamiUpdater.exe", "");
                 System.Environment.Exit(0);
             }
-
+            Task.Run(() =>
+            {
+                if (!Updater.IsLatest())
+                {
+                    Updater.Download();
+                }
+            });
         }
-       
     }
 }
