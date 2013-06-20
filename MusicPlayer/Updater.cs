@@ -45,7 +45,7 @@ namespace MusicPlayer
             Directory.CreateDirectory(dir_latest);
             var z = ZipFile.OpenRead(cwd("latest.zip"));
             var re = new Regex(@"Jean_Doe.Output/.+");
-            foreach (var f in z.Entries.Where(x => re.IsMatch(x.FullName)))
+            foreach (var f in z.Entries.Where(x => re.IsMatch(x.FullName) && x.Name!="XiamiUpdater.exe"))
             {
                 f.ExtractToFile(cwd("latest", f.Name), true);
             }
