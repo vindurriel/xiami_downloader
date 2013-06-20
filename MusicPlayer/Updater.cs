@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using Jean_Doe.Common;
 using System.IO;
 using Jean_Doe.Downloader;
-using Ionic.Zip;
+using System.IO.Compression;
+using System.Text.RegularExpressions;
 namespace MusicPlayer
 {
     class Updater
@@ -24,8 +25,8 @@ namespace MusicPlayer
             string latest = res.ToDynamicObject()[0]["sha"];
             File.WriteAllText(cwd("latest.txt"), latest);
             var current = "";
-            if(File.Exists(cwd("current.txt")))
-                current=File.ReadAllText(cwd("current.txt"));
+            if (File.Exists(cwd("current.txt")))
+                current = File.ReadAllText(cwd("current.txt"));
             return current == latest;
         }
         public static void Download()
@@ -40,12 +41,13 @@ namespace MusicPlayer
             client.Headers.Add("User-Agent:Mozilla/5.0 (Windows NT 6.2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31");
             client.DownloadFile("https://github.com/vindurriel/xiami_downloader/archive/master.zip", cwd("latest.zip"));
             if (Directory.Exists(dir_latest))
-                Directory.Delete(dir_latest,true);
-            var z = ZipFile.Read(cwd("latest.zip"));
-            foreach (var f in z.SelectEntries("*.*","xiami_downloader-master/Jean_Doe.Output"))
+                Directory.Delete(dir_latest, true);
+            Directory.CreateDirectory(dir_latest);
+            var z = ZipFile.OpenRead(cwd("latest.zip"));
+            var re = new Regex(@"Jean_Doe.Output/.+");
+            foreach (var f in z.Entries.Where(x => re.IsMatch(x.FullName)))
             {
-                f.FileName=Path.Combine("latest",Path.GetFileName(f.FileName));
-                f.Extract();
+                f.ExtractToFile(cwd("latest", f.Name), true);
             }
             File.CreateText(cwd("needs_update"));
         }
