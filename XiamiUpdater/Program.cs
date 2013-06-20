@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 
 namespace XiamiUpdater
 {
@@ -13,10 +14,17 @@ namespace XiamiUpdater
         }
         static void Main(string[] args)
         {
-            Console.ReadKey();
             if (!File.Exists(cwd("needs_update"))) return;
             var dir_src = cwd("latest");
             if (!Directory.Exists(dir_src)) return;
+            while (true)
+            {
+                var p = Process.GetProcessesByName("xiami");
+                if (p.Length == 0)
+                    break;
+                p[0].Kill();
+                Thread.Sleep(500);
+            }
             foreach (var f in Directory.EnumerateFiles(dir_src))
             {
                 try
@@ -31,7 +39,7 @@ namespace XiamiUpdater
                 }
             }
             if (File.Exists(cwd("latest.txt")))
-                File.Copy(cwd("latest.txt"), cwd("current.txt"));
+                File.Copy(cwd("latest.txt"), cwd("current.txt"), true);
             File.Delete(cwd("needs_update"));
             var info = new ProcessStartInfo(cwd("xiami.exe"));
             new Process { StartInfo = info }.Start();
