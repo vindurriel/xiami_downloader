@@ -15,7 +15,7 @@ namespace XiamiUpdater
         {
             Console.ReadKey();
             if (!File.Exists(cwd("needs_update"))) return;
-            var dir_src = cwd("latest", "xiami_downloader-master", "Jean_Doe.Output");
+            var dir_src = cwd("latest");
             if (!Directory.Exists(dir_src)) return;
             foreach (var f in Directory.EnumerateFiles(dir_src))
             {
