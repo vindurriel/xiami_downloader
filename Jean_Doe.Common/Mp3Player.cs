@@ -1,9 +1,13 @@
-﻿using NAudio.Wave;
+﻿using Artwork.DataBus;
+using NAudio.Wave;
 using System;
 using System.ComponentModel;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Threading;
+using ZMQ;
 namespace Jean_Doe.Common
 {
     public enum EnumPlayNextMode
@@ -17,8 +21,6 @@ namespace Jean_Doe.Common
     }
     public class Mp3Player
     {
-        static IWavePlayer device = new WaveOut { DesiredLatency = 400, NumberOfBuffers = 4 };
-        static WaveStream stream;
         public static event EventHandler<TimeChangedEventArgs> TimeChanged;
         public static event EventHandler<SongChangedEventArgs> SongChanged;
         private static double refreshInterval = 1000.0;
@@ -26,52 +28,84 @@ namespace Jean_Doe.Common
         {
             get { return refreshInterval; }
         }
-        static Timer timer = null;
-        public static bool IsPlaying { get { return device != null && device.PlaybackState == PlaybackState.Playing; } }
-        public static TimeSpan CurrentTime
+        static System.Timers.Timer timer = null;
+        static bool isPlaying;
+        public static bool IsPlaying
         {
-            get { return stream != null ? stream.CurrentTime : TimeSpan.Zero; }
-            set
+            get
             {
-                if (stream != null)
-                    stream.CurrentTime = value;
+                return isPlaying;
             }
         }
+        public static double CurrentTime
+        {
+            get
+            {
+                double res = 0;
+                double.TryParse(Send("get_cur_time"), out res);
+                return res;
+            }
+            set
+            {
+                Send("set_cur_time " + value.ToString());
+            }
+        }
+        static double totalTime = 0.0;
         static Mp3Player()
         {
-            timer = new Timer(RefreshInterval);
+            timer = new System.Timers.Timer(RefreshInterval);
             timer.Elapsed += timer_Tick;
             Task.Run(() => timer.Start());
+            ctx = new Context();
+            sender = ctx.Socket(SocketType.REQ);
+            sender.Connect("tcp://127.0.0.1:" + DataBus.Get("port1").ToString());
+            receiver = ctx.Socket(SocketType.SUB);
+            receiver.Connect("tcp://127.0.0.1:" + DataBus.Get("port2").ToString());
+            receiver.Subscribe("", Encoding.UTF8);
+            receive();
         }
+        static void receive()
+        {
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    var cmd = receiver.Recv(Encoding.UTF8);
+                    if (cmd.StartsWith("song_changed ") && SongChanged != null)
+                    {
+                        totalTime = double.Parse(cmd.Substring("song_changed ".Length));
+                        UIHelper.RunOnUI(() =>
+                        {
+                            SongChanged(null, new SongChangedEventArgs { Total = totalTime, Id = _id });
+                        });
+                    }
+                }
+            });
+        }
+        static bool isRequestingNext = false;
         public static void Next()
         {
+            if (isRequestingNext) return;
+            isRequestingNext = true;
             var msg = new MsgRequestNextSong();
             Artwork.MessageBus.MessageBus.Instance.Publish(msg);
             if (!string.IsNullOrEmpty(msg.Next))
             {
-                _id = msg.Id;
-                play(msg.Next);
+                play(msg.Next, msg.Id);
             }
+            isRequestingNext = false;
         }
         public static void PauseResume()
         {
-            if (stream == null) return;
-            if (stream.Length < stream.Position)
+            if (isPlaying)
             {
-                CurrentTime = TimeSpan.Zero;
-            }
-            else if (IsPlaying)
-            {
-                device.Pause();
+                if (Send("pause") == "ok")
+                    isPlaying = false;
             }
             else
             {
-                device.Play();
-                if (SongChanged != null && stream != null)
-                    UIHelper.RunOnUI(() =>
-                    {
-                        SongChanged(null, new SongChangedEventArgs { Total = stream.TotalTime, Id = _id });
-                    });
+                if (Send("play") == "ok")
+                    isPlaying = true;
             }
         }
         public static void Play(string filepath, string id)
@@ -84,51 +118,49 @@ namespace Jean_Doe.Common
             }
             else
             {
-                _id = id;
-                play(filepath);
+                play(filepath, id);
             }
         }
         static bool inChange = false;
         static void timer_Tick(object sender, EventArgs e)
         {
-            if (stream == null)
-                return;
-            if (stream.Length < stream.Position)
-            {
-                if (inChange) return;
-                inChange = true;
+            var cur = CurrentTime;
+            if (totalTime > 0 && cur >= totalTime)
                 Next();
-                inChange = false;
-            }
             UIHelper.RunOnUI(() =>
             {
                 if (TimeChanged != null)
-                    TimeChanged(null, new TimeChangedEventArgs { Current = stream.CurrentTime });
+                    TimeChanged(null, new TimeChangedEventArgs { Current = CurrentTime });
             });
 
         }
-
-        static void play(string filepath)
+        static Context ctx;
+        static Socket sender;
+        static Socket receiver;
+        static String Send(string msg)
         {
-            if (IsPlaying)
-            {
-                device.Pause();
-            }
             try
             {
-                stream = CreateInputStream(filepath);
-                device.Init(stream);
-                if (SongChanged != null && stream != null)
-                    UIHelper.RunOnUI(() =>
-               {
-                   SongChanged(null, new SongChangedEventArgs { Total = stream.TotalTime, Id = _id });
-               });
+                sender.Send(msg, Encoding.UTF8);
+                return sender.Recv(Encoding.UTF8, 1000);
             }
-            catch (Exception)
+            catch (System.Exception)
             {
-                return;
+                return "fail";
             }
-            device.Play();
+        }
+        static void play(string filepath, string id)
+        {
+            if (isPlaying)
+            {
+                Send("pause");
+            }
+            isPlaying = false;
+            var res = Send("init " + filepath);
+            if (res == "fail") return;
+            _id = id;
+            res = Send("play");
+            isPlaying = res == "ok";
         }
 
         static string _id;
@@ -141,11 +173,11 @@ namespace Jean_Doe.Common
     }
     public class TimeChangedEventArgs : EventArgs
     {
-        public TimeSpan Current { get; set; }
+        public double Current { get; set; }
     }
     public class SongChangedEventArgs : EventArgs
     {
-        public TimeSpan Total { get; set; }
+        public double Total { get; set; }
         public string Id { get; set; }
     }
     public class MsgRequestNextSong

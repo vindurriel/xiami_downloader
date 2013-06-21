@@ -8,14 +8,14 @@ namespace Jean_Doe.Common
 {
     public static class RunProgramHelper
     {
-        public static void RunProgram(string programName, string args)
+        public static void RunProgram(string programName, params string[] args)
         {
             try
             {
                 var pi = new ProcessStartInfo
                 {
                     FileName = programName,
-                    Arguments = args,
+                    Arguments = string.Join(" ",args),
                     UseShellExecute = true,
                 };
                 new Process { StartInfo = pi }.Start();

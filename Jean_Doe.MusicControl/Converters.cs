@@ -10,7 +10,7 @@ namespace Jean_Doe.MusicControl
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            return TimeSpan.FromSeconds((double)value).ToString(@"mm\:ss");
+            return TimeSpan.FromMilliseconds((double)value).ToString(@"mm\:ss");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

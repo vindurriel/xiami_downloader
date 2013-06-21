@@ -49,12 +49,12 @@ namespace MusicPlayer
 
         void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            Mp3Player.CurrentTime = TimeSpan.FromSeconds(e.NewValue);
+            Mp3Player.CurrentTime = e.NewValue;
         }
 
         void Mp3Player_TimeChanged(object sender, TimeChangedEventArgs e)
         {
-            da.To = e.Current.TotalSeconds;
+            da.To = e.Current;
             anim.Begin();
         }
         Storyboard anim;
@@ -62,11 +62,11 @@ namespace MusicPlayer
         void Mp3Player_SongChanged(object sender, SongChangedEventArgs e)
         {
             _slider.Visibility = Visibility.Visible;
-            if (_slider.Maximum != e.Total.TotalSeconds)
+            if (_slider.Maximum != e.Total)
             {
                 da.To = 0;
                 anim.Begin();
-                _slider.Maximum = e.Total.TotalSeconds;
+                _slider.Maximum = e.Total;
             }
         }
     }

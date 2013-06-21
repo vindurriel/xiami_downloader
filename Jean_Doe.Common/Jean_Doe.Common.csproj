@@ -38,6 +38,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Jean_Doe.Reference\Artwork.Bus.dll</HintPath>
     </Reference>
+    <Reference Include="clrzmq, Version=2.2.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Jean_Doe.Reference\clrzmq.dll</HintPath>
+    </Reference>
+    <Reference Include="clrzmq-ext, Version=2.2.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Jean_Doe.Reference\clrzmq-ext.dll</HintPath>
+    </Reference>
     <Reference Include="CsQuery">
       <HintPath>..\Jean_Doe.Reference\CsQuery.dll</HintPath>
     </Reference>
@@ -94,6 +102,12 @@
     <Compile Include="UIHelper.cs" />
     <Compile Include="XiamiClient.cs" />
     <Compile Include="XiamiUrl.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Jean_Doe.Reference\libzmq.dll">
+      <Link>libzmq.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

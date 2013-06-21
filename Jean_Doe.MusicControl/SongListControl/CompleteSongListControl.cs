@@ -144,7 +144,6 @@ namespace Jean_Doe.MusicControl
                 return;
             Items.AddItems(new List<IMusic> { item.Song }, true);
         }
-
         public IEnumerable<CharmAction> ProvideActions()
         {
             return new List<CharmAction> 
@@ -399,7 +398,7 @@ namespace Jean_Doe.MusicControl
                     break;
                 case EnumPlayNextMode.Repeat:
                     item = now;
-                    Mp3Player.CurrentTime = TimeSpan.Zero;
+                    Mp3Player.CurrentTime = 0.0;
                     break;
                 default:
                     break;

@@ -40,7 +40,7 @@ namespace Jean_Doe.MusicControl
             var t = e.Current;
             if (isworking) return;
             isworking = true;
-            var i = binarySearch(timelist, t.TotalMilliseconds, 0, timelist.Length - 1);
+            var i = binarySearch(timelist, t, 0, timelist.Length - 1);
             isworking = false;
             if (i == -1) return;
             UIHelper.RunOnUI(() =>
