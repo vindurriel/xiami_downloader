@@ -25,6 +25,14 @@ namespace XiamiUpdater
                 p[0].Kill();
                 Thread.Sleep(500);
             }
+            while (true)
+            {
+                var p = Process.GetProcessesByName("xiami_updater");
+                if (p.Length == 0)
+                    break;
+                p[0].Kill();
+                Thread.Sleep(500);
+            }
             foreach (var f in Directory.EnumerateFiles(dir_src))
             {
                 try
