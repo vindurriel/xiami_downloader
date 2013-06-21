@@ -50,19 +50,19 @@ namespace Jean_Doe.Mp3Player
         static Process parent;
         static void Main(string[] args)
         {
-            if (args.Length !=3)
+            if (args.Length != 3)
             {
                 log("wrong usage: xiami_player.exe PARENT_PROCESS_ID");
                 Environment.Exit(-1);
             }
             parent = Process.GetProcessById(int.Parse(args[0]));
             suicide();
-            Console.WriteLine(string.Format("{0} {1} {2}",args[0],args[1],args[2]));
+            Console.WriteLine(string.Format("{0} {1} {2}", args[0], args[1], args[2]));
             ctx = new Context();
             receiver = ctx.Socket(SocketType.REP);
-            receiver.Bind("tcp://*:"+args[1]);
+            receiver.Bind("tcp://*:" + args[1]);
             sender = ctx.Socket(SocketType.PUB);
-            sender.Bind("tcp://*:"+args[2]);
+            sender.Bind("tcp://*:" + args[2]);
             while (true)
             {
                 string cmd = receiver.Recv(Encoding.UTF8);
@@ -87,6 +87,8 @@ namespace Jean_Doe.Mp3Player
                         else if (cmd.StartsWith("init "))
                         {
                             var filename = cmd.Substring(4);
+                            if (stream != null)
+                                stream.Dispose();
                             stream = createInputStream(filename);
                             if (stream == null)
                                 res = "fail";
