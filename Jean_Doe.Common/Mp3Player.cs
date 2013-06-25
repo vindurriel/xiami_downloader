@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Threading;
-using ZMQ;
+using ZeroMQ;
 namespace Jean_Doe.Common
 {
     public enum EnumPlayNextMode
@@ -56,12 +56,12 @@ namespace Jean_Doe.Common
             timer = new System.Timers.Timer(RefreshInterval);
             timer.Elapsed += timer_Tick;
             Task.Run(() => timer.Start());
-            ctx = new Context();
-            sender = ctx.Socket(SocketType.REQ);
+            ctx = ZmqContext.Create();
+            sender =ctx.CreateSocket (SocketType.REQ);
             sender.Connect("tcp://127.0.0.1:" + DataBus.Get("port1").ToString());
-            receiver = ctx.Socket(SocketType.SUB);
+            receiver = ctx.CreateSocket(SocketType.SUB);
             receiver.Connect("tcp://127.0.0.1:" + DataBus.Get("port2").ToString());
-            receiver.Subscribe("", Encoding.UTF8);
+            receiver.SubscribeAll();
             receive();
         }
         static void receive()
@@ -70,7 +70,7 @@ namespace Jean_Doe.Common
             {
                 while (true)
                 {
-                    var cmd = receiver.Recv(Encoding.UTF8);
+                    var cmd = receiver.Receive(Encoding.UTF8);
                     if (cmd.StartsWith("song_changed ") && SongChanged != null)
                     {
                         totalTime = double.Parse(cmd.Substring("song_changed ".Length));
@@ -134,15 +134,15 @@ namespace Jean_Doe.Common
             });
 
         }
-        static Context ctx;
-        static Socket sender;
-        static Socket receiver;
+        static ZmqContext ctx;
+        static ZmqSocket sender;
+        static ZmqSocket receiver;
         static String Send(string msg)
         {
             try
             {
                 sender.Send(msg, Encoding.UTF8);
-                return sender.Recv(Encoding.UTF8, 1000);
+                return sender.Receive(Encoding.UTF8, TimeSpan.FromMilliseconds(1000));
             }
             catch (System.Exception)
             {

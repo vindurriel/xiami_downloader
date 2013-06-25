@@ -6,16 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ZMQ;
+using ZeroMQ;
 namespace Jean_Doe.Mp3Player
 {
     class Program
     {
         static IWavePlayer device = new WaveOut { DesiredLatency = 400, NumberOfBuffers = 4 };
         static WaveStream stream;
-        static Context ctx;
-        static Socket sender;
-        static Socket receiver;
+        static ZmqContext ctx;
+        static ZmqSocket sender;
+        static ZmqSocket receiver;
         static void Send(string msg)
         {
             try
@@ -58,14 +58,14 @@ namespace Jean_Doe.Mp3Player
             parent = Process.GetProcessById(int.Parse(args[0]));
             suicide();
             Console.WriteLine(string.Format("{0} {1} {2}", args[0], args[1], args[2]));
-            ctx = new Context();
-            receiver = ctx.Socket(SocketType.REP);
+            ctx = ZmqContext.Create();
+            receiver = ctx.CreateSocket(SocketType.REP);
             receiver.Bind("tcp://*:" + args[1]);
-            sender = ctx.Socket(SocketType.PUB);
+            sender = ctx.CreateSocket(SocketType.PUB);
             sender.Bind("tcp://*:" + args[2]);
             while (true)
             {
-                string cmd = receiver.Recv(Encoding.UTF8);
+                string cmd = receiver.Receive(Encoding.UTF8);
                 string res = "ok";
                 switch (cmd)
                 {
