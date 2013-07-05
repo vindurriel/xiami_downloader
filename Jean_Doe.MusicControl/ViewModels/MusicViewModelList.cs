@@ -40,7 +40,7 @@ namespace Jean_Doe.MusicControl
                         if (!queue.TryDequeue(out item)) break;
                         addItem(item, toFront);
                         buffer++;
-                        if (buffer == 100)
+                        if (buffer == 10000)
                         {
                             Thread.Sleep(100);
                             buffer = 0;
@@ -63,7 +63,7 @@ namespace Jean_Doe.MusicControl
             canSave = true;
             Save();
         }
-        bool canSave = false;
+        bool canSave = true;
         void addItem(IMusic music, bool toFront)
         {
             MusicViewModel s = createViewModel(music, toFront);

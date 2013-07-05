@@ -571,7 +571,7 @@ namespace Jean_Doe.MusicControl
             var s = (o as SongListControl).SelectedSongs;
             return s.Count() > 0 && s.Any(x => x.InFav);
         }
-        protected T GetParentOf<T>(DependencyObject o, string name = null) where T : FrameworkElement
+        public static T GetParentOf<T>(DependencyObject o, string name = null) where T : FrameworkElement
         {
             if (o == null) return null;
             var p = System.Windows.Media.VisualTreeHelper.GetParent(o);

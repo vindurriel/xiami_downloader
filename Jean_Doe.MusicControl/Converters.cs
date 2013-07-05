@@ -43,7 +43,15 @@ namespace Jean_Doe.MusicControl
             if (values.Count() != 2) return 0;
             try
             {
-                return (double)values[0] / (double)values[1];
+                var rate = Math.Ceiling(10 * Math.Log10(1 + (double)values[0]) / Math.Log10(1 + (double)values[1]));
+                var res = "";
+                for (int i = 0; i < rate / 2; i++)
+                {
+                    res += "8";
+                }
+                if (rate % 2 == 1)
+                    res += "0";
+                return res;
             }
             catch
             {
@@ -119,6 +127,19 @@ namespace Jean_Doe.MusicControl
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             throw new NotImplementedException();
+        }
+    }
+    public class MyTemplateSelector : DataTemplateSelector
+    {
+        public DataTemplate downloadTemplate { get; set; }
+        public DataTemplate normalTemplate { get; set; }
+        public override DataTemplate SelectTemplate(object item, DependencyObject container)
+        {
+            var control = container as SongListControl;
+            var parent = SongListControl.GetParentOf<SongListControl>(container);
+            if (parent is DownloadSongListControl)
+                return downloadTemplate;
+            return normalTemplate;
         }
     }
 }

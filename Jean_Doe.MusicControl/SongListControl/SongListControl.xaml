@@ -75,6 +75,69 @@
                     Value="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListViewItem}}" />
             <Setter Property="Visibility" Value="{Binding HasDetail,Converter={StaticResource bool2vis}}" />
         </Style>
+        <DataTemplate x:Key="t_download">
+            <Grid MinWidth="100" Margin="0,2,0,0">
+                <!--下载状态-->
+                <Grid.Resources>
+                    <Style TargetType='Rectangle'>
+                        <Setter Property='Width' Value='200' />
+                        <Setter Property='Height' Value='3' />
+                        <Setter Property='Margin' Value='0,0,3,0' />
+                        <Setter Property='Fill' Value='{DynamicResource lightBrush}' />
+                        <Setter Property='HorizontalAlignment' Value='Left' />
+                    </Style>
+                </Grid.Resources>
+                <Rectangle Opacity='{Binding HasMp3,Converter={StaticResource bool2opa}}'>
+                    <Rectangle.ToolTip>
+                        <TextBlock Text="{Binding Status}" />
+                    </Rectangle.ToolTip>
+                </Rectangle>
+                <Rectangle Fill="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}">
+                    <Rectangle.RenderTransform>
+                        <ScaleTransform ScaleX="{Binding Percent}" />
+                    </Rectangle.RenderTransform>
+                </Rectangle>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="t_recommend">
+            <Grid>
+                <Grid.Resources>
+                    <Style TargetType='Rectangle'>
+                        <Setter Property='Width' Value='200' />
+                        <Setter Property='Height' Value='3' />
+                        <Setter Property='Margin' Value='0,0,3,0' />
+                        <Setter Property='Fill' Value='{DynamicResource lightBrush}' />
+                        <Setter Property='HorizontalAlignment' Value='Left' />
+                    </Style>
+                </Grid.Resources>
+                <TextBlock FontFamily="{DynamicResource font_symbol}">
+                    <TextBlock.Text>
+                        <MultiBinding Converter="{StaticResource divconv}">
+                            <Binding Path="Recommends" />
+                            <Binding Path="MaxRec" ElementName="me" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <!--<Rectangle Fill="#01000000" />
+                <Rectangle Fill="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}">
+                    <Rectangle.ToolTip>
+                        <TextBlock Text="{Binding  Recommends,StringFormat={}{0} 人推荐}" />
+                    </Rectangle.ToolTip>
+                    <Rectangle.RenderTransform>
+                        <ScaleTransform>
+                            <ScaleTransform.ScaleX>
+                                <MultiBinding Converter="{StaticResource divconv}">
+                                    <Binding Path="Recommends" />
+                                    <Binding Path="MaxRec" ElementName="me" />
+                                </MultiBinding>
+                            </ScaleTransform.ScaleX>
+                        </ScaleTransform>
+                    </Rectangle.RenderTransform>
+                </Rectangle>-->
+            </Grid>
+        </DataTemplate>
+        <my:MyTemplateSelector x:Key="templateSelector" normalTemplate="{StaticResource t_recommend}"
+                downloadTemplate="{StaticResource t_download}" />
         <DataTemplate x:Key="listTemplate">
             <Grid Height="60" Margin="0,0,0,0" x:Name="root" ClipToBounds="True">
                 <Grid.ColumnDefinitions>
@@ -90,27 +153,8 @@
                         <TextBlock Text="  " Style="{DynamicResource label_base}" />
                         <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{DynamicResource label_base}" />
                     </DockPanel>
-                    <Grid x:Name="part_recommends">
-                        <Rectangle HorizontalAlignment="Left" Fill="#01000000" Width="200" Height="3" />
-                        <Rectangle HorizontalAlignment="Left"
-                                Fill="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
-                                Width="200" Height="3">
-                            <Rectangle.ToolTip>
-                                <TextBlock Text="{Binding  Recommends,StringFormat={}{0} 人推荐}" />
-                            </Rectangle.ToolTip>
-                            <Rectangle.RenderTransform>
-                                <ScaleTransform>
-                                    <ScaleTransform.ScaleX>
-                                        <MultiBinding Converter="{StaticResource divconv}">
-                                            <Binding Path="Recommends" />
-                                            <Binding Path="MaxRec" ElementName="me" />
-                                        </MultiBinding>
-                                    </ScaleTransform.ScaleX>
-                                </ScaleTransform>
-                            </Rectangle.RenderTransform>
-                        </Rectangle>
-                    </Grid>
-                    <TextBlock Text="{Binding Description}" TextTrimming="WordEllipsis" Height="20" Opacity="0.5"
+                    <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource templateSelector}" />
+                    <TextBlock Text="{Binding Description}" TextTrimming="WordEllipsis" Height="20" Opacity="0.3"
                             MaxWidth="400" Style="{DynamicResource label_base}">
                         <TextBlock.ToolTip>
                             <TextBlock Text="{Binding Description}" TextWrapping="Wrap" MaxWidth="400" />
@@ -355,10 +399,10 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition />
             <RowDefinition Height="30" />
+            <RowDefinition />
         </Grid.RowDefinitions>
-        <DockPanel Grid.Row="1" LastChildFill="False" Margin="5,0,0,0">
+        <DockPanel Grid.Row="0" LastChildFill="False" Margin="5,0,0,0">
             <TextBlock FontSize="20" FontFamily="{DynamicResource font_symbol}" Text="&#xE154;" />
             <my:ToggleSwitch x:Name="btn_more" BgColor="{DynamicResource lightBrush}" IsOnChanged="btn_more_Click"
                     SkinColor="Transparent" Height="20" Margin="2,0" VerticalAlignment="Center" />
@@ -381,23 +425,25 @@
                 </Grid>
             </DockPanel>
         </DockPanel>
-        <TextBlock Grid.ColumnSpan="2" x:Name="emptyText" FontSize="20" HorizontalAlignment="Left"
-                VerticalAlignment="Top" Style="{DynamicResource label_base}" Margin="10,10,0,0">列表为空</TextBlock>
-        <DockPanel x:Name="virtualPart" Visibility="Collapsed">
-            <ListView x:Name="virtualView" Grid.Row="1" VirtualizingPanel.VirtualizationMode="Standard"
-                    VirtualizingPanel.IsVirtualizing="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                    BorderThickness="0" Background="Transparent"
+        <Grid Grid.Row="1" Margin="5,0,0,0">
+            <TextBlock x:Name="emptyText" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top"
+                    Style="{DynamicResource label_base}" Margin="10,10,0,0">列表为空</TextBlock>
+            <DockPanel x:Name="virtualPart" Visibility="Collapsed">
+                <ListView x:Name="virtualView" VirtualizingPanel.VirtualizationMode="Standard"
+                        VirtualizingPanel.IsVirtualizing="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        BorderThickness="0" Background="Transparent"
+                        PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"
+                        ItemContainerStyle="{StaticResource lviStyle}" ItemsSource="{Binding}" SelectionMode="Extended"
+                        ItemTemplate="{StaticResource listTemplate}" ItemsPanel="{StaticResource vsp}">
+                </ListView>
+            </DockPanel>
+            <ListView x:Name="wrapView" VirtualizingPanel.VirtualizationMode="Standard"
+                    ScrollViewer.CanContentScroll="True" VirtualizingPanel.IsVirtualizing="True"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" Background="Transparent"
                     PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"
-                    ItemContainerStyle="{StaticResource lviStyle}" ItemsSource="{Binding}" SelectionMode="Extended"
-                    ItemTemplate="{StaticResource listTemplate}" ItemsPanel="{StaticResource vsp}">
+                    ItemTemplate="{StaticResource completeTemplate}" ItemsSource="{Binding}" SelectionMode="Extended"
+                    ItemContainerStyle="{StaticResource lviStyle}" ItemsPanel="{StaticResource wrap}">
             </ListView>
-        </DockPanel>
-        <ListView x:Name="wrapView" VirtualizingPanel.VirtualizationMode="Standard" ScrollViewer.CanContentScroll="True"
-                VirtualizingPanel.IsVirtualizing="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                BorderThickness="0" Background="Transparent"
-                PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"
-                ItemTemplate="{StaticResource completeTemplate}" ItemsSource="{Binding}" SelectionMode="Extended"
-                ItemContainerStyle="{StaticResource lviStyle}" ItemsPanel="{StaticResource wrap}">
-        </ListView>
+        </Grid>
     </Grid>
 </UserControl>

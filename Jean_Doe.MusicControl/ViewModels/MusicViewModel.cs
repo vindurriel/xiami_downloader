@@ -21,7 +21,7 @@ namespace Jean_Doe.MusicControl
             set
             {
                 imageSrc = value; Notify("ImageSource");
-                LogoColor = ImageHelper.GetAverageColor(value);
+                //LogoColor = ImageHelper.GetAverageColor(value);
             }
         }
         public bool InFav

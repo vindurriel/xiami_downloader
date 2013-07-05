@@ -79,6 +79,7 @@ namespace Jean_Doe.MusicControl
                         msg = "下载暂停";
                         break;
                     case EnumDownloadState.Success:
+                        msg = "";
                         break;
                     case EnumDownloadState.Error:
                         msg = "有错误";
@@ -90,7 +91,7 @@ namespace Jean_Doe.MusicControl
 
             UIHelper.RunOnUI(new Action(() =>
             {
-                item.Status = msg;
+                item.Description = msg;
             }));
         }
 
