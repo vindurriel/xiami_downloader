@@ -77,22 +77,21 @@
         </Style>
         <DataTemplate x:Key="t_download">
             <Grid MinWidth="100" Margin="0,2,0,0">
-                <!--下载状态-->
                 <Grid.Resources>
                     <Style TargetType='Rectangle'>
                         <Setter Property='Width' Value='200' />
                         <Setter Property='Height' Value='3' />
                         <Setter Property='Margin' Value='0,0,3,0' />
-                        <Setter Property='Fill' Value='{DynamicResource lightBrush}' />
+                        <Setter Property='Fill' Value='{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}' />
                         <Setter Property='HorizontalAlignment' Value='Left' />
                     </Style>
                 </Grid.Resources>
-                <Rectangle Opacity='{Binding HasMp3,Converter={StaticResource bool2opa}}'>
+                <Rectangle Opacity='{Binding HasMp3,Converter={StaticResource bool2opa}}' >
                     <Rectangle.ToolTip>
                         <TextBlock Text="{Binding Status}" />
                     </Rectangle.ToolTip>
                 </Rectangle>
-                <Rectangle Fill="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}">
+                <Rectangle>
                     <Rectangle.RenderTransform>
                         <ScaleTransform ScaleX="{Binding Percent}" />
                     </Rectangle.RenderTransform>
@@ -110,7 +109,10 @@
                         <Setter Property='HorizontalAlignment' Value='Left' />
                     </Style>
                 </Grid.Resources>
-                <TextBlock FontFamily="{DynamicResource font_symbol}">
+                <TextBlock FontFamily="{DynamicResource font_symbol}" FontSize="12">
+                    <TextBlock.ToolTip>
+                        <TextBlock Text="{Binding  Recommends,StringFormat={}{0} 人推荐}" />
+                    </TextBlock.ToolTip>
                     <TextBlock.Text>
                         <MultiBinding Converter="{StaticResource divconv}">
                             <Binding Path="Recommends" />
@@ -118,22 +120,6 @@
                         </MultiBinding>
                     </TextBlock.Text>
                 </TextBlock>
-                <!--<Rectangle Fill="#01000000" />
-                <Rectangle Fill="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}">
-                    <Rectangle.ToolTip>
-                        <TextBlock Text="{Binding  Recommends,StringFormat={}{0} 人推荐}" />
-                    </Rectangle.ToolTip>
-                    <Rectangle.RenderTransform>
-                        <ScaleTransform>
-                            <ScaleTransform.ScaleX>
-                                <MultiBinding Converter="{StaticResource divconv}">
-                                    <Binding Path="Recommends" />
-                                    <Binding Path="MaxRec" ElementName="me" />
-                                </MultiBinding>
-                            </ScaleTransform.ScaleX>
-                        </ScaleTransform>
-                    </Rectangle.RenderTransform>
-                </Rectangle>-->
             </Grid>
         </DataTemplate>
         <my:MyTemplateSelector x:Key="templateSelector" normalTemplate="{StaticResource t_recommend}"

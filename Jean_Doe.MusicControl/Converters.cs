@@ -43,14 +43,14 @@ namespace Jean_Doe.MusicControl
             if (values.Count() != 2) return 0;
             try
             {
-                var rate = Math.Ceiling(10 * Math.Log10(1 + (double)values[0]) / Math.Log10(1 + (double)values[1]));
+                int rate = (int)Math.Ceiling(10 * Math.Log10(1 + (double)values[0]) / Math.Log10(1 + (double)values[1]));
                 var res = "";
                 for (int i = 0; i < rate / 2; i++)
                 {
-                    res += "8";
+                    res += "\xE249";
                 }
                 if (rate % 2 == 1)
-                    res += "0";
+                    res += "\xE24A";
                 return res;
             }
             catch
