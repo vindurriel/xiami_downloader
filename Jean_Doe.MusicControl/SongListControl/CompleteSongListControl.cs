@@ -18,6 +18,7 @@ namespace Jean_Doe.MusicControl
     {
         public CompleteSongListControl()
         {
+            wrapView.DataContext = null;
             Mp3Player.SongChanged += Mp3Player_SongChanged;
             Items.CollectionChanged += Items_CollectionChanged;
             watcher = CreateWatcher();
@@ -176,7 +177,7 @@ namespace Jean_Doe.MusicControl
                     new CharmAction("打开文件所在位置","\xE1A5",this.btn_open_click,IsOnlyType<IHasMusicPart>),
                     new CharmAction("在浏览器中打开","\xE12B",this.btn_browse_Click,IsOnlyType<IHasMusicPart>),
                     new CharmAction("删除","\xE106",this.btn_remove_complete_Click,defaultActionValidate),
-                    new CharmAction("导入","\xE150",this.btn_import_click,defaultActionValidate),
+                    new CharmAction("导入","\xE150",this.btn_import_click,s=>{return ItemsCount==0 || defaultActionValidate(s);}),
                 };
         }
 

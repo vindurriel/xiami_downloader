@@ -72,7 +72,9 @@ namespace Jean_Doe.MusicControl
         double[] timelist = null;
         void OnMp3PlayerSongChanged(object sender, SongChangedEventArgs e)
         {
-            var lrcPath = Path.Combine(Global.BasePath, "cache", e.Id + ".lrc");
+            var lrcPath =Path.Combine(Global.AppSettings["DownloadFolder"], SongViewModel.Get(new Song { Id = e.Id }).FileNameBase + ".lrc");
+            if (!File.Exists(lrcPath))
+                lrcPath = Path.Combine(Global.BasePath, "cache", e.Id + ".lrc");
             var s = LyricViewModel.LoadLrcFile(lrcPath);
             source.Clear();
             foreach (var item in s)

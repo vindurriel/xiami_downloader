@@ -123,9 +123,9 @@ namespace Jean_Doe.MusicControl
             var art = System.IO.Path.Combine(Global.BasePath, "cache", AlbumId + ".art");
             if (File.Exists(art))
                 ImageSource = art;
-            else if (File.Exists(song.FilePath))
+            else
             {
-
+                ImageSource = song.UrlArt;
             }
         }
         public override string Description

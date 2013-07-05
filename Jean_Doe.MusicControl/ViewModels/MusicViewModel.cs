@@ -35,6 +35,7 @@ namespace Jean_Doe.MusicControl
         public MusicViewModel(IMusic m)
         {
             music = m;
+            ImageSource = MusicHelper.Get(m.JsonObject, "logo");
         }
         private bool canAnimate = true;
 

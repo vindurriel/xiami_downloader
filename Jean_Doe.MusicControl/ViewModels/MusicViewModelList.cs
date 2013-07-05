@@ -16,7 +16,7 @@ namespace Jean_Doe.MusicControl
             canSave = false;
             int count = inlist.Count();
             if (count == 0) return;
-            if (count > 30) count = 30;
+            if (count > 10) count = 10;
             int s = 1000 / count;
             Task.Run(() =>
             {
@@ -40,7 +40,7 @@ namespace Jean_Doe.MusicControl
                         if (!queue.TryDequeue(out item)) break;
                         addItem(item, toFront);
                         buffer++;
-                        if (buffer == 50)
+                        if (buffer == 100)
                         {
                             Thread.Sleep(100);
                             buffer = 0;

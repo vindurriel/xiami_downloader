@@ -57,7 +57,7 @@ namespace Jean_Doe.Common
             timer.Elapsed += timer_Tick;
             Task.Run(() => timer.Start());
             ctx = ZmqContext.Create();
-            sender =ctx.CreateSocket (SocketType.REQ);
+            sender = ctx.CreateSocket(SocketType.REQ);
             sender.Connect("tcp://127.0.0.1:" + DataBus.Get("port1").ToString());
             receiver = ctx.CreateSocket(SocketType.SUB);
             receiver.Connect("tcp://127.0.0.1:" + DataBus.Get("port2").ToString());
@@ -83,6 +83,10 @@ namespace Jean_Doe.Common
             });
         }
         static bool isRequestingNext = false;
+        public static void Exit()
+        {
+            Task.Run(() => Send("exit"));
+        }
         public static void Next()
         {
             if (isRequestingNext) return;

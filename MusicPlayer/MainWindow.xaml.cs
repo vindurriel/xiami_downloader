@@ -237,6 +237,7 @@ namespace MusicPlayer
 
         void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            Mp3Player.Exit();
             list_download.Save();
             list_complete.Save();
             Global.AppSettings["ActivePage"] = Page.ToString();

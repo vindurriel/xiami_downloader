@@ -100,10 +100,12 @@ namespace Jean_Doe.MusicControl
             };
             input_filter.GotFocus += (s, e) =>
             {
+                input_filter.Opacity = 1;
                 mask_filter.Visibility = Visibility.Collapsed;
             };
             input_filter.LostFocus += (s, e) =>
             {
+                input_filter.Opacity = 0.2;
                 mask_filter.Visibility = string.IsNullOrEmpty(input_filter.Text) ? Visibility.Visible : Visibility.Collapsed;
             };
         }
@@ -250,7 +252,6 @@ namespace Jean_Doe.MusicControl
             {
                 itemsCount = value;
                 emptyText.Visibility = value > 0 ? Visibility.Collapsed : Visibility.Visible;
-                btn_search.Visibility = (value == 0 && !string.IsNullOrEmpty(filter_text)) ? Visibility.Visible : Visibility.Collapsed;
                 Notify("ItemsCount");
             }
         }
@@ -443,11 +444,7 @@ namespace Jean_Doe.MusicControl
         {
             listView.UnselectAll();
         }
-        private async void btn_search_click(object sender, RoutedEventArgs e)
-        {
-            await SearchManager.Search(filter_text);
-        }
-
+       
         private void Image_SourceUpdated_1(object sender, System.Windows.Data.DataTransferEventArgs e)
         {
             var img = sender as Image;
@@ -631,6 +628,6 @@ namespace Jean_Doe.MusicControl
 
         // Using a DependencyProperty as the backing store for IsDefaultList.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsDefaultListProperty =
-            DependencyProperty.Register("IsDefaultList", typeof(bool), typeof(SongListControl), new PropertyMetadata(false));
+            DependencyProperty.Register("IsDefaultList", typeof(bool), typeof(SongListControl), new PropertyMetadata(true));
     }
 }

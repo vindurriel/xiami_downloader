@@ -79,6 +79,9 @@ namespace Jean_Doe.Mp3Player
                     case "get_cur_time":
                         res = CurrentTime.ToString();
                         break;
+                    case "exit":
+                        Environment.Exit(0);
+                        break;
                     default:
                         if (cmd.StartsWith("set_cur_time "))
                         {
