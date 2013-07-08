@@ -92,6 +92,7 @@ public class XiamiSearchProvider : ISearchProvider
                 json = await XiamiClient.GetDefault().Call_xiami_api("Artists.detail", "id=" + id);
                 items = GetArtist(json);
                 break;
+            case EnumSearchType.collect:
             case EnumSearchType.collect_song:
                 json = await XiamiClient.GetDefault().Call_xiami_api("Collects.detail", "id=" + id);
                 getCollectDetails(json.list_id);
