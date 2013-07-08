@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Linq;
 using Artwork.DataBus;
+using Artwork.MessageBus;
 namespace MusicPlayer
 {
     /// <summary>
@@ -24,9 +25,15 @@ namespace MusicPlayer
             }
             Task.Run(() =>
             {
+                Global.AppSettings["UpdateInfo"] = "正在检查更新";
                 if (!Updater.IsLatest())
                 {
+                    Global.AppSettings["UpdateInfo"] = "正在下载更新";
                     Updater.Download();
+                }
+                else
+                {
+                    Global.AppSettings["UpdateInfo"] = "已经是最新版本";
                 }
             });
             string port1 = getAvailablePort();

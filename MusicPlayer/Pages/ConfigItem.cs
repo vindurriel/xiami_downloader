@@ -63,7 +63,7 @@ namespace MusicPlayer
             }
             set
             {
-                ui.Text = value;
+                UIHelper.RunOnUI(() => ui.Text = value);
             }
         }
     }

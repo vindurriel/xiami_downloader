@@ -57,6 +57,7 @@ namespace MusicPlayer
                 new InputConfigItem("虾米账户","xiami_username","用户名"),
                 new PasswordConfigItem("虾米账户","xiami_password","密码"),
                 new ButtonConfigItem("虾米账户","登录",btn_xiami_login_Click),
+                new LabelConfigItem("软件更新","UpdateInfo",""),
             };
             foreach (var item in Configs)
             {

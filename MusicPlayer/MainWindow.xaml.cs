@@ -24,6 +24,7 @@ namespace MusicPlayer
         INotifyPropertyChanged,
         IHandle<MsgSearchStateChanged>,
         IHandle<string>,
+        IHandle<MsgUpdateReady>,
         IHandle<MsgChangeWindowState>
     {
         TaskbarIcon trayIcon;
@@ -82,13 +83,7 @@ namespace MusicPlayer
             SizeChanged += MainWindow_SizeChanged;
             Mp3Player.SongChanged += OnMp3PlayerSongChanged;
             Global.ListenToEvent("TitleMarquee", SetTitleMarquee);
-            watcher = new FileSystemWatcher(System.AppDomain.CurrentDomain.BaseDirectory, "needs_update") { EnableRaisingEvents = true }; 
-            watcher.Created += OnWatcherCreated;
             RunProgramHelper.RunProgram("updater.exe", "check");
-        }
-        void OnWatcherCreated(object sender, FileSystemEventArgs e)
-        {
-            UIHelper.RunOnUI(() => btn_restart.Visibility = Visibility.Visible);
         }
         void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -321,7 +316,7 @@ namespace MusicPlayer
         {
             Close();
         }
-        private void btn_restart_Click(object sender, RoutedEventArgs e) 
+        private void btn_restart_Click(object sender, RoutedEventArgs e)
         {
             this.Closed += OnClosed;
             Close();
@@ -329,11 +324,16 @@ namespace MusicPlayer
 
         void OnClosed(object sender, EventArgs e)
         {
-            RunProgramHelper.RunProgram("xiami.exe","");
+            RunProgramHelper.RunProgram("xiami.exe", "");
         }
         private void btn_min_Click(object sender, RoutedEventArgs e)
         {
             Handle(new MsgChangeWindowState { State = EnumChangeWindowState.Minimized });
+        }
+
+        public void Handle(MsgUpdateReady message)
+        {
+            UIHelper.RunOnUI(() => btn_restart.Visibility = Visibility.Visible);
         }
     }
 }

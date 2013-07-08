@@ -27,7 +27,7 @@ namespace XiamiUpdater
             }
             while (true)
             {
-                var p = Process.GetProcessesByName("xiami_updater");
+                var p = Process.GetProcessesByName("xiami_player");
                 if (p.Length == 0)
                     break;
                 p[0].Kill();

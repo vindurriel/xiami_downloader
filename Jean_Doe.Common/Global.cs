@@ -30,7 +30,13 @@ namespace Jean_Doe.Common
             {"ShowLyric","1"},
             {"TitleMarquee","1"},
             {"Theme","#333 #eee #000"},
+            {"UpdateInfo",""},
         };
+        public static string CWD(params string[] strs)
+        {
+            var s = Path.Combine(strs);
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, s);
+        }
         public static Dictionary<string, Dictionary<string, string>> ValueOptions = new Dictionary<string, Dictionary<string, string>>
         {
             {"MaxConnection", new Dictionary<string,string>{

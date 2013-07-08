@@ -156,10 +156,9 @@
                             MinWidth="0" Width="50" Margin="0" Height="50" Click="btn_min_Click" DockPanel.Dock="Right">
                         <TextBlock Text="&#xE0A1;" Style="{StaticResource glyph}" />
                     </Button>
-                    <Button x:Name="btn_restart" Visibility="Collapsed" Background="Transparent" Foreground="{DynamicResource lightBrush}"
-                            ToolTip="重启以更新程序"
-                            MinWidth="0" Width="50" Margin="0" Height="50" Click="btn_restart_Click"
-                            DockPanel.Dock="Right">
+                    <Button x:Name="btn_restart" Visibility="Collapsed" Background="Transparent"
+                            Foreground="{DynamicResource lightBrush}" ToolTip="重启以更新程序" MinWidth="0" Width="50"
+                            Margin="0" Height="50" Click="btn_restart_Click" DockPanel.Dock="Right">
                         <TextBlock Text="&#xe149;" Style="{StaticResource glyph}" />
                     </Button>
                     <ToggleButton DockPanel.Dock="Right" Tag="5">
