@@ -207,7 +207,7 @@
                             <controls:CompleteSongListControl x:Name="list_complete" IsDefaultList="True" />
                         </DockPanel>
                         <Grid x:Name="lrc">
-                            <controls:LyricControl Margin="0,-5,0,0" HorizontalAlignment="Left" x:Name="lyricShow"
+                            <controls:LyricControl Margin="0,-7,0,0" HorizontalAlignment="Left" x:Name="lyricShow"
                                     MaxHeight="{Binding ActualHeight,ElementName=lrc}" />
                         </Grid>
                         <GridSplitter Height="30" Background="#01ffffff" VerticalAlignment="Bottom"

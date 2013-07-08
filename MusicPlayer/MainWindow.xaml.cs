@@ -318,6 +318,7 @@ namespace MusicPlayer
         }
         private void btn_restart_Click(object sender, RoutedEventArgs e)
         {
+            Global.AppSettings["UpdateInfo"] = "";
             this.Closed += OnClosed;
             Close();
         }
