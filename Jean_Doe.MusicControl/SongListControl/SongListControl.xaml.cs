@@ -58,7 +58,7 @@ namespace Jean_Doe.MusicControl
         List<ListView> views;
         void SongListControl_Loaded(object sender, RoutedEventArgs e)
         {
-            btn_more.IsOn = IsDefaultList;
+            //btn_more.IsOn = IsDefaultList;
         }
         protected ListView listView;
         private void initTimer()
@@ -611,13 +611,13 @@ namespace Jean_Doe.MusicControl
         }
         private void btn_more_Click(object sender, RoutedEventArgs e)
         {
-            bool more_on = btn_more.IsOn;
-            btn_more.ToolTip = more_on ? "切换到格子" : "切换到列表";
-            listView = more_on ? virtualView : wrapView;
-            ItemsCount = listView.Items.Count;
-            virtualPart.Visibility = more_on ? Visibility.Visible : Visibility.Collapsed;
-            wrapView.Visibility = !more_on ? Visibility.Visible : Visibility.Collapsed;
-            ActionBarService.Refresh();
+            //bool more_on = btn_more.IsOn;
+            //btn_more.ToolTip = more_on ? "切换到格子" : "切换到列表";
+            //listView = more_on ? virtualView : wrapView;
+            //ItemsCount = listView.Items.Count;
+            //virtualPart.Visibility = more_on ? Visibility.Visible : Visibility.Collapsed;
+            //wrapView.Visibility = !more_on ? Visibility.Visible : Visibility.Collapsed;
+            //ActionBarService.Refresh();
         }
 
         public bool IsDefaultList
