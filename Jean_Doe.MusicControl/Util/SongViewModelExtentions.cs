@@ -43,7 +43,7 @@ namespace Jean_Doe.MusicControl
                                 Entity = item,
                                 Tag = item.Id,
                                 Priority = 2,
-                                Url = item.UrlArt,
+                                Url = item.UrlArt.Replace("_1.jpg",".jpg")
                             }
                         };
                         DownloadManager.Instance.Add(d);

@@ -150,13 +150,7 @@ namespace Jean_Doe.MusicControl
         {
             UIHelper.RunOnUI(() =>
             {
-                var ui = listView.ItemContainerGenerator.ContainerFromItem(song);
-                if (ui == null) return;
-                var storyboard = this.FindResource("FadeOut") as Storyboard;
-                Storyboard.SetTarget(storyboard, ui);
-                storyboard.Completed += (s, e) =>
-                    items.Remove(song);
-                storyboard.Begin();
+                items.Remove(song);
             });
         }
         public SongViewModel GetItemById(string id)
@@ -444,7 +438,7 @@ namespace Jean_Doe.MusicControl
         {
             listView.UnselectAll();
         }
-       
+
         private void Image_SourceUpdated_1(object sender, System.Windows.Data.DataTransferEventArgs e)
         {
             var img = sender as Image;
