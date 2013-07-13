@@ -85,15 +85,20 @@ namespace Jean_Doe.Common
         #endregion
         #region Properties
         [XmlIgnore]
-        public dynamic  JsonObject { get; set; }
+        public dynamic JsonObject { get; set; }
         [XmlIgnore]
         public string Description { get; set; }
         [XmlIgnore]
         public string Logo { get { return UrlArt; } set { UrlArt = value; } }
         [XmlIgnore]
         public EnumMusicType Type { get { return EnumMusicType.song; } }
+        private bool writeID3=true;
         [XmlIgnore]
-        public bool WriteId3 { get; set; }
+        public bool WriteId3
+        {
+            get { return writeID3; }
+            set { writeID3 = value; }
+        }
         [XmlIgnore]
         public string Name { get; set; }
         private string artistName;
