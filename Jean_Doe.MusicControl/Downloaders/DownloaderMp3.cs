@@ -61,7 +61,7 @@ namespace Jean_Doe.MusicControl
                         try
                         {
                             id3.Tag.Pictures = new TagLib.IPicture[] {
-                                new TagLib.Picture(Path.Combine(Global.BasePath, "cache", string.Format("album_{0}.jpg", item.AlbumId))) };
+                                new TagLib.Picture(Path.Combine(Global.BasePath, "cache", string.Format("{0}.art", item.AlbumId))) };
                         }
                         catch (Exception e)
                         {

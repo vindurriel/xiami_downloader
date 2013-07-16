@@ -14,13 +14,28 @@ namespace MusicPlayer
 {
     class Updater
     {
+        static string getRealUrl(string orig)
+        {
+            string res = null;
+            using (var client = new System.Net.WebClient())
+            {
+                var r = client.DownloadString(orig);
+                var re = new Regex("(http://d.pcs.+?)\"");
+                var m = re.Match(r);
+                if (m.Success)
+                {
+                    res = m.Groups[1].Value.Replace("&amp;", "&");
+                }
+            }
+            return res;
+        }
         public static bool IsLatest()
         {
+            var realUrl = getRealUrl("http://pan.baidu.com/share/link?shareid=611854251&uk=4093755095");
+            if (realUrl == null) return true;
             var client = new System.Net.WebClient();
-            client.Headers.Add("User-Agent:Mozilla/5.0 (Windows NT 6.2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31");
-            var res = client.DownloadString("https://api.github.com/repos/vindurriel/xiami_downloader/commits");
-            string latest = res.ToDynamicObject()[0]["sha"];
-            File.WriteAllText(Global.CWD("latest.txt"), latest);
+            client.DownloadFile(realUrl, Global.CWD("latest.txt"));
+            var latest = File.ReadAllText(Global.CWD("latest.txt"));
             var current = "";
             if (File.Exists(Global.CWD("current.txt")))
                 current = File.ReadAllText(Global.CWD("current.txt"));
@@ -28,14 +43,20 @@ namespace MusicPlayer
         }
         public static void Download()
         {
-            var client = new System.Net.WebClient();
-            if(File.Exists(Global.CWD("update.zip")))
-                File.Delete(Global.CWD("update.zip"));
-            var d = new SoftwareDownloader();
+            var dest = Global.CWD("latest.zip");
+            if (File.Exists(dest))
+                File.Delete(dest);
+            var realUrl = getRealUrl("http://pan.baidu.com/share/link?shareid=150811617&uk=4093755095");
+            if (realUrl == null) return;
+            var d = new SoftwareDownloader
+            {
+                Info = new DownloaderInfo
+                {
+                    Url = realUrl,
+                    FileName = dest,
+                }
+            };
             d.Download();
-            //client.Headers.Add("User-Agent:Mozilla/5.0 (Windows NT 6.2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31");
-            //client.DownloadFile("https://github.com/vindurriel/xiami_downloader/archive/master.zip", Global.CWD("latest.zip"));
-            
         }
     }
     public class MsgUpdateReady { }
@@ -45,14 +66,6 @@ namespace MusicPlayer
     }
     public class SoftwareDownloader : Downloader
     {
-        public SoftwareDownloader()
-        {
-            Info = new DownloaderInfo
-            {
-                Url = "https://github.com/vindurriel/xiami_downloader/archive/master.zip",
-                FileName = Global.CWD("latest.zip")
-            };
-        }
         protected override void OnProgressChanged()
         {
             Global.AppSettings["UpdateInfo"] = string.Format("{0}/{1}"
@@ -62,21 +75,29 @@ namespace MusicPlayer
         }
         public override void Process()
         {
-            Global.AppSettings["UpdateInfo"] = "正在解压";
-            var dir_latest = Global.CWD("latest");
-            if (Directory.Exists(dir_latest))
-                Directory.Delete(dir_latest, true);
-            Directory.CreateDirectory(dir_latest);
-            var z = ZipFile.OpenRead(Global.CWD("latest.zip"));
-            var re = new Regex(@"Jean_Doe.Output/.+");
-            foreach (var f in z.Entries.Where(x => re.IsMatch(x.FullName)))
+            try
             {
-                f.ExtractToFile(Global.CWD("latest", f.Name), true);
+                Global.AppSettings["UpdateInfo"] = "正在解压";
+                var dir_latest = Global.CWD("latest");
+                if (Directory.Exists(dir_latest))
+                    Directory.Delete(dir_latest, true);
+                Directory.CreateDirectory(dir_latest);
+                var z = ZipFile.OpenRead(Global.CWD("latest.zip"));
+                var re = new Regex(@"Jean_Doe.Output/.+");
+                foreach (var f in z.Entries)
+                {
+                    f.ExtractToFile(Global.CWD("latest", f.Name), true);
+                }
+                File.Copy(Global.CWD("latest", "XiamiUpdater.exe"), Global.CWD("XiamiUpdater.exe"), true);
+                File.WriteAllText(Global.CWD("needs_update"), "1");
+                Global.AppSettings["UpdateInfo"] = "完成，需要重启";
+                MessageBus.Instance.Publish(new MsgUpdateReady());
             }
-            File.Copy(Global.CWD("latest", "XiamiUpdater.exe"), Global.CWD("XiamiUpdater.exe"), true);
-            File.WriteAllText(Global.CWD("needs_update"),"1");
-            Global.AppSettings["UpdateInfo"] = "完成，需要重启";
-            MessageBus.Instance.Publish(new MsgUpdateReady());
+            catch (Exception e)
+            {
+                Jean_Doe.Common.Logger.Error(e);
+            }
+
         }
     }
 }
