@@ -34,13 +34,13 @@ namespace Jean_Doe.Common
             await Call_xiami_api("Library.removeSong", "id=" + songId);
         }
         public async Task<dynamic> Call_xiami_api(string methodName, params string[] args)
-        { 
+        {
             var p = new List<string>() { "api_get", methodName };
             if (args != null)
                 p.AddRange(args);
             Artwork.MessageBus.MessageBus.Instance.Publish(new MsgSetBusy(this, true));
             string res = await RunProgramHelper.RunProgramGetOutput(ApiPath, p.ToArray());
-            Artwork.MessageBus.MessageBus.Instance.Publish(new MsgSetBusy(this,false));
+            Artwork.MessageBus.MessageBus.Instance.Publish(new MsgSetBusy(this, false));
             var json = res.ToDynamicObject();
             if (!(json is string) && !(json is Array) && json.error != null)
             {
@@ -53,7 +53,7 @@ namespace Jean_Doe.Common
         public async Task<dynamic> GetGuess()
         {
             dynamic json = await Call_xiami_api("Recommend.getSongList"); //DailySongs
-            var res=new DynamicJsonObject(new Dictionary<string,object>{{"songs",json}});
+            var res = new DynamicJsonObject(new Dictionary<string, object> { { "songs", json } });
             return res;
         }
         public async Task<dynamic> GetDailyRecommend()
@@ -88,22 +88,20 @@ namespace Jean_Doe.Common
                 MessageBox.Show(r.error.ToString());
                 return;
             }
+
             Global.AppSettings["xiami_uid"] = r.user_id.ToString();
-            Global.AppSettings["xiami_nick_name"] = string.Format("来自{0}的{1}",r.city,r.nick_name);
+            Global.AppSettings["xiami_nick_name"] = string.Format("来自{0}的{1}", r.city, r.nick_name);
             string avatarUrl = r.avatar.ToString();
+            isLoggedIn = true;
             if (!string.IsNullOrEmpty(avatarUrl))
             {
-                var bytes = await new HttpClient().GetByteArrayAsync(avatarUrl);
-                var imgFile = Path.Combine(Global.BasePath, "cache", Global.AppSettings["xiami_uid"] + ".user");
-                File.WriteAllBytes(imgFile, bytes);
-                isLoggedIn = true;
-                Global.AppSettings["xiami_avatar"] = imgFile;
+                Global.AppSettings["xiami_avatar"] = avatarUrl;
             }
         }
         bool isLoggedIn;
         public bool IsLoggedIn
         {
-            get { return isLoggedIn;}
+            get { return isLoggedIn; }
         }
     }
 }

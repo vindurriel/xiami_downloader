@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using Jean_Doe.Common;
 using System.Collections.Generic;
+using System.Windows.Media.Imaging;
 namespace Jean_Doe.MusicControl
 {
     public class MusicViewModel : INotifyPropertyChanged
@@ -14,8 +15,8 @@ namespace Jean_Doe.MusicControl
         }
         #endregion
         protected IMusic music;
-        private string imageSrc;
-        public string ImageSource
+        private BitmapImage imageSrc;
+        public BitmapImage ImageSource
         {
             get { return imageSrc; }
             set
@@ -35,7 +36,12 @@ namespace Jean_Doe.MusicControl
         public MusicViewModel(IMusic m)
         {
             music = m;
-            ImageSource = MusicHelper.Get(m.JsonObject, "logo");
+            if (m.Logo != null)
+                m.Logo = m.Logo.Replace("_1.jpg", ".jpg");
+        }
+        public void ApplyLogo(BitmapImage src)
+        {
+            UIHelper.RunOnUI(() => ImageSource = src);
         }
         private bool canAnimate = true;
 
@@ -50,7 +56,7 @@ namespace Jean_Doe.MusicControl
             get
             {
                 double res = 0;
-                double.TryParse(MusicHelper.Get(music.JsonObject, "recommends","count_likes"), out res);
+                double.TryParse(MusicHelper.Get(music.JsonObject, "recommends", "count_likes"), out res);
                 return res;
             }
         }

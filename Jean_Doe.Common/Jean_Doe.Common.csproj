@@ -80,6 +80,8 @@
     <Compile Include="EnumXiamiType.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Dom\IMusic.cs" />
+    <Compile Include="ImageManager.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Messages\MsgSetDescription.cs" />
     <Compile Include="Messages\MsgSetBusy.cs" />
     <Compile Include="Mp3Player.cs" />

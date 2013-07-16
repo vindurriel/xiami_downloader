@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Jean_Doe.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,9 +14,10 @@ namespace Jean_Doe.MusicControl
         {
             artist = a;
             TypeImage = "\xe13d";
+            ImageManager.Get(string.Format("artist_{0}.jpg", a.Id), a.Logo, ApplyLogo);
         }
-        public string ArtistName { get { return artist.AlbumCount; } }
-        public string AlbumName { get { return artist.Description; } }
+        public string ArtistName { get { return "艺术家"; } }
+        public string AlbumName { get { return artist.AlbumCount; } }
         public string ArtistId
         {
             get { return artist.Id; }

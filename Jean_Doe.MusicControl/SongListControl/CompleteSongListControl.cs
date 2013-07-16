@@ -232,7 +232,8 @@ namespace Jean_Doe.MusicControl
             {
                 var buffer = new List<IMusic>();
                 int bufferLength = 10;
-                foreach (var item in Directory.EnumerateFiles(dir, "*.mp3"))
+                var mp3s = Directory.EnumerateFiles(dir, "*.mp3").ToArray();
+                foreach (var item in mp3s)
                 {
                     try
                     {
@@ -281,6 +282,7 @@ namespace Jean_Doe.MusicControl
                             ArtistName = tags.FirstPerformer,
                             AlbumName = tags.Album,
                             FilePath = item,
+                            Logo = logo,
                         };
                         buffer.Add(song);
                     }
@@ -296,7 +298,6 @@ namespace Jean_Doe.MusicControl
                         }
                         songs.AddRange(buffer);
                         Items.AddItems(songs);
-
                         buffer.Clear();
                     }
                 }
@@ -339,7 +340,7 @@ namespace Jean_Doe.MusicControl
                     try
                     {
                         File.Delete(item.Song.FilePath);
-                        File.Delete(Path.Combine(Global.BasePath,"cache",item.Id+".mp3"));
+                        File.Delete(Path.Combine(Global.BasePath, "cache", item.Id + ".mp3"));
                     }
                     catch (Exception ex)
                     {

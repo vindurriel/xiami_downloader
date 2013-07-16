@@ -16,10 +16,10 @@ namespace Jean_Doe.MusicControl
     {
         public override async Task Download()
         {
-            var song=Info.Entity as SongViewModel;
-            if (song==null)
+            var song = Info.Entity as SongViewModel;
+            if (song == null)
                 return;
-            var s =await XiamiClient.GetDefault().Call_xiami_api("Songs.getTrackDetail",
+            var s = await XiamiClient.GetDefault().Call_xiami_api("Songs.getTrackDetail",
                 "id=" + song.Id,
                 "device_id=android-307320b12d9283df",
                 "quality=h");
@@ -60,13 +60,14 @@ namespace Jean_Doe.MusicControl
                     {
                         try
                         {
-                            id3.Tag.Pictures = new TagLib.IPicture[] { new TagLib.Picture(item.ImageSource) };
+                            id3.Tag.Pictures = new TagLib.IPicture[] {
+                                new TagLib.Picture(Path.Combine(Global.BasePath, "cache", string.Format("album_{0}.jpg", item.AlbumId))) };
                         }
                         catch (Exception e)
                         {
                             NotifyError(e);
+                            Common.Logger.Error(e);
                         }
-
                     }
                     id3.Save();
                 }

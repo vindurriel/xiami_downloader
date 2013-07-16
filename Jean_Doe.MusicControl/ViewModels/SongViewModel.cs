@@ -120,13 +120,7 @@ namespace Jean_Doe.MusicControl
         {
             this.song = song;
             TypeImage = "\xE189";
-            var art = System.IO.Path.Combine(Global.BasePath, "cache", AlbumId + ".art");
-            if (File.Exists(art))
-                ImageSource = art;
-            else
-            {
-                ImageSource = song.UrlArt;
-            }
+            ImageManager.Get(string.Format("{0}.art", song.AlbumId), song.Logo, ApplyLogo);
         }
         public override string Description
         {

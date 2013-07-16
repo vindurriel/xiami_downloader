@@ -14,42 +14,42 @@ namespace Jean_Doe.MusicControl
 		public static void PrepareDownload(this SongViewModel item)
 		{
 			var nameBase = Path.Combine(Global.BasePath, "cache", item.Id);
-            if (!item.HasArt)
-            {
-                var art = Path.Combine(
-                       Global.BasePath, "cache",
-                       item.AlbumId + ".art");
-                if (File.Exists(art))
-                {
-                    item.ImageSource = art;
-                    item.HasArt = true;
-                }
-                else
-                {
-                    AfterDownloadManager.Register("art" + item.AlbumId, x =>
-                    {
-                        item.ImageSource = x;
-                        item.HasArt = true;
-                    });
-                    if (DownloadManager.Instance.GetById("art" + item.AlbumId) == null)
-                    {
+            //if (!item.HasArt)
+            //{
+            //    var art = Path.Combine(
+            //           Global.BasePath, "cache",
+            //           item.AlbumId + ".art");
+            //    if (File.Exists(art))
+            //    {
+            //        item.ImageSource = art;
+            //        item.HasArt = true;
+            //    }
+            //    else
+            //    {
+            //        AfterDownloadManager.Register("art" + item.AlbumId, x =>
+            //        {
+            //            item.ImageSource = x;
+            //            item.HasArt = true;
+            //        });
+            //        if (DownloadManager.Instance.GetById("art" + item.AlbumId) == null)
+            //        {
 
-                        var d = new DownloaderArt
-                        {
-                            Info = new DownloaderInfo
-                            {
-                                Id = "art" + item.AlbumId,
-                                FileName = art,
-                                Entity = item,
-                                Tag = item.Id,
-                                Priority = 2,
-                                Url = item.UrlArt.Replace("_1.jpg",".jpg")
-                            }
-                        };
-                        DownloadManager.Instance.Add(d);
-                    }
-                }
-            }
+            //            var d = new DownloaderArt
+            //            {
+            //                Info = new DownloaderInfo
+            //                {
+            //                    Id = "art" + item.AlbumId,
+            //                    FileName = art,
+            //                    Entity = item,
+            //                    Tag = item.Id,
+            //                    Priority = 2,
+            //                    Url = item.UrlArt.Replace("_1.jpg",".jpg")
+            //                }
+            //            };
+            //            DownloadManager.Instance.Add(d);
+            //        }
+            //    }
+            //}
 			if(!item.HasMp3)
 			{
 				var mp3 = nameBase + ".mp3";

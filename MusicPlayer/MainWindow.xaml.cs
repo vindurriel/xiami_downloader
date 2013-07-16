@@ -83,7 +83,6 @@ namespace MusicPlayer
             SizeChanged += MainWindow_SizeChanged;
             Mp3Player.SongChanged += OnMp3PlayerSongChanged;
             Global.ListenToEvent("TitleMarquee", SetTitleMarquee);
-            RunProgramHelper.RunProgram("updater.exe", "check");
         }
         void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -215,17 +214,12 @@ namespace MusicPlayer
         }
         void SetAvatar(string s)
         {
-            if (!System.IO.File.Exists(s) || !XiamiClient.GetDefault().IsLoggedIn)
+            if (!XiamiClient.GetDefault().IsLoggedIn)
             {
                 Avatar = null;
                 return;
             }
-            var bi = new BitmapImage();
-            bi.BeginInit();
-            bi.StreamSource = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(s));
-            bi.CacheOption = BitmapCacheOption.OnLoad;
-            bi.EndInit();
-            Avatar = bi;
+            ImageManager.Get(string.Format("user_{0}.jpg", Global.AppSettings["xiami_uid"]), s, (img) => Avatar = img);
         }
         BitmapSource avatar;
         public BitmapSource Avatar { get { return avatar; } set { avatar = value; Notify("Avatar"); } }

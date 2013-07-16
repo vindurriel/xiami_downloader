@@ -12,6 +12,8 @@ namespace Jean_Doe.Common
         {
             try
             {
+                if(args==null)
+                    args=new string[1];
                 var pi = new ProcessStartInfo
                 {
                     FileName = programName,
