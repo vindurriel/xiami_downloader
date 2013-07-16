@@ -13,7 +13,7 @@ def push():
 	file(os.path.join(f_baidu,"version.txt"),'w').write(str(time.time()))
 	z=zipfile.ZipFile(os.path.join(f_baidu,'latest.zip'),'w')
 	def allows(x):
-		if x=="access_token":
+		if x=="access_token" or x=="latest":
 			return False
 		ext=os.path.splitext(x.lower())[1]
 		return ext not in ['.txt','.pdb','.log','.zip']
