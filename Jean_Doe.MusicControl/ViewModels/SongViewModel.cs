@@ -115,6 +115,10 @@ namespace Jean_Doe.MusicControl
             }
             return cache[id];
         }
+        public static bool Remove(string id)
+        {
+            return cache.Remove(id);
+        }
         public SongViewModel(Song song)
             : base(song)
         {

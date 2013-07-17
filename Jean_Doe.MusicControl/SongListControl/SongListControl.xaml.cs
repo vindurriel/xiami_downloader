@@ -152,6 +152,7 @@ namespace Jean_Doe.MusicControl
             {
                 items.Remove(song);
             });
+            items.RemoveFromDb(song.Id);
         }
         public SongViewModel GetItemById(string id)
         {

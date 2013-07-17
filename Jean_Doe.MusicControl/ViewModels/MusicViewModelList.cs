@@ -132,7 +132,23 @@ namespace Jean_Doe.MusicControl
                 Logger.Error(e);
             }
         }
-        Songs tmpSongs;
+        public bool RemoveFromDb(string id)
+        {
+            bool res = false;
+            using (var db = new SQLite.SQLiteConnection(PersistHelper.SqliteDbPath))
+            {
+                try
+                {
+                    res = db.Delete<Song>(id)==0;
+                    db.Commit();
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e);
+                }
+            }
+            return res;
+        }
         public void Load()
         {
             List<Song> songs = null;
@@ -142,7 +158,7 @@ namespace Jean_Doe.MusicControl
                 using (var db = new SQLite.SQLiteConnection(PersistHelper.SqliteDbPath))
                 {
                     db.CreateTable<Song>();
-                    tmpSongs = PersistHelper.Load<Songs>(SavePath);
+                    var tmpSongs = PersistHelper.Load<Songs>(SavePath);
                     if (tmpSongs != null && tmpSongs.Count > 0)
                     {
                         db.BeginTransaction();

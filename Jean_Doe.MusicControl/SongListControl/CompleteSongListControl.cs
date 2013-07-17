@@ -345,10 +345,8 @@ namespace Jean_Doe.MusicControl
                     catch (Exception ex)
                     {
                     }
-                    item.HasArt = false;
-                    item.HasMp3 = false;
-                    item.HasLrc = false;
-                    item.Song.FilePath = null;
+                    
+                    SongViewModel.Remove(item.Id);
                     System.Threading.Thread.Sleep(10);
                 }
             });
