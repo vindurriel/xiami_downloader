@@ -183,9 +183,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="msvcr110.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Content Include="..\Jean_Doe.Reference\msvcr110.dll">
+      <Link>msvcr110.dll</Link>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
