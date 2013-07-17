@@ -96,6 +96,8 @@
     <Compile Include="SearchResult.cs" />
     <Compile Include="Dom\Song.cs" />
     <Compile Include="PersistHelper.cs" />
+    <Compile Include="SQLite.cs" />
+    <Compile Include="SQLiteAsync.cs" />
     <Compile Include="StringHelper.cs" />
     <Compile Include="UIHelper.cs" />
     <Compile Include="XiamiClient.cs" />
@@ -106,6 +108,13 @@
       <Link>libzmq.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="..\Jean_Doe.Reference\sqlite3.dll">
+      <Link>sqlite3.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -318,7 +318,7 @@ namespace Jean_Doe.MusicControl
         }
         public virtual void Load()
         {
-            Task.Run(async () => { await items.Load(); });
+            Task.Run( () => { items.Load(); });
         }
 
         protected virtual void btn_open_click(object sender, RoutedEventArgs e)

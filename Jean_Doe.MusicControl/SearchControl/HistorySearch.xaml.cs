@@ -17,7 +17,7 @@ namespace Jean_Doe.MusicControl
     /// <summary>
     /// Interaction logic for HistorySearch.xaml
     /// </summary>
-    public partial class HistorySearch :IHandle<SearchResult>
+    public partial class HistorySearch : IHandle<SearchResult>
     {
         public HistorySearch()
         {
@@ -39,9 +39,16 @@ namespace Jean_Doe.MusicControl
             HistoryItems.Clear();
             try
             {
-                PersistHelper.Load<XHistorySearch>(SavePath).Items.ForEach(x => HistoryItems.Add(x));
+                using (var db = new SQLite.SQLiteConnection(PersistHelper.SqliteDbPath))
+                {
+                    db.CreateTable<HistorySearchItem>();
+                    (from s in db.Table<HistorySearchItem>() select s).ToList().ForEach(x => HistoryItems.Add(x));
+                }
             }
-            catch (Exception) { }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
         }
         public void Save()
         {
@@ -53,11 +60,21 @@ namespace Jean_Doe.MusicControl
             try
             {
                 var dir = Path.GetDirectoryName(SavePath);
-                if (!Directory.Exists(dir))
-                    Directory.CreateDirectory(dir);
-                PersistHelper.Save(new XHistorySearch { Items = HistoryItems.ToList() }, SavePath);
+                using (var db = new SQLite.SQLiteConnection(PersistHelper.SqliteDbPath))
+                {
+                    db.CreateTable<HistorySearchItem>();
+                    db.BeginTransaction();
+                    foreach (var item in HistoryItems)
+                    {
+                        db.InsertOrReplace(item);
+                    }
+                    db.Commit();
+                }
             }
-            catch { }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
         }
         public void Upsert(EnumSearchType t, string key, long counter)
         {
@@ -95,7 +112,7 @@ namespace Jean_Doe.MusicControl
         {
             get
             {
-                if (SelectedItem==null) return EnumSearchType.all;
+                if (SelectedItem == null) return EnumSearchType.all;
                 return (SelectedItem as HistorySearchItem).SearchType;
             }
         }
@@ -118,10 +135,7 @@ namespace Jean_Doe.MusicControl
         }
     }
     [XmlRoot("History")]
-    public class XHistorySearch
+    public class XHistorySearch : List<HistorySearchItem>
     {
-        [XmlArray("Searches")]
-        [XmlArrayItem("Search")]
-        public List<HistorySearchItem> Items { get; set; }
     }
 }

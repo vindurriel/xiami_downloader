@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
-
+using SQLite;
 namespace Jean_Doe.Common
 {
     public class Song : IMusic
@@ -15,7 +15,7 @@ namespace Jean_Doe.Common
         public int TrackNo { get; set; }
 
         private string id;
-
+        [PrimaryKey]
         public string Id
         {
             get { return id; }
@@ -64,19 +64,19 @@ namespace Jean_Doe.Common
             get { return hasArt; }
             set { hasArt = value; }
         }
-        [XmlElement("Title")]
+        [XmlElement("Title")][Ignore]
         public XmlCDataSection XTitle
         {
             get { return new XmlDocument().CreateCDataSection(Name); }
             set { Name = value.Value; }
         }
-        [XmlElement("Artist")]
+        [XmlElement("Artist")][Ignore]
         public XmlCDataSection XArtist
         {
             get { return new XmlDocument().CreateCDataSection(ArtistName); }
             set { ArtistName = value.Value; }
         }
-        [XmlElement("Album")]
+        [XmlElement("Album")][Ignore]
         public XmlCDataSection XAlbum
         {
             get { return new XmlDocument().CreateCDataSection(AlbumName); }
@@ -84,14 +84,16 @@ namespace Jean_Doe.Common
         }
         #endregion
         #region Properties
-        [XmlIgnore]
+        [XmlIgnore][Ignore]
         public dynamic JsonObject { get; set; }
         [XmlIgnore]
         public string Description { get; set; }
-        [XmlIgnore]
+        [XmlIgnore][Ignore]
         public string Logo { get { return UrlArt; } set { UrlArt = value; } }
-        [XmlIgnore]
+        [XmlIgnore][Ignore]
         public EnumMusicType Type { get { return EnumMusicType.song; } }
+        [XmlIgnore][Indexed]
+        public string DownloadState { get; set; }
         private bool writeID3=true;
         [XmlIgnore]
         public bool WriteId3
@@ -117,14 +119,11 @@ namespace Jean_Doe.Common
                 {
                     artistName = list[0];
                     list.RemoveAt(0);
-                    FeaturingArtists = string.Join(";", list);
                 }
                 else
                     artistName = value;
             }
         }
-        [XmlIgnore]
-        public string FeaturingArtists { get; set; }
         [XmlIgnore]
         public string AlbumName { get; set; }
         #endregion
