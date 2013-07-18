@@ -23,7 +23,7 @@ namespace Jean_Doe.MusicControl
                 "id=" + song.Id,
                 "device_id=android-307320b12d9283df",
                 "quality=h");
-            Info.Url = s.track_url;
+            Info.Url = s["track_url"];
             await base.Download();
         }
 
