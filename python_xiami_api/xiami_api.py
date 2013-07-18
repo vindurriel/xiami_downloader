@@ -51,6 +51,7 @@ def api_get(method,params={}):
 		access_token=file(f,'r').read()
 	dic["access_token"]=access_token
 	resp=r.get(url_api,params=dic)
+	return  resp.url
 	json=resp.json()
 	if "err" in json and json["err"]:
 		die(json['err'])

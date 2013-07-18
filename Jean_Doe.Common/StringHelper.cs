@@ -23,6 +23,10 @@ namespace Jean_Doe.Common
             foreach (char invalidChar in invalidChars)
                 dump = dump + invalidChar;
         }
+        public static string toUtf8(this string s)
+        {
+            return Encoding.UTF8.GetString(Encoding.GetEncoding(936).GetBytes(s));
+        }
         /// <summary>
         /// returns a string valid for windows paths
         /// </summary>
@@ -91,10 +95,8 @@ namespace Jean_Doe.Common
         {
             // Create a new instance of the MD5CryptoServiceProvider object.
             var md5Hasher = MD5.Create();
-
             // Convert the input string to a byte array and compute the hash.
-            byte[] data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(input));
-
+            byte[] data = md5Hasher.ComputeHash(Encoding.GetEncoding("gbk").GetBytes(input));
             // Create a new Stringbuilder to collect the bytes
             // and create a string.
             StringBuilder sBuilder = new StringBuilder();

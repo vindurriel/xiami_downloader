@@ -178,12 +178,6 @@
     <Resource Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\python_xiami_api\xiami_api.exe">
-      <Link>xiami_api.exe</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\Jean_Doe.Reference\msvcp110.dll">
       <Link>msvcp110.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

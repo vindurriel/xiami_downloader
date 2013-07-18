@@ -6,7 +6,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using CsQuery;
+using HtmlAgilityPack;
 using System.IO;
 public class XiamiSearchProvider : ISearchProvider
 {
@@ -43,26 +43,24 @@ public class XiamiSearchProvider : ISearchProvider
         Task.Run(() =>
         {
             string url = XiamiUrl.GoCollect(id);
-            var tmp = Path.Combine(Global.BasePath,"cache", string.Format("collect.{0}.html", id));
+            var tmp = Path.Combine(Global.BasePath, "cache", string.Format("collect.{0}.html", id));
             if (!File.Exists(tmp))
             {
                 new System.Net.WebClient().DownloadFile(url, tmp);
             }
-            var doc = CQ.CreateFromFile(tmp);
-            foreach (var x in CQ.Create(doc["li[class^=\"totle_\"]"]))
+            var doc = new HtmlDocument();
+            doc.Load(tmp,System.Text.Encoding.UTF8);
+            foreach (var x in doc.DocumentNode.SelectNodes("//li[@class='totle_up']"))
             {
-                var item = CQ.Create(x);
-                var desc = item[".s_quote strong"];
-                if (desc.Length == 0) continue;
+                var desc = x.SelectSingleNode(".//strong");
+                if (desc == null) continue;
                 var song_id = x.Id.Substring(6);
-                var description = desc.Text();
+                var description = desc.InnerText;
                 UIHelper.RunOnUI(() =>
                 {
                     Artwork.MessageBus.MessageBus.Instance.Publish(
                         new MsgSetDescription { Id = song_id, Description = description });
                 });
-
-
             }
         });
     }
@@ -95,7 +93,7 @@ public class XiamiSearchProvider : ISearchProvider
             case EnumSearchType.collect:
             case EnumSearchType.collect_song:
                 json = await XiamiClient.GetDefault().Call_xiami_api("Collects.detail", "id=" + id);
-                getCollectDetails(json.list_id);
+                getCollectDetails(json["list_id"]);
                 items = GetSongsOfCollect(json);
                 break;
             case EnumSearchType.artist_artist:
@@ -133,7 +131,7 @@ public class XiamiSearchProvider : ISearchProvider
 
     static async Task<SearchResult> SearchAll(string key)
     {
-        dynamic obj = await XiamiClient.GetDefault().Call_xiami_api("Search.summary", string.Format("\"key={0}\"", key));
+        dynamic obj = await XiamiClient.GetDefault().Call_xiami_api("Search.summary", string.Format("key={0}", key));
         /////////////
         var items = new List<IMusic>();
         foreach (var type in new string[] { "song", "album", "artist", "collect" })
@@ -205,7 +203,7 @@ public class XiamiSearchProvider : ISearchProvider
                 }
             }
             SearchManager.notifyState(sr);
-            if (obj.more != "true")
+            if (!obj.ContainsKey("more") || obj["more"] != "true")
                 break;
             page++;
         }
@@ -253,7 +251,7 @@ public class XiamiSearchProvider : ISearchProvider
         }
         var searchType = EnumSearchType.song;
         Enum.TryParse<EnumSearchType>(type.ToString(), out searchType);
-        bool hasNext = page != (int)obj.next;
+        bool hasNext = page != (int)obj["next"];
         var res = new SearchResult
         {
             Items = items,
@@ -321,7 +319,7 @@ public class XiamiSearchProvider : ISearchProvider
         var items = new List<IMusic>();
         try
         {
-            foreach (var x in json.albums)
+            foreach (var x in json["albums"])
             {
                 items.Add(MusicFactory.CreateFromJson(x, EnumMusicType.album));
             }
@@ -334,7 +332,7 @@ public class XiamiSearchProvider : ISearchProvider
         var items = new List<IMusic>();
         try
         {
-            foreach (var x in json.songs)
+            foreach (var x in json["songs"])
             {
                 items.Add(MusicFactory.CreateFromJson(x, EnumMusicType.song));
             }
@@ -347,9 +345,9 @@ public class XiamiSearchProvider : ISearchProvider
         var items = new List<IMusic>();
         try
         {
-            foreach (var x in json.songs)
+            foreach (var x in json["songs"])
             {
-                string id = x.song_id;
+                string id = x["song_id"];
                 Song song = MusicFactory.CreateFromJson(x, EnumMusicType.song);
                 items.Add(song);
             }
@@ -373,7 +371,7 @@ public class XiamiSearchProvider : ISearchProvider
         try
         {
             dynamic obj = json;
-            foreach (var x in obj.songs)
+            foreach (var x in obj["songs"])
             {
                 Song a = MusicFactory.CreateFromJson(x, EnumMusicType.song);
                 items.Add(a);
