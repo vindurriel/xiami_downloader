@@ -10,7 +10,7 @@ namespace Jean_Doe.Common
         {
             lock (lockLog)
             {
-                File.AppendAllText(logfile, string.Format("{0}\n{1}\n", e.Message, e.StackTrace));
+                File.AppendAllText(logfile, string.Format("[{0}]{1}\n{2}\n",DateTime.Now.ToString(), e.Message, e.StackTrace));
             }
         }
     }
