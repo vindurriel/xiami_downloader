@@ -2,10 +2,11 @@
 using Artwork.MessageBus.Interfaces;
 using Hardcodet.Wpf.TaskbarNotification;
 using Jean_Doe.Common;
-using Jean_Doe.Downloader;
 using Jean_Doe.MusicControl;
 using System;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -13,8 +14,6 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Linq;
-using System.IO;
 namespace MusicPlayer
 {
     /// <summary>
@@ -99,7 +98,7 @@ namespace MusicPlayer
                 if (Global.AppSettings["ShowNowPlaying"] == "0") return;
                 balloonTip = new MyBalloonTip();
                 balloonTip.ViewModel = now;
-                trayIcon.ShowCustomBalloon(balloonTip, PopupAnimation.Slide, 3000);
+                trayIcon.ShowCustomBalloon(balloonTip, PopupAnimation.Fade, 3000);
             }
         }
         long counter;
@@ -227,6 +226,7 @@ namespace MusicPlayer
         void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Mp3Player.Exit();
+            trayIcon.Dispose();
             list_download.Save();
             list_complete.Save();
             Global.AppSettings["ActivePage"] = Page.ToString();
