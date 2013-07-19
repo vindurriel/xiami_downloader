@@ -203,7 +203,7 @@ public class XiamiSearchProvider : ISearchProvider
                 }
             }
             SearchManager.notifyState(sr);
-            if (!obj.ContainsKey("more") || obj["more"] != "true")
+            if (obj.more!="true")
                 break;
             page++;
         }

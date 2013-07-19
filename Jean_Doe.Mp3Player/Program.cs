@@ -16,18 +16,24 @@ namespace Jean_Doe.Mp3Player
         {
             Task.Run(() =>
             {
-                
+
             });
         }
         static Process parent;
         static ServiceHost host;
+        public static void Exit()
+        {
+            if (host != null)
+                host.Close();
+            Environment.Exit(0);
+        }
         static void Main(string[] args)
         {
             try
             {
-                if (args.Length <1)
+                if (args.Length < 1)
                 {
-                    throw new ArgumentException("wrong usage: xiami_player.exe PARENT_PROCESS_ID port1 port2");
+                    throw new ArgumentException("wrong usage: xiami_player.exe PARENT_PROCESS_ID");
                 }
                 parent = Process.GetProcessById(int.Parse(args[0]));
                 host = new ServiceHost(typeof(Mp3Player), new Uri[] { new Uri("net.pipe://localhost") });
@@ -37,7 +43,7 @@ namespace Jean_Doe.Mp3Player
                 {
                     Thread.Sleep(500);
                 }
-                host.Close();
+                Exit();
             }
             catch (Exception e)
             {

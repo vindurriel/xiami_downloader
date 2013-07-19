@@ -36,11 +36,7 @@ namespace MusicPlayer
                     Global.AppSettings["UpdateInfo"] = "已经是最新版本";
                 }
             });
-            string port1 = getAvailablePort();
-            string port2 = getAvailablePort();
-            DataBus.Set("port1", port1);
-            DataBus.Set("port2", port2);
-            RunProgramHelper.RunProgram("xiami_player.exe", System.Diagnostics.Process.GetCurrentProcess().Id.ToString(), port1, port2);
+            RunProgramHelper.RunProgram("xiami_player.exe", System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
         }
         bool isPortTaken(int n)
         {

@@ -13,6 +13,7 @@ namespace Jean_Doe.Mp3Player
         public double Play()
         {
             device.Play();
+            if (stream == null) return 0.0;
             return stream.TotalTime.TotalMilliseconds;
         }
 
@@ -25,7 +26,7 @@ namespace Jean_Doe.Mp3Player
         {
             stream.Dispose();
             device.Dispose();
-            Environment.Exit(0);
+            Program.Exit();
         }
         public void SetCurrentTime(double t)
         {

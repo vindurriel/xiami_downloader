@@ -146,7 +146,7 @@ namespace Jean_Doe.Common
                 MessageBox.Show(json.error.ToString());
                 return null;
             }
-            return json["data"];
+            return json.data;
         }
 
         static string client_id = "55ee94348aeba2635326059e60d20a49";
@@ -171,8 +171,9 @@ namespace Jean_Doe.Common
                 MessageBox.Show(json.error.ToString());
                 return;
             }
+            File.WriteAllText(Global.CWD("access_token"),json["access_token"]);
             var r = await Call_xiami_api("Members.showUser");
-            if (r.error != null)
+            if (r.error  != null)
             {
                 MessageBox.Show(r.error.ToString());
 
