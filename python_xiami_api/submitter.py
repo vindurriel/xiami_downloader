@@ -6,7 +6,7 @@ def cwd(*args):
 	for x in args:
 		d=os.path.join(d,x)
 	return d
-f_baidu=u"D:\\cloud\\百度云\\我的软件\\xiami"
+f_baidu=u"D:\\cloud\\百度云同步盘\\我的软件\\xiami"
 f_xiami=os.path.realpath(cwd("..","Jean_Doe.Output"))
 def push():
 	#write version info, ID is unix time
