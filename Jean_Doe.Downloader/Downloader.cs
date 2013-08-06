@@ -67,7 +67,7 @@ namespace Jean_Doe.Downloader
         {
             try
             {
-				if(Info.Url == null || !Uri.IsWellFormedUriString(Info.Url, UriKind.RelativeOrAbsolute))
+				if(Info.Url == null )
 				{
 					throw new Exception(string.Format("\'{0}\' is not a valid url", Info.Url));
 				}
