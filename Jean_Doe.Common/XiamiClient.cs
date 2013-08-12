@@ -124,7 +124,7 @@ namespace Jean_Doe.Common
             var dic = new NameValueCollection{
                        {"method",methodName},
                         {"api_key",client_id},
-                        {"call_id","qweqwe"},
+                        {"call_id","1231223"},
                         {"av","XMusic_1.1.1.3956"},
             };
             foreach (var item in args)
