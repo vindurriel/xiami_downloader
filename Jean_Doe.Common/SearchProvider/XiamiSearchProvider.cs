@@ -24,7 +24,7 @@ public class XiamiSearchProvider : ISearchProvider
             await getUserMusic(m.Groups[1].Value, t.ToString());
             return null;
         }
-        m = Regex.Match(key, "(artist|album|collect):(\\d+)");
+        m = Regex.Match(key, "(song|artist|album|collect):(\\d+)");
         if (m.Success)
         {
             var str_type = m.Groups[1].Value + "_" + t.ToString();

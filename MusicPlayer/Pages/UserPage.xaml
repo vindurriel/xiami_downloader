@@ -14,7 +14,9 @@
     </UserControl.Resources>
     <Grid>
         <StackPanel>
-            <TextBlock FontSize="20" Text="fdasf" x:Name="username"/>
+            <TextBox FontSize="20" Text="" x:Name="username"/>
+            <ContentControl x:Name="content"/>
+            <Button Content="save" Name="btn_save"/>
         </StackPanel>
     </Grid>
 </UserControl>

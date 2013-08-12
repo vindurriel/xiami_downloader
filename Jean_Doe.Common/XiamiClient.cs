@@ -123,8 +123,9 @@ namespace Jean_Doe.Common
         {
             var dic = new NameValueCollection{
                        {"method",methodName},
-            {"api_key",client_id},
-            {"call_id","1"},
+                        {"api_key",client_id},
+                        {"call_id","qweqwe"},
+                        {"av","XMusic_1.1.1.3956"},
             };
             foreach (var item in args)
             {
@@ -138,7 +139,7 @@ namespace Jean_Doe.Common
                 await Login();
             dic["access_token"] = File.ReadAllText(tokenFile);
             Artwork.MessageBus.MessageBus.Instance.Publish(new MsgSetBusy(this, true));
-            var res = await Http.Get(url_api, dic);
+            var res = await Http.Post(url_api, dic);
             Artwork.MessageBus.MessageBus.Instance.Publish(new MsgSetBusy(this, false));
             var json = res.ToDynamicObject();
             if (!(json is string) && !(json is Array) && json.err != null)

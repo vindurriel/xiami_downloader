@@ -61,7 +61,6 @@ namespace MusicPlayer
             slideIn.Begin(content, true);
             lastPage = content;
         }
-        static FileSystemWatcher watcher;
         public MainWindow()
         {
             Global.LoadSettings();

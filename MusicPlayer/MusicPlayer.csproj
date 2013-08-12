@@ -18,7 +18,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
@@ -55,6 +55,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Jean_Doe.Reference\Artwork.Bus.dll</HintPath>
     </Reference>
+    <Reference Include="Awesomium.Core, Version=1.7.1.0, Culture=neutral, PublicKeyToken=e1a0d7c8071a5214, processorArchitecture=x86" />
+    <Reference Include="Awesomium.Windows.Controls, Version=1.7.1.0, Culture=neutral, PublicKeyToken=7a34e179b8b61c39, processorArchitecture=x86" />
     <Reference Include="Hardcodet.Wpf.TaskbarNotification">
       <HintPath>..\Jean_Doe.Reference\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
