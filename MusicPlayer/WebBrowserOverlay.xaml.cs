@@ -79,7 +79,9 @@ namespace MusicPlayer
             Win32.POINT screenLocation = new Win32.POINT(offset);
             Win32.ClientToScreen(hwndSource.Handle, ref screenLocation);
             Win32.POINT screenSize = new Win32.POINT(size);
-            Win32.MoveWindow(((HwndSource)HwndSource.FromVisual(this)).Handle, screenLocation.X, screenLocation.Y, screenSize.X, screenSize.Y, true);
+            var hwnsource = (HwndSource)HwndSource.FromVisual(this);
+            if(hwnsource!=null)
+                Win32.MoveWindow(hwnsource.Handle, screenLocation.X, screenLocation.Y, screenSize.X, screenSize.Y, true);
         }
     }
     static class Win32

@@ -35,22 +35,22 @@ namespace MusicPlayer
             Task.Run(() =>
             {
                 System.Threading.Thread.Sleep(1000);
+                Global.ListenToEvent("baidu_access_token", (s) =>
+                {
+                    if (string.IsNullOrEmpty(s)) return;
+                    Global.AppSettings["UpdateInfo"] = "正在检查更新";
+                    if (!Updater.IsLatest())
+                    {
+                        Global.AppSettings["UpdateInfo"] = "正在下载更新";
+                        Updater.Download();
+                    }
+                    else
+                    {
+                        Global.AppSettings["UpdateInfo"] = "已经是最新版本";
+                    }
+                });
                 if (string.IsNullOrEmpty(Global.AppSettings["baidu_access_token"]))
                 {
-                    Global.ListenToEvent("baidu_access_token", (s) =>
-                    {
-                        if (string.IsNullOrEmpty(s)) return;
-                        Global.AppSettings["UpdateInfo"] = "正在检查更新";
-                        if (!Updater.IsLatest())
-                        {
-                            Global.AppSettings["UpdateInfo"] = "正在下载更新";
-                            Updater.Download();
-                        }
-                        else
-                        {
-                            Global.AppSettings["UpdateInfo"] = "已经是最新版本";
-                        }
-                    });
                     Global.AppSettings["UpdateInfo"] = "请先获取百度的令牌";
                     return;
                 }
