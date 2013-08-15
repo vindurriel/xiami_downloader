@@ -25,27 +25,7 @@ namespace MusicPlayer
             InitializeComponent();
             Global.ListenToEvent("xiami_avatar", SetIsLoggedIn);
             Global.ListenToEvent("xiami_nick_name", SetNickName);
-            Loaded += UserPage_Loaded;
         }
-
-        void UserPage_Loaded(object sender, RoutedEventArgs a)
-        {
-            WebBrowserOverlay wbo = new WebBrowserOverlay(_webBrowserPlacementTarget);
-            var webcontrol = wbo.WebBrowser;
-            webcontrol.Navigated += (s, e) =>
-            {
-                var re = new System.Text.RegularExpressions.Regex(@"/model/(\d+)");
-                var m = re.Match(e.Uri.ToString());
-                if (m.Success)
-                {
-                    username.Text = m.Groups[1].Value;
-                }
-            };
-            webcontrol.Navigate("http://localhost:8888");
-        }
-
-        WebBrowser webcontrol;
-     
         public void SetNickName(string s)
         {
             if (string.IsNullOrEmpty(s))

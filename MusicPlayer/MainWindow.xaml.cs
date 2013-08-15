@@ -122,7 +122,7 @@ namespace MusicPlayer
             ActionBarService.RegisterContext("3", list_download, "SelectCount");
             ActionBarService.RegisterContext("4", list_complete, "SelectCount");
         }
-        void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        void MainWindow_Loaded(object sender, RoutedEventArgs a)
         {
             initActionBar();
             var h = new WindowInteropHelper(this);
@@ -144,7 +144,7 @@ namespace MusicPlayer
             {
                 var header = item as ToggleButton;
                 if (header != null)
-                    header.Click += (s, a) =>
+                    header.Click += (s, e) =>
                     {
                         var hd = (s as ToggleButton);
                         hd.IsChecked = true;
@@ -163,6 +163,21 @@ namespace MusicPlayer
             //load last active page
             var lastPage = int.Parse(Global.AppSettings["ActivePage"]);
             Page = lastPage;
+
+            WebBrowserOverlay wbo = new WebBrowserOverlay(webBrowserPlaceHolder);
+            var webcontrol = wbo.WebBrowser;
+            webcontrol.Navigated += (s, e) =>
+            {
+                var re = new System.Text.RegularExpressions.Regex(@"/model/(artist|song|album)_(\d+)");
+                var m = re.Match(e.Uri.ToString());
+                if (m.Success)
+                {
+                    var text = string.Format("{0}:{1}", m.Groups[1], m.Groups[2]);
+                    Clipboard.SetData(DataFormats.Text, text);
+                }
+            };
+            string theme = Global.AppSettings["Theme"].StartsWith("#333") ? "dark" : "light";
+            webcontrol.Navigate("http://localhost:8888?theme=" + theme);
         }
 
         private void loadSongLists()
