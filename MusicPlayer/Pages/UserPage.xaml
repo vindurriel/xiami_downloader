@@ -13,10 +13,9 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <StackPanel>
-            <TextBox FontSize="20" Text="" x:Name="username"/>
-            <ContentControl x:Name="content"/>
-            <Button Content="save" Name="btn_save"/>
-        </StackPanel>
+        <DockPanel>
+            <TextBlock DockPanel.Dock="Top" FontSize="20" Text="" x:Name="username"/>
+            <Border   Margin="10"  Name="_webBrowserPlacementTarget" BorderBrush="Blue" BorderThickness="0"  />
+        </DockPanel>
     </Grid>
 </UserControl>

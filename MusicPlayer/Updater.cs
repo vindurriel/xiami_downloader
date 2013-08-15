@@ -31,11 +31,14 @@ namespace MusicPlayer
         }
         public static bool IsLatest()
         {
-            var realUrl = getRealUrl("http://pan.baidu.com/share/link?shareid=611854251&uk=4093755095");
-            if (realUrl == null) return true;
-            var client = new System.Net.WebClient();
-            client.DownloadFile(realUrl, Global.CWD("latest.txt"));
-            var latest = File.ReadAllText(Global.CWD("latest.txt"));
+            var client = new PCS_client();
+            client.DownloadFile("/apps/folder1/version.txt", Global.CWD("latest.txt"));
+            var latest = Global.CWD("latest.txt");
+            if (!File.Exists(latest))
+            {
+                return true;
+            }
+            latest = File.ReadAllText(latest);
             var current = "";
             if (File.Exists(Global.CWD("current.txt")))
                 current = File.ReadAllText(Global.CWD("current.txt"));
@@ -46,13 +49,12 @@ namespace MusicPlayer
             var dest = Global.CWD("latest.zip");
             if (File.Exists(dest))
                 File.Delete(dest);
-            var realUrl = getRealUrl("http://pan.baidu.com/share/link?shareid=150811617&uk=4093755095");
-            if (realUrl == null) return;
+            var url = new PCS_client().GetDownloadUrl("/apps/folder1/latest.zip");
             var d = new SoftwareDownloader
             {
                 Info = new DownloaderInfo
                 {
-                    Url = realUrl,
+                    Url = url,
                     FileName = dest,
                 }
             };

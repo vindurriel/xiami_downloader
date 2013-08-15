@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Linq;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 namespace MusicPlayer
 {
     /// <summary>
@@ -57,6 +58,8 @@ namespace MusicPlayer
                 new InputConfigItem("虾米账户","xiami_username","用户名"),
                 new PasswordConfigItem("虾米账户","xiami_password","密码"),
                 new ButtonConfigItem("虾米账户","登录",btn_xiami_login_Click),
+                new ButtonConfigItem("百度云账户","登录",btn_baidu_login_Click),
+                new LabelConfigItem("百度云账户","baidu_access_token","令牌"),
                 new LabelConfigItem("软件更新","UpdateInfo",""),
             };
             foreach (var item in Configs)
@@ -86,11 +89,30 @@ namespace MusicPlayer
             });
         }
 
-        private async void btn_xiami_login_Click(object sender, RoutedEventArgs e)
+        private async void btn_xiami_login_Click(object sender, RoutedEventArgs a)
         {
             Artwork.MessageBus.MessageBus.Instance.Publish(new MsgSetBusy(this, true));
             await XiamiClient.GetDefault().Login();
             Artwork.MessageBus.MessageBus.Instance.Publish(new MsgSetBusy(this, false));
+        }
+        private  void btn_baidu_login_Click(object sender, RoutedEventArgs a)
+        {
+            var b = new System.Windows.Controls.WebBrowser();
+            b.Width = 800;
+            b.Height = 600;
+            b.Navigated += (s, e) =>
+            {
+                var m = new Regex("access_token=(.*?)&").Match(e.Uri.ToString());
+                if (m.Success)
+                {
+                    Global.AppSettings["baidu_access_token"] = m.Groups[1].Value;
+                    (((s) as WebBrowser).Parent as Window).Close();
+                }
+            };
+            b.Navigate(new PCS_client().GetAccessTokenPage());
+            var w = new Window();
+            w.Content = b;
+            w.ShowDialog();
         }
 
         private void btn_browse_Click(object sender, RoutedEventArgs e)

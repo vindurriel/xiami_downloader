@@ -9,18 +9,12 @@
                 <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/Slider.xaml" />
                 <ResourceDictionary Source="/Jean_Doe.MusicControl;component/Themes/ToggleStyle.xaml" />
                 <ResourceDictionary>
-                    <!--<LinearGradientBrush x:Key="selectBrush" EndPoint="3,3" MappingMode="Absolute" SpreadMethod="Repeat"
-                            StartPoint="0,0">
-                        <GradientStop Color="{DynamicResource darkColor}" Offset="0" />
-                        <GradientStop Color="{DynamicResource darkColor}" Offset="0.1" />
-                        <GradientStop Color="{DynamicResource selectColor}" Offset="0.144" />
-                        <GradientStop Color="{DynamicResource selectColor}" Offset="1" />
-                    </LinearGradientBrush>-->
                     <SolidColorBrush x:Key="darkBrush" />
                     <SolidColorBrush x:Key="lightBrush" />
                     <SolidColorBrush x:Key="selectBrush" />
                     <SolidColorBrush x:Key='skinBrush' />
                     <FontFamily x:Key="font_symbol">/xiami;component/Resources/#Segoe UI Symbol</FontFamily>
+                    <FontFamily x:Key="font">/xiami;component/Resources/#Soho Gothic Pro Light,Microsoft Yahei Light</FontFamily>
                     <QuinticEase x:Key="easeFunc" EasingMode="EaseOut" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>

@@ -55,8 +55,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Jean_Doe.Reference\Artwork.Bus.dll</HintPath>
     </Reference>
-    <Reference Include="Awesomium.Core, Version=1.7.1.0, Culture=neutral, PublicKeyToken=e1a0d7c8071a5214, processorArchitecture=x86" />
-    <Reference Include="Awesomium.Windows.Controls, Version=1.7.1.0, Culture=neutral, PublicKeyToken=7a34e179b8b61c39, processorArchitecture=x86" />
     <Reference Include="Hardcodet.Wpf.TaskbarNotification">
       <HintPath>..\Jean_Doe.Reference\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
@@ -98,6 +96,9 @@
       <DependentUpon>UserPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Updater.cs" />
+    <Compile Include="WebBrowserOverlay.xaml.cs">
+      <DependentUpon>WebBrowserOverlay.xaml</DependentUpon>
+    </Compile>
     <Page Include="ActionBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -124,6 +125,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Pages\UserPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WebBrowserOverlay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

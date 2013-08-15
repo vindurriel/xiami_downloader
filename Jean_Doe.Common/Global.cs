@@ -31,6 +31,7 @@ namespace Jean_Doe.Common
             {"TitleMarquee","1"},
             {"Theme","#333 #eee #000"},
             {"UpdateInfo",""},
+            {"baidu_access_token",""},
         };
         public static string CWD(params string[] strs)
         {

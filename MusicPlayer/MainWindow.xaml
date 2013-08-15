@@ -6,7 +6,8 @@
         x:Class="MusicPlayer.MainWindow" WindowStyle="None" Foreground="{DynamicResource lightBrush}"
         AllowsTransparency="True" Background="#01ffffff" Icon="Resources/icon.ico" SnapsToDevicePixels="True"
         FontSize="15" ResizeMode="CanResizeWithGrip" x:Name="me" MinHeight="480" SizeToContent="Manual" MinWidth="350"
-        FontFamily="/xiami;component/Resources/#Soho Gothic Pro Light" Title="虾米下载" BorderWidth="5">
+        FontFamily="{DynamicResource font}"          
+        Title="虾米下载" BorderWidth="5">
     <controls:ResizeWindow.Resources>
         <controls:BoolToVisibilityConverter x:Key="bool2vis" />
         <Storyboard x:Key="Maximize">

@@ -86,7 +86,9 @@
     <Compile Include="Messages\MsgSetBusy.cs" />
     <Compile Include="Mp3Player.cs" />
     <Compile Include="NetAccess.cs" />
+    <Compile Include="PCS_client.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Regedit.cs" />
     <Compile Include="RunProgramHelper.cs" />
     <Compile Include="SearchManager.cs" />
     <Compile Include="SearchProvider\DoubanSearchProvider.cs" />

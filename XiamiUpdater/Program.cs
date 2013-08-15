@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-
+using Jean_Doe.Common;
 namespace XiamiUpdater
 {
     class Program

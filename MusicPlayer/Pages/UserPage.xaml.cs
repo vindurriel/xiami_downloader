@@ -1,12 +1,10 @@
-﻿using Awesomium.Core;
-using Awesomium.Windows.Controls;
-using Jean_Doe.Common;
+﻿using Jean_Doe.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
-
+using System.Windows.Controls;
 namespace MusicPlayer
 {
     /// <summary>
@@ -27,57 +25,27 @@ namespace MusicPlayer
             InitializeComponent();
             Global.ListenToEvent("xiami_avatar", SetIsLoggedIn);
             Global.ListenToEvent("xiami_nick_name", SetNickName);
-            webcontrol = new WebControl();
-            webcontrol.Width = 800;
-            webcontrol.Height = 600;
-            webcontrol.ShowJavascriptDialog += webcontrol_ShowJavascriptDialog;
-            webcontrol.DocumentReady += (s, e) =>
-            {
-                webcontrol.ExecuteJavascript(
-                     "document.documentElement.style.overflow = 'hidden';");
-            };
-            content.Content = webcontrol;
-            webcontrol.Source = new Uri("http://localhost:8888");
-            webcontrol.AddressChanged += webcontrol_AddressChanged;
-            btn_save.Click += btn_save_Click;
+            Loaded += UserPage_Loaded;
         }
 
-        void webcontrol_AddressChanged(object sender, UrlEventArgs e)
+        void UserPage_Loaded(object sender, RoutedEventArgs a)
         {
-            var re = new System.Text.RegularExpressions.Regex(@"/model/(\d+)");
-            var m = re.Match(e.Url.ToString());
-            if (m.Success)
+            WebBrowserOverlay wbo = new WebBrowserOverlay(_webBrowserPlacementTarget);
+            var webcontrol = wbo.WebBrowser;
+            webcontrol.Navigated += (s, e) =>
             {
-                username.Text = m.Groups[1].Value;
-            }
-        }
-
-        void webcontrol_ShowJavascriptDialog(object sender, JavascriptDialogEventArgs e)
-        {
-            if (e.DialogFlags.HasFlag(JSDialogFlags.HasPromptField))
-            {
-                // It's a 'window.prompt'. You need to design your own
-                // dialog for this.
-            }
-            else // Everything else can be presented with a MessageBox that can easily be designed using the available extensions.
-            {
-                e.Handled = true;
-                e.Cancel = true;
-                if (MessageBox.Show(e.Message,
-                 String.Format("Awesomium.NET - {0}", e.FrameURL)) == MessageBoxResult.OK)
+                var re = new System.Text.RegularExpressions.Regex(@"/model/(\d+)");
+                var m = re.Match(e.Uri.ToString());
+                if (m.Success)
                 {
-                    e.Cancel = false;
+                    username.Text = m.Groups[1].Value;
                 }
-            }
+            };
+            webcontrol.Navigate("http://localhost:8888");
         }
-        WebControl webcontrol;
-        void btn_save_Click(object sender, RoutedEventArgs e)
-        {
-            var bmp = webcontrol.Surface as WebViewPresenter;
-            var png = new System.Windows.Media.Imaging.PngBitmapEncoder();
-            png.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create((System.Windows.Media.Imaging.BitmapSource)bmp.Image));
-            png.Save(File.OpenWrite(Global.CWD("ok.png")));
-        }
+
+        WebBrowser webcontrol;
+     
         public void SetNickName(string s)
         {
             if (string.IsNullOrEmpty(s))
