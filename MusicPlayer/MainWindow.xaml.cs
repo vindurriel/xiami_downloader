@@ -165,7 +165,7 @@ namespace MusicPlayer
             Page = lastPage;
 
             WebBrowserOverlay wbo = new WebBrowserOverlay(webBrowserPlaceHolder);
-            var webcontrol = wbo.WebBrowser;
+            webcontrol = wbo.WebBrowser;
             webcontrol.Navigated += (s, e) =>
             {
                 var re = new System.Text.RegularExpressions.Regex(@"/model/(artist|song|album)_(\d+)");
@@ -179,7 +179,7 @@ namespace MusicPlayer
             string theme = Global.AppSettings["Theme"].StartsWith("#333") ? "dark" : "light";
             webcontrol.Navigate("http://localhost:8888?theme=" + theme);
         }
-
+        WebBrowser webcontrol;
         private void loadSongLists()
         {
             list_complete.SavePath = "complete.xml";
@@ -261,6 +261,15 @@ namespace MusicPlayer
                 case EnumSearchState.Started:
                     UIHelper.RunOnUI(() =>
                     {
+                        if (this.webcontrol != null)
+                        {
+                            var query = message.SearchResult.Keyword;
+                            var m = new System.Text.RegularExpressions.Regex("(artist|song):(\\d+)").Match(query);
+                            if (m.Success)
+                            {
+                                webcontrol.Navigate(string.Format("http://localhost:8888/model/{0}_{1}", m.Groups[1], m.Groups[2]));
+                            }
+                        }
                         Page = 2;
                     });
                     MessageBus.Instance.Publish(new MsgSetBusy(this, true));
