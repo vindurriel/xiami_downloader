@@ -32,7 +32,7 @@ namespace MusicPlayer
             _placementTarget = placementTarget;
             Window owner = Artwork.DataBus.DataBus.Get("MainWindow") as Window;
             Debug.Assert(owner != null);
-            //owner.SizeChanged += delegate { OnSizeLocationChanged(); };
+            owner.SizeChanged += delegate { OnSizeLocationChanged(); };
             owner.LocationChanged += delegate { OnSizeLocationChanged(); };
             _placementTarget.SizeChanged += delegate { OnSizeLocationChanged(); };
             Owner = owner;
@@ -48,12 +48,17 @@ namespace MusicPlayer
                     Hide();
             };
             //owner.LayoutUpdated += new EventHandler(OnOwnerLayoutUpdated);
+            SourceInitialized += WebBrowserOverlay_SourceInitialized;
             Loaded += WebBrowserOverlay_Loaded;
+        }
+
+        void WebBrowserOverlay_SourceInitialized(object sender, EventArgs e)
+        {
+            OnSizeLocationChanged();
         }
 
         void WebBrowserOverlay_Loaded(object sender, RoutedEventArgs e)
         {
-            OnSizeLocationChanged();
 
         }
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
