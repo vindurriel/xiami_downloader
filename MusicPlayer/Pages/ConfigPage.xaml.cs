@@ -54,6 +54,7 @@ namespace MusicPlayer
                 new ToggleConfigItem("外观","ShowLyric","显示歌词"),       
                 new ToggleConfigItem("外观","EnableMagnet","边界停靠"), 
                 new ToggleConfigItem("外观","TitleMarquee","标题滚动显示"),
+                new InputConfigItem("nest","url_nest","nest服务地址"),
                 new ComboConfigItem("播放","PlayNextMode","下一首模式"),
                 new InputConfigItem("虾米账户","xiami_username","用户名"),
                 new PasswordConfigItem("虾米账户","xiami_password","密码"),

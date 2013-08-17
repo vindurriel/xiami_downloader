@@ -32,6 +32,7 @@ namespace Jean_Doe.Common
             {"Theme","#333 #eee #000"},
             {"UpdateInfo",""},
             {"baidu_access_token",""},
+            {"url_nest","http://localhost:8888"},
         };
         public static string CWD(params string[] strs)
         {

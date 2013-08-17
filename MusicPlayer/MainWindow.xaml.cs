@@ -81,6 +81,27 @@ namespace MusicPlayer
             SizeChanged += MainWindow_SizeChanged;
             Mp3Player.SongChanged += OnMp3PlayerSongChanged;
             Global.ListenToEvent("TitleMarquee", SetTitleMarquee);
+            btn_sync_left.Click += btn_sync_left_Click;
+            btn_sync_right.Click += btn_sync_right_Click;
+        }
+
+        void btn_sync_right_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.webcontrol != null)
+            {
+                var query = searchKeywordControl.Key;
+                var m = new System.Text.RegularExpressions.Regex("(.+?):(\\d+)").Match(query);
+                if (m.Success)
+                {
+                    string theme = Global.AppSettings["Theme"].StartsWith("#333") ? "dark" : "light";
+                    webcontrol.Navigate(string.Format("{0}/model/{1}_{2}?theme={3}",Global.AppSettings["url_nest"],m.Groups[1], m.Groups[2], theme));
+                }
+            }
+        }
+
+        void btn_sync_left_Click(object sender, RoutedEventArgs e)
+        {
+            SearchManager.Search(webcontrol_entity);
         }
         void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -168,17 +189,19 @@ namespace MusicPlayer
             webcontrol = wbo.WebBrowser;
             webcontrol.Navigated += (s, e) =>
             {
-                var re = new System.Text.RegularExpressions.Regex(@"/model/(artist|song|album)_(\d+)");
+                var re = new System.Text.RegularExpressions.Regex(@"/model/(.+?)_(\d+)");
                 var m = re.Match(e.Uri.ToString());
                 if (m.Success)
                 {
                     var text = string.Format("{0}:{1}", m.Groups[1], m.Groups[2]);
-                    Clipboard.SetData(DataFormats.Text, text);
+                    webcontrol_entity = text;
+                    //Clipboard.SetData(DataFormats.Text, text);
                 }
             };
             string theme = Global.AppSettings["Theme"].StartsWith("#333") ? "dark" : "light";
-            webcontrol.Navigate("http://localhost:8888?theme=" + theme);
+            webcontrol.Navigate(string.Format("{0}/model/artist_1508?theme={1}",Global.AppSettings["url_nest"],theme));
         }
+        string webcontrol_entity;
         WebBrowser webcontrol;
         private void loadSongLists()
         {
@@ -261,15 +284,6 @@ namespace MusicPlayer
                 case EnumSearchState.Started:
                     UIHelper.RunOnUI(() =>
                     {
-                        if (this.webcontrol != null)
-                        {
-                            var query = message.SearchResult.Keyword;
-                            var m = new System.Text.RegularExpressions.Regex("(artist|song):(\\d+)").Match(query);
-                            if (m.Success)
-                            {
-                                webcontrol.Navigate(string.Format("http://localhost:8888/model/{0}_{1}", m.Groups[1], m.Groups[2]));
-                            }
-                        }
                         Page = 2;
                     });
                     MessageBus.Instance.Publish(new MsgSetBusy(this, true));
