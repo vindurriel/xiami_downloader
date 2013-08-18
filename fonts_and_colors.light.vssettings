@@ -8,7 +8,7 @@
 			<PropertyValue name="Version">2</PropertyValue>
 			<FontsAndColors Version="2.0">
 				<Categories>
-					<Category GUID="{58E96763-1D3B-4E05-B6BA-FF7115FD0B7B}" FontIsDefault="Yes">
+					<Category GUID="{58E96763-1D3B-4E05-B6BA-FF7115FD0B7B}" FontName="Consolas" FontSize="11" CharSet="1" FontIsDefault="No">
 						<Items>
 							<Item Name="Plain Text" Foreground="0x005A5A5A" Background="0x00F9F9F9" BoldFont="No"/>
 							<Item Name="Indicator Margin" Foreground="0x01000017" Background="0x00F7F7F7" BoldFont="No"/>
@@ -17,18 +17,18 @@
 					<Category GUID="{6BB65C5A-2F31-4BDE-9F48-8A38DC0C63E7}" FontName="新宋体" FontSize="9" CharSet="134" FontIsDefault="No">
 						<Items/>
 					</Category>
-					<Category GUID="{75A05685-00A8-4DED-BAE5-E7A50BFA929A}" FontIsDefault="Yes">
+					<Category GUID="{75A05685-00A8-4DED-BAE5-E7A50BFA929A}" FontName="Consolas" FontSize="11" CharSet="1" FontIsDefault="No">
 						<Items>
+							<Item Name="XML Doc Comment" Foreground="0x00A2A2A2" Background="0x01000001" BoldFont="No"/>
+							<Item Name="XML Doc Tag" Foreground="0x00A2A2A2" Background="0x01000001" BoldFont="No"/>
 							<Item Name="Comment" Foreground="0x00939393" Background="0x01000001" BoldFont="No"/>
 							<Item Name="Identifier" Foreground="0x00000000" Background="0x01000001" BoldFont="No"/>
-							<Item Name="Keyword" Foreground="0x00000000" Background="0x01000001" BoldFont="Yes"/>
+							<Item Name="Keyword" Foreground="0x003B3B3B" Background="0x01000001" BoldFont="No"/>
 							<Item Name="Preprocessor Keyword" Foreground="0x00CC7A00" Background="0x01000001" BoldFont="No"/>
 							<Item Name="String" Foreground="0x000000D5" Background="0x01000001" BoldFont="No"/>
 							<Item Name="outlining.collapsehintadornment" Foreground="0x00808080" Background="0x00FAF7F6" BoldFont="No"/>
 							<Item Name="urlformat" Foreground="0x0000009F" Background="0x01000001" BoldFont="No"/>
 							<Item Name="Line Number" Foreground="0x00868686" Background="0x01000001" BoldFont="No"/>
-							<Item Name="XML Doc Comment" Foreground="0x00A2A2A2" Background="0x01000001" BoldFont="No"/>
-							<Item Name="XML Doc Tag" Foreground="0x00A2A2A2" Background="0x01000001" BoldFont="No"/>
 							<Item Name="VBScript Keyword" Foreground="0x00800080" Background="0x01000001" BoldFont="No"/>
 						</Items>
 					</Category>
@@ -43,25 +43,34 @@
 							<Item Name="Odd Row Items" Foreground="0x00000000" Background="0x00FFFFFF" BoldFont="No"/>
 						</Items>
 					</Category>
-					<Category GUID="{E0187991-B458-4F7E-8CA9-42C9A573B56C}" FontIsDefault="Yes">
+					<Category GUID="{E0187991-B458-4F7E-8CA9-42C9A573B56C}" FontName="Consolas" FontSize="11" CharSet="1" FontIsDefault="No">
 						<Items>
-							<Item Name="Keyword" Foreground="0x00000000" Background="0x01000001" BoldFont="Yes"/>
+							<Item Name="Keyword" Foreground="0x003B3B3B" Background="0x01000001" BoldFont="No"/>
 							<Item Name="Comment" Foreground="0x00939393" Background="0x01000001" BoldFont="No"/>
 							<Item Name="Identifier" Foreground="0x00000000" Background="0x01000001" BoldFont="No"/>
 							<Item Name="String" Foreground="0x000000D5" Background="0x01000001" BoldFont="No"/>
 							<Item Name="XML Doc Comment" Foreground="0x00A2A2A2" Background="0x01000001" BoldFont="No"/>
 							<Item Name="XML Doc Tag" Foreground="0x00A2A2A2" Background="0x01000001" BoldFont="No"/>
-							<Item Name="Preprocessor Keyword" Foreground="0x00CC7A00" Background="0x01000001" BoldFont="No"/>
-							<Item Name="User Types" Foreground="0x008B3C01" Background="0x01000001" BoldFont="No"/>
 							<Item Name="XML Doc Attribute" Foreground="0x00A2A2A2" Background="0x01000001" BoldFont="No"/>
 							<Item Name="XML Comment" Foreground="0x0022995E" Background="0x01000001" BoldFont="No"/>
 							<Item Name="String(C# @ Verbatim)" Foreground="0x000000D5" Background="0x01000001" BoldFont="No"/>
+							<Item Name="Preprocessor Keyword" Foreground="0x00CC7A00" Background="0x01000001" BoldFont="No"/>
+							<Item Name="User Types" Foreground="0x008B3C01" Background="0x01000001" BoldFont="No"/>
 							<Item Name="User Types(Value types)" Foreground="0x00DD8000" Background="0x01000001" BoldFont="No"/>
 							<Item Name="User Types(Interfaces)" Foreground="0x00DD8000" Background="0x01000001" BoldFont="No"/>
 							<Item Name="User Types(Delegates)" Foreground="0x00DD8000" Background="0x01000001" BoldFont="No"/>
 							<Item Name="User Types(Enums)" Foreground="0x00DD8000" Background="0x01000001" BoldFont="No"/>
 							<Item Name="User Types(Type parameters)" Foreground="0x00DD8000" Background="0x01000001" BoldFont="No"/>
-							<Item Name="XAML Comment" Foreground="0x00000080" Background="0x01000001" BoldFont="No"/>
+							<Item Name="XAML Keyword" Foreground="0x02000000" Background="0x01000001" BoldFont="No"/>
+							<Item Name="XAML Delimiter" Foreground="0x02000000" Background="0x01000001" BoldFont="No"/>
+							<Item Name="XAML Comment" Foreground="0x00C0C0C0" Background="0x01000001" BoldFont="No"/>
+							<Item Name="XAML Name" Foreground="0x02000000" Background="0x01000001" BoldFont="No"/>
+							<Item Name="XAML Attribute" Foreground="0x02000000" Background="0x01000001" BoldFont="No"/>
+							<Item Name="XAML Attribute Value" Foreground="0x00000000" Background="0x01000001" BoldFont="No"/>
+							<Item Name="XAML Attribute Quotes" Foreground="0x02000000" Background="0x01000001" BoldFont="No"/>
+							<Item Name="XAML Markup Extension Class" Foreground="0x00C08000" Background="0x01000001" BoldFont="No"/>
+							<Item Name="XAML Markup Extension Parameter Name" Foreground="0x00000000" Background="0x01000001" BoldFont="No"/>
+							<Item Name="XAML Markup Extension Parameter Value" Foreground="0x00000000" Background="0x01000001" BoldFont="No"/>
 							<Item Name="XML Delimiter" Foreground="0x02000000" Background="0x01000001" BoldFont="No"/>
 							<Item Name="XML Name" Foreground="0x00000000" Background="0x01000001" BoldFont="No"/>
 							<Item Name="XML Attribute" Foreground="0x00800080" Background="0x01000001" BoldFont="No"/>
@@ -72,6 +81,9 @@
 						<Items/>
 					</Category>
 					<Category GUID="{F9D6BCE6-C669-41DB-8EE7-DD953828685B}" FontName="新宋体" FontSize="9" CharSet="134" FontIsDefault="No">
+						<Items/>
+					</Category>
+					<Category GUID="{FF349800-EA43-46C1-8C98-878E78F46501}" FontName="Consolas" FontSize="11" CharSet="1" FontIsDefault="No">
 						<Items/>
 					</Category>
 				</Categories>
