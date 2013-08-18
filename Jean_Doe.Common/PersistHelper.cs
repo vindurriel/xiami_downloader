@@ -2,46 +2,50 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System;
-
+using System.Linq;
+using System.Collections.Generic;
 namespace Jean_Doe.Common
 {
     public class PersistHelper
     {
-        public static void Save(object x, string path)
-        {
-            if (string.IsNullOrEmpty(path)) return;
-            var type = x.GetType();
-            if (type is System.Collections.IList)
-                type = type.GetElementType();
-            path = Path.Combine(Global.BasePath, path);
-            try
-            {
-                XmlSerializer Serializer = new XmlSerializer(x.GetType());
-                using (var writer = new StreamWriter(path))
-                    Serializer.Serialize(writer, x);
-            }
-            catch
-            {
-            }
-
-        }
         public static string SqliteDbPath = Path.Combine(Global.BasePath, "songs.sqlite");
-        public static T Load<T>(string path) where T : class
+        public static void Delete<T>(T item) where T : IHasId, new()
         {
-            if (string.IsNullOrEmpty(path)) return null;
-            path = Path.Combine(Global.BasePath, path);
-            if (!File.Exists(path)) return null;
-            try
+            using (var db = new SQLite.SQLiteConnection(SqliteDbPath))
             {
-                XmlSerializer Serializer = new XmlSerializer(typeof(T));
-                Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                var res = (T)Serializer.Deserialize(stream);
-                stream.Close();
-                return res;
+                db.CreateTable<T>();
+                db.BeginTransaction();
+                var d = db.Get<T>(item.Id);
+                if (d != null)
+                    db.Delete(d);
+                db.Commit();
             }
-            catch
+        }
+        static bool always_true<T>(T o) { return true; }
+        public static List<T> Load<T>(Func<T, bool> condition = null) where T : new()
+        {
+            var res = new List<T>();
+            SQLite.SQLiteConnection db = null;
+            if (condition == null)
+                condition = always_true;
+            using (db = new SQLite.SQLiteConnection(SqliteDbPath))
             {
-                return null;
+                db.CreateTable<T>();
+                res = (from s in db.Table<T>() select s).Where(condition).ToList();
+            }
+            return res;
+        }
+        public static void Save<T>(T[] items) where T : new()
+        {
+            using (var db = new SQLite.SQLiteConnection(SqliteDbPath))
+            {
+                db.CreateTable<T>();
+                db.BeginTransaction();
+                foreach (var item in items)
+                {
+                    db.InsertOrReplace(item);
+                }
+                db.Commit();
             }
         }
     }

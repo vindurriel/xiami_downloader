@@ -1,6 +1,6 @@
 ﻿using Jean_Doe.Common;
 using System.Collections.Generic;
-public interface IMusic
+public interface IMusic:IHasId
 {
     string Logo { get; set; }
     string Id { get; set; }

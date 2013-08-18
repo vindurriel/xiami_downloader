@@ -84,7 +84,6 @@ namespace MusicPlayer
             btn_sync_left.Click += btn_sync_left_Click;
             btn_sync_right.Click += btn_sync_right_Click;
         }
-
         void btn_sync_right_Click(object sender, RoutedEventArgs e)
         {
             if (this.webcontrol != null)
@@ -93,8 +92,15 @@ namespace MusicPlayer
                 var m = new System.Text.RegularExpressions.Regex("(.+?):(\\d+)").Match(query);
                 if (m.Success)
                 {
-                    string theme = Global.AppSettings["Theme"].StartsWith("#333") ? "dark" : "light";
-                    webcontrol.Navigate(string.Format("{0}/model/{1}_{2}?theme={3}",Global.AppSettings["url_nest"],m.Groups[1], m.Groups[2], theme));
+                    webcontrol.Navigate(string.Format("{0}/model/{1}_{2}?theme={3}", Global.AppSettings["url_nest"], m.Groups[1], m.Groups[2], theme));
+                }
+                else
+                {
+                   var song= this.list_search.SelectedSongs.FirstOrDefault();
+                   if (song != null)
+                   {
+                       webcontrol.Navigate(string.Format("{0}/model/{1}_{2}?theme={3}", Global.AppSettings["url_nest"], "song",song.Id, theme));
+                   }
                 }
             }
         }
@@ -198,7 +204,6 @@ namespace MusicPlayer
                     //Clipboard.SetData(DataFormats.Text, text);
                 }
             };
-            string theme = Global.AppSettings["Theme"].StartsWith("#333") ? "dark" : "light";
             webcontrol.Navigate(string.Format("{0}/model/artist_1508?theme={1}",Global.AppSettings["url_nest"],theme));
         }
         string webcontrol_entity;
@@ -237,8 +242,10 @@ namespace MusicPlayer
                 CompositionTarget.Rendering -= OnCompositionTargetRendering;
             }
         }
+        string theme;
         void SetTheme(string s)
         {
+            theme =s.StartsWith("#333") ? "dark" : "light";
             var colors = s.Split(" ".ToCharArray());
             App.Current.Resources["darkBrush"] = new SolidColorBrush { Color = (Color)ColorConverter.ConvertFromString(colors[0]) };
             App.Current.Resources["lightBrush"] = new SolidColorBrush { Color = (Color)ColorConverter.ConvertFromString(colors[1]) };

@@ -59,6 +59,13 @@ namespace Jean_Doe.MusicControl
                 playList.Shuffle();
             needsRefreshPlaylist = false;
         }
+
+        public override void Remove(SongViewModel song)
+        {
+            base.Remove(song);
+            PersistHelper.Delete(song.Song);
+        }
+
         protected override void ApplyFilter()
         {
             base.ApplyFilter();

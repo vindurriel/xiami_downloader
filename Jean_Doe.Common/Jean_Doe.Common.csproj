@@ -69,6 +69,7 @@
     <Compile Include="Dom\Artist.cs" />
     <Compile Include="Dom\Album.cs" />
     <Compile Include="Dom\Collection.cs" />
+    <Compile Include="Dom\IHasId.cs" />
     <Compile Include="Dom\MusicFactory.cs" />
     <Compile Include="Dom\MusicHelper.cs" />
     <Compile Include="DoubanUrl.cs" />

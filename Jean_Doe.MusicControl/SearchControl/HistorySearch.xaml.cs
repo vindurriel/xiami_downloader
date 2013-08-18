@@ -32,18 +32,10 @@ namespace Jean_Doe.MusicControl
         ObservableCollection<HistorySearchItem> HistoryItems = new ObservableCollection<HistorySearchItem>();
         public void Load()
         {
-            if (SavePath == null || !System.IO.File.Exists(SavePath))
-            {
-                return;
-            }
             HistoryItems.Clear();
             try
             {
-                using (var db = new SQLite.SQLiteConnection(PersistHelper.SqliteDbPath))
-                {
-                    db.CreateTable<HistorySearchItem>();
-                    (from s in db.Table<HistorySearchItem>() select s).ToList().ForEach(x => HistoryItems.Add(x));
-                }
+                PersistHelper.Load<HistorySearchItem>().ForEach(x => HistoryItems.Add(x));
             }
             catch (Exception e)
             {
@@ -52,24 +44,9 @@ namespace Jean_Doe.MusicControl
         }
         public void Save()
         {
-            if (SavePath == null)
-            {
-                MessageBox.Show("save path not defined.");
-                return;
-            }
             try
             {
-                var dir = Path.GetDirectoryName(SavePath);
-                using (var db = new SQLite.SQLiteConnection(PersistHelper.SqliteDbPath))
-                {
-                    db.CreateTable<HistorySearchItem>();
-                    db.BeginTransaction();
-                    foreach (var item in HistoryItems)
-                    {
-                        db.InsertOrReplace(item);
-                    }
-                    db.Commit();
-                }
+                PersistHelper.Save(HistoryItems.ToArray());
             }
             catch (Exception e)
             {

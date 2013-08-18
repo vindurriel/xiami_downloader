@@ -111,74 +111,36 @@ namespace Jean_Doe.MusicControl
         {
             if (!canSave) return;
             if (SavePath == null) return;
-            var songs = this.OfType<SongViewModel>().Select(x => x.Song).ToList();
+            var songs = this.OfType<SongViewModel>().Select(x => x.Song).ToArray();
             try
             {
                 string downloadState = System.IO.Path.GetFileNameWithoutExtension(SavePath);
-                using (var db = new SQLite.SQLiteConnection(PersistHelper.SqliteDbPath))
+                foreach (var item in songs)
                 {
-                    db.CreateTable<Song>();
-                    db.BeginTransaction();
-                    foreach (var item in songs)
-                    {
-                        item.DownloadState = downloadState;
-                        db.InsertOrReplace(item);
-                    }
-                    db.Commit();
+                    item.DownloadState = downloadState;
                 }
+                PersistHelper.Save(songs);
             }
             catch (Exception e)
             {
                 Logger.Error(e);
             }
-        }
-        public bool RemoveFromDb(string id)
-        {
-            bool res = false;
-            using (var db = new SQLite.SQLiteConnection(PersistHelper.SqliteDbPath))
-            {
-                try
-                {
-                    res = db.Delete<Song>(id)==0;
-                    db.Commit();
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e);
-                }
-            }
-            return res;
         }
         public void Load()
         {
-            List<Song> songs = null;
+            var songs = new List<Song>();
             try
             {
                 string downloadState = System.IO.Path.GetFileNameWithoutExtension(SavePath);
-                using (var db = new SQLite.SQLiteConnection(PersistHelper.SqliteDbPath))
-                {
-                    db.CreateTable<Song>();
-                    var tmpSongs = PersistHelper.Load<Songs>(SavePath);
-                    if (tmpSongs != null && tmpSongs.Count > 0)
-                    {
-                        db.BeginTransaction();
-                        foreach (var item in tmpSongs)
-                        {
-                            item.DownloadState = downloadState;
-                            db.InsertOrReplace(item);
-                        }
-                        db.Commit();
-                    }
-                    songs = (from s in db.Table<Song>() where s.DownloadState == downloadState select s).ToList();
-                }
-                if (songs == null || songs.Count() == 0)
-                    return;
+                var condition = new Func<Song, bool>((s) => {
+                    return s.DownloadState == downloadState;
+                });
+                songs = PersistHelper.Load<Song>(condition);
             }
             catch (Exception e)
             {
                 Logger.Error(e);
             }
-
             if (Count > 0)
                 Clear();
             AddItems(songs);

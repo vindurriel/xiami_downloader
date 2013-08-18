@@ -146,13 +146,12 @@ namespace Jean_Doe.MusicControl
                 items.Move(old, newi);
             }));
         }
-        public void Remove(SongViewModel song)
+        public virtual void Remove(SongViewModel song)
         {
             UIHelper.RunOnUI(() =>
             {
                 items.Remove(song);
             });
-            items.RemoveFromDb(song.Id);
         }
         public SongViewModel GetItemById(string id)
         {

@@ -7,7 +7,7 @@ namespace Jean_Doe.Common
 {
     public class Song : IMusic
     {
-        #region xml properties
+        #region db properties
         public string UrlMp3 { get; set; }
         public string UrlArt { get; set; }
         public string UrlLrc { get; set; }
