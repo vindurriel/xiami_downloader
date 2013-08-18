@@ -9,16 +9,23 @@ namespace Jean_Doe.Common
     public class PersistHelper
     {
         public static string SqliteDbPath = Path.Combine(Global.BasePath, "songs.sqlite");
-        public static void Delete<T>(T item) where T : IHasId, new()
+        static object lck = new object();
+        public static void Delete<T>(T[] items) where T : IHasId, new()
         {
             using (var db = new SQLite.SQLiteConnection(SqliteDbPath))
             {
-                db.CreateTable<T>();
-                db.BeginTransaction();
-                var d = db.Get<T>(item.Id);
-                if (d != null)
-                    db.Delete(d);
-                db.Commit();
+                lock (lck)
+                {
+                    db.CreateTable<T>();
+                    db.BeginTransaction();
+                    foreach (var item in items)
+                    {
+                        var d = db.Get<T>(item.Id);
+                        if (d != null)
+                            db.Delete(d);
+                    }
+                    db.Commit();
+                }
             }
         }
         static bool always_true<T>(T o) { return true; }
@@ -39,13 +46,16 @@ namespace Jean_Doe.Common
         {
             using (var db = new SQLite.SQLiteConnection(SqliteDbPath))
             {
-                db.CreateTable<T>();
-                db.BeginTransaction();
-                foreach (var item in items)
+                lock (lck)
                 {
-                    db.InsertOrReplace(item);
+                    db.CreateTable<T>();
+                    db.BeginTransaction();
+                    foreach (var item in items)
+                    {
+                        db.InsertOrReplace(item);
+                    }
+                    db.Commit();
                 }
-                db.Commit();
             }
         }
     }

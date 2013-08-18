@@ -59,13 +59,6 @@ namespace Jean_Doe.MusicControl
                 playList.Shuffle();
             needsRefreshPlaylist = false;
         }
-
-        public override void Remove(SongViewModel song)
-        {
-            base.Remove(song);
-            PersistHelper.Delete(song.Song);
-        }
-
         protected override void ApplyFilter()
         {
             base.ApplyFilter();
@@ -337,13 +330,20 @@ namespace Jean_Doe.MusicControl
         }
         void btn_remove_complete_Click(object sender, RoutedEventArgs e)
         {
-            var list = SelectedSongs.ToList();
+            var list = SelectedSongs.ToArray();
             Task.Run(() =>
             {
+                try
+                {
+                    PersistHelper.Delete(list.Select(x => x.Song).ToArray());
+
+                }
+                catch (Exception ex)
+                {
+                    Jean_Doe.Common.Logger.Error(ex);
+                }
                 foreach (var item in list)
                 {
-
-                    Remove(item);
                     try
                     {
                         File.Delete(item.Song.FilePath);
@@ -352,9 +352,8 @@ namespace Jean_Doe.MusicControl
                     catch (Exception ex)
                     {
                     }
-                    
+                    Remove(item);
                     SongViewModel.Remove(item.Id);
-                    System.Threading.Thread.Sleep(10);
                 }
             });
         }
