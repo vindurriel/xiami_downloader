@@ -40,6 +40,7 @@ namespace Jean_Doe.MusicControl
                 v.SelectionChanged += OnListViewSelectionChanged;
             }
             listView = virtualView;
+
         }
         double maxRec = 1;
         public double MaxRecommend { get { return maxRec; } set { maxRec = value; Notify("MaxRecommend"); } }

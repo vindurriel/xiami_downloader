@@ -151,7 +151,7 @@ namespace Jean_Doe.MusicControl
             actions.Add("选中正在播放", new CharmAction("选中正在播放", "\xE18B", btn_select_nowplaying_Click));
             actions.Add("下一首", new CharmAction("下一首", "\xE101", btn_next_Click));
             actions.Add("收藏该歌曲", new CharmAction("收藏该歌曲", "\xE0A5", btn_fav_Click));
-            actions.Add("不再收藏该歌曲", new CharmAction("不再收藏该歌曲", "\xE18B", btn_unfav_Click));
+            actions.Add("不再收藏该歌曲", new CharmAction("不再收藏该歌曲", "\xE007", btn_unfav_Click));
             actions.Add("查看专辑", new CharmAction("查看专辑", "\xE1d2", link_album));
             actions.Add("查看艺术家", new CharmAction("查看艺术家", "\xe13d", link_artist));
             actions.Add("存为播放列表", new CharmAction("存为播放列表", "\xE14C", btn_save_playlist_Click));

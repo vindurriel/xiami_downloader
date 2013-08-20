@@ -16,6 +16,20 @@
                     <FontFamily x:Key="font_symbol">/xiami;component/Resources/#Segoe UI Symbol</FontFamily>
                     <FontFamily x:Key="font">/xiami;component/Resources/#Soho Gothic Pro Light,Microsoft Yahei Light</FontFamily>
                     <QuinticEase x:Key="easeFunc" EasingMode="EaseOut" />
+                    <Style x:Key="simple_container" TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                    <ContentPresenter />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                    <DataTemplate x:Key="simple_item">
+                        <Button Style="{StaticResource AppBarButtonStyle}" Padding="2" Width="30" Height="30"
+                                ToolTip="{Binding Label}" Content="{Binding Icon}" x:Name="btn" Background="Black"
+                                Foreground="White" Tag="{Binding Label}"  />
+                    </DataTemplate>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

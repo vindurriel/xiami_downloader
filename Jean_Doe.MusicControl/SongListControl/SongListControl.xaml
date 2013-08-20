@@ -139,7 +139,7 @@
                 <!--<ContentControl Grid.Column="1" Margin="5,0" Content="{Binding}"
                         ContentTemplate="{StaticResource t_image}"
                         Visibility="{Binding IsSelected,RelativeSource={RelativeSource AncestorType=ListViewItem},Converter={StaticResource bool2vis}}" />-->
-                <DockPanel Margin="5,0,0,0" RenderOptions.ClearTypeHint="Enabled" RenderOptions.EdgeMode="Aliased">
+                <DockPanel Margin="0,0,0,0" RenderOptions.ClearTypeHint="Enabled" RenderOptions.EdgeMode="Aliased">
                     <TextBlock Style="{DynamicResource label_base}">
                         <TextBlock.Text>
                             <MultiBinding StringFormat="{}{0} - {1}">
@@ -225,9 +225,8 @@
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="auto" />
-            <RowDefinition Height="60" />
         </Grid.RowDefinitions>
-        <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Margin="5,0,0,0">
+        <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,0">
             <TextBlock x:Name="emptyText" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top"
                     Style="{DynamicResource label_base}" Margin="10,10,0,0">列表为空</TextBlock>
             <ListView x:Name="virtualView" VirtualizingPanel.VirtualizationMode="Standard" AlternationCount="2"
@@ -238,11 +237,11 @@
                     ItemTemplate="{StaticResource listTemplate}" ItemsPanel="{StaticResource vsp}">
             </ListView>
         </Grid>
-        <DockPanel Height="30" Grid.Row="1" Grid.Column="0" Margin="6,6,0,0" LastChildFill="False">
+        <DockPanel Height="30" Grid.Row="1" Grid.Column="0" Margin="-30,6,0,0" LastChildFill="False">
             <ToggleButton Style="{DynamicResource toggleStyle}" Grid.Column="0" MinWidth="0" Width="30" Height="30"
                     Background="Transparent" BorderThickness="0" Grid.Row="1" HorizontalAlignment="Left" Padding="0"
                     FontFamily="{DynamicResource font_symbol}" Content="&#xE16E;" ToolTip="筛选" x:Name="btn_more" />
-            <DockPanel Margin="6,0,0,0"
+            <DockPanel Margin="0,0,0,0"
                     Visibility="{Binding IsChecked,Converter={StaticResource bool2vis},ElementName=btn_more}">
                 <ComboBox x:Name="combo_sort">
                     <ComboBoxItem Tag="Default_Asc" IsSelected="True">无排序</ComboBoxItem>

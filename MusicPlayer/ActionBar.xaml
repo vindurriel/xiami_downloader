@@ -30,7 +30,7 @@
                 <ToolTipService.ToolTip>
                     <TextBlock  FontSize="15" Text="{Binding Label}"/>
                 </ToolTipService.ToolTip>
-                <Button Style="{StaticResource AppBarButtonStyle}" Width="40" Height="40" Content="{Binding Icon}" x:Name="btn" Tag="{Binding Label}" Click="charmBarAct"/>
+                <Button Style="{StaticResource AppBarButtonStyle}" Width="30" Height="30" Content="{Binding Icon}" x:Name="btn" Tag="{Binding Label}" Click="charmBarAct"/>
                 </Grid>
         </DataTemplate>
     </Expander.Resources>
@@ -72,6 +72,7 @@
     </Expander.Style>
     <DockPanel LastChildFill="False">
         <ListView ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                  VerticalAlignment="Center"
                 BorderThickness="0" Background="Transparent" x:Name="list"
                 ItemContainerStyle="{StaticResource itemStyle}" ItemTemplate="{StaticResource itemTemplate}"
                 SelectionMode="Single">

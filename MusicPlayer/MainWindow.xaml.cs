@@ -78,11 +78,11 @@ namespace MusicPlayer
             ActionBarService.RegisterActionBar(this.charmBar);
             Artwork.DataBus.DataBus.Set("list_download", list_download);
             SizeChanged += MainWindow_SizeChanged;
-            new MusicSliderConnector(slider);
             Mp3Player.SongChanged += OnMp3PlayerSongChanged;
             Global.ListenToEvent("TitleMarquee", SetTitleMarquee);
             btn_sync_left.Click += btn_sync_left_Click;
             btn_sync_right.Click += btn_sync_right_Click;
+            new MusicSliderConnector(slider);
         }
         void btn_sync_right_Click(object sender, RoutedEventArgs e)
         {

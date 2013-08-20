@@ -75,6 +75,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ButtonBase">
                     <Grid x:Name="root">
+                        <Ellipse Stroke="{TemplateBinding Foreground}" StrokeThickness="2" Fill="Transparent"/>
                         <ContentPresenter Margin="{TemplateBinding Padding}" x:Name="Content"
                                 HorizontalAlignment="Center" VerticalAlignment="Center" />
                         <Grid Opacity="0" x:Name="bg">
