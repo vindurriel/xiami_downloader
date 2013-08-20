@@ -91,7 +91,6 @@
     <Compile Include="Pages\ConfigPage.xaml.cs">
       <DependentUpon>ConfigPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MusicSliderConnector.cs" />
     <Compile Include="Pages\UserPage.xaml.cs">
       <DependentUpon>UserPage.xaml</DependentUpon>
     </Compile>

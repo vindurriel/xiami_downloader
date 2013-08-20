@@ -81,7 +81,7 @@
                 <DropShadowEffect ShadowDepth="1" Direction="-90" Opacity="0.5" Color="Black" BlurRadius="5" />
             </Border.Effect>
         </Border>
-        <Grid Margin="2,2,2,50">
+        <Grid Margin="2,2,2,60">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="10*" />
@@ -223,7 +223,7 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <DockPanel Grid.Row="1">
-                            <controls:CompleteSongListControl x:Name="list_complete" IsDefaultList="True" />
+                            <controls:CompleteSongListControl x:Name="list_complete" />
                         </DockPanel>
                         <Grid x:Name="lrc">
                             <controls:LyricControl Margin="0,-7,0,0" HorizontalAlignment="Left" x:Name="lyricShow"
@@ -232,8 +232,6 @@
                         <GridSplitter Height="30" Background="#01ffffff" VerticalAlignment="Bottom"
                                 HorizontalAlignment="Stretch" />
                     </Grid>
-                    <Slider Background="{DynamicResource darkBrush}" Foreground="{DynamicResource skinBrush}"
-                            Height="20" x:Name="slider" Margin="-30,-40,0,0" VerticalAlignment="Top" />
                 </Grid>
                 <Grid x:Name="page4" Opacity="0" IsHitTestVisible="false">
                     <Grid.ColumnDefinitions>
@@ -248,8 +246,42 @@
                         VerticalAlignment="Center" HorizontalAlignment="Stretch" IsIndeterminate="False" ItemWidth="5" />
             </Grid>
         </Grid>
-        <my:ActionBar Height="50" Margin="2" x:Name="charmBar" Background="{DynamicResource selectBrush}"
-                VerticalAlignment="Bottom" />
 
+        <Grid x:Name="part_nowPlaying" Height="50" VerticalAlignment="Bottom" Margin="2"
+                Background="{DynamicResource selectBrush}" Grid.Row="2"
+                DataContext="{Binding NowPlaying,ElementName=list_complete}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid VerticalAlignment="Top" Width="50" Height="50">
+                <Border BorderBrush="{DynamicResource lightBrush}" BorderThickness="3">
+                    <Grid>
+                        <TextBlock FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Text="{Binding TypeImage}" FontFamily="{DynamicResource font_symbol}" />
+                        <Image
+                                Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
+                                Stretch="Uniform">
+                            <!--<Image.OpacityMask>
+                                <VisualBrush Visual="{Binding ElementName=mask}" />
+                            </Image.OpacityMask>-->
+                        </Image>
+                        <Grid Margin="3,0,0,0" Visibility="{Binding InFav,Converter={StaticResource bool2vis}}"
+                                x:Name="corner_select" HorizontalAlignment="Left" VerticalAlignment="Top">
+                            <Path Stroke="{DynamicResource lightBrush}" StrokeThickness="3"
+                                    Data="M 0,0 L 10,0 10,20 5,15 0,20 Z" Fill="{DynamicResource skinBrush}" />
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+            <StackPanel Grid.Column="1" Margin="5,0,0,0">
+                <Slider Background="{DynamicResource darkBrush}" Foreground="{DynamicResource skinBrush}"
+                        x:Name="slider" Margin="0,-10,0,0" />
+                <TextBlock Text="{Binding Name}" />
+                <TextBlock Text="{Binding ArtistName}" />
+            </StackPanel>
+        </Grid>
+        <my:ActionBar Height="50" VerticalAlignment="Bottom" Margin="2" x:Name="charmBar"
+                Background="{DynamicResource selectBrush}" />
     </Grid>
 </controls:ResizeWindow>

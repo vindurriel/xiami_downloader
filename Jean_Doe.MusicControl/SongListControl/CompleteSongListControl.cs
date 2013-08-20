@@ -18,7 +18,6 @@ namespace Jean_Doe.MusicControl
     {
         public CompleteSongListControl()
         {
-            wrapView.DataContext = null;
             Mp3Player.SongChanged += Mp3Player_SongChanged;
             Items.CollectionChanged += Items_CollectionChanged;
             watcher = CreateWatcher();
@@ -27,6 +26,7 @@ namespace Jean_Doe.MusicControl
             this.PropertyChanged += OnPropertyChanged;
             combo_sort.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "播放顺序", Tag = "Playlist_Asc" });
             combo_sort.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "最近下载", Tag = "Date_Dsc" });
+            initActions();
         }
 
         void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -145,40 +145,50 @@ namespace Jean_Doe.MusicControl
                 return;
             Items.AddItems(new List<IMusic> { item.Song }, true);
         }
-        public IEnumerable<CharmAction> ProvideActions()
+        Dictionary<string, CharmAction> actions = new Dictionary<string, CharmAction>();
+        void initActions()
         {
-            return new List<CharmAction> 
-                {   
-                    new CharmAction("取消选择","\xE10E",this.btn_cancel_selection_Click,defaultActionValidate),
-                    new CharmAction("播放","\xE102",this.btn_play_Click,(s)=>{
-                        if (SelectCount == 0)
-                            return false;
-                        if (!Mp3Player.IsPlaying) 
-                            return true;
-                        if (isNowPlayingNotSelected(s))
-                            return true;
-                        return false;
-                    }),
-                    new CharmAction("暂停","\xE103",this.btn_play_Click,(s)=>{
-                        if (SelectCount == 0)
-                            return false;
-                        if (isNowPlayingSelected(s) && Mp3Player.IsPlaying)
-                            return true;
-                        return false;
-                    }),
-                    new CharmAction("选中正在播放","\xE18B",this.btn_select_nowplaying_Click,isNowPlayingNotSelected),  
-                    new CharmAction("下一首","\xE101",this.btn_next_Click,isNowPlayingSelected),    
-                    new CharmAction("收藏该歌曲","\xE0A5",this.btn_fav_Click,canFav),
-                    new CharmAction("不再收藏该歌曲","\xE007",this.btn_unfav_Click,canUnfav),
-                    new CharmAction("查看专辑","\xE1d2",link_album,IsOnlyType<IHasAlbum>),
-                    new CharmAction("查看艺术家","\xe13d",link_artist,IsOnlyType<IHasArtist>),
-                    new CharmAction("存为播放列表","\xE14C",this.btn_save_playlist_Click,s=>(s as CompleteSongListControl).SelectedSongs.Count()>1),
-                    new CharmAction("复制文件到剪贴板","\xE16F",this.btn_copy_Click,defaultActionValidate),
-                    new CharmAction("打开文件所在位置","\xE1A5",this.btn_open_click,IsOnlyType<IHasMusicPart>),
-                    new CharmAction("在浏览器中打开","\xE12B",this.btn_browse_Click,IsOnlyType<IHasMusicPart>),
-                    new CharmAction("删除","\xE106",this.btn_remove_complete_Click,defaultActionValidate),
-                    new CharmAction("导入","\xE150",this.btn_import_click,s=>{return ItemsCount==0 || defaultActionValidate(s);}),
-                };
+            actions.Add("选中正在播放", new CharmAction("选中正在播放", "\xE18B", btn_select_nowplaying_Click));
+            actions.Add("下一首", new CharmAction("下一首", "\xE101", btn_next_Click));
+            actions.Add("收藏该歌曲", new CharmAction("收藏该歌曲", "\xE0A5", btn_fav_Click));
+            actions.Add("不再收藏该歌曲", new CharmAction("不再收藏该歌曲", "\xE18B", btn_unfav_Click));
+            actions.Add("查看专辑", new CharmAction("查看专辑", "\xE1d2", link_album));
+            actions.Add("查看艺术家", new CharmAction("查看艺术家", "\xe13d", link_artist));
+            actions.Add("存为播放列表", new CharmAction("存为播放列表", "\xE14C", btn_save_playlist_Click));
+            actions.Add("复制文件到剪贴板", new CharmAction("复制文件到剪贴板", "\xE16F", btn_copy_Click));
+            actions.Add("打开文件所在位置", new CharmAction("打开文件所在位置", "\xE1A5", btn_open_click));
+            actions.Add("在浏览器中打开", new CharmAction("在浏览器中打开", "\xE12B", btn_browse_Click));
+            actions.Add("删除", new CharmAction("删除", "\xE106", btn_remove_complete_Click));
+            actions.Add("导入", new CharmAction("导入", "\xE150", btn_import_click));
+        }
+        public IEnumerable<CharmAction> ProvideActions(string barName = "Default")
+        {
+            var res = new List<CharmAction>();
+            if (barName == "Default")
+            {
+                if (SelectCount > 1)
+                {
+                    res.Add(actions["存为播放列表"]);
+                    res.Add(actions["删除"]);
+                }
+                else
+                {
+                    //var song = SelectedSongs.FirstOrDefault();
+                    //if (song != null)
+                    //    if (song.InFav)
+                    //        res.Add(actions["收藏该歌曲"]);
+                    //    else
+                    //        res.Add(actions["不再收藏该歌曲"]);
+                    //res.Add(actions["查看艺术家"]);
+                    //res.Add(actions["查看专辑"]);
+                    //res.Add(actions["在浏览器中打开"]);
+                }
+            }
+            else if (barName == "complete")
+            {
+
+            }
+            return res;
         }
 
         bool isNowPlayingSelected(object s)
@@ -208,7 +218,7 @@ namespace Jean_Doe.MusicControl
             btn_play_Click(sender, e);
             ActionBarService.Refresh();
         }
-        protected void btn_play_Click(object sender, RoutedEventArgs e)
+        protected override void btn_play_Click(object sender, RoutedEventArgs e)
         {
             bool isMultiSel = SelectedSongs.Count() > 1;
             if (isMultiSel)
@@ -417,7 +427,7 @@ namespace Jean_Doe.MusicControl
             if (item == null || string.IsNullOrEmpty(item.Song.FilePath)) return;
             message.Next = item.Song.FilePath;
             message.Id = item.Id;
-            SelectedSongs = new SongViewModel[] { item };
+            UIHelper.RunOnUI(() => SelectedSongs = new SongViewModel[] { item });
             listView.ScrollToCenterOfView(item);
         }
         void btn_next_Click(object sender, RoutedEventArgs e)

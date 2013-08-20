@@ -103,6 +103,19 @@ namespace Jean_Doe.MusicControl
             throw new NotImplementedException();
         }
     }
+    public class NotConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            var from = (bool)value;
+            return !from ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
     public class IntToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -132,14 +145,17 @@ namespace Jean_Doe.MusicControl
     public class MyTemplateSelector : DataTemplateSelector
     {
         public DataTemplate downloadTemplate { get; set; }
-        public DataTemplate normalTemplate { get; set; }
+        public DataTemplate searchTemplate { get; set; }
+        public DataTemplate completeTemplate { get; set; }
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             var control = container as SongListControl;
             var parent = SongListControl.GetParentOf<SongListControl>(container);
+            if (parent is SearchSongListControl)
+                return searchTemplate;
             if (parent is DownloadSongListControl)
                 return downloadTemplate;
-            return normalTemplate;
+            return completeTemplate;
         }
     }
 }

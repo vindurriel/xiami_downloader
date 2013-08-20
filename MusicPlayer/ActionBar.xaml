@@ -7,36 +7,11 @@
             <Setter Property="Padding" Value="20,10" />
             <Setter Property="FontFamily" Value="{DynamicResource font_symbol}" />
             <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
-            <Setter Property="ToolTipService.ToolTip">
-                <Setter.Value>
-                    <ToolTip Content="{Binding Label}" />
-                </Setter.Value>
-            </Setter>
-            <EventSetter Event="UIElement.MouseLeftButtonUp" Handler="charmBarAct" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListBoxItem}">
                         <Grid x:Name="Border" Background="Transparent" SnapsToDevicePixels="True">
-                            <Rectangle x:Name="OverRect" Opacity="0" Fill="{DynamicResource darkBrush}" />
-                            <ContentPresenter Margin="{TemplateBinding Padding}" />
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualStateGroup.Transitions>
-                                        <VisualTransition GeneratedDuration="0:0:0.2" To="MouseOver" />
-                                    </VisualStateGroup.Transitions>
-                                    <VisualState x:Name="Normal" />
-                                    <VisualState x:Name="MouseOver">
-                                        <Storyboard>
-                                            <DoubleAnimationUsingKeyFrames
-                                                    Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                    Storyboard.TargetName="OverRect">
-                                                <EasingDoubleKeyFrame KeyTime="0" Value="1" />
-                                            </DoubleAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Disabled"></VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter Margin="{TemplateBinding Padding}"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -52,9 +27,11 @@
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding Icon}" />
-                <!--<TextBlock Grid.Column="1" Text="{Binding Label}" Margin="5,0,0,0" />-->
-            </Grid>
+                <ToolTipService.ToolTip>
+                    <TextBlock  FontSize="15" Text="{Binding Label}"/>
+                </ToolTipService.ToolTip>
+                <Button Style="{StaticResource AppBarButtonStyle}" Width="40" Height="40" Content="{Binding Icon}" x:Name="btn" Tag="{Binding Label}" Click="charmBarAct"/>
+                </Grid>
         </DataTemplate>
     </Expander.Resources>
     <Expander.Style>
@@ -104,7 +81,6 @@
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
         </ListView>
-        <FrameworkElement x:Name="holder" />
         <Popup x:Name="more_actions" PopupAnimation="Slide" Placement="Top" Focusable="True">
             <ListView x:Name="menu"  ItemContainerStyle="{StaticResource itemStyle}"
                     ItemTemplate="{StaticResource itemTemplate}" ScrollViewer.VerticalScrollBarVisibility="Hidden"

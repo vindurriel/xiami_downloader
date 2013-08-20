@@ -19,15 +19,9 @@
         <my:BoolToOpacityConverter x:Key='bool2opa' />
         <my:BoolToVisibilityConverter x:Key="bool2vis" />
         <my:DivideConverter x:Key="divconv" />
-        <ItemsPanelTemplate x:Key="wrap">
-            <WrapPanel HorizontalAlignment="Left" Orientation="Horizontal" />
-        </ItemsPanelTemplate>
         <ItemsPanelTemplate x:Key="vsp">
-            <VirtualizingStackPanel HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <VirtualizingStackPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" />
         </ItemsPanelTemplate>
-        <Storyboard x:Key="FadeOut">
-            <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.2" From="1" To="0" />
-        </Storyboard>
         <DataTemplate x:Key="dateTemplate">
             <TextBlock Text="{Binding Date, StringFormat={}{0:yyyy/MM/dd HH:mm:ss}}"
                     Style="{DynamicResource label_base}" />
@@ -36,45 +30,50 @@
             <Grid VerticalAlignment="Top" Width="60" Height="60">
                 <Border x:Name="border"
                         BorderBrush="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
-                        BorderThickness="3">
+                        BorderThickness="0">
                     <Grid>
                         <TextBlock FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"
                                 Text="{Binding TypeImage}" FontFamily="{DynamicResource font_symbol}" />
+                        <Border Name="mask" Background="White" CornerRadius="30" />
                         <Image
                                 Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                                Stretch="Uniform" />
+                                Stretch="Uniform">
+                            <Image.OpacityMask>
+                                <VisualBrush Visual="{Binding ElementName=mask}" />
+                            </Image.OpacityMask>
+                        </Image>
                         <Grid Margin="3,0,0,0" Visibility="{Binding InFav,Converter={StaticResource bool2vis}}"
-                                x:Name="corner_select" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                x:Name="corner_select" HorizontalAlignment="Center" VerticalAlignment="Top">
                             <Path
                                     Stroke="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
-                                    StrokeThickness="3" Data="M 0,0 L 10,0 10,20 5,15 0,20 Z"
+                                    StrokeThickness="1" Data="M 0,0 L 10,0 10,20 5,15 0,20 Z"
                                     Fill="{DynamicResource skinBrush}" />
                         </Grid>
                     </Grid>
                 </Border>
             </Grid>
         </DataTemplate>
-        <Style TargetType="ScrollViewer" x:Key="scrollstyle">
-            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
-            <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="Height" Value="45" />
-            <Setter Property="Grid.Column" Value="1" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Margin" Value="10,0,0,0" />
-            <Setter Property="IsHitTestVisible"
-                    Value="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListViewItem}}" />
-        </Style>
-        <Style TargetType="Border" x:Key="triggerStyle">
-            <EventSetter Event="MouseMove" Handler="toggle_detail" />
-            <EventSetter Event="MouseEnter" Handler="toggle_detail" />
-            <Setter Property="Height" Value="5" />
-            <Setter Property="Background" Value="#01000000" />
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="IsHitTestVisible"
-                    Value="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListViewItem}}" />
-            <Setter Property="Visibility" Value="{Binding HasDetail,Converter={StaticResource bool2vis}}" />
-        </Style>
+        <DataTemplate x:Key="t_search">
+            <DockPanel>
+                <TextBlock FontFamily="{DynamicResource font_symbol}" FontSize="12" Height="20">
+                    <TextBlock.ToolTip>
+                        <TextBlock Text="{Binding  Recommends,StringFormat={}{0} 人推荐}" />
+                    </TextBlock.ToolTip>
+                    <TextBlock.Text>
+                        <MultiBinding Converter="{StaticResource divconv}">
+                            <Binding Path="Recommends" />
+                            <Binding Path="MaxRecommend" ElementName="me" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBlock Text="{Binding Description}" TextTrimming="WordEllipsis" Height="20" Opacity="0.3"
+                        MaxWidth="400" Style="{DynamicResource label_base}">
+                    <TextBlock.ToolTip>
+                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" MaxWidth="400" />
+                    </TextBlock.ToolTip>
+                    </TextBlock>
+            </DockPanel>
+        </DataTemplate>
         <DataTemplate x:Key="t_download">
             <Grid MinWidth="100" Margin="0,2,0,0">
                 <Grid.Resources>
@@ -99,189 +98,58 @@
                 </Rectangle>
             </Grid>
         </DataTemplate>
-        <DataTemplate x:Key="t_recommend">
-            <Grid>
-                <Grid.Resources>
-                    <Style TargetType='Rectangle'>
-                        <Setter Property='Width' Value='200' />
-                        <Setter Property='Height' Value='3' />
-                        <Setter Property='Margin' Value='0,0,3,0' />
-                        <Setter Property='Fill' Value='{DynamicResource lightBrush}' />
-                        <Setter Property='HorizontalAlignment' Value='Left' />
-                    </Style>
-                </Grid.Resources>
-                <TextBlock FontFamily="{DynamicResource font_symbol}" FontSize="12">
-                    <TextBlock.ToolTip>
-                        <TextBlock Text="{Binding  Recommends,StringFormat={}{0} 人推荐}" />
-                    </TextBlock.ToolTip>
-                    <TextBlock.Text>
-                        <MultiBinding Converter="{StaticResource divconv}">
-                            <Binding Path="Recommends" />
-                            <Binding Path="MaxRec" ElementName="me" />
-                        </MultiBinding>
-                    </TextBlock.Text>
-                </TextBlock>
-            </Grid>
+        <Style x:Key="simple_container" TargetType="{x:Type ListViewItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                        <ContentPresenter />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <DataTemplate x:Key="simple_item">
+            <Button Style="{StaticResource AppBarButtonStyle}" Padding="2" Width="30" Height="30"
+                    ToolTip="{Binding Label}" Content="{Binding Icon}" x:Name="btn" Background="Black"
+                    Foreground="White" Tag="{Binding Label}" Click="charmBarAct" />
         </DataTemplate>
-        <my:MyTemplateSelector x:Key="templateSelector" normalTemplate="{StaticResource t_recommend}"
-                downloadTemplate="{StaticResource t_download}" />
+        <DataTemplate x:Key="t_complete">
+            <DockPanel LastChildFill="False"
+                    Visibility="{Binding IsSelected,Converter={StaticResource bool2vis},  RelativeSource={RelativeSource AncestorType=ListViewItem}}">
+                <!--<ListView ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                        ItemContainerStyle="{StaticResource simple_container}"
+                        ItemsSource="{Binding ItemActionSource1,ElementName=me}"
+                        ItemTemplate="{StaticResource simple_item}" ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                        BorderThickness="0" Background="Transparent" x:Name="list" SelectionMode="Single">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="1" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                </ListView>-->
+            </DockPanel>
+        </DataTemplate>
+        <my:MyTemplateSelector x:Key="templateSelector" searchTemplate="{StaticResource t_search}"
+                completeTemplate="{StaticResource t_complete}" downloadTemplate="{StaticResource t_download}" />
         <DataTemplate x:Key="listTemplate">
-            <Grid Height="60" Margin="0,0,0,0" x:Name="root" ClipToBounds="True">
+            <Grid Height="40" Margin="0,0,0,0" x:Name="root" ClipToBounds="True">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <ContentControl Content="{Binding}" ContentTemplate="{StaticResource t_image}" />
-                <StackPanel Grid.Column="1" Margin="5,0,0,0">
-                    <DockPanel RenderOptions.ClearTypeHint="Enabled" RenderOptions.EdgeMode="Aliased">
-                        <TextBlock Text="{Binding Name}" Style="{DynamicResource label_base}" />
-                        <TextBlock Text="  " Style="{DynamicResource label_base}" />
-                        <TextBlock Text="{Binding ArtistName}" Opacity="0.8" Style="{DynamicResource label_base}" />
-                        <TextBlock Text="  " Style="{DynamicResource label_base}" />
-                        <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{DynamicResource label_base}" />
-                    </DockPanel>
-                    <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource templateSelector}" />
-                    <TextBlock Text="{Binding Description}" TextTrimming="WordEllipsis" Height="20" Opacity="0.3"
-                            MaxWidth="400" Style="{DynamicResource label_base}">
-                        <TextBlock.ToolTip>
-                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap" MaxWidth="400" />
-                        </TextBlock.ToolTip>
+                <!--<ContentControl Grid.Column="1" Margin="5,0" Content="{Binding}"
+                        ContentTemplate="{StaticResource t_image}"
+                        Visibility="{Binding IsSelected,RelativeSource={RelativeSource AncestorType=ListViewItem},Converter={StaticResource bool2vis}}" />-->
+                <DockPanel Margin="5,0,0,0" RenderOptions.ClearTypeHint="Enabled" RenderOptions.EdgeMode="Aliased">
+                    <TextBlock Style="{DynamicResource label_base}">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} - {1}">
+                                <Binding Path="Name" />
+                                <Binding Path="ArtistName" />
+                            </MultiBinding>
+                        </TextBlock.Text>
                     </TextBlock>
-                </StackPanel>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="searchTemplate">
-            <Grid Width="220" Height="60">
-                <Grid Margin="0,0,0,-5" x:Name="root" ClipToBounds="True">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-                    <Grid x:Name="main" Height="60">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <ContentControl Content="{Binding}" ContentTemplate="{StaticResource t_image}" />
-                        <ScrollViewer Grid.Column="1" Style="{StaticResource scrollstyle}">
-                            <StackPanel>
-                                <TextBlock Text="{Binding Name}" Style="{DynamicResource label_base}" />
-                                <TextBlock Text="{Binding ArtistName}" Opacity="0.8"
-                                        Style="{DynamicResource label_base}" />
-                                <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{DynamicResource label_base}" />
-                            </StackPanel>
-                        </ScrollViewer>
-                    </Grid>
-                    <DockPanel Grid.Row="1" x:Name="detail" Height="5">
-                        <Border DockPanel.Dock="Top" Style="{StaticResource triggerStyle}" VerticalAlignment="Top">
-                            <Line x:Name="detail_indicator" RenderOptions.EdgeMode="Aliased" X2="25"
-                                    Stroke="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
-                                    VerticalAlignment="Top" StrokeThickness="5" StrokeDashArray="1,1" />
-                        </Border>
-                        <ScrollViewer Style="{StaticResource scrollstyle}">
-                            <StackPanel>
-                                <TextBlock Text="{Binding Description}" Opacity="0.5"
-                                        Style="{DynamicResource label_base}" />
-                            </StackPanel>
-                        </ScrollViewer>
-                    </DockPanel>
-                </Grid>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="downloadingTemplate">
-            <Grid Width="220" Height="60">
-                <Grid Margin="0,0,0,-5" x:Name="root" ClipToBounds="True">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-                    <Grid x:Name="main" Height="60">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <ContentControl Content="{Binding}" ContentTemplate="{StaticResource t_image}" />
-                        <ScrollViewer Grid.Column="1" Style="{StaticResource scrollstyle}"
-                                Height="{Binding ActualHeight,ElementName=root}">
-                            <StackPanel>
-                                <TextBlock Text="{Binding Name}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"
-                                        Style="{DynamicResource label_base}" />
-                                <TextBlock Text="{Binding ArtistName}" Opacity="0.8" TextWrapping="NoWrap"
-                                        TextTrimming="CharacterEllipsis" Style="{DynamicResource label_base}" />
-                                <Grid MinWidth="100" Margin="0,2,0,0">
-                                    <!--下载状态-->
-                                    <Grid.Resources>
-                                        <Style TargetType='Rectangle'>
-                                            <Setter Property='MinWidth' Value='80' />
-                                            <Setter Property='Height' Value='4' />
-                                            <Setter Property='Margin' Value='0,0,3,0' />
-                                            <Setter Property='Fill' Value='{DynamicResource lightBrush}' />
-                                        </Style>
-                                    </Grid.Resources>
-                                    <Rectangle x:Name="mp3Indicator"
-                                            Opacity='{Binding HasMp3,Converter={StaticResource bool2opa}}' />
-                                    <Rectangle Width="{Binding  ElementName=mp3Indicator,Path=ActualWidth}"
-                                            HorizontalAlignment="Left">
-                                        <Rectangle.RenderTransform>
-                                            <ScaleTransform ScaleX="{Binding Percent}" />
-                                        </Rectangle.RenderTransform>
-                                    </Rectangle>
-                                </Grid>
-                            </StackPanel>
-                        </ScrollViewer>
-                    </Grid>
-                    <DockPanel Grid.Row="1" x:Name="detail" Height="5">
-                        <Border DockPanel.Dock="Top" Visibility="Visible" Style="{StaticResource triggerStyle}"
-                                VerticalAlignment="Top">
-                            <Line x:Name="detail_indicator" RenderOptions.EdgeMode="Aliased" X2="25"
-                                    Stroke="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
-                                    VerticalAlignment="Top" StrokeThickness="5" StrokeDashArray="1,1" />
-                        </Border>
-                        <ScrollViewer Style="{StaticResource scrollstyle}">
-                            <StackPanel>
-                                <TextBlock Text="{Binding Status}" Opacity="0.5" Style="{DynamicResource label_base}" />
-                            </StackPanel>
-                        </ScrollViewer>
-                    </DockPanel>
-                </Grid>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="completeTemplate">
-            <Grid Width="220" Height="60">
-                <Grid Margin="0,0,0,-5" x:Name="root" ClipToBounds="True">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-                    <Grid x:Name="main" Height="60">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <ContentControl Content="{Binding}" ContentTemplate="{StaticResource t_image}" />
-                        <ScrollViewer Grid.Column="1" Style="{StaticResource scrollstyle}">
-                            <StackPanel>
-                                <TextBlock Text="{Binding Name}" Style="{DynamicResource label_base}" />
-                                <TextBlock Text="{Binding ArtistName}" Opacity="0.8"
-                                        Style="{DynamicResource label_base}" />
-                                <TextBlock Text="{Binding AlbumName}" Opacity="0.5" Style="{DynamicResource label_base}" />
-                            </StackPanel>
-                        </ScrollViewer>
-                    </Grid>
-                    <DockPanel Grid.Row="1" x:Name="detail" Height="5">
-                        <Border DockPanel.Dock="Top" Style="{StaticResource triggerStyle}" VerticalAlignment="Top">
-                            <Line x:Name="detail_indicator" RenderOptions.EdgeMode="Aliased" X2="25"
-                                    Stroke="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
-                                    VerticalAlignment="Top" StrokeThickness="5" StrokeDashArray="1,1" />
-                        </Border>
-                        <ScrollViewer Style="{StaticResource scrollstyle}">
-                            <StackPanel>
-                                <TextBlock Text="{Binding Description}" Opacity="0.5"
-                                        Style="{DynamicResource label_base}" />
-                            </StackPanel>
-                        </ScrollViewer>
-                    </DockPanel>
-                </Grid>
+                    <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource templateSelector}" />
+                </DockPanel>
             </Grid>
         </DataTemplate>
         <Style TargetType="ListViewItem" x:Key="lviStyle">
@@ -291,53 +159,29 @@
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="0"
                                     EasingFunction="{StaticResource easeFunc}" To="1" />
-                            <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"
-                                    Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="1" />
-                            <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"
-                                    Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="1" />
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>
-                <EventTrigger RoutedEvent="FrameworkElement.Unloaded">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="0:0:0.5" From="1" To="0" />
-                            <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleX)"
-                                    Duration="0:0:0.5" EasingFunction="{StaticResource easeFunc}" To="0" />
-                            <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(Children)[0].(ScaleY)"
-                                    Duration="0:0:0.2" EasingFunction="{StaticResource easeFunc}" To="0" />
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
+                <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                    <Setter Property="Background" Value="#11888888"></Setter>
+                </Trigger>
                 <Trigger Property="IsSelected" Value="true">
                     <Setter Property="Foreground" Value="White" />
                 </Trigger>
             </Style.Triggers>
-            <Setter Property="RenderTransform">
-                <Setter.Value>
-                    <TransformGroup>
-                        <ScaleTransform ScaleX="1" ScaleY="1" />
-                    </TransformGroup>
-                </Setter.Value>
-            </Setter>
             <EventSetter Event="MouseDoubleClick" Handler="item_double_click" />
-            <Setter Property="Margin" Value="0,0,5,5" />
+            <Setter Property="Margin" Value="0" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="Opacity" Value="0" />
             <Setter Property="Padding" Value="5,5,5,5" />
-            <Setter Property="RenderTransformOrigin" Value=".5,.5" />
             <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListViewItem}">
-                        <Grid Background="Black" x:Name="root" RenderTransformOrigin=".5,.5">
-                            <Grid.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform ScaleX="1" ScaleY="1" />
-                                </TransformGroup>
-                            </Grid.RenderTransform>
-                            <Border x:Name="normal" Background="{Binding ThemeColor,ElementName=me}" />
-                            <Border x:Name="mouseover" Opacity="0" Background="{DynamicResource selectBrush}" />
+                        <Grid x:Name="root">
+                            <Border x:Name="normal" Background="{TemplateBinding Background}" />
+                            <Border x:Name="mouseover" Opacity="0" BorderBrush="{DynamicResource selectBrush}"
+                                    BorderThickness="2" />
                             <Grid x:Name="pressed" Opacity="0">
                                 <Border Background="{DynamicResource skinBrush}" />
                             </Grid>
@@ -366,13 +210,6 @@
                                     </VisualState>
                                     <VisualState x:Name="Unselected" />
                                 </VisualStateGroup>
-                                <VisualStateGroup x:Name="FocusStates">
-                                    <VisualState x:Name="Focused" />
-                                </VisualStateGroup>
-                                <VisualStateGroup x:Name="ValidationStates">
-                                    <VisualState x:Name="InvalidFocused" />
-                                    <VisualState x:Name="InvalidUnfocused" />
-                                </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
                         </Grid>
                     </ControlTemplate>
@@ -388,18 +225,25 @@
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="60" />
         </Grid.RowDefinitions>
-        <!--<DockPanel Grid.Row="1" LastChildFill="False" Margin="5,0,0,0">
-            <TextBlock FontSize="20" Visibility="Collapsed" FontFamily="{DynamicResource font_symbol}" Text="&#xE154;" />
-            <my:ToggleSwitch Visibility="Collapsed" x:Name="btn_more" BgColor="{DynamicResource lightBrush}" IsOnChanged="btn_more_Click"
-                    SkinColor="Transparent" Height="20" Margin="2,0" VerticalAlignment="Center" />
-            <TextBlock Visibility="Collapsed" FontSize="20" FontFamily="{DynamicResource font_symbol}" Text="&#xE14C;" />
-        </DockPanel>-->
+        <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Margin="5,0,0,0">
+            <TextBlock x:Name="emptyText" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top"
+                    Style="{DynamicResource label_base}" Margin="10,10,0,0">列表为空</TextBlock>
+            <ListView x:Name="virtualView" VirtualizingPanel.VirtualizationMode="Standard" AlternationCount="2"
+                    VirtualizingPanel.IsVirtualizing="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    BorderThickness="0" Background="Transparent"
+                    PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"
+                    ItemContainerStyle="{StaticResource lviStyle}" ItemsSource="{Binding}" SelectionMode="Extended"
+                    ItemTemplate="{StaticResource listTemplate}" ItemsPanel="{StaticResource vsp}">
+            </ListView>
+        </Grid>
         <DockPanel Height="30" Grid.Row="1" Grid.Column="0" Margin="6,6,0,0" LastChildFill="False">
             <ToggleButton Style="{DynamicResource toggleStyle}" Grid.Column="0" MinWidth="0" Width="30" Height="30"
                     Background="Transparent" BorderThickness="0" Grid.Row="1" HorizontalAlignment="Left" Padding="0"
-                    FontFamily="{DynamicResource font_symbol}" Content="&#xE16E;" ToolTip="筛选" x:Name="btn_more"/>
-            <DockPanel Margin="6,0,0,0" Visibility="{Binding IsChecked,Converter={StaticResource bool2vis},ElementName=btn_more}">
+                    FontFamily="{DynamicResource font_symbol}" Content="&#xE16E;" ToolTip="筛选" x:Name="btn_more" />
+            <DockPanel Margin="6,0,0,0"
+                    Visibility="{Binding IsChecked,Converter={StaticResource bool2vis},ElementName=btn_more}">
                 <ComboBox x:Name="combo_sort">
                     <ComboBoxItem Tag="Default_Asc" IsSelected="True">无排序</ComboBoxItem>
                     <ComboBoxItem Tag="Recommends_Dsc">推荐数降序</ComboBoxItem>
@@ -416,25 +260,5 @@
                 </Grid>
             </DockPanel>
         </DockPanel>
-        <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Margin="5,0,0,0">
-            <TextBlock x:Name="emptyText" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top"
-                    Style="{DynamicResource label_base}" Margin="10,10,0,0">列表为空</TextBlock>
-            <DockPanel x:Name="virtualPart">
-                <ListView x:Name="virtualView" VirtualizingPanel.VirtualizationMode="Standard"
-                        VirtualizingPanel.IsVirtualizing="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                        BorderThickness="0" Background="Transparent"
-                        PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"
-                        ItemContainerStyle="{StaticResource lviStyle}" ItemsSource="{Binding}" SelectionMode="Extended"
-                        ItemTemplate="{StaticResource listTemplate}" ItemsPanel="{StaticResource vsp}">
-                </ListView>
-            </DockPanel>
-            <ListView x:Name="wrapView" Visibility="Collapsed" VirtualizingPanel.VirtualizationMode="Standard"
-                    ScrollViewer.CanContentScroll="True" VirtualizingPanel.IsVirtualizing="True"
-                    ScrollViewer.HorizontalScrollBarVisibility="Disabled" BorderThickness="0" Background="Transparent"
-                    PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"
-                    ItemTemplate="{StaticResource completeTemplate}" ItemsSource="{Binding}" SelectionMode="Extended"
-                    ItemContainerStyle="{StaticResource lviStyle}" ItemsPanel="{StaticResource wrap}">
-            </ListView>
-        </Grid>
     </Grid>
 </UserControl>

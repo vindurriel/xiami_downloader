@@ -24,9 +24,13 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ButtonBase">
-                        <Grid x:Name="root" Opacity="0.5">
+                        <Grid x:Name="root">
                             <Ellipse x:Name="bg" Stroke="{DynamicResource lightBrush}" StrokeThickness="2"
-                                    Fill="#01000000" />
+                                    Fill="#01000000">
+                            </Ellipse>
+                            <Popup Placement="Top" PlacementTarget="{Binding ElementName=bg}" IsOpen="{Binding IsMouseOver}">
+                                <TextBlock Background="{DynamicResource darkBrush}" Foreground="{DynamicResource lightBrush}" FontSize="15" Text="{Binding Tag}"/>
+                            </Popup>
                             <ContentPresenter x:Name="Content" HorizontalAlignment="Center" VerticalAlignment="Center" />
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">

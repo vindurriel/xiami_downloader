@@ -28,7 +28,7 @@ namespace Jean_Doe.Common
             Action = a;
             Validate = (s) => { return (s is bool) && (bool)s; };
         }
-        public CharmAction(string l, string i, Action<object, RoutedEventArgs> a, Func<object, bool> v)
+        public CharmAction(string l, string i, Action<object, RoutedEventArgs> a, Func<object, bool> v=null)
         {
             Label = l;
             Icon = i;

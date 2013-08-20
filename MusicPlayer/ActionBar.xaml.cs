@@ -52,7 +52,6 @@ namespace MusicPlayer
         void IActionBar.ValidActions(IEnumerable<CharmAction> actions)
         {
             more_actions.IsOpen = false;
-            
             source1.Clear();
             source2.Clear();
             var c = actions.Count();
@@ -68,18 +67,9 @@ namespace MusicPlayer
                     source2.Add(item);
                 }
             }
+            IsExpanded = c > 0;
         }
-        bool IActionBar.IsOpen
-        {
-            get
-            {
-                return IsExpanded;
-            }
-            set
-            {
-                IsExpanded = value;
-            }
-        }
+     
         CharmAction open_more;
         CharmAction close_more;
         private void more_Click_1(object sender, RoutedEventArgs e)

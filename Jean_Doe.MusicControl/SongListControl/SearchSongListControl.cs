@@ -18,7 +18,6 @@ namespace Jean_Doe.MusicControl
         public SearchSongListControl()
         {
             Items.CollectionChanged += Items_CollectionChanged;
-            wrapView.ItemTemplate = this.Resources["searchTemplate"] as DataTemplate;
             MessageBus.Instance.Subscribe(this);
         }
         private double maxPlayTimes = 1;
@@ -73,7 +72,7 @@ namespace Jean_Doe.MusicControl
             }
         }
 
-        public System.Collections.Generic.IEnumerable<CharmAction> ProvideActions()
+        public System.Collections.Generic.IEnumerable<CharmAction> ProvideActions(string barName="Default")
         {
             return new List<CharmAction> { 
                new CharmAction("取消选择", "\xE10E",btn_cancel_selection_Click,defaultActionValidate),

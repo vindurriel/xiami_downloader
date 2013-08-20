@@ -14,12 +14,13 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Linq.Expressions;
+using System.Collections.ObjectModel;
 namespace Jean_Doe.MusicControl
 {
     /// <summary>
     /// Interaction logic for SongListControl.xaml
     /// </summary>
-    public partial class SongListControl : INotifyPropertyChanged
+    public partial class SongListControl : INotifyPropertyChanged, IActionBar
     {
         public SongListControl()
         {
@@ -32,20 +33,16 @@ namespace Jean_Doe.MusicControl
             items.CollectionChanged += items_CollectionChanged;
             Source = new ListCollectionView(items);
             virtualView.DataContext = Source;
-            wrapView.DataContext = items;
             virtualView.SelectionChanged += OnSelectionChanged;
-            wrapView.SelectionChanged += OnSelectionChanged;
-            views = new List<ListView> { virtualView, wrapView };
+            views = new List<ListView> { virtualView };
             foreach (var v in views)
             {
                 v.SelectionChanged += OnListViewSelectionChanged;
             }
-            listView = IsDefaultList ? virtualView : wrapView;
-            Loaded += SongListControl_Loaded;
-
+            listView = virtualView;
         }
         double maxRec = 1;
-        public double MaxRec { get { return maxRec; } set { maxRec = value; Notify("MaxRec"); } }
+        public double MaxRecommend { get { return maxRec; } set { maxRec = value; Notify("MaxRecommend"); } }
         void OnListViewSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var curView = sender as ListView;
@@ -56,10 +53,7 @@ namespace Jean_Doe.MusicControl
             }
         }
         List<ListView> views;
-        void SongListControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            //btn_more.IsOn = IsDefaultList;
-        }
+
         protected ListView listView;
         private void initTimer()
         {
@@ -75,8 +69,8 @@ namespace Jean_Doe.MusicControl
             if (e.NewItems != null)
                 foreach (var item in e.NewItems.OfType<MusicViewModel>())
                 {
-                    if (item.Recommends > MaxRec)
-                        MaxRec = item.Recommends;
+                    if (item.Recommends > MaxRecommend)
+                        MaxRecommend = item.Recommends;
                 }
         }
 
@@ -186,7 +180,7 @@ namespace Jean_Doe.MusicControl
                 if (s != null)
                     s.ScrollToTop();
                 items.Clear();
-                MaxRec = 1;
+                MaxRecommend = 1;
             }));
         }
         #endregion
@@ -275,7 +269,9 @@ namespace Jean_Doe.MusicControl
         {
             ThemeColor = ImageHelper.RefreshDefaultColor();
         }
-
+        protected virtual void btn_play_Click(object sender, RoutedEventArgs e)
+        {
+        }
         protected virtual void ApplyFilter()
         {
             filter_text = input_filter.Text.ToLower();
@@ -318,7 +314,7 @@ namespace Jean_Doe.MusicControl
         }
         public virtual void Load()
         {
-            Task.Run( () => { items.Load(); });
+            Task.Run(() => { items.Load(); });
         }
 
         protected virtual void btn_open_click(object sender, RoutedEventArgs e)
@@ -420,7 +416,13 @@ namespace Jean_Doe.MusicControl
             }
         }
         DispatcherTimer timer = new DispatcherTimer();
-
+        private void charmBarAct(object sender, RoutedEventArgs e)
+        {
+            var sel = (sender as FrameworkElement).DataContext as CharmAction;
+            if (sel == null) return;
+            sel.Action(sel, null);
+            ActionBarService.Refresh();
+        }
 
         void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -485,7 +487,6 @@ namespace Jean_Doe.MusicControl
             sb.Children.Add(da);
             sb.Begin();
         }
-        protected List<CharmAction> actions = new List<CharmAction>();
         protected void btn_cancel_selection_Click(object sender, RoutedEventArgs e)
         {
             UnselectAll();
@@ -577,51 +578,45 @@ namespace Jean_Doe.MusicControl
             }
             return GetParentOf<T>(p, name);
         }
-        private void toggle_detail(object sender, MouseEventArgs e)
+        private ObservableCollection<CharmAction> itemActionSource1 = new ObservableCollection<CharmAction> { };
+        public ObservableCollection<CharmAction> ItemActionSource1
         {
-            var music = (sender as FrameworkElement).DataContext as MusicViewModel;
-            if (!music.CanAnimate) return;
-            music.CanAnimate = false;
-            music.IsDetailShown = !music.IsDetailShown;
-            var root = GetParentOf<Grid>(sender as FrameworkElement, "root");
-            var main = root.FindName("main") as FrameworkElement;
-            var detail = root.FindName("detail") as FrameworkElement;
-            var to = music.IsDetailShown ? 0 : 60;
-            var to2 = !music.IsDetailShown ? 5 : 60;
-            var sb = new Storyboard();
-            var da = new DoubleAnimation(to, new Duration(TimeSpan.FromSeconds(.5)));
-            var da2 = new DoubleAnimation(to2, new Duration(TimeSpan.FromSeconds(.5)));
-            detail.Height = 5;
-            var ease = new QuinticEase { EasingMode = EasingMode.EaseOut };
-            da.EasingFunction = da2.EasingFunction = ease;
-            Storyboard.SetTarget(da, main);
-            Storyboard.SetTargetProperty(da, new PropertyPath("Height"));
-            Storyboard.SetTarget(da2, detail);
-            Storyboard.SetTargetProperty(da2, new PropertyPath("Height"));
-            sb.Children.Add(da);
-            sb.Children.Add(da2);
-            sb.Completed += (d, ef) => music.CanAnimate = true;
-            sb.Begin();
-        }
-        private void btn_more_Click(object sender, RoutedEventArgs e)
+            get { return itemActionSource1; }
+            set { itemActionSource1 = value; }
+        } 
+        private ObservableCollection<CharmAction> itemActionSource2 = new ObservableCollection<CharmAction> { };
+        public ObservableCollection<CharmAction> ItemActionSource2
         {
-            //bool more_on = btn_more.IsOn;
-            //btn_more.ToolTip = more_on ? "切换到格子" : "切换到列表";
-            //listView = more_on ? virtualView : wrapView;
-            //ItemsCount = listView.Items.Count;
-            //virtualPart.Visibility = more_on ? Visibility.Visible : Visibility.Collapsed;
-            //wrapView.Visibility = !more_on ? Visibility.Visible : Visibility.Collapsed;
-            //ActionBarService.Refresh();
+            get { return itemActionSource2; }
+            set { itemActionSource2 = value; }
         }
 
-        public bool IsDefaultList
+        CharmAction open_more = new CharmAction("更多", "\xE0C2", more_Click_1);
+        CharmAction close_more = new CharmAction("更少", "\xE0C2", more_Click_2);
+        private static void more_Click_1(object sender, RoutedEventArgs e)
         {
-            get { return (bool)GetValue(IsDefaultListProperty); }
-            set { SetValue(IsDefaultListProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for IsDefaultList.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IsDefaultListProperty =
-            DependencyProperty.Register("IsDefaultList", typeof(bool), typeof(SongListControl), new PropertyMetadata(true));
+        private static void more_Click_2(object sender, RoutedEventArgs e)
+        {
+        }
+        void IActionBar.ValidActions(IEnumerable<CharmAction> actions)
+        {
+            ItemActionSource1.Clear();
+            ItemActionSource2.Clear();
+            var c = actions.Count();
+            int MaxItemCount = 5;
+            foreach (var item in actions.Take(MaxItemCount))
+            {
+                ItemActionSource1.Add(item);
+            }
+            if (c > MaxItemCount)
+            {
+                ItemActionSource1.Add(open_more);
+                foreach (var item in actions.Skip(MaxItemCount))
+                {
+                    ItemActionSource2.Add(item);
+                }
+            }
+        }
     }
 }

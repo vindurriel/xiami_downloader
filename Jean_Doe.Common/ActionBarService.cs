@@ -10,12 +10,12 @@ namespace Jean_Doe.Common
 {
     public class ActionBarService
     {
-        public static void RegisterContext(string contextName, IActionProvider obj, string propertyName)
+        public static void RegisterContext(string contextName, IActionProvider obj, params string[] properties)
         {
             Contexts[contextName] = obj;
             obj.PropertyChanged += (s, e) =>
             {
-                if (e.PropertyName == propertyName)
+                if (properties.Contains(e.PropertyName))
                     Refresh();
             };
             Actions[contextName] = new List<CharmAction>();
@@ -24,9 +24,9 @@ namespace Jean_Doe.Common
                 Actions[contextName].Add(item);
             }
         }
-        public static void SetActionBar(IActionBar bar)
+        public static void RegisterActionBar(IActionBar bar, string name = "Default")
         {
-            actionBar = bar;
+            ActionBars[name] = bar;
         }
         private static string contextName;
 
@@ -38,27 +38,28 @@ namespace Jean_Doe.Common
 
         public static void Refresh()
         {
-            if (actionBar == null) return;
-            var validActions = new List<CharmAction>();
+            if (ActionBars.Count == 0) return;
             if (!string.IsNullOrEmpty(ContextName) && Contexts.ContainsKey(ContextName))
             {
-                validActions = Actions[ContextName].Where(x => x.Validate(Contexts[ContextName])).ToList();
-                actionBar.ValidActions(validActions);
+                var provider = Contexts[ContextName];
+                foreach (var pair in ActionBars)
+                {
+                    var actions = provider.ProvideActions(pair.Key);
+                    pair.Value.ValidActions(actions);
+                }
             }
-            actionBar.IsOpen = validActions.Count > 0; 
         }
-        static Dictionary<string, object> Contexts = new Dictionary<string, object>();
-        static IActionBar actionBar;
-
+        static Dictionary<string, IActionProvider> Contexts = new Dictionary<string, IActionProvider>();
+        static Dictionary<string, IActionBar> ActionBars = new Dictionary<string, IActionBar>();
         static Dictionary<string, List<CharmAction>> Actions = new Dictionary<string, List<CharmAction>>();
     }
     public interface IActionBar
     {
         void ValidActions(IEnumerable<CharmAction> actions);
-        bool IsOpen { get; set; }
     }
     public interface IActionProvider : System.ComponentModel.INotifyPropertyChanged
     {
-        IEnumerable<CharmAction> ProvideActions();
+        IEnumerable<CharmAction> ProvideActions(string actionBarName="Default");
     }
 }
+

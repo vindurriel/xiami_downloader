@@ -19,8 +19,6 @@ namespace Jean_Doe.MusicControl
     {
         public DownloadSongListControl()
         {
-
-            wrapView.ItemTemplate = this.Resources["downloadingTemplate"] as DataTemplate;
             Items.CollectionChanged += Items_CollectionChanged;
             MessageBus.Instance.Subscribe(this);
         }
@@ -95,7 +93,7 @@ namespace Jean_Doe.MusicControl
             }));
         }
 
-        public IEnumerable<CharmAction> ProvideActions()
+        public IEnumerable<CharmAction> ProvideActions(string barName = "Default")
         {
             return new List<CharmAction> 
                 { 

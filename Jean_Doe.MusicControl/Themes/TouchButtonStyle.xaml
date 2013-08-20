@@ -46,7 +46,7 @@
                             <Border x:Name="NormalRect" Background="{TemplateBinding Background}" Opacity="1"
                                     BorderThickness="0" />
                             <Grid x:Name="OverRect" Opacity="0">
-                                <Border Background="White" Opacity="0.3"/>
+                                <Border Background="White" Opacity="0.3" />
                             </Grid>
                             <Grid x:Name="PressRect" Opacity="0">
                                 <Border Background="{DynamicResource skinBrush}" />
@@ -63,4 +63,48 @@
         </Setter>
     </Style>
     <Style x:Key="StyleSearchButton" BasedOn="{StaticResource {x:Type Button}}" TargetType="Button"></Style>
+    <Style x:Key="AppBarButtonStyle" TargetType="ButtonBase">
+        <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
+        <Setter Property="Background" Value="{DynamicResource darkBrush}" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="FontFamily" Value="{DynamicResource font_symbol}" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ButtonBase">
+                    <Grid x:Name="root">
+                        <ContentPresenter Margin="{TemplateBinding Padding}" x:Name="Content"
+                                HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <Grid Opacity="0" x:Name="bg">
+                            <Ellipse StrokeThickness="0" Fill="{TemplateBinding Foreground}">
+                            </Ellipse>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Text="{TemplateBinding Content}" Margin="{TemplateBinding Padding}"
+                                    Foreground="{TemplateBinding Background}" />
+                        </Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="bg" Duration="0:0:0.1"
+                                                Storyboard.TargetProperty="Opacity" To="0.2" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="bg" Duration="0:0:0.1"
+                                                Storyboard.TargetProperty="Opacity" To="1" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
