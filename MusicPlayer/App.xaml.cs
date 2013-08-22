@@ -6,6 +6,7 @@ using System.Windows;
 using System.Linq;
 using Artwork.DataBus;
 using Artwork.MessageBus;
+using Jean_Doe.MusicControl;
 namespace MusicPlayer
 {
     /// <summary>
@@ -57,18 +58,12 @@ namespace MusicPlayer
             });
             RunProgramHelper.RunProgram("xiami_player.exe", System.Diagnostics.Process.GetCurrentProcess().Id.ToString());
         }
-        bool isPortTaken(int n)
+       
+        private void btn_Click(object sender, RoutedEventArgs e)
         {
-            return IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections().Any(x => x.LocalEndPoint.Port == n);
-        }
-        int port = 500;
-        public string getAvailablePort()
-        {
-            while (isPortTaken(port))
-                port++;
-            string res = port.ToString();
-            port++;
-            return res;
+            var d = (sender as FrameworkElement).DataContext as CharmAction;
+            if (d == null) return;
+            d.Action(sender, e);
         }
     }
 }

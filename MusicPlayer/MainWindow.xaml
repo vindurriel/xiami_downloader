@@ -197,19 +197,20 @@
                             HorizontalAlignment="Left" />
                     <DockPanel Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center">
                         <DockPanel.Resources>
-                            <Style TargetType="Button">
-                                <Setter Property="Width" Value="30" />
-                                <Setter Property="Height" Value="80" />
+                            <Style TargetType="Button" BasedOn="{StaticResource AppBarButtonStyle}">
+                                <Setter Property="Width" Value="28" />
+                                <Setter Property="Height" Value="28" />
                                 <Setter Property="Margin" Value="0,20" />
+                                <Setter Property="FontSize" Value="12" />
                                 <Setter Property="DockPanel.Dock" Value="Top" />
                             </Style>
                         </DockPanel.Resources>
-                        <Button x:Name="btn_sync_left" Content="&lt;" />
-                        <Button x:Name="btn_sync_right" Content="&gt;" />
+                        <Button x:Name="btn_sync_left" Content="&#xE239;" />
+                        <Button x:Name="btn_sync_right" Content="&#xE23A;" />
                     </DockPanel>
                     <Border Margin="30,0,0,0" x:Name="webBrowserPlaceHolder" Grid.Column="1" />
                     <DockPanel>
-                        <controls:SearchControl Margin="10,0" DockPanel.Dock="Top" x:Name="searchKeywordControl" />
+                        <controls:SearchControl Margin="2,0,0,0" DockPanel.Dock="Top" x:Name="searchKeywordControl" />
                         <controls:SearchSongListControl Margin="0,10,0,0" x:Name="list_search" DockPanel.Dock="Top" />
                     </DockPanel>
                 </Grid>
@@ -232,34 +233,38 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <my:ConfigPage x:Name="configPage" />
+                    <my:ConfigPage x:Name="configPage"  />
                 </Grid>
             </Grid>
-            <Grid x:Name="footer" Grid.Row="2">
+            <Grid x:Name="footer" Grid.Row="2" Margin="0,0,0,5">
                 <controls:ProgressBar x:Name="busyIndicator" Foreground="{DynamicResource skinBrush}" Margin="0"
                         VerticalAlignment="Center" HorizontalAlignment="Stretch" IsIndeterminate="False" ItemWidth="5" />
             </Grid>
         </Grid>
-        <Grid x:Name="part_nowPlaying" Height="50" VerticalAlignment="Bottom" Margin="2"
+        <Grid x:Name="part_nowPlaying" Height="60" VerticalAlignment="Bottom" Margin="2"
                 Background="{DynamicResource selectBrush}" Grid.Row="1"
                 DataContext="{Binding NowPlaying,ElementName=list_complete}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
-                <ColumnDefinition />
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <DockPanel>
+            <DockPanel Grid.Row="1">
                 <Border BorderBrush="{DynamicResource lightBrush}" BorderThickness="0">
                     <Image Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
                             Stretch="Uniform">
                     </Image>
                 </Border>
-                <StackPanel Margin="5,5,0,0">
+                <StackPanel Margin="5,3,0,0">
                     <TextBlock Text="{Binding Name}" />
                     <TextBlock Text="{Binding ArtistName}" />
                 </StackPanel>
             </DockPanel>
-            <DockPanel Grid.Column="1" LastChildFill="False" HorizontalAlignment="Center">
+            <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="False" HorizontalAlignment="Center">
                 <DockPanel.Resources>
                     <Style TargetType="Button" BasedOn="{StaticResource AppBarButtonStyle}">
                         <Setter Property="Width" Value="30" />
@@ -268,16 +273,16 @@
                         <Setter Property="Margin" Value="10,0" />
                     </Style>
                 </DockPanel.Resources>
-                <Button ToolTip="stop" Content="&#xE15B;" />
-                <Button ToolTip="play" Content="&#xE118;" />
-                <Button ToolTip="play" Content="&#xE118;" />
+                <Button x:Name="btn_select_now_playing" Content="&#xE18B;" Click="btn_select_now_playing_Click"/>
+                <Button x:Name="btn_plause" Content="&#xE102;" Click="btn_plause_Click"/>
+                <Button x:Name="btn_next" Content="&#xE101;" Click="btn_next_Click"/>
             </DockPanel>
-            <Grid Grid.Column="2" x:Name="lrc">
+            <Grid Grid.Row="1" Grid.Column="2" x:Name="lrc">
                 <controls:LyricControl Margin="0,-7,0,0" HorizontalAlignment="Right" x:Name="lyricShow"
                         MaxHeight="{Binding ActualHeight,ElementName=lrc}" />
             </Grid>
             <Slider Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Top" Background="Transparent"
-                    Foreground="{DynamicResource skinBrush}" x:Name="slider" Margin="0,-10,0,0" />
+                    Foreground="{DynamicResource skinBrush}" x:Name="slider" Margin="0,0,0,0" />
         </Grid>
         <my:ActionBar Height="50" VerticalAlignment="Bottom" Margin="2" x:Name="charmBar"
                 Background="{DynamicResource selectBrush}" />

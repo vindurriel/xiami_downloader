@@ -54,7 +54,7 @@ namespace Jean_Doe.Common
             get { return totalTime; }
             set
             {
-                totalTime = value; 
+                totalTime = value;
                 UIHelper.RunOnUI(() =>
                 {
                     SongChanged(null, new SongChangedEventArgs { Total = value, Id = _id });
@@ -72,32 +72,7 @@ namespace Jean_Doe.Common
             timer = new System.Timers.Timer(RefreshInterval);
             timer.Elapsed += timer_Tick;
             Task.Run(() => timer.Start());
-            //ctx = ZmqContext.Create();
-            //sender = ctx.CreateSocket(SocketType.REQ);
-            //sender.Connect("tcp://127.0.0.1:" + DataBus.Get("port1").ToString());
-            //receiver = ctx.CreateSocket(SocketType.SUB);
-            //receiver.Connect("tcp://127.0.0.1:" + DataBus.Get("port2").ToString());
-            //receiver.SubscribeAll();
-            //receive();
         }
-        //static void receive()
-        //{
-        //    Task.Run(() =>
-        //    {
-        //        while (true)
-        //        {
-        //            var cmd = receiver.Receive(Encoding.UTF8);
-        //            if (cmd.StartsWith("song_changed ") && SongChanged != null)
-        //            {
-        //                totalTime = double.Parse(cmd.Substring("song_changed ".Length));
-        //                UIHelper.RunOnUI(() =>
-        //                {
-        //                    SongChanged(null, new SongChangedEventArgs { Total = totalTime, Id = _id });
-        //                });
-        //            }
-        //        }
-        //    });
-        //}
         static bool isRequestingNext = false;
         public static void Exit()
         {
@@ -128,6 +103,14 @@ namespace Jean_Doe.Common
                 isPlaying = true;
             }
         }
+        public static string GetPlayOrPause(string id)
+        {
+            if (id == _id)
+            {
+                return isPlaying?"\xE103":"\xE102";
+            }
+            return "\xE102";
+        }
         public static void Play(string filepath, string id)
         {
             if (!System.IO.File.Exists(filepath))
@@ -153,21 +136,6 @@ namespace Jean_Doe.Common
             });
 
         }
-        //static ZmqContext ctx;
-        //static ZmqSocket sender;
-        //static ZmqSocket receiver;
-        //static String Send(string msg)
-        //{
-        //    try
-        //    {
-        //        sender.Send(msg, Encoding.UTF8);
-        //        return sender.Receive(Encoding.UTF8, TimeSpan.FromMilliseconds(1000));
-        //    }
-        //    catch (System.Exception)
-        //    {
-        //        return "fail";
-        //    }
-        //}
         static void play(string filepath, string id)
         {
             if (isPlaying)

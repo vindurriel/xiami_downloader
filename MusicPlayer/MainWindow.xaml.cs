@@ -83,6 +83,21 @@ namespace MusicPlayer
             btn_sync_left.Click += btn_sync_left_Click;
             btn_sync_right.Click += btn_sync_right_Click;
             new MusicSliderConnector(slider);
+            list_complete.PropertyChanged += list_complete_PropertyChanged;
+        }
+
+        void list_complete_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != "SelectCount") return;
+            refreshPlause();
+        }
+        void refreshPlause() 
+        {
+            string id = null;
+            var song = list_complete.SelectedSongs.FirstOrDefault();
+            if (song != null)
+                id = song.Id;
+            btn_plause.Content = Mp3Player.GetPlayOrPause(id);
         }
         void btn_sync_right_Click(object sender, RoutedEventArgs e)
         {
@@ -105,9 +120,9 @@ namespace MusicPlayer
             }
         }
 
-        void btn_sync_left_Click(object sender, RoutedEventArgs e)
+        async void btn_sync_left_Click(object sender, RoutedEventArgs e)
         {
-            SearchManager.Search(webcontrol_entity);
+            await SearchManager.Search(webcontrol_entity);
         }
         void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -126,6 +141,7 @@ namespace MusicPlayer
                 balloonTip.ViewModel = now;
                 trayIcon.ShowCustomBalloon(balloonTip, PopupAnimation.Fade, 3000);
             }
+            refreshPlause();
         }
         long counter;
         void OnCompositionTargetRendering(object sender, EventArgs e)
@@ -162,7 +178,7 @@ namespace MusicPlayer
                 trayIcon.TrayMouseDoubleClick += OnTrayIconClick;
                 trayIcon.Icon = new System.Drawing.Icon(iconStream);
             }
-            catch (Exception ex)
+            catch
             {
             }
 
@@ -210,8 +226,9 @@ namespace MusicPlayer
         WebBrowser webcontrol;
         private void loadSongLists()
         {
-            list_complete.SavePath = "complete.xml";
-            list_download.SavePath = "download.xml";
+            SongViewModel.Load();
+            list_download.SavePath = "download";
+            list_complete.SavePath = "complete";
             list_download.Load();
             list_complete.Load();
         }
@@ -374,5 +391,25 @@ namespace MusicPlayer
         {
             UIHelper.RunOnUI(() => btn_restart.Visibility = Visibility.Visible);
         }
+
+        private void btn_select_now_playing_Click(object sender, RoutedEventArgs e)
+        {
+            Page = 4;
+            list_complete.PerformAction("选中正在播放");
+        }
+
+        private void btn_plause_Click(object sender, RoutedEventArgs e)
+        {
+            list_complete.PerformAction("播放/暂停");
+            refreshPlause();
+        }
+
+        private void btn_next_Click(object sender, RoutedEventArgs e)
+        {
+            list_complete.PerformAction("下一首");
+
+        }
+
+       
     }
 }

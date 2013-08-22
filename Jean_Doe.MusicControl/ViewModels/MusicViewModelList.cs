@@ -11,9 +11,8 @@ namespace Jean_Doe.MusicControl
     public class MusicViewModelList : ObservableCollection<MusicViewModel>
     {
         ConcurrentQueue<IMusic> queue = new ConcurrentQueue<IMusic>();
-        public void AddItems(IEnumerable<IMusic> inlist, bool toFront = false)
+        public void AddItems(List<IMusic> inlist, bool toFront = false)
         {
-            canSave = false;
             int count = inlist.Count();
             if (count == 0) return;
             if (count > 10) count = 10;
@@ -51,19 +50,13 @@ namespace Jean_Doe.MusicControl
                 {
                     var x = e.StackTrace;
                 }
-
-                canSave = true;
-                Save();
             });
         }
         public new void Remove(MusicViewModel item)
         {
-            canSave = false;
             base.Remove(item);
-            canSave = true;
-            Save();
         }
-        bool canSave = true;
+
         void addItem(IMusic music, bool toFront)
         {
             MusicViewModel s = createViewModel(music, toFront);
@@ -107,43 +100,20 @@ namespace Jean_Doe.MusicControl
             return s;
         }
         public string SavePath { get; set; }
-        public void Save()
-        {
-            if (!canSave) return;
-            if (SavePath == null) return;
-            var songs = this.OfType<SongViewModel>().Select(x => x.Song).ToArray();
-            try
-            {
-                string downloadState = System.IO.Path.GetFileNameWithoutExtension(SavePath);
-                foreach (var item in songs)
-                {
-                    item.DownloadState = downloadState;
-                }
-                PersistHelper.Save(songs);
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-            }
-        }
         public void Load()
         {
-            var songs = new List<Song>();
             try
             {
-                string downloadState = System.IO.Path.GetFileNameWithoutExtension(SavePath);
-                var condition = new Func<Song, bool>((s) => {
-                    return s.DownloadState == downloadState;
-                });
-                songs = PersistHelper.Load<Song>(condition);
+                var songs = SongViewModel.All
+                    .Where(x => x.Song.DownloadState == SavePath)
+                    .Select(x => x.Song as IMusic)
+                    .ToList();
+                AddItems(songs);
             }
             catch (Exception e)
             {
                 Logger.Error(e);
             }
-            if (Count > 0)
-                Clear();
-            AddItems(songs);
         }
     }
 }

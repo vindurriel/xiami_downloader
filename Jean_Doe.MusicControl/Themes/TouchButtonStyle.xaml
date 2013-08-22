@@ -63,7 +63,7 @@
         </Setter>
     </Style>
     <Style x:Key="StyleSearchButton" BasedOn="{StaticResource {x:Type Button}}" TargetType="Button"></Style>
-    <Style x:Key="AppBarButtonStyle" TargetType="ButtonBase">
+    <Style x:Key="AppBarButtonStyle" TargetType="Button">
         <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
         <Setter Property="Background" Value="{DynamicResource darkBrush}" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
@@ -71,11 +71,15 @@
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="FontSize" Value="15" />
         <Setter Property="Padding" Value="5" />
+        <Setter Property="Width" Value="30" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="MinHeight" Value="2" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ButtonBase">
                     <Grid x:Name="root">
-                        <Ellipse Stroke="{TemplateBinding Foreground}" StrokeThickness="2" Fill="Transparent"/>
+                        <Ellipse Stroke="{TemplateBinding Foreground}"
+                                StrokeThickness="{TemplateBinding MinHeight}" Fill="Transparent" />
                         <ContentPresenter Margin="{TemplateBinding Padding}" x:Name="Content"
                                 HorizontalAlignment="Center" VerticalAlignment="Center" />
                         <Grid Opacity="0" x:Name="bg">

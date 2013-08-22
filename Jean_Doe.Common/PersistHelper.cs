@@ -22,7 +22,10 @@ namespace Jean_Doe.Common
                     {
                         var d = db.Get<T>(item.Id);
                         if (d != null)
+                        {
+                            File.AppendAllLines("d:\\a.txt", new []{item.Id});
                             db.Delete(d);
+                        }
                     }
                     db.Commit();
                 }

@@ -15,12 +15,13 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Linq.Expressions;
 using System.Collections.ObjectModel;
+using System.Windows.Controls.Primitives;
 namespace Jean_Doe.MusicControl
 {
     /// <summary>
     /// Interaction logic for SongListControl.xaml
     /// </summary>
-    public partial class SongListControl : INotifyPropertyChanged, IActionBar
+    public partial class SongListControl : INotifyPropertyChanged,IActionProvider
     {
         public SongListControl()
         {
@@ -62,11 +63,9 @@ namespace Jean_Doe.MusicControl
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Start();
         }
-        bool isDirty;
         void items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             ItemsCount = listView.Items.Count;
-            isDirty = true;
             if (e.NewItems != null)
                 foreach (var item in e.NewItems.OfType<MusicViewModel>())
                 {
@@ -107,7 +106,6 @@ namespace Jean_Doe.MusicControl
         string lastFilter = "";
         void OnTimerTick(object sender, EventArgs e)
         {
-
             Save();
         }
 
@@ -217,7 +215,13 @@ namespace Jean_Doe.MusicControl
                 if (source == null) return;
                 var dragData = new DataObject();
                 dragData.SetFileDropList(files);
-                DragDrop.DoDragDrop(listView, dragData, DragDropEffects.Copy);
+                try
+                {
+                    DragDrop.DoDragDrop(listView, dragData, DragDropEffects.Copy);
+                }
+                catch
+                {
+                }
 
             }
         }
@@ -307,15 +311,12 @@ namespace Jean_Doe.MusicControl
         public string SavePath { get { return Items.SavePath; } set { Items.SavePath = value; } }
         public virtual void Save()
         {
-            if (isDirty)
-            {
-                items.Save();
-                isDirty = false;
-            }
+            SongViewModel.Save();
         }
         public virtual void Load()
         {
-            Task.Run(() => { items.Load(); });
+            items.Load();
+            Task.Run(() => {  });
         }
 
         protected virtual void btn_open_click(object sender, RoutedEventArgs e)
@@ -584,7 +585,7 @@ namespace Jean_Doe.MusicControl
         {
             get { return itemActionSource1; }
             set { itemActionSource1 = value; }
-        } 
+        }
         private ObservableCollection<CharmAction> itemActionSource2 = new ObservableCollection<CharmAction> { };
         public ObservableCollection<CharmAction> ItemActionSource2
         {
@@ -600,24 +601,50 @@ namespace Jean_Doe.MusicControl
         private static void more_Click_2(object sender, RoutedEventArgs e)
         {
         }
-        void IActionBar.ValidActions(IEnumerable<CharmAction> actions)
+
+        protected Dictionary<string, CharmAction> actions = new Dictionary<string, CharmAction>();
+        public CharmAction GetAction(string name)
         {
-            ItemActionSource1.Clear();
-            ItemActionSource2.Clear();
-            var c = actions.Count();
-            int MaxItemCount = 5;
-            foreach (var item in actions.Take(MaxItemCount))
+            if (!actions.ContainsKey(name))
+                return null;
+            return actions[name];
+        }
+        public void PerformAction(string name)
+        {
+            if (!actions.ContainsKey(name))
+                return;
+            try
             {
-                ItemActionSource1.Add(item);
+                actions[name].Action(null, null);
             }
-            if (c > MaxItemCount)
+            catch (Exception ex)
             {
-                ItemActionSource1.Add(open_more);
-                foreach (var item in actions.Skip(MaxItemCount))
-                {
-                    ItemActionSource2.Add(item);
-                }
+                Logger.Error(ex);
             }
+        }
+        protected List<CharmAction> contextMenuSource = new List<CharmAction>();
+        protected virtual void btn_item_action_Click(object sender, RoutedEventArgs e)
+        {
+            contextMenuSource.Clear();
+            contextMenuSource.AddRange(actions.Values.Where(x => x.Validate(this)));
+            var cm = new ContextMenu();
+            cm.ItemsSource = contextMenuSource;
+            cm.Placement = PlacementMode.Left;
+            cm.PreviewMouseUp += cm_PreviewMouseUp;
+            cm.PlacementTarget = sender as UIElement;
+            cm.StaysOpen = false;
+            cm.IsOpen = true;
+        }
+        void cm_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            (sender as ContextMenu).IsOpen = false;
+        }
+        public IEnumerable<CharmAction> ProvideActions(string barName = "Default")
+        {
+            var res = new List<CharmAction>();
+            if (SelectCount > 1)
+                res.AddRange(actions.Values.Where(x => x.Validate(this)));
+            return res;
         }
     }
 }

@@ -13,7 +13,6 @@ using System.Windows;
 namespace Jean_Doe.MusicControl
 {
     public class DownloadSongListControl : SongListControl,
-        IActionProvider,
         IHandle<MsgDownloadProgressChanged>,
         IHandle<MsgDownloadStateChanged>
     {
@@ -21,6 +20,21 @@ namespace Jean_Doe.MusicControl
         {
             Items.CollectionChanged += Items_CollectionChanged;
             MessageBus.Instance.Subscribe(this);
+            var l = new List<CharmAction> { 
+                    new CharmAction("取消选择","\xE10E",this.btn_cancel_selection_Click,defaultActionValidate),
+                    new CharmAction("开始","\xE118",this.btn_download_start_Click,defaultActionValidate),
+                    new CharmAction("暂停","\xE15B",this.btn_cancel_Click,defaultActionValidate),
+                    new CharmAction("删除","\xE106",this.btn_remove_Click,defaultActionValidate),
+                    new CharmAction("完成","\xE10B",this.btn_complete_Click,defaultActionValidate),
+                    new CharmAction("查看专辑歌曲","\xE1d2",link_album,IsOnlyType<IHasAlbum>),
+                    new CharmAction("查看艺术家","\xe13d",link_artist,IsOnlyType<IHasArtist>),
+                    new CharmAction("在浏览器中打开","\xE12B",this.btn_browse_Click,IsOnlyType<IHasMusicPart>),
+                };
+            foreach (var item in l)
+            {
+                actions[item.Label] = item;
+                contextMenuSource.Add(item);
+            }
         }
 
         void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -36,7 +50,7 @@ namespace Jean_Doe.MusicControl
         public void AddAndStart(SongViewModel song)
         {
             Items.Add(song);
-            var hasWork = DownloadManager.Instance.StartByTag(new[] { song.Id });
+            var hasWork = DownloadManager.Instance.StartByTag(new string[] { song.Id });
             if (!hasWork)
                 MessageBus.Instance.Publish(new MsgDownloadStateChanged { Id = song.Id, Item = song, State = EnumDownloadState.Success });
         }
@@ -91,21 +105,6 @@ namespace Jean_Doe.MusicControl
             {
                 item.Description = msg;
             }));
-        }
-
-        public IEnumerable<CharmAction> ProvideActions(string barName = "Default")
-        {
-            return new List<CharmAction> 
-                { 
-                    new CharmAction("取消选择","\xE10E",this.btn_cancel_selection_Click,defaultActionValidate),
-                    new CharmAction("开始","\xE118",this.btn_download_start_Click,defaultActionValidate),
-                    new CharmAction("暂停","\xE15B",this.btn_cancel_Click,defaultActionValidate),
-                    new CharmAction("删除","\xE106",this.btn_remove_Click,defaultActionValidate),
-                    new CharmAction("完成","\xE10B",this.btn_complete_Click,defaultActionValidate),
-                    new CharmAction("查看专辑歌曲","\xE1d2",link_album,IsOnlyType<IHasAlbum>),
-                    new CharmAction("查看艺术家","\xe13d",link_artist,IsOnlyType<IHasArtist>),
-                    new CharmAction("在浏览器中打开","\xE12B",this.btn_browse_Click,IsOnlyType<IHasMusicPart>),
-                };
         }
 
         void btn_download_start_Click(object sender, RoutedEventArgs e)

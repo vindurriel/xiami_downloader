@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Controls;
 using Jean_Doe.Common;
 using System.Collections.Generic;
+using System.Linq;
 namespace Jean_Doe.MusicControl
 {
     public class SongViewModel : MusicViewModel, IHasArtist, IHasAlbum
@@ -50,8 +51,6 @@ namespace Jean_Doe.MusicControl
         public string UrlArt { get { return song.UrlArt; } }
         public string UrlLrc { get { return song.UrlLrc; } set { song.UrlLrc = value; } }
         public int TrackNo { get { return song.TrackNo; } set { song.TrackNo = value; Notify("TrackNo"); } }
-        string lyric = null;
-
         private string status;
         public string Status
         {
@@ -64,6 +63,8 @@ namespace Jean_Doe.MusicControl
             get { return percent; }
             set { percent = value; Notify("Percent"); }
         }
+
+
         #endregion
         #region update methods
 
@@ -104,6 +105,7 @@ namespace Jean_Doe.MusicControl
             if (!cache.ContainsKey(id))
             {
                 cache[id] = new SongViewModel(song);
+                isDirty = true;
             }
             if (song.InFav)
             {
@@ -115,8 +117,30 @@ namespace Jean_Doe.MusicControl
             }
             return cache[id];
         }
+        public static SongViewModel[] All { get { return cache.Values.ToArray(); } }
+        public static void Load()
+        {
+            cache.Clear();
+            CanSave = false;
+            PersistHelper.Load<Song>().ForEach(x => Get(x));
+            CanSave = true;
+        }
+        public static bool isDirty = false;
+        public static bool CanSave { get; set; }
+        public static void Save()
+        {
+            if (!CanSave) return;
+            if (!isDirty) return;
+            var songs = cache.Values
+                .Where(x => x.song.DownloadState != null)
+                .Select(x => x.song)
+                .ToArray();
+            PersistHelper.Save(songs);
+            isDirty = false;
+        }
         public static bool Remove(string id)
         {
+            isDirty = true;
             return cache.Remove(id);
         }
         public SongViewModel(Song song)

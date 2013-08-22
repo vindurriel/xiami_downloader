@@ -25,6 +25,13 @@ namespace Jean_Doe.MusicControl
                 //LogoColor = ImageHelper.GetAverageColor(value);
             }
         }
+        private bool isNowPlaying;
+
+        public bool IsNowPlaying
+        {
+            get { return isNowPlaying; }
+            set { isNowPlaying = value; Notify("IsNowPlaying"); }
+        }
         public bool InFav
         {
             get { return false; }

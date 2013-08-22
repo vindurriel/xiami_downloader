@@ -14,7 +14,7 @@ namespace Jean_Doe.MusicControl
 {
     public class CompleteSongListControl : SongListControl,
         IHandle<MsgDownloadStateChanged>,
-        IHandle<MsgRequestNextSong>, IActionProvider
+        IHandle<MsgRequestNextSong>
     {
         public CompleteSongListControl()
         {
@@ -115,7 +115,11 @@ namespace Jean_Doe.MusicControl
 
         void Mp3Player_SongChanged(object sender, SongChangedEventArgs e)
         {
+            if (NowPlaying != null)
+                NowPlaying.IsNowPlaying = false;
             NowPlaying = Items.FirstOrDefault(x => x.Id == e.Id) as SongViewModel;
+            if (NowPlaying != null)
+                NowPlaying.IsNowPlaying = true;
             ActionBarService.Refresh();
         }
 
@@ -145,52 +149,41 @@ namespace Jean_Doe.MusicControl
                 return;
             Items.AddItems(new List<IMusic> { item.Song }, true);
         }
-        Dictionary<string, CharmAction> actions = new Dictionary<string, CharmAction>();
         void initActions()
         {
-            actions.Add("选中正在播放", new CharmAction("选中正在播放", "\xE18B", btn_select_nowplaying_Click));
-            actions.Add("下一首", new CharmAction("下一首", "\xE101", btn_next_Click));
-            actions.Add("收藏该歌曲", new CharmAction("收藏该歌曲", "\xE0A5", btn_fav_Click));
-            actions.Add("不再收藏该歌曲", new CharmAction("不再收藏该歌曲", "\xE007", btn_unfav_Click));
-            actions.Add("查看专辑", new CharmAction("查看专辑", "\xE1d2", link_album));
-            actions.Add("查看艺术家", new CharmAction("查看艺术家", "\xe13d", link_artist));
-            actions.Add("存为播放列表", new CharmAction("存为播放列表", "\xE14C", btn_save_playlist_Click));
-            actions.Add("复制文件到剪贴板", new CharmAction("复制文件到剪贴板", "\xE16F", btn_copy_Click));
-            actions.Add("打开文件所在位置", new CharmAction("打开文件所在位置", "\xE1A5", btn_open_click));
-            actions.Add("在浏览器中打开", new CharmAction("在浏览器中打开", "\xE12B", btn_browse_Click));
-            actions.Add("删除", new CharmAction("删除", "\xE106", btn_remove_complete_Click));
-            actions.Add("导入", new CharmAction("导入", "\xE150", btn_import_click));
+            var l = new List<CharmAction>{
+                new CharmAction("取消选择","\xE10E",this.btn_cancel_selection_Click,isMultiSelect),
+                new CharmAction("播放/暂停","\xE102",this.btn_play_Click,(s)=>{
+                    string id=null;
+                    var song=SelectedSongs.FirstOrDefault();
+                    if (song != null)
+                    id = song.Id;
+                    this.actions["播放/暂停"].Icon = Mp3Player.GetPlayOrPause(id);
+                    return true;
+                }),
+                new CharmAction("选中正在播放","\xE18B",this.btn_select_nowplaying_Click,(s)=>false),  
+                new CharmAction("下一首","\xE101",this.btn_next_Click,(s)=>false),    
+                new CharmAction("收藏该歌曲","\xE0A5",this.btn_fav_Click,canFav),
+                new CharmAction("不再收藏该歌曲","\xE007",this.btn_unfav_Click,canUnfav),
+                new CharmAction("查看专辑","\xE1d2",link_album,IsOnlyType<IHasAlbum>),
+                new CharmAction("查看艺术家","\xe13d",link_artist,IsOnlyType<IHasArtist>),
+                new CharmAction("存为播放列表","\xE14C",this.btn_save_playlist_Click,isMultiSelect),
+                new CharmAction("复制文件到剪贴板","\xE16F",this.btn_copy_Click,(s)=>true),
+                new CharmAction("打开文件所在位置","\xE1A5",this.btn_open_click,IsOnlyType<IHasMusicPart>),
+                new CharmAction("在浏览器中打开","\xE12B",this.btn_browse_Click,IsOnlyType<IHasMusicPart>),
+                new CharmAction("删除","\xE106",this.btn_remove_complete_Click,(s)=>true),
+                new CharmAction("导入","\xE150",this.btn_import_click,s=>{return ItemsCount==0 || defaultActionValidate(s);}),
+            };
+            foreach (var item in l)
+            {
+                actions[item.Label] = item;
+                contextMenuSource.Add(item);
+            }
         }
-        public IEnumerable<CharmAction> ProvideActions(string barName = "Default")
+        bool isMultiSelect(object s)
         {
-            var res = new List<CharmAction>();
-            if (barName == "Default")
-            {
-                if (SelectCount > 1)
-                {
-                    res.Add(actions["存为播放列表"]);
-                    res.Add(actions["删除"]);
-                }
-                else
-                {
-                    //var song = SelectedSongs.FirstOrDefault();
-                    //if (song != null)
-                    //    if (song.InFav)
-                    //        res.Add(actions["收藏该歌曲"]);
-                    //    else
-                    //        res.Add(actions["不再收藏该歌曲"]);
-                    //res.Add(actions["查看艺术家"]);
-                    //res.Add(actions["查看专辑"]);
-                    //res.Add(actions["在浏览器中打开"]);
-                }
-            }
-            else if (barName == "complete")
-            {
-
-            }
-            return res;
+            return SelectCount > 1;
         }
-
         bool isNowPlayingSelected(object s)
         {
             var list = s as CompleteSongListControl;
@@ -296,7 +289,7 @@ namespace Jean_Doe.MusicControl
                         };
                         buffer.Add(song);
                     }
-                    catch (Exception ex)
+                    catch
                     {
                     }
                     if (buffer.Count == bufferLength)
@@ -343,15 +336,7 @@ namespace Jean_Doe.MusicControl
             var list = SelectedSongs.ToArray();
             Task.Run(() =>
             {
-                try
-                {
-                    PersistHelper.Delete(list.Select(x => x.Song).ToArray());
-
-                }
-                catch (Exception ex)
-                {
-                    Jean_Doe.Common.Logger.Error(ex);
-                }
+                SongViewModel.CanSave = false;
                 foreach (var item in list)
                 {
                     try
@@ -359,12 +344,21 @@ namespace Jean_Doe.MusicControl
                         File.Delete(item.Song.FilePath);
                         File.Delete(Path.Combine(Global.BasePath, "cache", item.Id + ".mp3"));
                     }
-                    catch (Exception ex)
+                    catch
                     {
                     }
                     Remove(item);
                     SongViewModel.Remove(item.Id);
                 }
+                try
+                {
+                    PersistHelper.Delete(list.Select(x => x.Song).ToArray());
+                }
+                catch (Exception ex)
+                {
+                    Jean_Doe.Common.Logger.Error(ex);
+                }
+                SongViewModel.CanSave = true;
             });
         }
         void btn_copy_Click(object sender, RoutedEventArgs e)
@@ -434,6 +428,10 @@ namespace Jean_Doe.MusicControl
         {
             ensureRefreshPlayList();
             Mp3Player.Next();
+        }
+        protected override void btn_item_action_Click(object sender, RoutedEventArgs e)
+        {
+            base.btn_item_action_Click(sender, e);
         }
     }
 }
