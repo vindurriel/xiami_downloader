@@ -20,27 +20,13 @@ namespace Jean_Doe.MusicControl
             Items.CollectionChanged += Items_CollectionChanged;
             MessageBus.Instance.Subscribe(this);
             var l = new List<CharmAction> { 
-               new CharmAction("取消选择", "\xE10E",btn_cancel_selection_Click,defaultActionValidate),
                new CharmAction("下载","\xE118",this.btn_download_add_Click,(s)=>{return (s as SongListControl).SelectedSongs.Count()>0;}),
-               new CharmAction("收藏该歌曲","\xE0A5",this.btn_fav_Click,canFav),
-               new CharmAction("不再收藏该歌曲","\xE007",this.btn_unfav_Click,canUnfav),
-               new CharmAction("查看歌曲的艺术家","\xe13d",link_artist,IsOnlyType<SongViewModel>),
-               new CharmAction("查看歌曲的专辑","\xE1d2",link_album,IsOnlyType<SongViewModel>),
-
-               new CharmAction("查看专辑的歌曲","\xE189",link_album,IsOnlyType<AlbumViewModel>),
-               new CharmAction("查看专辑的艺术家","\xe13d",link_artist,IsOnlyType<AlbumViewModel>),
-               new CharmAction("查看精选集的歌曲","\xE189",link_collection,IsOnlyType<CollectViewModel>),
-
-               new CharmAction("查看艺术家的最受欢迎歌曲","\xE189",link_artist,IsOnlyType<ArtistViewModel>),
-               new CharmAction("查看艺术家的专辑","\xE1d2",link_artist_album,IsOnlyType<ArtistViewModel>),
-               new CharmAction("查看艺术家的相似艺人","\xE125",link_similar_artist,IsOnlyType<ArtistViewModel>),
-               new CharmAction("在浏览器中打开","\xE12B",this.btn_browse_Click,IsOnlyType<MusicViewModel>),
             };
             foreach (var item in l)
             {
                 actions[item.Label] = item;
-                contextMenuSource.Add(item);
             }
+            addCommonActions();
         }
         private double maxPlayTimes = 1;
 

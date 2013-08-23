@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="MusicPlayer.UserActionsControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Name="me">
+    <Grid Width="50" Height="50">
+        <Image Source="Resources/user.png" Stretch="UniformToFill" />
+        <Image Source="{Binding Avatar,ElementName=me}" Stretch="UniformToFill" />
+        <Popup Placement="RelativePoint" HorizontalOffset="50" VerticalOffset="50"
+                IsOpen="{Binding IsOpen,ElementName=me}" StaysOpen="False" PreviewMouseUp="OnPreviewMouseUp">
+            <ListView x:Name="menu_actions" ItemTemplate="{DynamicResource simple_item}" Width="50" BorderThickness="0"
+                    Background="{DynamicResource skinBrush}">
+                <ListView.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource simple_container}" TargetType="ListViewItem">
+                        <Setter Property="Margin" Value="2,10" />
+                        <Setter Property="ToolTip">
+                            <Setter.Value>
+                                <ToolTip Placement="Left" Background="{DynamicResource skinBrush}" Foreground="White" BorderThickness="0">
+                                    <TextBlock Text="{Binding Label}"   FontSize="16" />
+                                </ToolTip>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Popup>
+    </Grid>
+</UserControl>

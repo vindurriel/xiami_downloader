@@ -4,6 +4,7 @@ using Hardcodet.Wpf.TaskbarNotification;
 using Jean_Doe.Common;
 using Jean_Doe.MusicControl;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -67,7 +68,6 @@ namespace MusicPlayer
             Global.ListenToEvent("EnableMagnet", SetEnableMagnet);
             Global.ListenToEvent("ColorSkin", SetColorSkin);
             Global.ListenToEvent("Theme", SetTheme);
-            Global.ListenToEvent("xiami_avatar", SetAvatar);
             InitializeComponent();
             Artwork.DataBus.DataBus.Set("MainWindow", this);
             DataContext = this;
@@ -83,18 +83,55 @@ namespace MusicPlayer
             btn_sync_left.Click += btn_sync_left_Click;
             btn_sync_right.Click += btn_sync_right_Click;
             new MusicSliderConnector(slider);
-            list_complete.PropertyChanged += list_complete_PropertyChanged;
+            lists = new List<SongListControl> { 
+                list_search,
+                list_download,
+                list_complete,
+            };
+            foreach (var item in lists)
+            {
+                item.PropertyChanged += songlist_PropertyChanged;
+                item.ListView.SelectionChanged += ListView_SelectionChanged;
+            }
         }
-
-        void list_complete_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        List<SongListControl> lists;
+        bool isSyncingSelection = false;
+        void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (isSyncingSelection) return;
+            isSyncingSelection = true;
+            var cur = currentList;
+            foreach (var l in lists)
+            {
+                if (l == cur) continue;
+                l.ListView.SelectedItems.Clear();
+                foreach (var item in cur.SelectedItems)
+                {
+                    l.ListView.SelectedItems.Add(item);
+                }
+            }
+            isSyncingSelection = false;
+        }
+        SongListControl currentList
+        {
+            get
+            {
+                foreach (var item in lists)
+                {
+                    if (item.IsHitTestVisible) return item;
+                }
+                return lists[0];
+            }
+        }
+        void songlist_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName != "SelectCount") return;
             refreshPlause();
         }
-        void refreshPlause() 
+        void refreshPlause()
         {
             string id = null;
-            var song = list_complete.SelectedSongs.FirstOrDefault();
+            var song = currentList.SelectedSongs.FirstOrDefault();
             if (song != null)
                 id = song.Id;
             btn_plause.Content = Mp3Player.GetPlayOrPause(id);
@@ -111,11 +148,11 @@ namespace MusicPlayer
                 }
                 else
                 {
-                   var song= this.list_search.SelectedSongs.FirstOrDefault();
-                   if (song != null)
-                   {
-                       webcontrol.Navigate(string.Format("{0}/model/{1}_{2}?theme={3}", Global.AppSettings["url_nest"], "song",song.Id, theme));
-                   }
+                    var song = this.list_search.SelectedSongs.FirstOrDefault();
+                    if (song != null)
+                    {
+                        webcontrol.Navigate(string.Format("{0}/model/{1}_{2}?theme={3}", Global.AppSettings["url_nest"], "song", song.Id, theme));
+                    }
                 }
             }
         }
@@ -160,7 +197,7 @@ namespace MusicPlayer
         }
         void initActionBar()
         {
-            ActionBarService.RegisterContext("1", userPage, "IsLoggedIn");
+            //ActionBarService.RegisterContext("1", userPage, "IsLoggedIn");
             ActionBarService.RegisterContext("2", list_search, "SelectCount");
             ActionBarService.RegisterContext("3", list_download, "SelectCount");
             ActionBarService.RegisterContext("4", list_complete, "SelectCount");
@@ -220,7 +257,7 @@ namespace MusicPlayer
                     //Clipboard.SetData(DataFormats.Text, text);
                 }
             };
-            webcontrol.Navigate(string.Format("{0}/model/artist_1508?theme={1}",Global.AppSettings["url_nest"],theme));
+            webcontrol.Navigate(string.Format("{0}/model/artist_1508?theme={1}", Global.AppSettings["url_nest"], theme));
         }
         string webcontrol_entity;
         WebBrowser webcontrol;
@@ -262,7 +299,7 @@ namespace MusicPlayer
         string theme;
         void SetTheme(string s)
         {
-            theme =s.StartsWith("#333") ? "dark" : "light";
+            theme = s.StartsWith("#333") ? "dark" : "light";
             var colors = s.Split(" ".ToCharArray());
             App.Current.Resources["darkBrush"] = new SolidColorBrush { Color = (Color)ColorConverter.ConvertFromString(colors[0]) };
             App.Current.Resources["lightBrush"] = new SolidColorBrush { Color = (Color)ColorConverter.ConvertFromString(colors[1]) };
@@ -272,17 +309,8 @@ namespace MusicPlayer
         {
             App.Current.Resources["skinBrush"] = new SolidColorBrush { Color = (Color)ColorConverter.ConvertFromString(s) };
         }
-        void SetAvatar(string s)
-        {
-            if (!XiamiClient.GetDefault().IsLoggedIn)
-            {
-                Avatar = null;
-                return;
-            }
-            ImageManager.Get(string.Format("user_{0}.jpg", Global.AppSettings["xiami_uid"]), s, (img) => Avatar = img);
-        }
-        BitmapSource avatar;
-        public BitmapSource Avatar { get { return avatar; } set { avatar = value; Notify("Avatar"); } }
+       
+    
 
         void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -395,21 +423,18 @@ namespace MusicPlayer
         private void btn_select_now_playing_Click(object sender, RoutedEventArgs e)
         {
             Page = 4;
-            list_complete.PerformAction("选中正在播放");
+            currentList.PerformAction("选中正在播放");
         }
 
         private void btn_plause_Click(object sender, RoutedEventArgs e)
         {
-            list_complete.PerformAction("播放/暂停");
+            currentList.PerformAction("播放/暂停");
             refreshPlause();
         }
 
         private void btn_next_Click(object sender, RoutedEventArgs e)
         {
-            list_complete.PerformAction("下一首");
-
+            currentList.PerformAction("下一首");
         }
-
-       
     }
 }

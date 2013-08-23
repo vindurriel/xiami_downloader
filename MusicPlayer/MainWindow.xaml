@@ -116,12 +116,9 @@
                             <Setter Property="Background" Value="{DynamicResource selectBrush}" />
                         </Style>
                     </DockPanel.Resources>
-                    <ToggleButton MinWidth="0" Padding="0,0,0,0" Tag="1">
-                        <Grid Width="50">
-                            <Image Source="Resources/user.png" Stretch="UniformToFill" />
-                            <Image Source="{Binding Avatar,ElementName=me}" Stretch="UniformToFill" />
-                        </Grid>
-                    </ToggleButton>
+                    <my:UserActionsControl />
+               
+
                     <ToggleButton Tag="2">
                         <DockPanel HorizontalAlignment="Center">
                             <TextBlock Text="&#xE11a;" Style="{StaticResource glyph}" />
@@ -186,7 +183,6 @@
             </Grid>
             <Grid x:Name="contents" Grid.Row="1" Margin="50,30,0,0">
                 <Grid x:Name="page5" Opacity="0" IsHitTestVisible="false">
-                    <my:UserPage x:Name="userPage" />
                 </Grid>
                 <Grid x:Name="page1" Opacity="0" IsHitTestVisible="false">
                     <Grid.ColumnDefinitions>
@@ -233,7 +229,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <my:ConfigPage x:Name="configPage"  />
+                    <my:ConfigPage x:Name="configPage" />
                 </Grid>
             </Grid>
             <Grid x:Name="footer" Grid.Row="2" Margin="0,0,0,5">
@@ -245,12 +241,12 @@
                 Background="{DynamicResource selectBrush}" Grid.Row="1"
                 DataContext="{Binding NowPlaying,ElementName=list_complete}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
-                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <DockPanel Grid.Row="1">
@@ -273,9 +269,9 @@
                         <Setter Property="Margin" Value="10,0" />
                     </Style>
                 </DockPanel.Resources>
-                <Button x:Name="btn_select_now_playing" Content="&#xE18B;" Click="btn_select_now_playing_Click"/>
-                <Button x:Name="btn_plause" Content="&#xE102;" Click="btn_plause_Click"/>
-                <Button x:Name="btn_next" Content="&#xE101;" Click="btn_next_Click"/>
+                <Button x:Name="btn_select_now_playing" Content="&#xE18B;" Click="btn_select_now_playing_Click" />
+                <Button x:Name="btn_plause" Content="&#xE102;" Click="btn_plause_Click" />
+                <Button x:Name="btn_next" Content="&#xE101;" Click="btn_next_Click" />
             </DockPanel>
             <Grid Grid.Row="1" Grid.Column="2" x:Name="lrc">
                 <controls:LyricControl Margin="0,-7,0,0" HorizontalAlignment="Right" x:Name="lyricShow"

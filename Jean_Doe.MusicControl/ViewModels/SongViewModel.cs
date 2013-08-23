@@ -21,6 +21,14 @@ namespace Jean_Doe.MusicControl
             get { return date; }
             set { date = value; Notify("Date"); }
         }
+        private bool isSelected;
+
+        public bool IsSelected
+        {
+            get { return isSelected; }
+            set { isSelected = value; }
+        }
+
         public bool HasLrc
         {
             get { return song.HasLrc; }

@@ -91,10 +91,11 @@
     <Compile Include="Pages\ConfigPage.xaml.cs">
       <DependentUpon>ConfigPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\UserPage.xaml.cs">
-      <DependentUpon>UserPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Updater.cs" />
+    <Compile Include="UserActions.cs" />
+    <Compile Include="UserActionsControl.xaml.cs">
+      <DependentUpon>UserActionsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WebBrowserOverlay.xaml.cs">
       <DependentUpon>WebBrowserOverlay.xaml</DependentUpon>
     </Compile>
@@ -123,7 +124,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Pages\UserPage.xaml">
+    <Page Include="UserActionsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

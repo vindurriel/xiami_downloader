@@ -21,7 +21,7 @@ namespace Jean_Doe.MusicControl
     /// <summary>
     /// Interaction logic for SongListControl.xaml
     /// </summary>
-    public partial class SongListControl : INotifyPropertyChanged,IActionProvider
+    public partial class SongListControl : INotifyPropertyChanged, IActionProvider
     {
         public SongListControl()
         {
@@ -35,27 +35,44 @@ namespace Jean_Doe.MusicControl
             Source = new ListCollectionView(items);
             virtualView.DataContext = Source;
             virtualView.SelectionChanged += OnSelectionChanged;
-            views = new List<ListView> { virtualView };
-            foreach (var v in views)
-            {
-                v.SelectionChanged += OnListViewSelectionChanged;
-            }
             listView = virtualView;
-
+            Global.ListenToEvent("PlayNextMode", OnPlayNextMode);
+            this.PropertyChanged += OnPropertyChanged;
+        }
+        protected void addCommonActions()
+        {
+            var l = new List<CharmAction>
+            {
+                new CharmAction("取消选择","\xE10E",this.btn_cancel_selection_Click,isMultiSelect),
+                new CharmAction("播放/暂停","\xE102",this.btn_play_Click,(s)=>{
+                    string id=null;
+                    var song=SelectedSongs.FirstOrDefault();
+                    if (song != null)
+                    id = song.Id;
+                    this.actions["播放/暂停"].Icon = Mp3Player.GetPlayOrPause(id);
+                    return true;
+                }),
+                new CharmAction("选中正在播放","\xE18B",this.btn_select_nowplaying_Click,(s)=>false),  
+                new CharmAction("下一首","\xE101",this.btn_next_Click,(s)=>false),    
+                new CharmAction("收藏","\xE0A5",this.btn_fav_Click,canFav),
+                new CharmAction("不再收藏","\xE007",this.btn_unfav_Click,canUnfav),
+                new CharmAction("查看专辑","\xE1d2",link_album,IsOnlyType<IHasAlbum>),
+                new CharmAction("查看艺术家","\xe13d",link_artist,IsOnlyType<IHasArtist>),
+                new CharmAction("查看专辑的歌曲","\xE189",link_album,IsOnlyType<AlbumViewModel>),
+               new CharmAction("查看专辑的艺术家","\xe13d",link_artist,IsOnlyType<AlbumViewModel>),
+               new CharmAction("查看精选集的歌曲","\xE189",link_collection,IsOnlyType<CollectViewModel>),
+               new CharmAction("查看艺术家的最受欢迎歌曲","\xE189",link_artist,IsOnlyType<ArtistViewModel>),
+               new CharmAction("查看艺术家的专辑","\xE1d2",link_artist_album,IsOnlyType<ArtistViewModel>),
+               new CharmAction("查看艺术家的相似艺人","\xE125",link_similar_artist,IsOnlyType<ArtistViewModel>),
+                new CharmAction("在浏览器中打开","\xE12B",this.btn_browse_Click,IsOnlyType<IHasMusicPart>),
+            };
+            foreach (var item in l)
+            {
+                actions[item.Label] = item;
+            }
         }
         double maxRec = 1;
         public double MaxRecommend { get { return maxRec; } set { maxRec = value; Notify("MaxRecommend"); } }
-        void OnListViewSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var curView = sender as ListView;
-            foreach (var v in views)
-            {
-                if (v == curView) continue;
-                v.SelectedItem = curView.SelectedItem;
-            }
-        }
-        List<ListView> views;
-
         protected ListView listView;
         private void initTimer()
         {
@@ -63,6 +80,12 @@ namespace Jean_Doe.MusicControl
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Start();
         }
+        #region action filters
+        protected virtual bool isMultiSelect(object s)
+        {
+            return SelectCount > 1;
+        }
+        #endregion
         void items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             ItemsCount = listView.Items.Count;
@@ -236,7 +259,7 @@ namespace Jean_Doe.MusicControl
         public ListView ListView { get { return listView; } }
         MusicViewModelList items;
         public MusicViewModelList Items { get { return items; } }
-        protected MusicViewModelList playList = new MusicViewModelList();
+        protected static MusicViewModelList playList = new MusicViewModelList();
         private int itemsCount;
         public int ItemsCount
         {
@@ -256,12 +279,16 @@ namespace Jean_Doe.MusicControl
         {
             get
             {
-                return listView.SelectedItems.OfType<SongViewModel>();
+                return ListView.SelectedItems.OfType<SongViewModel>();
             }
-            set
-            {
-                listView.SelectedItem = value.FirstOrDefault();
-            }
+            //set
+            //{
+            //    foreach (var item in SongViewModel.All)
+            //    {
+            //        item.IsSelected = false;
+            //    }
+            //    listView.SelectedItem = value.FirstOrDefault();
+            //}
         }
         public IEnumerable<MusicViewModel> SelectedItems
         {
@@ -274,8 +301,41 @@ namespace Jean_Doe.MusicControl
         {
             ThemeColor = ImageHelper.RefreshDefaultColor();
         }
+        void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "ItemsCount")
+            {
+                needsRefreshPlaylist = true;
+            }
+            if (e.PropertyName == "NowPlaying")
+            {
+                btn_select_nowplaying_Click(this, null);
+            }
+        }
+        void OnPlayNextMode(string s)
+        {
+            needsRefreshPlaylist = true;
+            ensureRefreshPlayList();
+        }
         protected virtual void btn_play_Click(object sender, RoutedEventArgs e)
         {
+            var isMultiSel = isMultiSelect(this);
+            if (isMultiSel)
+                needsRefreshPlaylist = true;
+            this.ensureRefreshPlayList(isMultiSel);
+            var item = SelectedSongs.FirstOrDefault(x => x.Song.DownloadState == "complete") ?? Items.OfType<SongViewModel>().FirstOrDefault(x => x.Song.DownloadState == "complete");
+            if (item == null)
+                return;
+            if (!string.IsNullOrEmpty(item.Song.FilePath))
+            {
+                Mp3Player.Play(item.Song.FilePath, item.Id);
+                ActionBarService.Refresh();
+            }
+        }
+        protected virtual void btn_next_Click(object sender, RoutedEventArgs e)
+        {
+            ensureRefreshPlayList();
+            Mp3Player.Next();
         }
         protected virtual void ApplyFilter()
         {
@@ -316,7 +376,7 @@ namespace Jean_Doe.MusicControl
         public virtual void Load()
         {
             items.Load();
-            Task.Run(() => {  });
+            Task.Run(() => { });
         }
 
         protected virtual void btn_open_click(object sender, RoutedEventArgs e)
@@ -428,6 +488,14 @@ namespace Jean_Doe.MusicControl
 
         void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            //foreach (var item in e.RemovedItems.OfType<SongViewModel>())
+            //{
+            //    item.IsSelected = false;
+            //}
+            //foreach (var item in e.RemovedItems.OfType<SongViewModel>())
+            //{
+            //    item.IsSelected = true;
+            //}
             UIHelper.RunOnUI(new Action(() =>
           {
               SelectCount = listView.SelectedItems.Count;
@@ -448,7 +516,11 @@ namespace Jean_Doe.MusicControl
             var img = sender as Image;
             //Show(img);
         }
-
+        protected void btn_select_nowplaying_Click(object sender, RoutedEventArgs e)
+        {
+            listView.SelectedItem = NowPlaying;
+            virtualView.ScrollToCenterOfView(NowPlaying);
+        }
         protected void btn_fav_Click(object sender, RoutedEventArgs e)
         {
             var tasks = new List<Task>();
@@ -646,5 +718,22 @@ namespace Jean_Doe.MusicControl
                 res.AddRange(actions.Values.Where(x => x.Validate(this)));
             return res;
         }
+        #region playlist control
+        public static bool needsRefreshPlaylist = false;
+        protected void ensureRefreshPlayList(bool onlySelected = false)
+        {
+            if (!needsRefreshPlaylist) return;
+            var selSongs = SelectedSongs.ToList();
+            playList.Clear();
+            var list = onlySelected ? selSongs : Source.OfType<SongViewModel>();
+            foreach (var item in list.Where(x=>x.Song.DownloadState=="complete"))
+            {
+                playList.Add(item);
+            };
+            if (Global.AppSettings["PlayNextMode"] == "Random")
+                playList.Shuffle();
+            needsRefreshPlaylist = false;
+        }
+        #endregion
     }
 }

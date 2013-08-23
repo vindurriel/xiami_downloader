@@ -55,7 +55,7 @@
         </DataTemplate>
         <DataTemplate x:Key="t_search">
             <DockPanel>
-                <TextBlock FontFamily="{DynamicResource font_symbol}" FontSize="12" Height="20">
+                <TextBlock FontFamily="{DynamicResource font_symbol}" FontSize="12" Height="20" Opacity="0.3">
                     <TextBlock.ToolTip>
                         <TextBlock Text="{Binding  Recommends,StringFormat={}{0} 人推荐}" />
                     </TextBlock.ToolTip>

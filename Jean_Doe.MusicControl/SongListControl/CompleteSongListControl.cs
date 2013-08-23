@@ -22,43 +22,25 @@ namespace Jean_Doe.MusicControl
             Items.CollectionChanged += Items_CollectionChanged;
             watcher = CreateWatcher();
             MessageBus.Instance.Subscribe(this);
-            Global.ListenToEvent("PlayNextMode", OnPlayNextMode);
-            this.PropertyChanged += OnPropertyChanged;
+
             combo_sort.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "播放顺序", Tag = "Playlist_Asc" });
             combo_sort.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "最近下载", Tag = "Date_Dsc" });
-            initActions();
-        }
-
-        void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "ItemsCount")
-            {
-                needsRefreshPlaylist = true;
-            }
-            if (e.PropertyName == "NowPlaying")
-            {
-                btn_select_nowplaying_Click(this, null);
-            }
-        }
-        void OnPlayNextMode(string s)
-        {
-            needsRefreshPlaylist = true;
-            ensureRefreshPlayList();
-        }
-        void ensureRefreshPlayList(bool onlySelected = false)
-        {
-            if (!needsRefreshPlaylist) return;
-            var selSongs = SelectedSongs.ToList();
-            playList.Clear();
-            var list = onlySelected ? selSongs : Source.OfType<SongViewModel>();
-            foreach (var item in list)
-            {
-                playList.Add(item);
+            var l = new List<CharmAction>{
+                new CharmAction("存为播放列表","\xE14C",this.btn_save_playlist_Click,isMultiSelect),
+                new CharmAction("复制文件到剪贴板","\xE16F",this.btn_copy_Click,(s)=>true),
+                new CharmAction("打开文件所在位置","\xE1A5",this.btn_open_click,IsOnlyType<IHasMusicPart>),
+                new CharmAction("删除","\xE106",this.btn_remove_complete_Click,(s)=>true),
+                new CharmAction("导入","\xE150",this.btn_import_click,s=>false)
             };
-            if (Global.AppSettings["PlayNextMode"] == "Random")
-                playList.Shuffle();
-            needsRefreshPlaylist = false;
+            foreach (var item in l)
+            {
+                actions[item.Label] = item;
+            }
+            addCommonActions();
         }
+      
+
+       
         protected override void ApplyFilter()
         {
             base.ApplyFilter();
@@ -149,82 +131,12 @@ namespace Jean_Doe.MusicControl
                 return;
             Items.AddItems(new List<IMusic> { item.Song }, true);
         }
-        void initActions()
-        {
-            var l = new List<CharmAction>{
-                new CharmAction("取消选择","\xE10E",this.btn_cancel_selection_Click,isMultiSelect),
-                new CharmAction("播放/暂停","\xE102",this.btn_play_Click,(s)=>{
-                    string id=null;
-                    var song=SelectedSongs.FirstOrDefault();
-                    if (song != null)
-                    id = song.Id;
-                    this.actions["播放/暂停"].Icon = Mp3Player.GetPlayOrPause(id);
-                    return true;
-                }),
-                new CharmAction("选中正在播放","\xE18B",this.btn_select_nowplaying_Click,(s)=>false),  
-                new CharmAction("下一首","\xE101",this.btn_next_Click,(s)=>false),    
-                new CharmAction("收藏该歌曲","\xE0A5",this.btn_fav_Click,canFav),
-                new CharmAction("不再收藏该歌曲","\xE007",this.btn_unfav_Click,canUnfav),
-                new CharmAction("查看专辑","\xE1d2",link_album,IsOnlyType<IHasAlbum>),
-                new CharmAction("查看艺术家","\xe13d",link_artist,IsOnlyType<IHasArtist>),
-                new CharmAction("存为播放列表","\xE14C",this.btn_save_playlist_Click,isMultiSelect),
-                new CharmAction("复制文件到剪贴板","\xE16F",this.btn_copy_Click,(s)=>true),
-                new CharmAction("打开文件所在位置","\xE1A5",this.btn_open_click,IsOnlyType<IHasMusicPart>),
-                new CharmAction("在浏览器中打开","\xE12B",this.btn_browse_Click,IsOnlyType<IHasMusicPart>),
-                new CharmAction("删除","\xE106",this.btn_remove_complete_Click,(s)=>true),
-                new CharmAction("导入","\xE150",this.btn_import_click,s=>{return ItemsCount==0 || defaultActionValidate(s);}),
-            };
-            foreach (var item in l)
-            {
-                actions[item.Label] = item;
-                contextMenuSource.Add(item);
-            }
-        }
-        bool isMultiSelect(object s)
-        {
-            return SelectCount > 1;
-        }
-        bool isNowPlayingSelected(object s)
-        {
-            var list = s as CompleteSongListControl;
-            var song = list.SelectedSongs.FirstOrDefault();
-            if (song == null) return false;
-            if (list.NowPlaying == null) return true;
-            return Object.ReferenceEquals(list.NowPlaying, song);
-        }
-        bool isNowPlayingNotSelected(object s)
-        {
-            var list = s as CompleteSongListControl;
-            if (list.NowPlaying == null) return false;
-            var song = list.SelectedSongs.FirstOrDefault();
-            return song != null && !Object.ReferenceEquals(list.NowPlaying, song);
-        }
 
-        void btn_select_nowplaying_Click(object sender, RoutedEventArgs e)
-        {
-            SelectedSongs = new SongViewModel[] { NowPlaying as SongViewModel };
-            virtualView.ScrollToCenterOfView(NowPlaying);
-        }
-        bool needsRefreshPlaylist = false;
+       
         protected override void item_double_click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             btn_play_Click(sender, e);
             ActionBarService.Refresh();
-        }
-        protected override void btn_play_Click(object sender, RoutedEventArgs e)
-        {
-            bool isMultiSel = SelectedSongs.Count() > 1;
-            if (isMultiSel)
-                needsRefreshPlaylist = true;
-            this.ensureRefreshPlayList(isMultiSel);
-            var item = SelectedSongs.FirstOrDefault() ?? Items.OfType<SongViewModel>().FirstOrDefault();
-            if (item == null)
-                return;
-            if (!string.IsNullOrEmpty(item.Song.FilePath))
-            {
-                Mp3Player.Play(item.Song.FilePath, item.Id);
-                ActionBarService.Refresh();
-            }
         }
         Regex reg = new Regex("^(\\d+)$");
         Regex reg_ids = new Regex("^(\\d+) (\\d+) (\\d+)$");
@@ -421,14 +333,10 @@ namespace Jean_Doe.MusicControl
             if (item == null || string.IsNullOrEmpty(item.Song.FilePath)) return;
             message.Next = item.Song.FilePath;
             message.Id = item.Id;
-            UIHelper.RunOnUI(() => SelectedSongs = new SongViewModel[] { item });
+            //UIHelper.RunOnUI(() => SelectedSongs = new SongViewModel[] { item });
             listView.ScrollToCenterOfView(item);
         }
-        void btn_next_Click(object sender, RoutedEventArgs e)
-        {
-            ensureRefreshPlayList();
-            Mp3Player.Next();
-        }
+
         protected override void btn_item_action_Click(object sender, RoutedEventArgs e)
         {
             base.btn_item_action_Click(sender, e);
