@@ -19,7 +19,8 @@ namespace Jean_Doe.Common
                 {"client_id","DtNgikRWSM7qHUShIOAmvw5y"},
                 {"response_type","token"},
                 {"redirect_uri","oob"},
-                {"scope","netdisk"},
+                {"scope","netdisk"}, 
+                {"page","popup"},
                 {"force_login","1"},
             };
             return url + ToQueryString(dic);

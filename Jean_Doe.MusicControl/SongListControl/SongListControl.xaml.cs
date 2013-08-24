@@ -701,7 +701,7 @@ namespace Jean_Doe.MusicControl
             contextMenuSource.AddRange(actions.Values.Where(x => x.Validate(this)));
             var cm = new ContextMenu();
             cm.ItemsSource = contextMenuSource;
-            cm.Placement = PlacementMode.Left;
+            cm.Placement = PlacementMode.Right;
             cm.PreviewMouseUp += cm_PreviewMouseUp;
             cm.PlacementTarget = sender as UIElement;
             cm.StaysOpen = false;

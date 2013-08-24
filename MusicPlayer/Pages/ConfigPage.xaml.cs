@@ -98,21 +98,35 @@ namespace MusicPlayer
         }
         private  void btn_baidu_login_Click(object sender, RoutedEventArgs a)
         {
-            var b = new System.Windows.Controls.WebBrowser();
+            var b = new System.Windows.Forms.WebBrowser();
             b.Width = 800;
             b.Height = 600;
+            b.AllowNavigation=true;
+            var w = new System.Windows.Window();
             b.Navigated += (s, e) =>
             {
-                var m = new Regex("access_token=(.*?)&").Match(e.Uri.ToString());
-                if (m.Success)
+                try
                 {
-                    Global.AppSettings["baidu_access_token"] = m.Groups[1].Value;
-                    (((s) as WebBrowser).Parent as Window).Close();
+                    var m = new Regex("access_token=(.*?)&").Match(e.Url.ToString());
+                    if (m.Success)
+                    {
+                        Global.AppSettings["baidu_access_token"] = m.Groups[1].Value;
+                        w.Close();
+                    }
+                    else
+                    {
+                    }
                 }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex);
+                }
+               
             };
             b.Navigate(new PCS_client().GetAccessTokenPage());
-            var w = new Window();
-            w.Content = b;
+            var h = new System.Windows.Forms.Integration.WindowsFormsHost();
+            h.Child = b;
+            w.Content = h;
             w.ShowDialog();
         }
 

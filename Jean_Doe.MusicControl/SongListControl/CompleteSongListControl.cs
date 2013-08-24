@@ -317,7 +317,10 @@ namespace Jean_Doe.MusicControl
             {
                 case EnumPlayNextMode.Sequential:
                 case EnumPlayNextMode.Random:
-                    if (playList.Count == 0) break;
+                    if (playList.Count == 0) {
+                        needsRefreshPlaylist = true;
+                        ensureRefreshPlayList();
+                    }
                     int i = playList.IndexOf(now);
                     if (i == -1) i = playList.Count - 1;
                     i = i == playList.Count - 1 ? 0 : i + 1;

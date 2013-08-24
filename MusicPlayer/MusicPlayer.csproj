@@ -75,6 +75,7 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -92,7 +93,6 @@
       <DependentUpon>ConfigPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Updater.cs" />
-    <Compile Include="UserActions.cs" />
     <Compile Include="UserActionsControl.xaml.cs">
       <DependentUpon>UserActionsControl.xaml</DependentUpon>
     </Compile>
