@@ -27,6 +27,10 @@ namespace Jean_Doe.Common
         {
             return Encoding.UTF8.GetString(Encoding.GetEncoding(936).GetBytes(s));
         }
+        public static string toGBK(this string s)
+        {
+            return Encoding.GetEncoding(936).GetString(Encoding.UTF8.GetBytes(s));
+        }
         /// <summary>
         /// returns a string valid for windows paths
         /// </summary>
@@ -90,6 +94,26 @@ namespace Jean_Doe.Common
             {
             }
             return s;
+        }
+        public static string ToMD5(this byte[] input)
+        {
+            // Create a new instance of the MD5CryptoServiceProvider object.
+            var md5Hasher = MD5.Create();
+            // Convert the input string to a byte array and compute the hash.
+            byte[] data = md5Hasher.ComputeHash(input);
+            // Create a new Stringbuilder to collect the bytes
+            // and create a string.
+            StringBuilder sBuilder = new StringBuilder();
+
+            // Loop through each byte of the hashed data 
+            // and format each one as a hexadecimal string.
+            for (int i = 0; i < data.Length; i++)
+            {
+                sBuilder.Append(data[i].ToString("x2"));
+            }
+
+            // Return the hexadecimal string.
+            return sBuilder.ToString();
         }
         public static string ToMD5(this string input)
         {

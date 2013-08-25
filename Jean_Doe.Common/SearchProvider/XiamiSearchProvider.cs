@@ -49,7 +49,7 @@ public class XiamiSearchProvider : ISearchProvider
                 new System.Net.WebClient().DownloadFile(url, tmp);
             }
             var doc = new HtmlDocument();
-            doc.Load(tmp,System.Text.Encoding.UTF8);
+            doc.Load(tmp, System.Text.Encoding.UTF8);
             foreach (var x in doc.DocumentNode.SelectNodes("//li[@class='totle_up']"))
             {
                 var desc = x.SelectSingleNode(".//strong");
@@ -131,9 +131,16 @@ public class XiamiSearchProvider : ISearchProvider
 
     static async Task<SearchResult> SearchAll(string key)
     {
-        dynamic obj = await XiamiClient.GetDefault().Call_xiami_api("Search.summary", string.Format("key={0}", key));
-        /////////////
         var items = new List<IMusic>();
+        var sr = new SearchResult
+        {
+            Items = items,
+            Keyword = key,
+            Page = -1,
+            SearchType = EnumSearchType.all,
+        };
+        dynamic obj = await XiamiClient.GetDefault().Call_xiami_api("Search.summary", true, string.Format("key={0}", key));
+        if (obj == null) return sr;
         foreach (var type in new string[] { "song", "album", "artist", "collect" })
         {
             var data = obj[type + "s"] as ArrayList;
@@ -143,13 +150,6 @@ public class XiamiSearchProvider : ISearchProvider
                 items.Add(MusicFactory.CreateFromJson(x, (EnumMusicType)Enum.Parse(typeof(EnumMusicType), type)));
             }
         }
-        var sr = new SearchResult
-        {
-            Items = items,
-            Keyword = key,
-            Page = -1,
-            SearchType = EnumSearchType.all,
-        };
         return sr;
     }
     static async Task getUserMusic(string key, string t)
@@ -203,7 +203,7 @@ public class XiamiSearchProvider : ISearchProvider
                 }
             }
             SearchManager.notifyState(sr);
-            if (obj.more!="true")
+            if (obj.more != "true")
                 break;
             page++;
         }

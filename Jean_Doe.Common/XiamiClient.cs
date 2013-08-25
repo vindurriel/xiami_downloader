@@ -39,13 +39,13 @@ namespace Jean_Doe.Common
         string get_api_signature(NameValueCollection dic, string secret)
         {
             var res = "";
-            var keys = dic.AllKeys.OrderBy(x => x).ToList();
+            var keys = dic.AllKeys.OrderBy(x => x);
             foreach (var k in keys)
             {
                 res += k + dic[k];
             }
             res += secret;
-            res = res.ToMD5();
+            res = Encoding.Default.GetBytes(res).ToMD5();
             return res;
         }
 
@@ -125,11 +125,15 @@ namespace Jean_Doe.Common
         }
         public async Task<dynamic> Call_xiami_api(string methodName, params string[] args)
         {
+            return await Call_xiami_api(methodName, false, args);
+        }
+        public async Task<dynamic> Call_xiami_api(string methodName, bool useGet, params string[] args)
+        {
             var dic = new NameValueCollection{
                        {"method",methodName},
                         {"api_key",client_id},
                         {"call_id",DateTimeToUnixTimestamp(DateTime.Now).ToString() },
-                        {"av","XMusic_1.1.1.3956"},
+                        {"av","XMusic_1.1.1.4009"},
             };
             foreach (var item in args)
             {
@@ -143,12 +147,16 @@ namespace Jean_Doe.Common
                 await Login();
             dic["access_token"] = File.ReadAllText(tokenFile);
             Artwork.MessageBus.MessageBus.Instance.Publish(new MsgSetBusy(this, true));
-            var res = await Http.Post(url_api, dic);
+            string res;
+            if (useGet)
+                res = await Http.Get(url_api, dic);
+            else
+                res = await Http.Post(url_api, dic);
             Artwork.MessageBus.MessageBus.Instance.Publish(new MsgSetBusy(this, false));
             var json = res.ToDynamicObject();
             if (!(json is string) && !(json is Array) && json.err != null)
             {
-                MessageBox.Show(json.error.ToString());
+                MessageBox.Show(json.err.ToString());
                 return null;
             }
             return json.data;
@@ -176,9 +184,9 @@ namespace Jean_Doe.Common
                 MessageBox.Show(json.error.ToString());
                 return;
             }
-            File.WriteAllText(Global.CWD("access_token"),json["access_token"]);
+            File.WriteAllText(Global.CWD("access_token"), json["access_token"]);
             var r = await Call_xiami_api("Members.showUser");
-            if (r.error  != null)
+            if (r.error != null)
             {
                 MessageBox.Show(r.error.ToString());
 
@@ -208,7 +216,7 @@ namespace Jean_Doe.Common
             byte[] response = null;
             using (WebClient client = new WebClient())
             {
-                response =await client.UploadValuesTaskAsync(uri, pairs);
+                response = await client.UploadValuesTaskAsync(uri, pairs);
             }
             return Encoding.UTF8.GetString(response);
         }
@@ -217,7 +225,7 @@ namespace Jean_Doe.Common
             string res = null;
             using (WebClient client = new WebClient())
             {
-                res =await client.DownloadStringTaskAsync(uri + ToQueryString(dic));
+                res = await client.DownloadStringTaskAsync(uri + ToQueryString(dic));
             }
             return res;
         }
