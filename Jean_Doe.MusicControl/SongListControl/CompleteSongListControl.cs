@@ -38,9 +38,9 @@ namespace Jean_Doe.MusicControl
             }
             addCommonActions();
         }
-      
 
-       
+
+
         protected override void ApplyFilter()
         {
             base.ApplyFilter();
@@ -98,7 +98,17 @@ namespace Jean_Doe.MusicControl
         void Mp3Player_SongChanged(object sender, SongChangedEventArgs e)
         {
             if (NowPlaying != null)
+            {
+                Task.Run(async () =>
+                {
+                    await XiamiClient.GetDefault().Call_xiami_api("Playlog.add",
+                        "id=" + NowPlaying.Id,
+                        "time=" + XiamiClient.DateTimeToUnixTimestamp(DateTime.Now).ToString(),
+                        "type=20"
+                    );
+                });
                 NowPlaying.IsNowPlaying = false;
+            }
             NowPlaying = Items.FirstOrDefault(x => x.Id == e.Id) as SongViewModel;
             if (NowPlaying != null)
                 NowPlaying.IsNowPlaying = true;
@@ -132,7 +142,7 @@ namespace Jean_Doe.MusicControl
             Items.AddItems(new List<IMusic> { item.Song }, true);
         }
 
-       
+
         protected override void item_double_click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             btn_play_Click(sender, e);
@@ -317,7 +327,8 @@ namespace Jean_Doe.MusicControl
             {
                 case EnumPlayNextMode.Sequential:
                 case EnumPlayNextMode.Random:
-                    if (playList.Count == 0) {
+                    if (playList.Count == 0)
+                    {
                         needsRefreshPlaylist = true;
                         ensureRefreshPlayList();
                     }

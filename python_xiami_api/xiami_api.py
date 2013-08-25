@@ -40,7 +40,11 @@ def api_get(method,params={}):
 	dic={
 		"method":method,
 		"api_key":client_id,
-		"call_id":"1",
+		"call_id":"1377396718",
+		"av":"XMusic_1.1.1.4009",
+	}
+	headers={
+		"User-Agent":"oriole(windows) v0.0.0.1"
 	}
 	for k,v in params.iteritems():
 		dic[k]=v
@@ -50,7 +54,8 @@ def api_get(method,params={}):
 	if os.path.isfile(f):
 		access_token=file(f,'r').read()
 	dic["access_token"]=access_token
-	resp=r.get(url_api,params=dic)
+	resp=r.get(url_api,params=dic,headers=headers)
+	print resp.status_code
 	json=resp.json()
 	if "err" in json and json["err"]:
 		die(json['err'])

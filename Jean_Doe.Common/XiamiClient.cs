@@ -119,12 +119,16 @@ namespace Jean_Doe.Common
         }
         #endregion
         static string url_api = "http://api.xiami.com/api";
+        public static double DateTimeToUnixTimestamp(DateTime dateTime)
+        {
+            return (dateTime - new DateTime(1970, 1, 1).ToLocalTime()).TotalSeconds;
+        }
         public async Task<dynamic> Call_xiami_api(string methodName, params string[] args)
         {
             var dic = new NameValueCollection{
                        {"method",methodName},
                         {"api_key",client_id},
-                        {"call_id","1231223"},
+                        {"call_id",DateTimeToUnixTimestamp(DateTime.Now).ToString() },
                         {"av","XMusic_1.1.1.3956"},
             };
             foreach (var item in args)
