@@ -139,6 +139,7 @@ namespace Jean_Doe.MusicControl
             var item = message.Item as SongViewModel;
             if (item == null || !item.HasMp3)
                 return;
+            item.Song.DownloadState = "complete";
             Items.AddItems(new List<IMusic> { item.Song }, true);
         }
 

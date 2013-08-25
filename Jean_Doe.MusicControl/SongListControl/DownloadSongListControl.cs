@@ -39,6 +39,7 @@ namespace Jean_Doe.MusicControl
             {
                 foreach (var item in e.NewItems.OfType<SongViewModel>())
                 {
+                    item.Song.DownloadState = "download";
                     item.PrepareDownload();
                 }
             }
