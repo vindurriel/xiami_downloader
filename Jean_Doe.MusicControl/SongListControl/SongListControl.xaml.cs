@@ -37,6 +37,18 @@ namespace Jean_Doe.MusicControl
             listView = virtualView;
             Global.ListenToEvent("PlayNextMode", OnPlayNextMode);
             this.PropertyChanged += OnPropertyChanged;
+            btn_more.Click += btn_more_Click;
+        }
+
+        void btn_more_Click(object sender, RoutedEventArgs e)
+        {
+            if (btn_more.IsChecked == true)
+            {
+                Grid.SetRowSpan(virtualView, 1);
+            }
+            else {
+                Grid.SetRowSpan(virtualView, 2);
+            }
         }
         protected void addCommonActions()
         {
