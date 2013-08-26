@@ -316,8 +316,7 @@ namespace MusicPlayer
         {
             Mp3Player.Exit();
             trayIcon.Dispose();
-            list_download.Save();
-            list_complete.Save();
+            SongViewModel.Save();
             Global.AppSettings["ActivePage"] = Page.ToString();
             Global.AppSettings["WindowPos"] = new Rect(Left, Top, ActualWidth, ActualHeight).ToString();
             Global.SaveSettings();

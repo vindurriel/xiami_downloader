@@ -24,7 +24,7 @@ namespace Jean_Doe.MusicControl
             MessageBus.Instance.Subscribe(this);
 
             combo_sort.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "播放顺序", Tag = "Playlist_Asc" });
-            combo_sort.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "最近下载", Tag = "Date_Dsc" });
+            combo_sort.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "最近下载", Tag = "Date_Dsc",IsSelected=true });
             var l = new List<CharmAction>{
                 new CharmAction("存为播放列表","\xE14C",this.btn_save_playlist_Click,isMultiSelect),
                 new CharmAction("复制文件到剪贴板","\xE16F",this.btn_copy_Click,(s)=>true),
@@ -140,6 +140,7 @@ namespace Jean_Doe.MusicControl
             if (item == null || !item.HasMp3)
                 return;
             item.Song.DownloadState = "complete";
+            SongViewModel.RequestSave(item);
             Items.AddItems(new List<IMusic> { item.Song }, true);
         }
 

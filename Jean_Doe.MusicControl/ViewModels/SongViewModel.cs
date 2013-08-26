@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using Jean_Doe.Common;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Threading;
 namespace Jean_Doe.MusicControl
 {
     public class SongViewModel : MusicViewModel, IHasArtist, IHasAlbum
@@ -126,17 +127,34 @@ namespace Jean_Doe.MusicControl
             return cache[id];
         }
         public static SongViewModel[] All { get { return cache.Values.ToArray(); } }
+        static DispatcherTimer timer = new DispatcherTimer();
+        static SongViewModel()
+        {
+            timer.Tick += OnTimerTick;
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Start();
+        }
+        static void OnTimerTick(object sender, EventArgs e)
+        {
+            Save();
+        }
+        static bool isLoaded = false;
         public static void Load()
         {
             cache.Clear();
-            CanSave = false;
             PersistHelper.Load<Song>().ForEach(x => Get(x));
-            CanSave = true;
+            isLoaded = true;
         }
         public static bool isDirty = false;
         public static bool CanSave { get; set; }
+        public static void RequestSave(SongViewModel s)
+        {
+            if (!isLoaded) return;
+            PersistHelper.Save(new[] { s.Song });
+        }
         public static void Save()
         {
+            if (!isLoaded) return;
             if (!CanSave) return;
             if (!isDirty) return;
             var songs = cache.Values
@@ -171,7 +189,6 @@ namespace Jean_Doe.MusicControl
                 Notify("HasDetail");
             }
         }
-
         Song song;
         public Song Song
         {

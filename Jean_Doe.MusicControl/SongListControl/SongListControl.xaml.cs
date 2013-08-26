@@ -28,7 +28,6 @@ namespace Jean_Doe.MusicControl
             InitializeComponent();
             Global.ListenToEvent("Theme", OnTheme);
             initInputFilter();
-            initTimer();
             combo_sort.SelectionChanged += (s, e) => ApplySort();
             items = new MusicViewModelList();
             items.CollectionChanged += items_CollectionChanged;
@@ -74,12 +73,7 @@ namespace Jean_Doe.MusicControl
         double maxRec = 1;
         public double MaxRecommend { get { return maxRec; } set { maxRec = value; Notify("MaxRecommend"); } }
         protected ListView listView;
-        private void initTimer()
-        {
-            timer.Tick += OnTimerTick;
-            timer.Interval = TimeSpan.FromSeconds(1);
-            timer.Start();
-        }
+      
         #region action filters
         protected virtual bool isMultiSelect(object s)
         {
@@ -127,10 +121,7 @@ namespace Jean_Doe.MusicControl
             };
         }
         string lastFilter = "";
-        void OnTimerTick(object sender, EventArgs e)
-        {
-            Save();
-        }
+
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -369,14 +360,10 @@ namespace Jean_Doe.MusicControl
         }
 
         public string SavePath { get { return Items.SavePath; } set { Items.SavePath = value; } }
-        public virtual void Save()
-        {
-            SongViewModel.Save();
-        }
+
         public virtual void Load()
         {
             items.Load();
-            Task.Run(() => { });
         }
 
         protected virtual void btn_open_click(object sender, RoutedEventArgs e)
@@ -477,7 +464,6 @@ namespace Jean_Doe.MusicControl
                 go_collect(music, null);
             }
         }
-        DispatcherTimer timer = new DispatcherTimer();
         private void charmBarAct(object sender, RoutedEventArgs e)
         {
             var sel = (sender as FrameworkElement).DataContext as CharmAction;

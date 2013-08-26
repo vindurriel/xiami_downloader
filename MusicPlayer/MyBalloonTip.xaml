@@ -14,51 +14,10 @@
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="10,0,0,0" />
         </Style>
-        <Style x:Key="AppBarButtonStyle" TargetType="ButtonBase">
-            <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
-            <Setter Property="VerticalAlignment" Value="Stretch" />
-            <Setter Property="FontFamily" Value="{DynamicResource font_symbol}" />
-            <Setter Property="FontWeight" Value="Normal" />
-            <Setter Property="FontSize" Value="15" />
-            <Setter Property="AutomationProperties.ItemType" Value="App Bar Button" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ButtonBase">
-                        <Grid x:Name="root">
-                            <Ellipse x:Name="bg" Stroke="{DynamicResource lightBrush}" StrokeThickness="2"
-                                    Fill="#01000000">
-                            </Ellipse>
-                            <Popup Placement="Top" PlacementTarget="{Binding ElementName=bg}" IsOpen="{Binding IsMouseOver}">
-                                <TextBlock Background="{DynamicResource darkBrush}" Foreground="{DynamicResource lightBrush}" FontSize="15" Text="{Binding Tag}"/>
-                            </Popup>
-                            <ContentPresenter x:Name="Content" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Normal" />
-                                    <VisualState x:Name="MouseOver">
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="root" Duration="0:0:0.1"
-                                                    Storyboard.TargetProperty="Opacity" To="1" />
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Pressed">
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="root" Duration="0:0:0.0"
-                                                    Storyboard.TargetProperty="Opacity" To="1" />
-                                        </Storyboard>
-                                    </VisualState>
-                                    <VisualState x:Name="Disabled" />
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
         <Style TargetType="TextBlock" x:Key="label_base">
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontSize" Value="14" />
             <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
             <Setter Property="TextWrapping" Value="WrapWithOverflow" />
         </Style>
@@ -88,14 +47,9 @@
         </EventTrigger>
     </UserControl.Triggers>
     <Grid x:Name="grid" Background="{DynamicResource darkBrush}">
-        <Grid Width="220" Height="70" Margin="15">
+        <Grid Width="220" Height="60" Margin="15">
             <Grid.Resources>
                 <Style TargetType="Button" BasedOn="{StaticResource AppBarButtonStyle}">
-                    <Setter Property="Width" Value="25" />
-                    <Setter Property="FontSize" Value="15" />
-                    <Setter Property="Margin" Value="2" />
-                    <Setter Property="Height" Value="25" />
-                    <Setter Property="Padding" Value="0" />
                     <Setter Property="Visibility"
                             Value="{Binding IsMouseOver,ElementName=grid,Converter={StaticResource bool2vis}}" />
                 </Style>
@@ -120,12 +74,6 @@
                     <TextBlock Text="{Binding ArtistName}" Opacity="0.8" Style="{DynamicResource label_base}" />
                 </StackPanel>
             </ScrollViewer>
-            <Grid Grid.Row="1" Margin="0,0,0,-25">
-                <Button x:Name="btn_play" HorizontalAlignment="Left" VerticalAlignment="Bottom" Content="&#xE103;"
-                        Click="btn_play_click" />
-                <Button x:Name="btn_next" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="&#xE101;"
-                        Click="btn_next_click" />
-            </Grid>
             <Button Margin="0,-20,-20,0" x:Name="btn_close" Grid.Column="1" HorizontalAlignment="Right"
                     VerticalAlignment="Top" Click="btn_view_click" Content="&#xE1AA;" />
         </Grid>
