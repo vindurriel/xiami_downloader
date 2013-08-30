@@ -167,12 +167,12 @@ namespace MusicPlayer
 
         void OnMp3PlayerSongChanged(object sender, SongChangedEventArgs e)
         {
-            var now = list_complete.NowPlaying;
+            var now = SongViewModel.NowPlaying;
+            part_nowPlaying.DataContext = now;
             Title = string.Format("{0} - {1}      ", now.Name, now.ArtistName);
             counter = 0;
             if (trayIcon != null)
             {
-
                 if (Global.AppSettings["ShowNowPlaying"] == "0") return;
                 balloonTip = new MyBalloonTip();
                 balloonTip.ViewModel = now;
@@ -291,8 +291,8 @@ namespace MusicPlayer
             }
             else
             {
-                if (list_complete.NowPlaying != null)
-                    Title = string.Format("{0} - {1}      ", list_complete.NowPlaying.Name, list_complete.NowPlaying.ArtistName);
+                if (SongViewModel.NowPlaying != null)
+                    Title = string.Format("{0} - {1}      ", SongViewModel.NowPlaying.Name, SongViewModel.NowPlaying.ArtistName);
                 CompositionTarget.Rendering -= OnCompositionTargetRendering;
             }
         }
@@ -309,8 +309,8 @@ namespace MusicPlayer
         {
             App.Current.Resources["skinBrush"] = new SolidColorBrush { Color = (Color)ColorConverter.ConvertFromString(s) };
         }
-       
-    
+
+
 
         void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -421,7 +421,6 @@ namespace MusicPlayer
 
         private void btn_select_now_playing_Click(object sender, RoutedEventArgs e)
         {
-            Page = 4;
             currentList.PerformAction("选中正在播放");
         }
 

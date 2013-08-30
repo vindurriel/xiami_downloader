@@ -277,7 +277,6 @@ namespace Jean_Doe.MusicControl
         private int selectCount;
         public int SelectCount { get { return selectCount; } set { selectCount = value; Notify("SelectCount"); } }
         SongViewModel nowPlaying = null;
-        public SongViewModel NowPlaying { get { return nowPlaying; } set { nowPlaying = value; Notify("NowPlaying"); } }
         public IEnumerable<SongViewModel> SelectedSongs
         {
             get
@@ -516,8 +515,8 @@ namespace Jean_Doe.MusicControl
         }
         protected void btn_select_nowplaying_Click(object sender, RoutedEventArgs e)
         {
-            listView.SelectedItem = NowPlaying;
-            virtualView.ScrollToCenterOfView(NowPlaying);
+            listView.SelectedItem = SongViewModel.NowPlaying;
+            virtualView.ScrollToCenterOfView(SongViewModel.NowPlaying);
         }
         protected void btn_fav_Click(object sender, RoutedEventArgs e)
         {

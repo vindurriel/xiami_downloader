@@ -43,7 +43,10 @@ namespace Jean_Doe.MusicControl
         {
             if (SelectedSongs.Count() > 0)
             {
-                btn_download_add_Click(sender, null);
+                if (SelectedSongs.FirstOrDefault().Song.DownloadState == "complete")
+                    btn_play_Click(sender, e);
+                else
+                    btn_download_add_Click(sender, null);
                 return;
             }
             base.item_double_click(sender, e);

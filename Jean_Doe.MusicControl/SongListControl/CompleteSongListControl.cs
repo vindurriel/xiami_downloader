@@ -97,21 +97,21 @@ namespace Jean_Doe.MusicControl
 
         void Mp3Player_SongChanged(object sender, SongChangedEventArgs e)
         {
-            if (NowPlaying != null)
+            if (SongViewModel.NowPlaying != null)
             {
                 Task.Run(async () =>
                 {
                     await XiamiClient.GetDefault().Call_xiami_api("Playlog.add",
-                        "id=" + NowPlaying.Id,
+                        "id=" + SongViewModel.NowPlaying.Id,
                         "time=" + XiamiClient.DateTimeToUnixTimestamp(DateTime.Now).ToString(),
                         "type=20"
                     );
                 });
-                NowPlaying.IsNowPlaying = false;
+                SongViewModel.NowPlaying.IsNowPlaying = false;
             }
-            NowPlaying = Items.FirstOrDefault(x => x.Id == e.Id) as SongViewModel;
-            if (NowPlaying != null)
-                NowPlaying.IsNowPlaying = true;
+            SongViewModel.NowPlaying = Items.FirstOrDefault(x => x.Id == e.Id) as SongViewModel;
+            if (SongViewModel.NowPlaying != null)
+                SongViewModel.NowPlaying.IsNowPlaying = true;
             ActionBarService.Refresh();
         }
 
@@ -322,7 +322,7 @@ namespace Jean_Doe.MusicControl
         {
             if (Items.Count == 0) return;
             SongViewModel item = null;
-            var now = NowPlaying ?? SelectedSongs.FirstOrDefault() ?? Items.OfType<SongViewModel>().FirstOrDefault();
+            var now = SongViewModel.NowPlaying ?? SelectedSongs.FirstOrDefault() ?? Items.OfType<SongViewModel>().FirstOrDefault();
             var mode = EnumPlayNextMode.Random;
             Enum.TryParse(Global.AppSettings["PlayNextMode"], out mode);
             switch (mode)

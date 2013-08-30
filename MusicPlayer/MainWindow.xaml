@@ -237,10 +237,9 @@
                         VerticalAlignment="Center" HorizontalAlignment="Stretch" IsIndeterminate="False" ItemWidth="5" />
             </Grid>
         </Grid>
-        <Grid x:Name="part_nowPlaying" Height="60" VerticalAlignment="Bottom" Margin="2"
-                Background="{DynamicResource selectBrush}" Grid.Row="1"
-                DataContext="{Binding NowPlaying,ElementName=list_complete}">
-            <Grid.RowDefinitions>
+        <Grid x:Name="part_nowPlaying" Height="60" VerticalAlignment="Bottom" Margin="2" DataContext="{x:Null}"
+                Background="{DynamicResource selectBrush}" Grid.Row="1">
+        <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>

@@ -17,6 +17,14 @@ namespace Jean_Doe.MusicControl
             set { playTimes = value; Notify("PlayTimes"); }
         }
         DateTime date = DateTime.Now;
+        private static SongViewModel nowPlaying;
+
+        public static SongViewModel NowPlaying
+        {
+            get { return nowPlaying; }
+            set { nowPlaying = value; }
+        }
+
         public DateTime Date
         {
             get { return date; }
