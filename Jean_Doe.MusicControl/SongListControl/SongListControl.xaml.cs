@@ -276,7 +276,6 @@ namespace Jean_Doe.MusicControl
         }
         private int selectCount;
         public int SelectCount { get { return selectCount; } set { selectCount = value; Notify("SelectCount"); } }
-        SongViewModel nowPlaying = null;
         public IEnumerable<SongViewModel> SelectedSongs
         {
             get

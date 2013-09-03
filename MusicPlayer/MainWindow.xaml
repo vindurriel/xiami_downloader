@@ -268,7 +268,7 @@
                         <Setter Property="Margin" Value="10,0" />
                     </Style>
                 </DockPanel.Resources>
-                <Button x:Name="btn_select_now_playing" Content="&#xE18B;" Click="btn_select_now_playing_Click" />
+                <Button x:Name="btn_select_now_playing" Content="&#xE1e9;" Click="btn_select_now_playing_Click" />
                 <Button x:Name="btn_plause" Content="&#xE102;" Click="btn_plause_Click" />
                 <Button x:Name="btn_next" Content="&#xE101;" Click="btn_next_Click" />
             </DockPanel>
