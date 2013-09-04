@@ -324,12 +324,13 @@ namespace Jean_Doe.MusicControl
             if (isMultiSel)
                 needsRefreshPlaylist = true;
             this.ensureRefreshPlayList(isMultiSel);
-            var item = SelectedSongs.FirstOrDefault(x => x.Song.DownloadState == "complete") ?? Items.OfType<SongViewModel>().FirstOrDefault(x => x.Song.DownloadState == "complete");
+            var item = SelectedSongs.FirstOrDefault() ?? Items.OfType<SongViewModel>().FirstOrDefault();
             if (item == null)
                 return;
-            if (!string.IsNullOrEmpty(item.Song.FilePath))
+            var location = item.Song.DownloadState == "complete" ? item.Song.FilePath : item.Song.UrlMp3;
+            if (!string.IsNullOrEmpty(location))
             {
-                Mp3Player.Play(item.Song.FilePath, item.Id);
+                Mp3Player.Play(location, item.Id);
                 ActionBarService.Refresh();
             }
         }
@@ -722,7 +723,7 @@ namespace Jean_Doe.MusicControl
             var selSongs = SelectedSongs.ToList();
             playList.Clear();
             var list = onlySelected ? selSongs : Source.OfType<SongViewModel>();
-            foreach (var item in list.Where(x=>x.Song.DownloadState=="complete"))
+            foreach (var item in list)
             {
                 playList.Add(item);
             };

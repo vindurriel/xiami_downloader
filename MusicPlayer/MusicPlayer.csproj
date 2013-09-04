@@ -50,6 +50,9 @@
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>MusicPlayer.App</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Artwork.Bus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

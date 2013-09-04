@@ -9,7 +9,6 @@ using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
 namespace Jean_Doe.MusicControl
-
 {
     public class MusicSliderConnector
     {
@@ -50,7 +49,8 @@ namespace Jean_Doe.MusicControl
 
         void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            Mp3Player.CurrentTime = e.NewValue;
+            if (canReposition)
+                Mp3Player.CurrentTime = e.NewValue;
         }
 
         void Mp3Player_TimeChanged(object sender, TimeChangedEventArgs e)
@@ -60,9 +60,12 @@ namespace Jean_Doe.MusicControl
         }
         Storyboard anim;
         DoubleAnimation da;
+        bool canReposition = false;
         void Mp3Player_SongChanged(object sender, SongChangedEventArgs e)
         {
             _slider.Visibility = Visibility.Visible;
+            canReposition = SongViewModel.GetId(e.Id).Song.DownloadState == "complete";
+            _slider.Cursor = canReposition ? System.Windows.Input.Cursors.Hand : System.Windows.Input.Cursors.No;
             if (_slider.Maximum != e.Total)
             {
                 da.To = 0;

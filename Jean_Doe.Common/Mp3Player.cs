@@ -55,10 +55,6 @@ namespace Jean_Doe.Common
             set
             {
                 totalTime = value;
-                UIHelper.RunOnUI(() =>
-                {
-                    SongChanged(null, new SongChangedEventArgs { Total = value, Id = _id });
-                });
             }
         }
         static IMp3Player proxy;
@@ -92,29 +88,34 @@ namespace Jean_Doe.Common
         }
         public static void PauseResume()
         {
-            if (isPlaying)
+            Task.Run(() =>
             {
-                proxy.Pause();
-                isPlaying = false;
-            }
-            else
-            {
-                TotalTime = proxy.Play();
-                isPlaying = true;
-            }
+                if (isPlaying)
+                {
+                    proxy.Pause();
+                    isPlaying = false;
+                }
+                else
+                {
+                    TotalTime = proxy.Play();
+                    isPlaying = true;
+                }
+                UIHelper.RunOnUI(() =>
+                {
+                    SongChanged(null, new SongChangedEventArgs { Total = totalTime, Id = _id });
+                });
+            });
         }
         public static string GetPlayOrPause(string id)
         {
             if (id == _id)
             {
-                return isPlaying?"\xE103":"\xE102";
+                return isPlaying ? "\xE103" : "\xE102";
             }
             return "\xE102";
         }
         public static void Play(string filepath, string id)
         {
-            if (!System.IO.File.Exists(filepath))
-                return;
             if (_id == id)
             {
                 PauseResume();
@@ -138,16 +139,23 @@ namespace Jean_Doe.Common
         }
         static void play(string filepath, string id)
         {
-            if (isPlaying)
+            Task.Run(() =>
             {
-                proxy.Pause();
-            }
-            isPlaying = false;
-            bool ok = proxy.Initialize(filepath);
-            if (!ok) return;
-            _id = id;
-            TotalTime = proxy.Play();
-            isPlaying = true;
+                if (isPlaying)
+                {
+                    proxy.Pause();
+                }
+                isPlaying = false;
+                bool ok = proxy.Initialize(filepath);
+                if (!ok) return;
+                _id = id;
+                TotalTime = proxy.Play();
+                isPlaying = true;
+                UIHelper.RunOnUI(() =>
+                {
+                    SongChanged(null, new SongChangedEventArgs { Total = totalTime, Id = _id });
+                });
+            });
         }
         static string _id;
     }

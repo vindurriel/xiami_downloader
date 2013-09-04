@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -167,18 +168,37 @@ namespace MusicPlayer
 
         void OnMp3PlayerSongChanged(object sender, SongChangedEventArgs e)
         {
+            if (SongViewModel.NowPlaying != null)
+            {
+                Task.Run(async () =>
+                {
+                    if (Mp3Player.IsPlaying)
+                        await XiamiClient.GetDefault().Call_xiami_api("Playlog.add",
+                            "id=" + SongViewModel.NowPlaying.Id,
+                            "time=" + XiamiClient.DateTimeToUnixTimestamp(DateTime.Now).ToString(),
+                            "type=20"
+                        );
+                });
+                SongViewModel.NowPlaying.IsNowPlaying = false;
+            }
+            SongViewModel.NowPlaying = SongViewModel.GetId(e.Id);
+            if (SongViewModel.NowPlaying != null)
+                SongViewModel.NowPlaying.IsNowPlaying = true;
+            ActionBarService.Refresh();
+
             var now = SongViewModel.NowPlaying;
+            if (now == null) return;
             part_nowPlaying.DataContext = now;
             Title = string.Format("{0} - {1}      ", now.Name, now.ArtistName);
             counter = 0;
-            if (trayIcon != null)
+            if (trayIcon != null && Global.AppSettings["ShowNowPlaying"] != "0" && Mp3Player.IsPlaying)
             {
-                if (Global.AppSettings["ShowNowPlaying"] == "0") return;
                 balloonTip = new MyBalloonTip();
                 balloonTip.ViewModel = now;
                 trayIcon.ShowCustomBalloon(balloonTip, PopupAnimation.Fade, 3000);
             }
             refreshPlause();
+            currentList.PerformAction("选中正在播放");
         }
         long counter;
         void OnCompositionTargetRendering(object sender, EventArgs e)
@@ -427,7 +447,6 @@ namespace MusicPlayer
         private void btn_plause_Click(object sender, RoutedEventArgs e)
         {
             currentList.PerformAction("播放/暂停");
-            refreshPlause();
         }
 
         private void btn_next_Click(object sender, RoutedEventArgs e)

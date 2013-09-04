@@ -276,7 +276,7 @@
                 <controls:LyricControl Margin="0,-7,0,0" HorizontalAlignment="Right" x:Name="lyricShow"
                         MaxHeight="{Binding ActualHeight,ElementName=lrc}" />
             </Grid>
-            <Slider Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Top" Background="Transparent"
+            <Slider Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Top" Background="Transparent" Cursor="Hand"
                     Foreground="{DynamicResource skinBrush}" x:Name="slider" Margin="0,0,0,0" />
         </Grid>
         <my:ActionBar Height="50" VerticalAlignment="Bottom" Margin="2" x:Name="charmBar"

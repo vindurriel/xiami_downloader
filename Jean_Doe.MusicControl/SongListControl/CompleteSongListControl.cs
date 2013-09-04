@@ -18,7 +18,6 @@ namespace Jean_Doe.MusicControl
     {
         public CompleteSongListControl()
         {
-            Mp3Player.SongChanged += Mp3Player_SongChanged;
             Items.CollectionChanged += Items_CollectionChanged;
             watcher = CreateWatcher();
             MessageBus.Instance.Subscribe(this);
@@ -95,25 +94,6 @@ namespace Jean_Doe.MusicControl
             UIHelper.RunOnUI(() => ActionBarService.Refresh());
         }
 
-        void Mp3Player_SongChanged(object sender, SongChangedEventArgs e)
-        {
-            if (SongViewModel.NowPlaying != null)
-            {
-                Task.Run(async () =>
-                {
-                    await XiamiClient.GetDefault().Call_xiami_api("Playlog.add",
-                        "id=" + SongViewModel.NowPlaying.Id,
-                        "time=" + XiamiClient.DateTimeToUnixTimestamp(DateTime.Now).ToString(),
-                        "type=20"
-                    );
-                });
-                SongViewModel.NowPlaying.IsNowPlaying = false;
-            }
-            SongViewModel.NowPlaying = Items.FirstOrDefault(x => x.Id == e.Id) as SongViewModel;
-            if (SongViewModel.NowPlaying != null)
-                SongViewModel.NowPlaying.IsNowPlaying = true;
-            ActionBarService.Refresh();
-        }
 
         void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -320,7 +300,7 @@ namespace Jean_Doe.MusicControl
 
         public void Handle(MsgRequestNextSong message)
         {
-            if (Items.Count == 0) return;
+            if (SongViewModel.All.Count() == 0) return;
             SongViewModel item = null;
             var now = SongViewModel.NowPlaying ?? SelectedSongs.FirstOrDefault() ?? Items.OfType<SongViewModel>().FirstOrDefault();
             var mode = EnumPlayNextMode.Random;
@@ -346,11 +326,9 @@ namespace Jean_Doe.MusicControl
                 default:
                     break;
             }
-            if (item == null || string.IsNullOrEmpty(item.Song.FilePath)) return;
-            message.Next = item.Song.FilePath;
+            if (item == null) return;
+            message.Next =item.Song.DownloadState=="complete"?  item.Song.FilePath : item.Song.UrlMp3;
             message.Id = item.Id;
-            //UIHelper.RunOnUI(() => SelectedSongs = new SongViewModel[] { item });
-            listView.ScrollToCenterOfView(item);
         }
 
         protected override void btn_item_action_Click(object sender, RoutedEventArgs e)

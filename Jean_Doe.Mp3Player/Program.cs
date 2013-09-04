@@ -12,13 +12,6 @@ namespace Jean_Doe.Mp3Player
 {
     class Program
     {
-        static void suicide()
-        {
-            Task.Run(() =>
-            {
-
-            });
-        }
         static Process parent;
         static ServiceHost host;
         public static void Exit()

@@ -12,38 +12,80 @@ namespace Jean_Doe.Mp3Player
 
         public double Play()
         {
-            device.Play();
-            if (stream == null) return 0.0;
-            return stream.TotalTime.TotalMilliseconds;
+            try
+            {
+                device.Pause();
+                device.Play();
+                return stream.TotalTime.TotalMilliseconds;
+            }
+            catch (Exception e)
+            {
+                log(e);
+                log(new Exception(f));
+                return 0.0;
+            }
+
         }
 
         public void Pause()
         {
-            device.Pause();
+            try
+            {
+                device.Pause();
+            }
+            catch (Exception e)
+            {
+                log(e);
+            }
         }
 
         public void Exit()
         {
-            stream.Dispose();
-            device.Dispose();
-            Program.Exit();
+            try
+            {
+                stream.Dispose();
+                device.Dispose();
+                Program.Exit();
+            }
+            catch (Exception e)
+            {
+                log(e);
+            }
         }
         public void SetCurrentTime(double t)
         {
-            CurrentTime = t;
+            try
+            {
+                CurrentTime = t;
+            }
+            catch (Exception e)
+            {
+                log(e);
+            }
         }
         public double GetCurrentTime()
         {
-            return CurrentTime;
+            try
+            {
+                return CurrentTime;
+            }
+            catch (Exception e)
+            {
+                return 0.0;
+            }
         }
+        string f;
         public bool Initialize(string fileName)
         {
             bool res = false;
             try
             {
+                f = fileName;
                 if (stream != null)
                     stream.Dispose();
                 stream = createInputStream(fileName);
+                device.Stop();
+                stream.Position = 0;
                 device.Init(stream);
                 res = true;
             }
@@ -56,7 +98,7 @@ namespace Jean_Doe.Mp3Player
 
         WaveStream createInputStream(string fileName)
         {
-            WaveStream mp3Reader = new Mp3FileReader(fileName);
+            var mp3Reader = new MediaFoundationReader(fileName);
             return new WaveChannel32(mp3Reader);
         }
         internal double CurrentTime
