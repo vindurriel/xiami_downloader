@@ -40,7 +40,7 @@ namespace MusicPlayer
             new CharmAction("收藏的精选集","\xE0A5",btn_user_collect_Click,(s)=>IsLoggedIn),
             };
             menu_actions.ItemsSource = Source;
-            this.MouseLeftButtonUp += UserActionsControl_MouseLeftButtonUp;
+            //this.MouseLeftButtonUp += UserActionsControl_MouseLeftButtonUp;
         }
 
         void OnPreviewMouseUp(object sender, MouseButtonEventArgs e)

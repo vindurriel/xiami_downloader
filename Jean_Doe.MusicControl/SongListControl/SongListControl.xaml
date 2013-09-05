@@ -119,10 +119,6 @@
                 completeTemplate="{StaticResource t_complete}" downloadTemplate="{StaticResource t_download}" />
         <DataTemplate x:Key="listTemplate">
             <Grid Height="40" Margin="0,0,0,0" x:Name="root" ClipToBounds="True">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
                 <DockPanel Margin="0,0,0,0" RenderOptions.ClearTypeHint="Enabled" RenderOptions.EdgeMode="Aliased">
                     <DockPanel.Resources>
                         <Style TargetType="TextBlock" BasedOn="{StaticResource label_base}">
@@ -133,15 +129,15 @@
                         <TextBlock FontFamily="{DynamicResource font_symbol}" HorizontalAlignment="Center"
                                 Visibility="{Binding IsNowPlaying,Converter={StaticResource bool2vis}}" Text="&#xE1e9;" />
                     </Grid>
-                    <TextBlock Text="{Binding Name}" />
-                    <TextBlock Text="{Binding ArtistName}" Opacity=".5" />
-                    <TextBlock Text="{Binding AlbumName}" Opacity=".3" />
-                    <DockPanel LastChildFill="False"
+                    <DockPanel LastChildFill="False" Margin="-5,0,5,0"
                             Visibility="{Binding IsSelected, Converter={StaticResource bool2vis}, RelativeSource={RelativeSource AncestorType=ListViewItem}}">
                         <Button x:Name="btn_item_action" Click="btn_item_action_Click" Content="&#xE013;"
                                 Foreground="White" SnapsToDevicePixels="True"
                                 Style="{DynamicResource AppBarButtonStyle}" MinHeight="0" />
                     </DockPanel>
+                    <TextBlock Text="{Binding Name}" />
+                    <TextBlock Text="{Binding ArtistName}" Opacity=".5" />
+                    <TextBlock Text="{Binding AlbumName}" Opacity=".3" />
                     <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource templateSelector}" />
                 </DockPanel>
             </Grid>
