@@ -45,7 +45,8 @@ namespace Jean_Doe.Mp3Player
             {
                 device.Stop();
                 device.Dispose();
-                stream.Dispose();
+                if (stream != null)
+                    stream.Dispose();
                 Program.Exit();
             }
             catch (Exception e)
