@@ -149,13 +149,13 @@ namespace Jean_Doe.MusicControl
         public DataTemplate completeTemplate { get; set; }
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            var control = container as SongListControl;
-            var parent = SongListControl.GetParentOf<SongListControl>(container);
-            if (parent is SearchSongListControl)
-                return searchTemplate;
-            if (parent is DownloadSongListControl)
+            var s = item as SongViewModel;
+            if (s == null) return completeTemplate;
+            if (s.Song.DownloadState == "complete")
+                return completeTemplate;
+            if (s.Song.DownloadState == "download")
                 return downloadTemplate;
-            return completeTemplate;
+            return searchTemplate;
         }
     }
 }

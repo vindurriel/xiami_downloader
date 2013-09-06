@@ -110,11 +110,14 @@ namespace Jean_Doe.MusicControl
         public void Handle(SearchResult message)
         {
             if (message == null || string.IsNullOrEmpty(message.Keyword)) return;
-            UIHelper.RunOnUI(new Action(() =>
+            UIHelper.RunOnUI(() =>
             {
-                this.Upsert(message.SearchType, message.Keyword, message.Count);
-                this.Save();
-            }));
+                if (!message.Keyword.StartsWith("user:"))
+                {
+                    this.Upsert(message.SearchType, message.Keyword, message.Count);
+                    this.Save();
+                }
+            });
         }
         public event TextChangedEventHandler TextChanged;
         private void ComboBox_TextChanged_1(object sender, TextChangedEventArgs e)
