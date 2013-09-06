@@ -133,7 +133,7 @@ namespace Jean_Doe.Common
             UIHelper.RunOnUI(() =>
             {
                 if (TimeChanged != null)
-                    TimeChanged(null, new TimeChangedEventArgs { Current = CurrentTime });
+                    TimeChanged(null, new TimeChangedEventArgs { Current = cur });
             });
 
         }

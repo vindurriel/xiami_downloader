@@ -576,30 +576,21 @@ namespace Jean_Doe.MusicControl
             var s = (source as SongListControl);
             return s.SelectedItems.Count() > 0 && s.SelectedItems.All(x => x is TInterface);
         }
-        class Sorter : System.Collections.IComparer
-        {
-            private string propName;
-            public string PropertyName
-            {
-                get { return propName; }
-                set
-                {
-                    propName = value; info = typeof(SongViewModel).GetProperty(PropertyName);
-                }
-            }
-            public bool IsAsc { get; set; }
-            System.Reflection.PropertyInfo info;
-            public int Compare(object x, object y)
-            {
-                var vx = info.GetValue(x) as IComparable;
-                var vy = info.GetValue(y) as IComparable;
-                var res = vx.CompareTo(vy);
-                return IsAsc ? res : -res;
-            }
-        }
+
         protected virtual void ApplySort()
         {
             var tag = (combo_sort.SelectedItem as ComboBoxItem).Tag.ToString();
+            if (tag == "Playlist_Asc")
+            {
+                virtualView.DataContext = playList;
+                GongSolutions.Wpf.DragDrop.DragDrop.SetIsDragSource(virtualView, true);
+                GongSolutions.Wpf.DragDrop.DragDrop.SetIsDropTarget(virtualView, true);
+                btn_select_nowplaying_Click(null, null);
+                return;
+            }
+            GongSolutions.Wpf.DragDrop.DragDrop.SetIsDragSource(virtualView, false);
+            GongSolutions.Wpf.DragDrop.DragDrop.SetIsDropTarget(virtualView, false);
+            virtualView.DataContext = Source;
             if (tag == "Default_Asc")
             {
                 Source.CustomSort = null;
@@ -610,6 +601,8 @@ namespace Jean_Doe.MusicControl
             Source.SortDescriptions.Clear();
             Source.SortDescriptions.Add(new SortDescription(prop, order == "Asc" ? ListSortDirection.Ascending : ListSortDirection.Descending));
             ItemsCount = listView.Items.Count;
+            btn_select_nowplaying_Click(null, null);
+
         }
         string filter_text = "";
 

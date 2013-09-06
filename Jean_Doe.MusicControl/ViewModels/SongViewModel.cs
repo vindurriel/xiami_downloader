@@ -150,7 +150,8 @@ namespace Jean_Doe.MusicControl
         public static void Load()
         {
             cache.Clear();
-            PersistHelper.Load<Song>().ForEach(x => Get(x));
+            PersistHelper.Load<Song>()
+                .ForEach(x => Get(x));
             isLoaded = true;
         }
         public static bool isDirty = false;

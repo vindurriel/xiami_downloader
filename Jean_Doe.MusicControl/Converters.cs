@@ -150,7 +150,7 @@ namespace Jean_Doe.MusicControl
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             var s = item as SongViewModel;
-            if (s == null) return completeTemplate;
+            if (s == null) return searchTemplate;
             if (s.Song.DownloadState == "complete")
                 return completeTemplate;
             if (s.Song.DownloadState == "download")

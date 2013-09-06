@@ -106,6 +106,8 @@ namespace Jean_Doe.MusicControl
             {
                 var songs = SongViewModel.All
                     .Where(x => x.Song.DownloadState == SavePath)
+                    .OrderBy(x => x.Date)
+                    .Reverse()
                     .Select(x => x.Song as IMusic)
                     .ToList();
                 AddItems(songs);

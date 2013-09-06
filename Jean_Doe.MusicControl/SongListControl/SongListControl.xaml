@@ -55,16 +55,10 @@
         </DataTemplate>
         <DataTemplate x:Key="t_search">
             <DockPanel>
-                <TextBlock FontFamily="{DynamicResource font_symbol}" FontSize="12" Height="20" Opacity="0.3">
+                <TextBlock Text="{Binding  Recommends,StringFormat={}热度{0} }"  Height="20" Opacity="0.3">
                     <TextBlock.ToolTip>
-                        <TextBlock Text="{Binding  Recommends,StringFormat={}{0} 人推荐}" />
+                        <TextBlock Text="{Binding  Recommends,StringFormat={}热度{0}}" />
                     </TextBlock.ToolTip>
-                    <TextBlock.Text>
-                        <MultiBinding Converter="{StaticResource divconv}">
-                            <Binding Path="Recommends" />
-                            <Binding Path="MaxRecommend" ElementName="me" />
-                        </MultiBinding>
-                    </TextBlock.Text>
                 </TextBlock>
                 <TextBlock Text="{Binding Description}" TextTrimming="WordEllipsis" Height="20" Opacity="0.3"
                         MaxWidth="400" Style="{DynamicResource label_base}">
@@ -239,6 +233,7 @@
                 <ComboBoxItem Tag="Name_Asc">名称升序</ComboBoxItem>
                 <ComboBoxItem Tag="AlbumName_Asc">专辑升序</ComboBoxItem>
                 <ComboBoxItem Tag="ArtistName_Asc">艺术家升序</ComboBoxItem>
+                <ComboBoxItem Tag="Playlist_Asc">播放顺序</ComboBoxItem>
             </ComboBox>
             <Grid Margin="10,0" x:Name="part_filter">
                 <TextBox VerticalContentAlignment="Center" Background="{DynamicResource selectBrush}" Opacity="0.2"

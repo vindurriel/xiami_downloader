@@ -22,8 +22,7 @@ namespace Jean_Doe.MusicControl
             watcher = CreateWatcher();
             MessageBus.Instance.Subscribe(this);
 
-            combo_sort.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "播放顺序", Tag = "Playlist_Asc" });
-            combo_sort.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "最近下载", Tag = "Date_Dsc",IsSelected=true });
+            combo_sort.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "最近下载", Tag = "Date_Dsc"});
             var l = new List<CharmAction>{
                 new CharmAction("存为播放列表","\xE14C",this.btn_save_playlist_Click,isMultiSelect),
                 new CharmAction("复制文件到剪贴板","\xE16F",this.btn_copy_Click,(s)=>true),
@@ -46,22 +45,6 @@ namespace Jean_Doe.MusicControl
             ensureRefreshPlayList();
         }
 
-        protected override void ApplySort()
-        {
-            var tag = (combo_sort.SelectedItem as System.Windows.Controls.ComboBoxItem).Tag.ToString();
-            if (tag == "Playlist_Asc")
-            {
-                virtualView.DataContext = playList;
-                GongSolutions.Wpf.DragDrop.DragDrop.SetIsDragSource(virtualView, true);
-                GongSolutions.Wpf.DragDrop.DragDrop.SetIsDropTarget(virtualView, true);
-                return;
-            }
-            GongSolutions.Wpf.DragDrop.DragDrop.SetIsDragSource(virtualView, false);
-            GongSolutions.Wpf.DragDrop.DragDrop.SetIsDropTarget(virtualView, false);
-            virtualView.DataContext = Source;
-            base.ApplySort();
-            btn_select_nowplaying_Click(null, null);
-        }
         static FileSystemWatcher watcher;
         FileSystemWatcher CreateWatcher()
         {
