@@ -24,28 +24,20 @@ namespace Jean_Doe.MusicControl
             InitializeComponent();
             MessageBus.Instance.Subscribe(this);
             Source = CollectionViewSource.GetDefaultView(HistoryItems);
-            Source.Filter = (s) => { return defaultItems.IndexOf(s as HistorySearchItem) != -1 || HistoryItems.IndexOf(s as HistorySearchItem) < 10; };
+            Source.Filter = (s) => { return HistorySearchItem.Defaults.IndexOf(s as HistorySearchItem) != -1 || HistoryItems.IndexOf(s as HistorySearchItem) < 10; };
             ItemsSource = Source;
             MinWidth = 200;
             MouseLeftButtonUp += HistorySearch_MouseLeftButtonUp;
         }
         ObservableCollection<HistorySearchItem> HistoryItems = new ObservableCollection<HistorySearchItem>();
-        List<HistorySearchItem> defaultItems = new List<HistorySearchItem> { 
-            new HistorySearchItem{ Key="user:lib",SearchType=EnumSearchType.song},
-            new HistorySearchItem{ Key="user:lib",SearchType=EnumSearchType.artist},
-            new HistorySearchItem{ Key="user:lib",SearchType=EnumSearchType.collect},
-            new HistorySearchItem{ Key="user:lib",SearchType=EnumSearchType.album},
-            new HistorySearchItem{ Key="user:collect_recommend",SearchType=EnumSearchType.collect},
-            new HistorySearchItem{ Key="user:guess",SearchType=EnumSearchType.song},
-            new HistorySearchItem{ Key="user:daily",SearchType=EnumSearchType.song},
-        };
+
         public void Load()
         {
             HistoryItems.Clear();
             try
             {
                 PersistHelper.Load<HistorySearchItem>().ForEach(x => HistoryItems.Add(x));
-                defaultItems.ForEach(x => HistoryItems.Add(x));
+                HistorySearchItem.Defaults.ForEach(x => HistoryItems.Add(x));
             }
             catch (Exception e)
             {
@@ -56,7 +48,7 @@ namespace Jean_Doe.MusicControl
         {
             try
             {
-                var items = HistoryItems.Where(x => defaultItems.IndexOf(x) == -1)
+                var items = HistoryItems.Where(x => HistorySearchItem.Defaults.IndexOf(x) == -1)
                     .ToArray();
                 PersistHelper.Save(items);
             }
@@ -112,7 +104,7 @@ namespace Jean_Doe.MusicControl
             if (message == null || string.IsNullOrEmpty(message.Keyword)) return;
             UIHelper.RunOnUI(() =>
             {
-                if (!message.Keyword.StartsWith("user:"))
+                if (!HistorySearchItem.Defaults.Any(x => x.Key == message.Keyword))
                 {
                     this.Upsert(message.SearchType, message.Keyword, message.Count);
                     this.Save();

@@ -21,7 +21,7 @@ public class XiamiSearchProvider : ISearchProvider
         var m = Regex.Match(key, "user:(\\w+)");
         if (m.Success)
         {
-            await getUserMusic(m.Groups[1].Value, t.ToString());
+            await getUserMusic(m.Groups[1].Value);
             return null;
         }
         m = Regex.Match(key, "(song|artist|album|collect):(\\d+)");
@@ -152,16 +152,17 @@ public class XiamiSearchProvider : ISearchProvider
         }
         return sr;
     }
-    static async Task getUserMusic(string key, string t)
+    static async Task getUserMusic(string key)
     {
-        if (t == "all" || t == "any") t = "song";
+        bool isKeyValidMusicType = new Regex("^(song|album|artist|collect)$").IsMatch(key.Trim());
         var searchType = EnumSearchType.song;
-        Enum.TryParse(t.ToString(), out searchType);
         var musicType = EnumMusicType.song;
-        Enum.TryParse(t.ToString(), out musicType);
+        if (isKeyValidMusicType)
+        {
+            Enum.TryParse(key, out searchType);
+            Enum.TryParse(key, out musicType);
+        }
         int page = 1;
-        if (key == "me")
-            key = "lib";
         while (true)
         {
             dynamic obj = null;
@@ -169,12 +170,19 @@ public class XiamiSearchProvider : ISearchProvider
                 obj = await XiamiClient.GetDefault().Call_xiami_api("Recommend.DailySongs");
             else if (key == "guess")
                 obj = await XiamiClient.GetDefault().GetGuess();
-            else if (key == "lib")
-                obj = await XiamiClient.GetDefault().GetUserMusic(t, page);
             else if (key == "collect_recommend")
+            {
+                musicType = EnumMusicType.collect;
+                searchType = EnumSearchType.collect;
                 obj = await XiamiClient.GetDefault().Call_xiami_api("Collects.recommend");
+            }
+            else if (isKeyValidMusicType)
+                obj = await XiamiClient.GetDefault().GetUserMusic(key, page);
             else
-                throw new Exception("user:" + key + " is not supported");
+            {
+                Logger.Error(new Exception("user:" + key + " is not supported"));
+                break;
+            }
             if (obj == null) break;
             var items = new List<IMusic>();
             var list = obj[musicType.ToString() + "s"];
@@ -195,7 +203,7 @@ public class XiamiSearchProvider : ISearchProvider
                 break;
             }
             Artwork.MessageBus.MessageBus.Instance.Publish(sr);
-            if (key == "lib" && t == "song")
+            if (key == "song")
             {
                 foreach (Song item in sr.Items)
                 {
