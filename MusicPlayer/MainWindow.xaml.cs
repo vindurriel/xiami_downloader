@@ -78,7 +78,6 @@ namespace MusicPlayer
             Closing += MainWindow_Closing;
             ActionBarService.RegisterActionBar(this.charmBar);
             Artwork.DataBus.DataBus.Set("list_download", list_download);
-            SizeChanged += MainWindow_SizeChanged;
             Mp3Player.SongChanged += OnMp3PlayerSongChanged;
             Global.ListenToEvent("TitleMarquee", SetTitleMarquee);
             btn_sync_left.Click += btn_sync_left_Click;
@@ -162,41 +161,41 @@ namespace MusicPlayer
         {
             await SearchManager.Search(webcontrol_entity);
         }
-        void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-        }
 
         void OnMp3PlayerSongChanged(object sender, SongChangedEventArgs e)
         {
             if (SongViewModel.NowPlaying != null)
             {
-                Task.Run(async () =>
-                {
-                    if (Mp3Player.IsPlaying)
-                        await XiamiClient.GetDefault().Call_xiami_api("Playlog.add",
-                            "id=" + SongViewModel.NowPlaying.Id,
-                            "time=" + XiamiClient.DateTimeToUnixTimestamp(DateTime.Now).ToString(),
-                            "type=20"
-                        );
-                });
                 SongViewModel.NowPlaying.IsNowPlaying = false;
             }
             SongViewModel.NowPlaying = SongViewModel.GetId(e.Id);
             if (SongViewModel.NowPlaying != null)
-                SongViewModel.NowPlaying.IsNowPlaying = true;
-            ActionBarService.Refresh();
-
-            var now = SongViewModel.NowPlaying;
-            if (now == null) return;
-            part_nowPlaying.DataContext = now;
-            Title = string.Format("{0} - {1}      ", now.Name, now.ArtistName);
-            counter = 0;
-            if (trayIcon != null && Global.AppSettings["ShowNowPlaying"] != "0" && Mp3Player.IsPlaying)
             {
-                balloonTip = new MyBalloonTip();
-                balloonTip.ViewModel = now;
-                trayIcon.ShowCustomBalloon(balloonTip, PopupAnimation.Fade, 3000);
+                Task.Run(async () =>
+                {
+                    if (!Mp3Player.IsPlaying) return;
+                    var id = SongViewModel.NowPlaying.Id;
+                    System.Threading.Thread.Sleep(10000);
+                    if (SongViewModel.NowPlaying.Id != id) return;
+                    await XiamiClient.GetDefault().Call_xiami_api("Playlog.add",
+                        "id=" + SongViewModel.NowPlaying.Id,
+                        "time=" + XiamiClient.DateTimeToUnixTimestamp(DateTime.Now).ToString(),
+                        "type=20"
+                    );
+                });
+                SongViewModel.NowPlaying.IsNowPlaying = true;
+                var now = SongViewModel.NowPlaying;
+                part_nowPlaying.DataContext = now;
+                Title = string.Format("{0} - {1}      ", now.Name, now.ArtistName);
+                counter = 0;
+                if (trayIcon != null && Global.AppSettings["ShowNowPlaying"] != "0" && Mp3Player.IsPlaying)
+                {
+                    balloonTip = new MyBalloonTip();
+                    balloonTip.ViewModel = now;
+                    trayIcon.ShowCustomBalloon(balloonTip, PopupAnimation.Fade, 3000);
+                }
             }
+            ActionBarService.Refresh();
             refreshPlause();
             currentList.PerformAction("选中正在播放");
         }

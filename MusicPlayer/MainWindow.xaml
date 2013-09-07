@@ -268,9 +268,9 @@
                         <Setter Property="Margin" Value="10,0" />
                     </Style>
                 </DockPanel.Resources>
-                <Button x:Name="btn_select_now_playing" Content="&#xE1e9;" Click="btn_select_now_playing_Click" />
-                <Button x:Name="btn_plause" Content="&#xE102;" Click="btn_plause_Click" />
-                <Button x:Name="btn_next" Content="&#xE101;" Click="btn_next_Click" />
+                <Button x:Name="btn_select_now_playing" Content="&#xE1e9;" Click="btn_select_now_playing_Click" ToolTip="选中正在播放"/>
+                <Button x:Name="btn_plause" Content="&#xE102;" Click="btn_plause_Click" ToolTip="播放/暂停"/>
+                <Button x:Name="btn_next" Content="&#xE101;" Click="btn_next_Click" ToolTip="下一首"/>
             </DockPanel>
             <Grid Grid.Row="1" Grid.Column="2" x:Name="lrc">
                 <controls:LyricControl Margin="0,-7,0,0" HorizontalAlignment="Right" x:Name="lyricShow"
