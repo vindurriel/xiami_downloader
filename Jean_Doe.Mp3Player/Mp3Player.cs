@@ -14,7 +14,7 @@ namespace Jean_Doe.Mp3Player
         {
             try
             {
-                device.Pause();
+                Pause();
                 device.Play();
                 return stream.TotalTime.TotalMilliseconds;
             }
@@ -24,7 +24,6 @@ namespace Jean_Doe.Mp3Player
                 log(new Exception(f));
                 return 0.0;
             }
-
         }
 
         public void Pause()
@@ -71,7 +70,7 @@ namespace Jean_Doe.Mp3Player
             {
                 return CurrentTime;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return 0.0;
             }
@@ -79,29 +78,42 @@ namespace Jean_Doe.Mp3Player
         string f;
         public bool Initialize(string fileName)
         {
-            bool res = false;
             try
             {
                 f = fileName;
+                var s = createInputStream(fileName);
+                if (s == null)
+                    return false;
+                device.Stop();
+                device.Init(s);
                 if (stream != null)
                     stream.Dispose();
-                stream = createInputStream(fileName);
-                device.Stop();
-                stream.Position = 0;
-                device.Init(stream);
-                res = true;
+                stream = s;
+                return true;
             }
             catch (Exception e)
             {
                 log(e);
+                return false;
             }
-            return res;
         }
 
         WaveStream createInputStream(string fileName)
         {
-            var mp3Reader = new MediaFoundationReader(fileName);
-            return new WaveChannel32(mp3Reader);
+            Exception e = null;
+            for (int i = 0; i < 3; i++)
+            {
+                try
+                {
+                    return new WaveChannel32(new MediaFoundationReader(fileName));
+                }
+                catch (Exception ex)
+                {
+                    e = ex;
+                }
+            }
+            log(e);
+            return null;
         }
         internal double CurrentTime
         {
@@ -117,6 +129,7 @@ namespace Jean_Doe.Mp3Player
         static object _logLock = new object();
         static void log(Exception msg)
         {
+            if (msg == null) return;
             lock (_logLock)
             {
                 Console.WriteLine(msg);

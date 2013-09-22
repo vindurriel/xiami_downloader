@@ -30,35 +30,34 @@ namespace Jean_Doe.MusicControl
             refresh();
             btn_search.DataContext = this;
             btn_search.Click += btn_search_Click;
-            hs.SelectionChanged += hs_SelectionChanged;
-
+            historySearch.SelectionChanged += historySearch_SelectionChanged;
             Loaded += SearchControl_Loaded;
 
         }
 
-        void hs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        async void historySearch_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.combo_xiami_type.SelectedItem = hs.SelectedSearchType;
+            if (historySearch.IsChanging) return;
+            if (e.AddedItems.Count == 0) return;
+            var key = (e.AddedItems[0] as HistorySearchItem).Key;
+            if (key != Key)
+                await SearchManager.Search(key, SearchType);
         }
         void SearchControl_Loaded(object sender, RoutedEventArgs e)
         {
             var source = new CollectionViewSource { Source = Enum.GetValues(typeof(EnumSearchType)).Cast<EnumSearchType>() }.View;
             source.Filter = searchTypeFilter;
-            combo_xiami_type.ItemsSource = source;
-            var xtype = EnumSearchType.all;
-            combo_xiami_type.SelectedItem = xtype;
-            combo_xiami_type.SelectionChanged += this.combo_xiami_type_SelectionChanged_1;
-            hs.TextChanged += (s, dd) =>
+            historySearch.TextChanged += (s, dd) =>
             {
                 mask_filter.Visibility = Visibility.Collapsed;
             };
-            hs.GotFocus += (s, dd) =>
+            historySearch.GotFocus += (s, dd) =>
             {
                 mask_filter.Visibility = Visibility.Collapsed;
             };
-            hs.LostFocus += (s, dd) =>
+            historySearch.LostFocus += (s, dd) =>
             {
-                mask_filter.Visibility = string.IsNullOrEmpty(hs.Text) ? Visibility.Visible : Visibility.Collapsed;
+                mask_filter.Visibility = string.IsNullOrEmpty(historySearch.Text) ? Visibility.Visible : Visibility.Collapsed;
             };
         }
         static bool searchTypeFilter(object s)
@@ -81,9 +80,9 @@ namespace Jean_Doe.MusicControl
         }
         void refresh()
         {
-            if (hs == null) return;
-            hs.SavePath = SavePath;
-            hs.Load();
+            if (historySearch == null) return;
+            historySearch.SavePath = SavePath;
+            historySearch.Load();
         }
         public string SavePath { get { return System.IO.Path.Combine(Global.BasePath, "history_all.xml"); } }
 
@@ -117,9 +116,9 @@ namespace Jean_Doe.MusicControl
         {
             try
             {
-                var i = hs.SelectedIndex;
-                if (i < 0 || i>hs.Items.Count-1) { CanGoBack = false; return; }
-                hs.SelectedIndex = i + 1;
+                var i = historySearch.SelectedIndex;
+                if (i < 0 || i > historySearch.Items.Count - 1) { CanGoBack = false; return; }
+                historySearch.SelectedIndex = i + 1;
                 btn_search_Click(this, e);
             }
             catch (Exception ex)
@@ -136,8 +135,7 @@ namespace Jean_Doe.MusicControl
                     case EnumSearchState.Started:
                         CanGoBack = false;
                         btn_search.Content = "\xe1a4";
-                        hs.Text = message.SearchResult.Keyword;
-                        combo_xiami_type.SelectedItem = message.SearchResult.SearchType;
+                        historySearch.Text = message.SearchResult.Keyword;
                         break;
                     case EnumSearchState.Working:
                         break;
@@ -152,33 +150,16 @@ namespace Jean_Doe.MusicControl
         {
             get
             {
-                if (combo_xiami_type.SelectedItem == null)
-                    return EnumSearchType.song;
-                return (EnumSearchType)combo_xiami_type.SelectedItem;
+                if (historySearch.SelectedItem == null) return EnumSearchType.song;
+                return (historySearch.SelectedItem as HistorySearchItem).SearchType;
             }
         }
         public string Key
         {
             get
             {
-                return hs.Text.Trim();
+                return historySearch.Text.Trim();
             }
-        }
-        private void combo_xiami_type_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
-        {
-            var x = combo_xiami_type.SelectedItem;
-            if (x == null) return;
-            EnumSearchType t = EnumSearchType.song;
-            if (!Enum.TryParse(x.ToString(), out t))
-                return;
-            if (t >= EnumSearchType.user_song)
-            {
-                hs.Text = "user:me";
-                var s = t.ToString();
-                Enum.TryParse(s.Substring("user_".Length), out t);
-                combo_xiami_type.SelectedItem = t;
-            }
-            Global.AppSettings["SearchResultType"] = t.ToString();
         }
 
 

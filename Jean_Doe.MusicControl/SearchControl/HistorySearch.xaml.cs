@@ -57,8 +57,11 @@ namespace Jean_Doe.MusicControl
                 Logger.Error(e);
             }
         }
+        bool isChanging = false;
+        public bool IsChanging { get { return isChanging; } }
         public void Upsert(EnumSearchType t, string key, long counter)
         {
+            isChanging = true;
             if (string.IsNullOrEmpty(key)) return;
             var k = key.ToLower().Trim();
             var item = HistoryItems.FirstOrDefault(x => x.Key == k);
@@ -79,7 +82,7 @@ namespace Jean_Doe.MusicControl
                 HistoryItems.Insert(0, item);
             }
             SelectedIndex = 0;
-            Save();
+            isChanging = false;
         }
         ICollectionView Source;
         void HistorySearch_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -104,11 +107,8 @@ namespace Jean_Doe.MusicControl
             if (message == null || string.IsNullOrEmpty(message.Keyword)) return;
             UIHelper.RunOnUI(() =>
             {
-                if (!HistorySearchItem.Defaults.Any(x => x.Key == message.Keyword))
-                {
-                    this.Upsert(message.SearchType, message.Keyword, message.Count);
-                    this.Save();
-                }
+                this.Upsert(message.SearchType, message.Keyword, message.Count);
+                this.Save();
             });
         }
         public event TextChangedEventHandler TextChanged;

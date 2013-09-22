@@ -31,12 +31,12 @@ namespace Jean_Doe.MusicControl
                 if (Key.StartsWith("user"))
                 {
                     if (Key == "user:collect_recommend")
-                        return "推荐的精选集";
+                        return "【推荐的精选集】";
                     if (Key == "user:daily")
-                        return "推荐的每日歌曲";
+                        return "【推荐的每日歌曲】";
                     if (Key == "user:guess")
-                        return "虾米猜";
-                    return string.Format("收藏的{0}", SearchType.GetDescription());
+                        return "【虾米猜】";
+                    return string.Format("【收藏的{0}】", SearchType.GetDescription());
                 }
                 return string.Format("{0} {1}", SearchType.GetDescription(), Key);
             }

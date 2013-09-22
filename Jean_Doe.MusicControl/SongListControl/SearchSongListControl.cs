@@ -41,15 +41,10 @@ namespace Jean_Doe.MusicControl
         }
         protected override void item_double_click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (SelectedSongs.Count() > 0)
-            {
-                if (SelectedSongs.FirstOrDefault().Song.DownloadState == "complete")
-                    btn_play_Click(sender, e);
-                else
-                    btn_download_add_Click(sender, null);
-                return;
-            }
-            base.item_double_click(sender, e);
+            if (SelectedSongs.Any())
+                btn_play_Click(sender, e);
+            else
+                base.item_double_click(sender, e);
         }
         void btn_download_add_Click(object sender, RoutedEventArgs e)
         {

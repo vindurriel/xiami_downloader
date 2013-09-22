@@ -141,13 +141,13 @@ namespace Jean_Doe.Common
         {
             Task.Run(() =>
             {
+                bool ok = proxy.Initialize(filepath);
+                if (!ok) return;
                 if (isPlaying)
                 {
                     proxy.Pause();
                 }
                 isPlaying = false;
-                bool ok = proxy.Initialize(filepath);
-                if (!ok) return;
                 _id = id;
                 TotalTime = proxy.Play();
                 isPlaying = true;

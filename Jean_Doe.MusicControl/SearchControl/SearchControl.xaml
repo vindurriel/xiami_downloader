@@ -25,10 +25,10 @@
                     FontSize="12" RenderOptions.EdgeMode="Aliased" FontFamily="{DynamicResource font_symbol}"
                     Content="&#xE1a3;" Background="{DynamicResource skinBrush}">
             </Button>
-            <ComboBox x:Name="combo_xiami_type" Visibility="Collapsed"  Margin="5,0" />
+            <ComboBox  Visibility="Collapsed"  Margin="5,0" />
             <!--search box-->
             <Grid Margin="5,0">
-                <local:HistorySearch x:Name="hs" HorizontalContentAlignment="Left" />
+                <local:HistorySearch x:Name="historySearch" HorizontalContentAlignment="Left" />
                 <TextBlock x:Name="mask_filter" Background="Transparent" Opacity=".5" VerticalAlignment="Center"
                         Margin="3" Text="输入字符以搜索" IsHitTestVisible="False" Foreground="{DynamicResource lightBrush}" />
             </Grid>
