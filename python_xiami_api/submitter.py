@@ -9,10 +9,12 @@ def cwd(*args):
 f_xiami=os.path.realpath(cwd("..","Jean_Doe.Output"))
 f_version=cwd("version.txt")
 f_zip=cwd("latest.zip")
+def refresh_token():
+	url
 def upload(path,fname):
 	import requests as r
 	url_file=  "https://pcs.baidu.com/rest/2.0/pcs/file"
-	token="3.fa547d34c11a67393d0b6c9825005629.2592000.1379127285.4093755095-1182756"
+	token="3.65026d3e7c2bbb31812f7573ad246b0b.2592000.1382426430.4093755095-1182756"
 	print "@uploading",repr(path)
 	res=r.post(url_file,
 		params={

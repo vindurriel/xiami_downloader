@@ -69,6 +69,7 @@ namespace Jean_Doe.MusicControl
                     System.Threading.Thread.Sleep(100);
                 }
             }
+            System.Media.SystemSounds.Beep.Play();
             var cmd = File.ReadAllText(e.FullPath);
             if (cmd == "next")
                 UIHelper.RunOnUI(() => btn_next_Click(null, null));

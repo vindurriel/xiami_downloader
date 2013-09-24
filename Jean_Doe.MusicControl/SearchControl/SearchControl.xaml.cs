@@ -35,13 +35,12 @@ namespace Jean_Doe.MusicControl
 
         }
 
-        async void historySearch_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        void historySearch_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (historySearch.IsChanging) return;
             if (e.AddedItems.Count == 0) return;
             var key = (e.AddedItems[0] as HistorySearchItem).Key;
-            if (key != Key)
-                await SearchManager.Search(key, SearchType);
+                btn_search_Click(this, null);
         }
         void SearchControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -119,7 +118,7 @@ namespace Jean_Doe.MusicControl
                 var i = historySearch.SelectedIndex;
                 if (i < 0 || i > historySearch.Items.Count - 1) { CanGoBack = false; return; }
                 historySearch.SelectedIndex = i + 1;
-                btn_search_Click(this, e);
+                //btn_search_Click(this, e);
             }
             catch (Exception ex)
             {
@@ -158,7 +157,8 @@ namespace Jean_Doe.MusicControl
         {
             get
             {
-                return historySearch.Text.Trim();
+                if (historySearch.SelectedItem == null) return null;
+                return (historySearch.SelectedItem as HistorySearchItem).Key;
             }
         }
 
