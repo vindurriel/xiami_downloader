@@ -141,7 +141,7 @@ namespace Jean_Doe.MusicControl
                             m = reg.Match(tags.Comment);
                             if (!m.Success) continue;
                             id = m.Groups[1].Value;
-                            var obj = await XiamiClient.GetDefault().Call_xiami_api("Songs.detail", "id=" + id);
+                            var obj = await NetAccess.Json(XiamiUrl.url_song, "id", id);
                             artistid = MusicHelper.Get(obj["song"], "artist_id");
                             albumid = MusicHelper.Get(obj["song"], "album_id");
                             logo = StringHelper.EscapeUrl(MusicHelper.Get(obj["song"], "logo"));
@@ -159,7 +159,7 @@ namespace Jean_Doe.MusicControl
                         {
                             if (string.IsNullOrEmpty(logo))
                             {
-                                var obj = await XiamiClient.GetDefault().Call_xiami_api("Songs.detail", "id=" + id);
+                                var obj = await NetAccess.Json(XiamiUrl.url_song, "id", id);
                                 logo = StringHelper.EscapeUrl(MusicHelper.Get(obj["song"], "logo"));
                             }
                             await new System.Net.WebClient().DownloadFileTaskAsync(logo, art);

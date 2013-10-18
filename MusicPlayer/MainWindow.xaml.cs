@@ -171,18 +171,18 @@ namespace MusicPlayer
             SongViewModel.NowPlaying = SongViewModel.GetId(e.Id);
             if (SongViewModel.NowPlaying != null)
             {
-                Task.Run(async () =>
-                {
-                    if (!Mp3Player.IsPlaying) return;
-                    var id = SongViewModel.NowPlaying.Id;
-                    System.Threading.Thread.Sleep(10000);
-                    if (SongViewModel.NowPlaying.Id != id) return;
-                    await XiamiClient.GetDefault().Call_xiami_api("Playlog.add",
-                        "id=" + SongViewModel.NowPlaying.Id,
-                        "time=" + XiamiClient.DateTimeToUnixTimestamp(DateTime.Now).ToString(),
-                        "type=20"
-                    );
-                });
+                //Task.Run(async () =>
+                //{
+                //    if (!Mp3Player.IsPlaying) return;
+                //    var id = SongViewModel.NowPlaying.Id;
+                //    System.Threading.Thread.Sleep(10000);
+                //    if (SongViewModel.NowPlaying.Id != id) return;
+                //    await XiamiClient.GetDefault().Call_xiami_api("Playlog.add",
+                //        "id=" + SongViewModel.NowPlaying.Id,
+                //        "time=" + XiamiClient.DateTimeToUnixTimestamp(DateTime.Now).ToString(),
+                //        "type=20"
+                //    );
+                //});
                 SongViewModel.NowPlaying.IsNowPlaying = true;
                 var now = SongViewModel.NowPlaying;
                 part_nowPlaying.DataContext = now;

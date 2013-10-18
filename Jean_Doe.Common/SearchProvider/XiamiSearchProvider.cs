@@ -36,7 +36,7 @@ public class XiamiSearchProvider : ISearchProvider
             return await SearchByUrl(key);
         var musicType = EnumMusicType.all;
         Enum.TryParse(t.ToString(), out musicType);
-        return await SearchByKey(key, musicType);
+        return await SearchAll (key);
     }
     static void getCollectDetails(string id)
     {
@@ -71,37 +71,37 @@ public class XiamiSearchProvider : ISearchProvider
         switch (type)
         {
             case EnumSearchType.song:
-                json = await XiamiClient.GetDefault().Call_xiami_api("Songs.detail", "id=" + id);
+                json = await NetAccess.Json(XiamiUrl.url_song,"id",id);
                 items = GetSong(json);
                 break;
             case EnumSearchType.album:
-                json = await XiamiClient.GetDefault().Call_xiami_api("Albums.detail", "id=" + id);
+                json = await NetAccess.Json(XiamiUrl.url_album, "id", id);
                 items = GetAlbum(json);
                 break;
             case EnumSearchType.album_song:
-                json = await XiamiClient.GetDefault().Call_xiami_api("Albums.detail", "id=" + id);
+                json = await NetAccess.Json(XiamiUrl.url_album, "id", id);
                 items = GetSongsOfAlbum(json);
                 break;
             case EnumSearchType.artist_song:
-                json = await XiamiClient.GetDefault().Call_xiami_api("Artists.hotSongs", "id=" + id);
+                json = await NetAccess.Json(XiamiUrl.url_artist_top_song, "id", id);
                 items = GetSongsOfArtist(json);
                 break;
             case EnumSearchType.artist:
-                json = await XiamiClient.GetDefault().Call_xiami_api("Artists.detail", "id=" + id);
+                json = await NetAccess.Json(XiamiUrl.url_artist, "id", id);
                 items = GetArtist(json);
                 break;
             case EnumSearchType.collect:
             case EnumSearchType.collect_song:
-                json = await XiamiClient.GetDefault().Call_xiami_api("Collects.detail", "id=" + id);
+                json = await NetAccess.Json(XiamiUrl.url_collect, "id", id);
                 getCollectDetails(json["list_id"]);
                 items = GetSongsOfCollect(json);
                 break;
             case EnumSearchType.artist_artist:
-                json = await NetAccess.DownloadStringAsync(XiamiUrl.UrlArtistSimilars(id));
+                json = await NetAccess.Json(XiamiUrl.url_artsit_similars, "id", id);
                 items = GetSimilarsOfArtist(json);
                 break;
             case EnumSearchType.artist_album:
-                json = await XiamiClient.GetDefault().Call_xiami_api("Artists.albums", "id=" + id);
+                json = await NetAccess.Json(XiamiUrl.url_artist_albums, "id", id);
                 items = GetAlbumsOfArtist(json);
                 break;
             default:
@@ -139,7 +139,7 @@ public class XiamiSearchProvider : ISearchProvider
             Page = -1,
             SearchType = EnumSearchType.all,
         };
-        dynamic obj = await XiamiClient.GetDefault().Call_xiami_api("Search.summary", true, string.Format("key={0}", key));
+        dynamic obj = await NetAccess.Json(XiamiUrl.url_search_all, "key", key);
         if (obj == null) return sr;
         foreach (var type in new string[] { "song", "album", "artist", "collect" })
         {
@@ -241,16 +241,15 @@ public class XiamiSearchProvider : ISearchProvider
     }
     async static Task<SearchResult> _searchByKey(string keyword, int page, EnumMusicType type = EnumMusicType.song)
     {
-        //string url = XiamiUrl.UrlSearch(keyword, page, type);
-        //string json = await NetAccess.DownloadStringAsync(url);
-        ///////////////
-        //if (json == null) return null;
-        string typestr = type.ToString();
-        dynamic obj = await XiamiClient.GetDefault().Call_xiami_api(string.Format("Search.{0}s", typestr),
-            string.Format("\"key={0}\"", keyword),
-            string.Format("page={0}", page));
+        dynamic obj =await  NetAccess.Json(XiamiUrl.url_search_all, "key", keyword, "page", page.ToString());
+        /////////////
         if (obj == null) return null;
-        var data = obj[typestr + "s"] as ArrayList;
+        //string typestr = type.ToString();
+        //dynamic obj = await XiamiClient.GetDefault().Call_xiami_api(string.Format("Search.{0}s", typestr),
+        //    string.Format("\"key={0}\"", keyword),
+        //    string.Format("page={0}", page));
+        //if (obj == null) return null;
+        var data = obj[type.ToString() + "s"] as ArrayList;
         if (data == null) return null;
         var items = new List<IMusic>();
         foreach (dynamic x in data)
@@ -259,7 +258,7 @@ public class XiamiSearchProvider : ISearchProvider
         }
         var searchType = EnumSearchType.song;
         Enum.TryParse<EnumSearchType>(type.ToString(), out searchType);
-        bool hasNext = page != (int)obj["next"];
+        bool hasNext =  page.ToString() !=  obj["next"];
         var res = new SearchResult
         {
             Items = items,

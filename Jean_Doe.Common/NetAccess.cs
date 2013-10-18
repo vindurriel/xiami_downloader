@@ -12,6 +12,7 @@ using System.Windows;
 using System.Web.Script.Serialization;
 using System.Collections;
 using System.Net.Http;
+using System.Collections.Specialized;
 namespace Jean_Doe.Common
 {
     public static class NetAccess
@@ -24,6 +25,23 @@ namespace Jean_Doe.Common
         }
         static List<CancellationTokenSource> cancelTokens = new List<CancellationTokenSource>();
         static CancellationTokenSource cancelToken = new CancellationTokenSource();
+        public async static Task<dynamic> Json(string url, params string[] ps)
+        {
+            var len = ps.Length;
+            if (len % 2 != 0)
+                throw new ArgumentException();
+            var dic = new Dictionary<string,string>();
+            if (len > 0)
+            {
+                for (int i = 0; i < len / 2; i++)
+                {
+                    dic[ps[2*i]] = ps[2*i + 1];
+                }
+                url = url.WithParams(dic);
+            }
+            var s = await DownloadStringAsync(url);
+            return s.ToDynamicObject();
+        }
         public async static Task<string> DownloadStringAsync(string url)
         {
             var client = new HttpClient();
@@ -34,7 +52,7 @@ namespace Jean_Doe.Common
             }
             catch (Exception e)
             {
-               
+
             }
             finally
             {
@@ -45,53 +63,19 @@ namespace Jean_Doe.Common
 
         public async static Task<string> GetUrlLrc(string songId)
         {
-            var json = await NetAccess.DownloadStringAsync(XiamiUrl.UrlSong(songId));
+            var json = await NetAccess.Json(XiamiUrl.url_song,"id",songId);
             if (json == null) return null;
             try
             {
-                return json.ToDynamicObject().lyric as string;
+                return json.lyric as string;
             }
             catch
             {
                 return null;
             }
         }
-        public async static Task<double> GetPlayTimes(string songId)
-        {
-            double res = 0;
-            var json = await NetAccess.DownloadStringAsync(XiamiUrl.UrlSong(songId));
-            if (json == null) return 0;
-            try
-            {
-                var str = json.ToDynamicObject().year_play as string;
-                double.TryParse(str, out res);
-            }
-            catch { }
-            return res;
-        }
         static Dictionary<string, int> TrackNoCache = new Dictionary<string, int>();
         static object l = new object();
-        public async static Task<int> GetTrackNo(string songId, string albumId)
-        {
-            if (TrackNoCache.ContainsKey(songId)) return TrackNoCache[songId];
-            var json = await NetAccess.DownloadStringAsync(XiamiUrl.UrlAlbum(albumId));
-            if (json == null) return 0;
-            try
-            {
-                var songs = json.ToDynamicObject().album.songs;
-                int i = 1;
-                foreach (var song in songs)
-                {
-                    lock (l)
-                    {
-                        TrackNoCache[song.song_id.ToString()] = i;
-                    }
-                    i++;
-                }
-                return TrackNoCache[songId];
-            }
-            catch { return 0; }
-        }
         public static dynamic ToDynamicObject(this string json)
         {
             var serializer = new JavaScriptSerializer();
