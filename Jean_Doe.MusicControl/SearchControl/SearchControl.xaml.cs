@@ -157,7 +157,7 @@ namespace Jean_Doe.MusicControl
         {
             get
             {
-                if (historySearch.SelectedItem == null) return null;
+                if (historySearch.SelectedItem == null) return historySearch.Text;
                 return (historySearch.SelectedItem as HistorySearchItem).Key;
             }
         }

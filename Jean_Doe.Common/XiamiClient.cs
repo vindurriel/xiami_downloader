@@ -156,7 +156,7 @@ namespace Jean_Doe.Common
             var json = res.ToDynamicObject();
             if (!(json is string) && !(json is Array) && json.err != null)
             {
-                MessageBox.Show(json.err.ToString());
+                //MessageBox.Show(json.err.ToString());
                 return null;
             }
             return json.data;
