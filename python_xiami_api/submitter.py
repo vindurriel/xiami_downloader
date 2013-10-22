@@ -14,7 +14,7 @@ def refresh_token():
 def upload(path,fname):
 	import requests as r
 	url_file=  "https://pcs.baidu.com/rest/2.0/pcs/file"
-	token="3.65026d3e7c2bbb31812f7573ad246b0b.2592000.1382426430.4093755095-1182756"
+	token="3.9f695526212e72665604185c73ae9a66.2592000.1385028974.4093755095-1182756"
 	print "@uploading",repr(path)
 	res=r.post(url_file,
 		params={

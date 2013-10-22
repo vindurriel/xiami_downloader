@@ -171,31 +171,39 @@ namespace Jean_Doe.Common
             var username = Global.AppSettings["xiami_username"];
             if (password.Length != 32)
                 password = password.ToMD5();
-            var resp = await Http.Post(url_new_token, new NameValueCollection{
-                {"grant_type","password"},
-                {"username",username},
-                {"password",password},
-                {"client_id",client_id},
-                {"client_secret",client_secret}
+            //var resp = await Http.Post(url_new_token, new NameValueCollection{
+            //    {"grant_type","password"},
+            //    {"username",username},
+            //    {"password",password},
+            //    {"client_id",client_id},
+            //    {"client_secret",client_secret}
+            //});
+            //var json = resp.ToDynamicObject();
+            //if (json.error != null)
+            //{
+            //    MessageBox.Show(json.error.ToString());
+            //    return;
+            //}
+            //File.WriteAllText(Global.CWD("access_token"), json["access_token"]);
+            //var r = await Call_xiami_api("Members.showUser");
+            //if (r.error != null)
+            //{
+            //    MessageBox.Show(r.error.ToString());
+
+            //    return;
+            //}
+            //Global.AppSettings["xiami_uid"] = r.user_id.ToString();
+            //Global.AppSettings["xiami_nick_name"] = string.Format("来自{0}的{1}", r.city, r.nick_name);
+            var content = await Http.Post(string.Format("https://login.xiami.com/web/login"), new NameValueCollection() { 
+                {"email","vindurriel@gmail.com"},
+                {"password","1q2w3e4r"},
+                {"remember","1"},
+                {"LoginButton","登录"},
             });
-            var json = resp.ToDynamicObject();
-            if (json.error != null)
-            {
-                MessageBox.Show(json.error.ToString());
-                return;
-            }
-            File.WriteAllText(Global.CWD("access_token"), json["access_token"]);
-            var r = await Call_xiami_api("Members.showUser");
-            if (r.error != null)
-            {
-                MessageBox.Show(r.error.ToString());
-
-                return;
-            }
-
-            Global.AppSettings["xiami_uid"] = r.user_id.ToString();
-            Global.AppSettings["xiami_nick_name"] = string.Format("来自{0}的{1}", r.city, r.nick_name);
-            string avatarUrl = r.avatar.ToString();
+            var doc = new HtmlAgilityPack.HtmlDocument();
+            doc.LoadHtml(content);
+            var img = doc.DocumentNode.SelectSingleNode("img");
+            string avatarUrl = img.Attributes["src"].Value;
             isLoggedIn = true;
             if (!string.IsNullOrEmpty(avatarUrl))
             {
@@ -216,6 +224,7 @@ namespace Jean_Doe.Common
             byte[] response = null;
             using (WebClient client = new WebClient())
             {
+                client.Headers.Set("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.69 Safari/537.36");
                 response = await client.UploadValuesTaskAsync(uri, pairs);
             }
             return Encoding.UTF8.GetString(response);
@@ -225,6 +234,7 @@ namespace Jean_Doe.Common
             string res = null;
             using (WebClient client = new WebClient())
             {
+                client.Headers.Set("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.69 Safari/537.36");
                 res = await client.DownloadStringTaskAsync(uri + ToQueryString(dic));
             }
             return res;
