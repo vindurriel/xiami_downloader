@@ -40,6 +40,7 @@ namespace Jean_Doe.MusicControl
             if (historySearch.IsChanging) return;
             if (e.AddedItems.Count == 0) return;
             var key = (e.AddedItems[0] as HistorySearchItem).Key;
+            if (SearchManager.State == EnumSearchState.Finished)
                 btn_search_Click(this, null);
         }
         void SearchControl_Loaded(object sender, RoutedEventArgs e)

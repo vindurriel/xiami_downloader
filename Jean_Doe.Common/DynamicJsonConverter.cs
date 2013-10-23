@@ -97,19 +97,23 @@ public sealed class DynamicJsonObject : DynamicObject
         sb.Append("}");
     }
 
-    public dynamic this[string x]
+    public object this[string x]
     {
         get
         {
-            dynamic res = null;
-            _dictionary.TryGetValue(x, out res);
+            object res = null;
+            tryGetMember(x, out res);
             return res;
         }
     }
 
     public override bool TryGetMember(GetMemberBinder binder, out object result)
     {
-        if (!_dictionary.TryGetValue(binder.Name, out result))
+        return tryGetMember(binder.Name, out result);
+    }
+    bool tryGetMember(string name, out object result)
+    {
+        if (!_dictionary.TryGetValue(name, out result))
         {
             // return null to avoid exception.  caller can check for null this way...
             result = null;

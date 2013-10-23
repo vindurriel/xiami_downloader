@@ -30,5 +30,9 @@ public class Album : IMusic
         MusicHelper.LoadMusicInfoFromJson(this, obj);
         ArtistId = MusicHelper.Get(obj, "artist_id");
         ArtistName = MusicHelper.Get(obj, "artist_name");
+        if (string.IsNullOrEmpty(ArtistId) && obj["songs"]!=null)
+        {
+            ArtistId = MusicHelper.Get(obj["songs"][0], "artist_id");
+        }
     }
 }

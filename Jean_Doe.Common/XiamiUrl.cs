@@ -16,6 +16,7 @@ namespace Jean_Doe.Common
         public readonly static string url_artsit_similars = "http://www.xiami.com/app/android/artist-similar?id={id}";
         public readonly static string url_collect = "http://www.xiami.com/app/android/collect?id={id}&uid={uid}";
         public readonly static string url_grade = "http://www.xiami.com/app/android/grade?id={id}&grade={grade}";
+        public readonly static string url_lib_music = "http://www.xiami.com/app/android/lib-{music}s?uid={uid}&page={page}";
         public readonly static string url_lib_albums = "http://www.xiami.com/app/android/lib-albums?uid={uid}&page={page}";
         public readonly static string url_lib_artists = "http://www.xiami.com/app/android/lib-artists?uid={uid}&page={page}";
         public readonly static string url_lib_collects = "http://www.xiami.com/app/android/lib-collects?uid={uid}&page={page}";

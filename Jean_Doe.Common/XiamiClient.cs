@@ -36,10 +36,10 @@ namespace Jean_Doe.Common
             await Call_xiami_api("Library.removeSong", "id=" + songId);
         }
 
-        string get_api_signature(NameValueCollection dic, string secret)
+        string get_api_signature(Dictionary<string, string> dic, string secret)
         {
             var res = "";
-            var keys = dic.AllKeys.OrderBy(x => x);
+            var keys = dic.Keys.OrderBy(x => x);
             foreach (var k in keys)
             {
                 res += k + dic[k];
@@ -129,7 +129,7 @@ namespace Jean_Doe.Common
         }
         public async Task<dynamic> Call_xiami_api(string methodName, bool useGet, params string[] args)
         {
-            var dic = new NameValueCollection{
+            var dic = new Dictionary<string, string>{
                        {"method",methodName},
                         {"api_key",client_id},
                         {"call_id",DateTimeToUnixTimestamp(DateTime.Now).ToString() },
@@ -169,8 +169,8 @@ namespace Jean_Doe.Common
         {
             var password = Global.AppSettings["xiami_password"];
             var username = Global.AppSettings["xiami_username"];
-            if (password.Length != 32)
-                password = password.ToMD5();
+            //if (password.Length != 32)
+            //    password = password.ToMD5();
             //var resp = await Http.Post(url_new_token, new NameValueCollection{
             //    {"grant_type","password"},
             //    {"username",username},
@@ -194,16 +194,21 @@ namespace Jean_Doe.Common
             //}
             //Global.AppSettings["xiami_uid"] = r.user_id.ToString();
             //Global.AppSettings["xiami_nick_name"] = string.Format("来自{0}的{1}", r.city, r.nick_name);
-            var content = await Http.Post(string.Format("https://login.xiami.com/web/login"), new NameValueCollection() { 
-                {"email","vindurriel@gmail.com"},
-                {"password","1q2w3e4r"},
+            var content = await Http.Post(string.Format("https://login.xiami.com/web/login"), new Dictionary<string, string>() { 
+                {"email",username},
+                {"password",password},
                 {"remember","1"},
                 {"LoginButton","登录"},
             });
             var doc = new HtmlAgilityPack.HtmlDocument();
             doc.LoadHtml(content);
-            var img = doc.DocumentNode.SelectSingleNode("img");
+            var img = doc.DocumentNode.SelectNodes("//img")[1];
             string avatarUrl = img.Attributes["src"].Value;
+            var m=new Regex("/web/feed/id/(\\d+)").Match(content);
+            if(m.Success)
+            {
+                Global.AppSettings["xiami_uid"] = m.Groups[1].Value;
+            }
             isLoggedIn = true;
             if (!string.IsNullOrEmpty(avatarUrl))
             {
@@ -219,31 +224,33 @@ namespace Jean_Doe.Common
     }
     public static class Http
     {
-        public static async Task<string> Post(string uri, NameValueCollection pairs)
+        public static async Task<string> Post(string uri, Dictionary<string, string> pairs)
         {
             byte[] response = null;
-            using (WebClient client = new WebClient())
+            using (var client = new HttpClient())
             {
-                client.Headers.Set("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.69 Safari/537.36");
-                response = await client.UploadValuesTaskAsync(uri, pairs);
+                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.69 Safari/537.36");
+                var a = await client.PostAsync(uri, new FormUrlEncodedContent(pairs));
+                response = await a.Content.ReadAsByteArrayAsync();
             }
             return Encoding.UTF8.GetString(response);
         }
-        public static async Task<string> Get(string uri, NameValueCollection dic)
+        public static async Task<string> Get(string uri, Dictionary<string, string> dic)
         {
             string res = null;
-            using (WebClient client = new WebClient())
+            using (var client = new HttpClient())
             {
-                client.Headers.Set("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.69 Safari/537.36");
-                res = await client.DownloadStringTaskAsync(uri + ToQueryString(dic));
+                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.69 Safari/537.36");
+                var a = await client.GetAsync(uri + ToQueryString(dic));
+                res = await a.Content.ReadAsStringAsync();
             }
             return res;
         }
-        static string ToQueryString(NameValueCollection nvc)
+        static string ToQueryString(Dictionary<string, string> dic)
         {
-            var array = (from key in nvc.AllKeys
-                         from value in nvc.GetValues(key)
-                         select string.Format("{0}={1}", HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(value, Encoding.Default)))
+
+            var array = (from x in dic
+                         select string.Format("{0}={1}", HttpUtility.UrlEncode(x.Key), HttpUtility.UrlEncode(x.Value, Encoding.Default)))
                 .ToArray();
             var res = "?" + string.Join("&", array);
             return res;

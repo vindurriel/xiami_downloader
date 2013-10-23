@@ -177,7 +177,11 @@ public class XiamiSearchProvider : ISearchProvider
                 obj = await XiamiClient.GetDefault().Call_xiami_api("Collects.recommend");
             }
             else if (isKeyValidMusicType)
-                obj = await XiamiClient.GetDefault().GetUserMusic(key, page);
+            {
+
+                //obj = await XiamiClient.GetDefault().GetUserMusic(key, page);
+                obj =await NetAccess.Json(XiamiUrl.url_lib_music, "music", key, "uid", Global.AppSettings["xiami_uid"], "page", page.ToString());
+            }
             else
             {
                 Logger.Error(new Exception("user:" + key + " is not supported"));
@@ -211,7 +215,7 @@ public class XiamiSearchProvider : ISearchProvider
                 }
             }
             SearchManager.notifyState(sr);
-            if (obj.more != "true")
+            if (obj.more !=null && obj.more != "true")
                 break;
             page++;
         }
@@ -302,17 +306,17 @@ public class XiamiSearchProvider : ISearchProvider
         var items = new List<IMusic>();
         try
         {
-            items.Add(MusicFactory.CreateFromJson(json, EnumMusicType.artist));
+            items.Add(MusicFactory.CreateFromJson(json["artist"], EnumMusicType.artist));
         }
         catch { }
         return items;
     }
-    static List<IMusic> GetSimilarsOfArtist(string json)
+    static List<IMusic> GetSimilarsOfArtist(dynamic json)
     {
         var items = new List<IMusic>();
         try
         {
-            var obj = json.ToDynamicObject().artists;
+            var obj = json["artists"];
             foreach (var x in obj)
             {
                 items.Add(MusicFactory.CreateFromJson(x, EnumMusicType.artist));
@@ -367,6 +371,8 @@ public class XiamiSearchProvider : ISearchProvider
         var items = new List<IMusic>();
         try
         {
+            if (json["album"] != null)
+                json = json["album"];
             items.Add(MusicFactory.CreateFromJson(json, EnumMusicType.album));
         }
         catch { }
@@ -377,8 +383,9 @@ public class XiamiSearchProvider : ISearchProvider
         var items = new List<IMusic>();
         try
         {
-            dynamic obj = json;
-            foreach (var x in obj["songs"])
+            if (json["album"] != null)
+                json = json["album"];
+            foreach (var x in json["songs"])
             {
                 Song a = MusicFactory.CreateFromJson(x, EnumMusicType.song);
                 items.Add(a);
@@ -392,20 +399,11 @@ public class XiamiSearchProvider : ISearchProvider
         List<IMusic> res = new List<IMusic>();
         try
         {
-            var obj = json.song;
+            var obj = json["song"];
             var song = MusicFactory.CreateFromJson(obj, EnumMusicType.song);
             res.Add(song);
         }
         catch { }
         return res;
     }
-    //public async static Task<Album> GetAlbum(string id)
-    //{
-    //    var url = XiamiUrl.UrlPlaylistByIdAndType(id, EnumMusicType.album.ToString());
-    //    var json = await NetAccess.DownloadStringAsync(url);
-    //    if(json == null) return null;
-    //    var obj = json.ToDynamicObject().album;
-    //    var Album = MusicFactory.CreateFromJson(obj, EnumMusicType.album);
-    //    return Album;
-    //}
 }

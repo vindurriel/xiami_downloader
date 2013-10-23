@@ -84,19 +84,19 @@ namespace MusicPlayer
         private async void btn_user_song_Click(object sender, RoutedEventArgs e)
         {
             Jean_Doe.MusicControl.SongViewModel.ClearFav();
-            await SearchManager.Search("user:lib", EnumSearchType.song);
+            await SearchManager.Search("user:song", EnumSearchType.song);
         }
         private async void btn_user_artist_Click(object sender, RoutedEventArgs e)
         {
-            await SearchManager.Search("user:lib", EnumSearchType.artist);
+            await SearchManager.Search("user:artist", EnumSearchType.artist);
         }
         private async void btn_user_album_Click(object sender, RoutedEventArgs e)
         {
-            await SearchManager.Search("user:lib", EnumSearchType.album);
+            await SearchManager.Search("user:album", EnumSearchType.album);
         }
         private async void btn_user_collect_Click(object sender, RoutedEventArgs e)
         {
-            await SearchManager.Search("user:lib", EnumSearchType.collect);
+            await SearchManager.Search("user:collect", EnumSearchType.collect);
         }
         private async void btn_user_daily_Click(object sender, RoutedEventArgs e)
         {
