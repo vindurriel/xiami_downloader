@@ -93,7 +93,7 @@ public class XiamiSearchProvider : ISearchProvider
             case EnumSearchType.collect:
             case EnumSearchType.collect_song:
                 json = await NetAccess.Json(XiamiUrl.url_collect, "id", id);
-                getCollectDetails(json["list_id"]);
+                getCollectDetails(json["collect"]["id"]);
                 items = GetSongsOfCollect(json);
                 break;
             case EnumSearchType.artist_artist:
@@ -356,6 +356,8 @@ public class XiamiSearchProvider : ISearchProvider
         var items = new List<IMusic>();
         try
         {
+            if (json["collect"] != null)
+                json = json["collect"];
             foreach (var x in json["songs"])
             {
                 string id = x["song_id"];
