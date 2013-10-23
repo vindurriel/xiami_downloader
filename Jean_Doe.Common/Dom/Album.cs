@@ -33,6 +33,7 @@ public class Album : IMusic
         if (string.IsNullOrEmpty(ArtistId) && obj["songs"]!=null)
         {
             ArtistId = MusicHelper.Get(obj["songs"][0], "artist_id");
+            ArtistName = MusicHelper.Get(obj["songs"][0], "artist_name");
         }
     }
 }

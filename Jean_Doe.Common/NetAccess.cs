@@ -27,6 +27,7 @@ namespace Jean_Doe.Common
         static CancellationTokenSource cancelToken = new CancellationTokenSource();
         public async static Task<dynamic> Json(string url, params string[] ps)
         {
+
             var len = ps.Length;
             if (len % 2 != 0)
                 throw new ArgumentException();
@@ -39,7 +40,10 @@ namespace Jean_Doe.Common
                 }
                 url = url.WithParams(dic);
             }
+            Guid o = Guid.NewGuid();
+            MessageBus.Instance.Publish(new MsgSetBusy(o, true));
             var s = await DownloadStringAsync(url);
+            MessageBus.Instance.Publish(new MsgSetBusy(o, false));
             return s.ToDynamicObject();
         }
         public async static Task<string> DownloadStringAsync(string url)
