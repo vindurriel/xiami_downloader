@@ -141,6 +141,7 @@
       <DependentUpon>LyricControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="LyricViewModel.cs" />
+    <Compile Include="PlayList.cs" />
     <Compile Include="Util\AfterDownloadManager.cs" />
     <Compile Include="Util\ImageHelper.cs" />
     <Compile Include="Util\ListViewExtension.cs" />

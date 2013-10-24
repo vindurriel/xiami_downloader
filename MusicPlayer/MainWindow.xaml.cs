@@ -70,6 +70,7 @@ namespace MusicPlayer
             Global.ListenToEvent("ColorSkin", SetColorSkin);
             Global.ListenToEvent("Theme", SetTheme);
             InitializeComponent();
+            Global.ListenToEvent("PlayNextMode", SetPlayNextMode);
             Artwork.DataBus.DataBus.Set("MainWindow", this);
             DataContext = this;
             MessageBus.Instance.Subscribe(this);
@@ -93,6 +94,27 @@ namespace MusicPlayer
                 item.PropertyChanged += songlist_PropertyChanged;
                 item.ListView.SelectionChanged += ListView_SelectionChanged;
             }
+        }
+
+        private void SetPlayNextMode(string s)
+        {
+            string c = "顺";
+            string tooltip = "顺序播放";
+            switch (s)
+            {
+                case "Random":
+                    c = "随";
+                    tooltip = "随机播放";
+                    break;
+                case "Repeat":
+                    c = "单";
+                    tooltip = "单曲循环";
+                    break;
+                default:
+                    break;
+            }
+            btn_select_now_playing.Content = c;
+            btn_select_now_playing.ToolTip = tooltip;
         }
         List<SongListControl> lists;
         bool isSyncingSelection = false;
@@ -134,7 +156,7 @@ namespace MusicPlayer
             var song = currentList.SelectedSongs.FirstOrDefault();
             if (song != null)
                 id = song.Id;
-            btn_plause.Content = Mp3Player.GetPlayOrPause(id);
+            btn_plause.Content = Mp3Player.GetPlayOrPause(id) ? "\xE102" : "\xE103";
         }
         void btn_sync_right_Click(object sender, RoutedEventArgs e)
         {
@@ -238,7 +260,7 @@ namespace MusicPlayer
             catch
             {
             }
-
+            watcher = CreateWatcher();
             //tag control events
             foreach (var item in headers.Children)
             {
@@ -441,7 +463,10 @@ namespace MusicPlayer
 
         private void btn_select_now_playing_Click(object sender, RoutedEventArgs e)
         {
-            currentList.PerformAction("选中正在播放");
+            int mode = (int)Enum.Parse(typeof(EnumPlayNextMode), Global.AppSettings["PlayNextMode"]);
+            mode = (mode + 1) % 3;
+            var m = (EnumPlayNextMode)mode;
+            Global.AppSettings["PlayNextMode"] = m.ToString();
         }
 
         private void btn_plause_Click(object sender, RoutedEventArgs e)
@@ -452,6 +477,38 @@ namespace MusicPlayer
         private void btn_next_Click(object sender, RoutedEventArgs e)
         {
             currentList.PerformAction("下一首");
+        }
+        static FileSystemWatcher watcher;
+        FileSystemWatcher CreateWatcher()
+        {
+            using (var s = File.CreateText(Path.Combine(Global.BasePath, "a.txt"))) { }
+            var f = new FileSystemWatcher(Global.BasePath, "a.txt") { EnableRaisingEvents = true, NotifyFilter = NotifyFilters.LastWrite };
+            f.Changed += f_Changed;
+            return f;
+        }
+        void f_Changed(object sender, FileSystemEventArgs e)
+        {
+            while (true)
+            {
+                try
+                {
+                    using (var s = File.Open(e.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                    }
+                    break;
+                }
+                catch (Exception)
+                {
+                    System.Threading.Thread.Sleep(100);
+                }
+            }
+            System.Media.SystemSounds.Beep.Play();
+            var cmd = File.ReadAllText(e.FullPath);
+            if (cmd == "next")
+                UIHelper.RunOnUI(() => btn_next_Click(null, null));
+            else if (cmd == "pause")
+                UIHelper.RunOnUI(() => btn_plause_Click(null, null));
+            UIHelper.RunOnUI(() => ActionBarService.Refresh());
         }
     }
 }

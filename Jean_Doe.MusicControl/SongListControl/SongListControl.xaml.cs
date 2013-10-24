@@ -46,7 +46,8 @@ namespace Jean_Doe.MusicControl
             {
                 Grid.SetRowSpan(virtualView, 1);
             }
-            else {
+            else
+            {
                 Grid.SetRowSpan(virtualView, 2);
             }
         }
@@ -60,7 +61,7 @@ namespace Jean_Doe.MusicControl
                     var song=SelectedSongs.FirstOrDefault();
                     if (song != null)
                     id = song.Id;
-                    this.actions["播放/暂停"].Icon = Mp3Player.GetPlayOrPause(id);
+                    this.actions["播放/暂停"].Icon = Mp3Player.GetPlayOrPause(id) ? "\xE102":"\xE103";
                     return true;
                 }),
                 new CharmAction("选中正在播放","\xE18B",this.btn_select_nowplaying_Click,(s)=>false),  
@@ -85,7 +86,7 @@ namespace Jean_Doe.MusicControl
         double maxRec = 1;
         public double MaxRecommend { get { return maxRec; } set { maxRec = value; Notify("MaxRecommend"); } }
         protected ListView listView;
-      
+
         #region action filters
         protected virtual bool isMultiSelect(object s)
         {
@@ -262,7 +263,6 @@ namespace Jean_Doe.MusicControl
         public ListView ListView { get { return listView; } }
         MusicViewModelList items;
         public MusicViewModelList Items { get { return items; } }
-        protected static MusicViewModelList playList = new MusicViewModelList();
         private int itemsCount;
         public int ItemsCount
         {
@@ -306,7 +306,7 @@ namespace Jean_Doe.MusicControl
         {
             if (e.PropertyName == "ItemsCount")
             {
-                needsRefreshPlaylist = true;
+                PlayList.NeedsRefresh();
             }
             if (e.PropertyName == "NowPlaying")
             {
@@ -315,28 +315,35 @@ namespace Jean_Doe.MusicControl
         }
         void OnPlayNextMode(string s)
         {
-            needsRefreshPlaylist = true;
-            ensureRefreshPlayList();
+            PlayList.NeedsRefresh();
         }
         protected virtual void btn_play_Click(object sender, RoutedEventArgs e)
         {
-            var isMultiSel = isMultiSelect(this);
-            if (isMultiSel)
-                needsRefreshPlaylist = true;
-            this.ensureRefreshPlayList(isMultiSel);
             var item = SelectedSongs.FirstOrDefault() ?? Items.OfType<SongViewModel>().FirstOrDefault();
             if (item == null)
                 return;
             var location = item.Song.DownloadState == "complete" ? item.Song.FilePath : item.Song.UrlMp3;
-            if (!string.IsNullOrEmpty(location))
+            if (string.IsNullOrEmpty(location))
+                return;
+            if (Mp3Player.GetPlayOrPause(item.Id))
             {
-                Mp3Player.Play(location, item.Id);
-                ActionBarService.Refresh();
+                if (!PlayList.Contains(item))
+                {
+                    PlayList.NeedsRefresh();
+                    PlayList.Refresh(Items.OfType<SongViewModel>());
+                }
+                else if (isMultiSelect(this))
+                {
+                    PlayList.NeedsRefresh();
+                    PlayList.Refresh(SelectedSongs);
+                }
             }
+            Mp3Player.Play(location, item.Id);
+            ActionBarService.Refresh();
         }
         protected virtual void btn_next_Click(object sender, RoutedEventArgs e)
         {
-            ensureRefreshPlayList();
+            PlayList.Refresh(Items.OfType<SongViewModel>());
             Mp3Player.Next();
         }
         protected virtual void ApplyFilter()
@@ -582,7 +589,7 @@ namespace Jean_Doe.MusicControl
             var tag = (combo_sort.SelectedItem as ComboBoxItem).Tag.ToString();
             if (tag == "Playlist_Asc")
             {
-                virtualView.DataContext = playList;
+                virtualView.DataContext = PlayList.ItemSource;
                 GongSolutions.Wpf.DragDrop.DragDrop.SetIsDragSource(virtualView, true);
                 GongSolutions.Wpf.DragDrop.DragDrop.SetIsDropTarget(virtualView, true);
                 btn_select_nowplaying_Click(null, null);
@@ -708,22 +715,5 @@ namespace Jean_Doe.MusicControl
                 res.AddRange(actions.Values.Where(x => x.Validate(this)));
             return res;
         }
-        #region playlist control
-        public static bool needsRefreshPlaylist = false;
-        protected void ensureRefreshPlayList(bool onlySelected = false)
-        {
-            if (!needsRefreshPlaylist) return;
-            var selSongs = SelectedSongs.ToList();
-            playList.Clear();
-            var list = onlySelected ? selSongs : Source.OfType<SongViewModel>();
-            foreach (var item in list)
-            {
-                playList.Add(item);
-            };
-            if (Global.AppSettings["PlayNextMode"] == "Random")
-                playList.Shuffle();
-            needsRefreshPlaylist = false;
-        }
-        #endregion
     }
 }

@@ -13,13 +13,11 @@ using System.Windows;
 namespace Jean_Doe.MusicControl
 {
     public class CompleteSongListControl : SongListControl,
-        IHandle<MsgDownloadStateChanged>,
-        IHandle<MsgRequestNextSong>
+        IHandle<MsgDownloadStateChanged>
     {
         public CompleteSongListControl()
         {
             Items.CollectionChanged += Items_CollectionChanged;
-            watcher = CreateWatcher();
             MessageBus.Instance.Subscribe(this);
 
             combo_sort.Items.Add(new System.Windows.Controls.ComboBoxItem { Content = "最近下载", Tag = "Date_Dsc"});
@@ -42,41 +40,10 @@ namespace Jean_Doe.MusicControl
         protected override void ApplyFilter()
         {
             base.ApplyFilter();
-            ensureRefreshPlayList();
+            PlayList.NeedsRefresh();
         }
 
-        static FileSystemWatcher watcher;
-        FileSystemWatcher CreateWatcher()
-        {
-            using (var s = File.CreateText(Path.Combine(Global.BasePath, "a.txt"))) { }
-            var f = new FileSystemWatcher(Global.BasePath, "a.txt") { EnableRaisingEvents = true, NotifyFilter = NotifyFilters.LastWrite };
-            f.Changed += f_Changed;
-            return f;
-        }
-        void f_Changed(object sender, FileSystemEventArgs e)
-        {
-            while (true)
-            {
-                try
-                {
-                    using (var s = File.Open(e.FullPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-                    {
-                    }
-                    break;
-                }
-                catch (Exception)
-                {
-                    System.Threading.Thread.Sleep(100);
-                }
-            }
-            System.Media.SystemSounds.Beep.Play();
-            var cmd = File.ReadAllText(e.FullPath);
-            if (cmd == "next")
-                UIHelper.RunOnUI(() => btn_next_Click(null, null));
-            else if (cmd == "pause")
-                UIHelper.RunOnUI(() => btn_play_Click(null, null));
-            UIHelper.RunOnUI(() => ActionBarService.Refresh());
-        }
+        
 
 
         void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -282,38 +249,7 @@ namespace Jean_Doe.MusicControl
             return path;
         }
 
-        public void Handle(MsgRequestNextSong message)
-        {
-            if (SongViewModel.All.Count() == 0) return;
-            SongViewModel item = null;
-            var now = SongViewModel.NowPlaying ?? SelectedSongs.FirstOrDefault() ?? Items.OfType<SongViewModel>().FirstOrDefault();
-            var mode = EnumPlayNextMode.Random;
-            Enum.TryParse(Global.AppSettings["PlayNextMode"], out mode);
-            switch (mode)
-            {
-                case EnumPlayNextMode.Sequential:
-                case EnumPlayNextMode.Random:
-                    if (playList.Count == 0)
-                    {
-                        needsRefreshPlaylist = true;
-                        ensureRefreshPlayList();
-                    }
-                    int i = playList.IndexOf(now);
-                    if (i == -1) i = playList.Count - 1;
-                    i = i == playList.Count - 1 ? 0 : i + 1;
-                    item = playList.ElementAt(i) as SongViewModel;
-                    break;
-                case EnumPlayNextMode.Repeat:
-                    item = now;
-                    Mp3Player.CurrentTime = 0.0;
-                    break;
-                default:
-                    break;
-            }
-            if (item == null) return;
-            message.Next =item.Song.DownloadState=="complete"?  item.Song.FilePath : item.Song.UrlMp3;
-            message.Id = item.Id;
-        }
+     
 
         protected override void btn_item_action_Click(object sender, RoutedEventArgs e)
         {

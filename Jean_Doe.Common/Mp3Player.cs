@@ -106,13 +106,13 @@ namespace Jean_Doe.Common
                 });
             });
         }
-        public static string GetPlayOrPause(string id)
+        public static bool GetPlayOrPause(string id)
         {
             if (id == _id)
             {
-                return isPlaying ? "\xE103" : "\xE102";
+                return isPlaying ? false : true;
             }
-            return "\xE102";
+            return true;
         }
         public static void Play(string filepath, string id)
         {
