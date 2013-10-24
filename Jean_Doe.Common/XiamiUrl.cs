@@ -6,6 +6,7 @@ namespace Jean_Doe.Common
 {
     public static class XiamiUrl
     {
+        public readonly static string url_recommend_guess = "http://www.xiami.com/home/recommend/ajax/1/page/{0}";
         public readonly static string url_action_fav = "http://www.xiami.com/app/android/fav?id={id}&type={type}";
         public readonly static string url_action_unfav = "http://www.xiami.com/app/android/unfav?id={id}&type={type}";
         public readonly static string url_album = "http://www.xiami.com/app/android/album?id={id}";

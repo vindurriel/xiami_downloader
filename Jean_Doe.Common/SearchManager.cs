@@ -45,11 +45,18 @@ namespace Jean_Doe.Common
             if (provider == null)
                 provider = new XiamiSearchProvider();
             state = EnumSearchState.Working;
-            var sr = await provider.Search(input, t);
-            if (sr != null && state != EnumSearchState.Cancelling)
+            try
             {
-                MessageBus.Instance.Publish(sr);
-                notifyState(sr);
+                var sr = await provider.Search(input, t);
+                if (sr != null && state != EnumSearchState.Cancelling)
+                {
+                    MessageBus.Instance.Publish(sr);
+                    notifyState(sr);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
             }
             state = EnumSearchState.Finished;
             notifyState(searchInfo);

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Jean_Doe.Common;
+using Newtonsoft.Json.Linq;
 public static class MusicHelper
 {
     public static void LoadMusicInfoFromJson(IMusic m, dynamic obj)
@@ -30,7 +31,7 @@ public static class MusicHelper
         }
         else
         {
-            var dict = obj as IDictionary<string, object>;
+            var dict = obj as IDictionary<string,JToken>;
             foreach (var prop in props)
             {
                 if (dict.ContainsKey(prop))

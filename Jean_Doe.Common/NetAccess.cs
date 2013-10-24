@@ -13,6 +13,7 @@ using System.Web.Script.Serialization;
 using System.Collections;
 using System.Net.Http;
 using System.Collections.Specialized;
+using Newtonsoft.Json.Linq;
 namespace Jean_Doe.Common
 {
     public static class NetAccess
@@ -31,12 +32,12 @@ namespace Jean_Doe.Common
             var len = ps.Length;
             if (len % 2 != 0)
                 throw new ArgumentException();
-            var dic = new Dictionary<string,string>();
+            var dic = new Dictionary<string, string>();
             if (len > 0)
             {
                 for (int i = 0; i < len / 2; i++)
                 {
-                    dic[ps[2*i]] = ps[2*i + 1];
+                    dic[ps[2 * i]] = ps[2 * i + 1];
                 }
                 url = url.WithParams(dic);
             }
@@ -67,7 +68,7 @@ namespace Jean_Doe.Common
 
         public async static Task<string> GetUrlLrc(string songId)
         {
-            var json = await NetAccess.Json(XiamiUrl.url_song,"id",songId);
+            var json = await NetAccess.Json(XiamiUrl.url_song, "id", songId);
             if (json == null) return null;
             try
             {
@@ -82,16 +83,23 @@ namespace Jean_Doe.Common
         static object l = new object();
         public static dynamic ToDynamicObject(this string json)
         {
-            var serializer = new JavaScriptSerializer();
-            serializer.RegisterConverters(new[] { new DynamicJsonConverter() });
+            dynamic res = null;
             try
             {
-                return serializer.Deserialize(json, typeof(object)) as dynamic;
+                res = JObject.Parse(json);
             }
-            catch (Exception)
+            catch
             {
-                return null;
+                try
+                {
+                    res = JArray.Parse(json);
+                }
+                catch (Exception)
+                {
+                }
             }
+            return res;
+
         }
     }
 }

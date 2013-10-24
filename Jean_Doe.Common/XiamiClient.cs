@@ -204,8 +204,8 @@ namespace Jean_Doe.Common
             doc.LoadHtml(content);
             var img = doc.DocumentNode.SelectNodes("//img")[1];
             string avatarUrl = img.Attributes["src"].Value;
-            var m=new Regex("/web/feed/id/(\\d+)").Match(content);
-            if(m.Success)
+            var m = new Regex("/web/feed/id/(\\d+)").Match(content);
+            if (m.Success)
             {
                 Global.AppSettings["xiami_uid"] = m.Groups[1].Value;
             }
@@ -224,37 +224,87 @@ namespace Jean_Doe.Common
     }
     public static class Http
     {
+        static CookieContainer cookies;
+        static Http()
+        {
+            cookies = ReadCookiesFromDisk(Global.CWD("cookie.dat"));
+        }
         public static async Task<string> Post(string uri, Dictionary<string, string> pairs)
         {
             byte[] response = null;
-            using (var client = new HttpClient())
+            HttpClientHandler handler = new HttpClientHandler();
+            handler.CookieContainer = cookies;
+            using (var client = new HttpClient(handler))
             {
                 client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.69 Safari/537.36");
                 var a = await client.PostAsync(uri, new FormUrlEncodedContent(pairs));
                 response = await a.Content.ReadAsByteArrayAsync();
+                if (a.Headers.Contains("Set-Cookie"))
+                    WriteCookiesToDisk(Global.CWD("cookie.dat"), cookies);
             }
             return Encoding.UTF8.GetString(response);
+        }
+        public static void WriteCookiesToDisk(string file, CookieContainer cookieJar)
+        {
+            using (Stream stream = File.Create(file))
+            {
+                try
+                {
+                    var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                    formatter.Serialize(stream, cookieJar);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e);
+                }
+            }
+        }
+
+        public static CookieContainer ReadCookiesFromDisk(string file)
+        {
+
+            try
+            {
+                using (Stream stream = File.Open(file, FileMode.Open))
+                {
+                    Console.Out.Write("Reading cookies from disk... ");
+                    var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                    Console.Out.WriteLine("Done.");
+                    return (CookieContainer)formatter.Deserialize(stream);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                return new CookieContainer();
+            }
         }
         public static async Task<string> Get(string uri, Dictionary<string, string> dic)
         {
             string res = null;
-            using (var client = new HttpClient())
+            HttpClientHandler handler = new HttpClientHandler();
+            handler.CookieContainer = cookies;
+            using (var client = new HttpClient(handler))
             {
                 client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.69 Safari/537.36");
                 var a = await client.GetAsync(uri + ToQueryString(dic));
                 res = await a.Content.ReadAsStringAsync();
+                if (a.Headers.Contains("Set-Cookie"))
+                    WriteCookiesToDisk(Global.CWD("cookie.dat"), cookies);
             }
             return res;
         }
         static string ToQueryString(Dictionary<string, string> dic)
         {
-
+            if (dic == null)
+                return "";
             var array = (from x in dic
                          select string.Format("{0}={1}", HttpUtility.UrlEncode(x.Key), HttpUtility.UrlEncode(x.Value, Encoding.Default)))
                 .ToArray();
             var res = "?" + string.Join("&", array);
             return res;
         }
+
     }
 
 }

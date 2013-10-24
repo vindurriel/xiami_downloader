@@ -49,6 +49,8 @@ namespace Jean_Doe.Common
         }
         public static void Get(string id, string url, Action<BitmapImage> readyAction)
         {
+            if (string.IsNullOrEmpty(id)) return;
+            if (string.IsNullOrEmpty(url)) return;
             string localFile = Path.Combine(Global.BasePath, "cache", id);
             //state checking
             if (!images.ContainsKey(id))

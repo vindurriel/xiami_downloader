@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using HtmlAgilityPack;
 using System.IO;
+using Newtonsoft.Json.Linq;
 public class XiamiSearchProvider : ISearchProvider
 {
     public Regex Pattern
@@ -36,20 +37,16 @@ public class XiamiSearchProvider : ISearchProvider
             return await SearchByUrl(key);
         var musicType = EnumMusicType.all;
         Enum.TryParse(t.ToString(), out musicType);
-        return await SearchAll (key);
+        return await SearchAll(key);
     }
     static void getCollectDetails(string id)
     {
-        Task.Run(() =>
+        Task.Run(async () =>
         {
             string url = XiamiUrl.GoCollect(id);
-            var tmp = Path.Combine(Global.BasePath, "cache", string.Format("collect.{0}.html", id));
-            if (!File.Exists(tmp))
-            {
-                new System.Net.WebClient().DownloadFile(url, tmp);
-            }
+            var html = await Http.Get(url, null);
             var doc = new HtmlDocument();
-            doc.Load(tmp, System.Text.Encoding.UTF8);
+            doc.LoadHtml(html);
             foreach (var x in doc.DocumentNode.SelectNodes("//li[@class='totle_up']"))
             {
                 var desc = x.SelectSingleNode(".//strong");
@@ -71,7 +68,7 @@ public class XiamiSearchProvider : ISearchProvider
         switch (type)
         {
             case EnumSearchType.song:
-                json = await NetAccess.Json(XiamiUrl.url_song,"id",id);
+                json = await NetAccess.Json(XiamiUrl.url_song, "id", id);
                 items = GetSong(json);
                 break;
             case EnumSearchType.album:
@@ -93,7 +90,7 @@ public class XiamiSearchProvider : ISearchProvider
             case EnumSearchType.collect:
             case EnumSearchType.collect_song:
                 json = await NetAccess.Json(XiamiUrl.url_collect, "id", id);
-                getCollectDetails(json["collect"]["id"]);
+                getCollectDetails(json["collect"]["id"].ToString());
                 items = GetSongsOfCollect(json);
                 break;
             case EnumSearchType.artist_artist:
@@ -143,7 +140,7 @@ public class XiamiSearchProvider : ISearchProvider
         if (obj == null) return sr;
         foreach (var type in new string[] { "song", "album", "artist", "collect" })
         {
-            var data = obj[type + "s"] as ArrayList;
+            dynamic data = obj[type + "s"];
             if (data == null) continue;
             foreach (dynamic x in data)
             {
@@ -169,7 +166,54 @@ public class XiamiSearchProvider : ISearchProvider
             if (key == "daily")
                 obj = await XiamiClient.GetDefault().Call_xiami_api("Recommend.DailySongs");
             else if (key == "guess")
-                obj = await XiamiClient.GetDefault().GetGuess();
+            {
+                musicType = EnumMusicType.all;
+                searchType = EnumSearchType.all;
+                var html = await Http.Get(string.Format(XiamiUrl.url_recommend_guess, page), null);
+                var doc = new HtmlAgilityPack.HtmlDocument();
+                doc.LoadHtml(html);
+                obj = new JObject();
+                obj.alls = new JArray();
+                HtmlNodeCollection nodes = null;
+                nodes = doc.DocumentNode.SelectNodes("*[contains(concat(' ', @class, ' '), ' album ')]");
+                if (nodes != null)
+                    foreach (var x in nodes)
+                    {
+                        var duo = getIdName(x, "/album/").Split('\t');
+                        var id = duo[0];
+                        var name = duo[1];
+                        duo = getIdName(x, "/artist/").Split('\t');
+                        var artist_id = duo[0];
+                        var artist_name = duo[1];
+                        obj.alls.Add(JObject.Parse(string.Format(@"
+                    {{
+                        Type: 'album',
+                        album_id : '{0}',
+                        album_name : '{1}',
+                        artist_id : '{2}',
+                        artist_name : '{3}',
+                    }}", id, name, artist_id, artist_name)));
+                    }
+                nodes = doc.DocumentNode.SelectNodes("*[contains(concat(' ', @class, ' '), ' collect ')]");
+                if (nodes != null)
+                    foreach (var x in nodes)
+                    {
+                        var duo = getIdName(x, "/song/showcollect/id/").Split('\t');
+                        var id = duo[0];
+                        var name = duo[1];
+                        duo = getIdName(x, "/u/").Split('\t');
+                        var artist_id = duo[0];
+                        var artist_name = duo[1];
+                        obj.alls.Add(JObject.Parse(string.Format(@"
+                    {{
+                        Type: 'collect',
+                        list_id : '{0}',
+                        collect_name : '{1}',
+                        user_id : '{2}',
+                        user_name : '{3}',
+                    }}", id, name, artist_id, artist_name)));
+                    }
+            }
             else if (key == "collect_recommend")
             {
                 musicType = EnumMusicType.collect;
@@ -178,9 +222,7 @@ public class XiamiSearchProvider : ISearchProvider
             }
             else if (isKeyValidMusicType)
             {
-
-                //obj = await XiamiClient.GetDefault().GetUserMusic(key, page);
-                obj =await NetAccess.Json(XiamiUrl.url_lib_music, "music", key, "uid", Global.AppSettings["xiami_uid"], "page", page.ToString());
+                obj = await NetAccess.Json(XiamiUrl.url_lib_music, "music", key, "uid", Global.AppSettings["xiami_uid"], "page", page.ToString());
             }
             else
             {
@@ -189,13 +231,16 @@ public class XiamiSearchProvider : ISearchProvider
             }
             if (obj == null) break;
             var items = new List<IMusic>();
-            var list = obj[musicType.ToString() + "s"];
-            if (list == null) break;
-            foreach (dynamic item in list)
+            if (obj[musicType.ToString() + "s"] != null)
+                obj = obj[musicType.ToString() + "s"] as dynamic;
+            foreach (dynamic item in obj)
             {
                 try
                 {
-                    items.Add(MusicFactory.CreateFromJson(item, musicType));
+                    EnumMusicType t = musicType;
+                    if (item["Type"] != null)
+                        Enum.TryParse(item["Type"].ToString(), out t);
+                    items.Add(MusicFactory.CreateFromJson(item, t));
                 }
                 catch (Exception e)
                 {
@@ -215,10 +260,18 @@ public class XiamiSearchProvider : ISearchProvider
                 }
             }
             SearchManager.notifyState(sr);
-            if (obj.more !=null && obj.more != "true")
-                break;
+            //if (obj.more != null && obj.more != "true")
+            //    break;
             page++;
         }
+    }
+
+    private static string getIdName(HtmlNode x, string prefix)
+    {
+        var node = x.SelectNodes(string.Format(".//a[starts-with(@href,'{0}')]", prefix)).Last();
+        string id = node.Attributes["href"].Value.Substring(prefix.Length);
+        string name = node.InnerText;
+        return string.Join("\t", id, name);
     }
 
     static async Task<SearchResult> SearchByKey(string key, EnumMusicType type)
@@ -245,7 +298,7 @@ public class XiamiSearchProvider : ISearchProvider
     }
     async static Task<SearchResult> _searchByKey(string keyword, int page, EnumMusicType type = EnumMusicType.song)
     {
-        dynamic obj =await  NetAccess.Json(XiamiUrl.url_search_all, "key", keyword, "page", page.ToString());
+        dynamic obj = await NetAccess.Json(XiamiUrl.url_search_all, "key", keyword, "page", page.ToString());
         /////////////
         if (obj == null) return null;
         //string typestr = type.ToString();
@@ -253,7 +306,7 @@ public class XiamiSearchProvider : ISearchProvider
         //    string.Format("\"key={0}\"", keyword),
         //    string.Format("page={0}", page));
         //if (obj == null) return null;
-        var data = obj[type.ToString() + "s"] as ArrayList;
+        dynamic data = obj[type.ToString() + "s"];
         if (data == null) return null;
         var items = new List<IMusic>();
         foreach (dynamic x in data)
@@ -262,7 +315,7 @@ public class XiamiSearchProvider : ISearchProvider
         }
         var searchType = EnumSearchType.song;
         Enum.TryParse<EnumSearchType>(type.ToString(), out searchType);
-        bool hasNext =  page.ToString() !=  obj["next"];
+        bool hasNext = page.ToString() != obj["next"];
         var res = new SearchResult
         {
             Items = items,

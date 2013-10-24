@@ -104,7 +104,7 @@ namespace MusicPlayer
         }
         private async void btn_user_guess_Click(object sender, RoutedEventArgs e)
         {
-            await SearchManager.Search("user:guess", EnumSearchType.song);
+            await SearchManager.Search("user:guess", EnumSearchType.all);
         }
         private async void btn_collect_recommend_Click(object sender, RoutedEventArgs e)
         {
