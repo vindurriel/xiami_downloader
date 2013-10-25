@@ -63,7 +63,7 @@ namespace Jean_Doe.Common
             var pipeFactory = new ChannelFactory<IMp3Player>(
                   new NetNamedPipeBinding(),
                   new EndpointAddress(
-                  "net.pipe://localhost/Mp3Player"));
+                  string.Format("net.pipe://localhost/{0}/Mp3Player", System.Diagnostics.Process.GetCurrentProcess().Id.ToString())));
             proxy = pipeFactory.CreateChannel();
             timer = new System.Timers.Timer(RefreshInterval);
             timer.Elapsed += timer_Tick;

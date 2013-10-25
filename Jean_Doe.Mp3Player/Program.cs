@@ -29,7 +29,7 @@ namespace Jean_Doe.Mp3Player
                     throw new ArgumentException("wrong usage: xiami_player.exe PARENT_PROCESS_ID");
                 }
                 parent = Process.GetProcessById(int.Parse(args[0]));
-                host = new ServiceHost(typeof(Mp3Player), new Uri[] { new Uri("net.pipe://localhost") });
+                host = new ServiceHost(typeof(Mp3Player), new Uri[] { new Uri("net.pipe://localhost/"+args[0]) });
                 host.AddServiceEndpoint(typeof(IMp3Player), new NetNamedPipeBinding(), "Mp3Player");
                 host.Open();
                 while (!parent.HasExited)

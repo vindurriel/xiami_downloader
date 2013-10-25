@@ -16,6 +16,7 @@ namespace Jean_Doe.Common
         static Dictionary<string, ImageHolder> images = new Dictionary<string, ImageHolder>();
         static BitmapImage getBitmap(byte[] bytes)
         {
+            if (bytes.Length == 0) return null;
             var byteStream = new System.IO.MemoryStream(bytes);
             BitmapImage bi = new BitmapImage();
             bi.BeginInit();
@@ -35,6 +36,7 @@ namespace Jean_Doe.Common
             public void Fire()
             {
                 BitmapImage image = getBitmap(Data);
+                if (image == null) return;
                 foreach (var action in ReadyActions)
                 {
                     call(action, image);
@@ -92,6 +94,8 @@ namespace Jean_Doe.Common
                     {
                         if (img.Data == null)
                             img.Data = File.ReadAllBytes(localFile);
+                        if (img.Data.Length == 0)
+                            return;
                         call(readyAction, getBitmap(img.Data));
                     }
                     catch (Exception e)

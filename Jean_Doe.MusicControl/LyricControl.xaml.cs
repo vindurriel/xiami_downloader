@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
 using System.Linq;
+using System.Threading.Tasks;
 namespace Jean_Doe.MusicControl
 {
     /// <summary>
@@ -72,9 +73,40 @@ namespace Jean_Doe.MusicControl
         double[] timelist = null;
         void OnMp3PlayerSongChanged(object sender, SongChangedEventArgs e)
         {
-            var lrcPath =Path.Combine(Global.AppSettings["DownloadFolder"], SongViewModel.Get(new Song { Id = e.Id }).FileNameBase + ".lrc");
+            SongViewModel svm = SongViewModel.GetId(e.Id);
+            if (svm == null) return;
+            var lrcPath = Path.Combine(Global.AppSettings["DownloadFolder"], svm.FileNameBase + ".lrc");
             if (!File.Exists(lrcPath))
                 lrcPath = Path.Combine(Global.BasePath, "cache", e.Id + ".lrc");
+            if (!File.Exists(lrcPath))
+            {
+                Task.Run(async () =>
+                {
+                    var url = svm.Song.UrlLrc;
+                    if (string.IsNullOrEmpty(url))
+                    {
+                        var json = await NetAccess.Json(XiamiUrl.url_song, "id", svm.Id);
+                        if (json.song != null)
+                            json = json.song;
+                        url = MusicHelper.Get(json, "lyric", "song_lrc");
+                        if (string.IsNullOrEmpty(url))
+                            return;
+                    }
+                    string lrcText = await Http.Get(url, null);
+                    File.WriteAllText(lrcPath, lrcText);
+                    var f = LyricViewModel.LoadLrcFile(lrcPath);
+                    UIHelper.RunOnUI(() =>
+                    {
+                        source.Clear();
+                        foreach (var item in f)
+                        {
+                            source.Add(item);
+                        }
+                        timelist = source.Select(x => x.Time.TotalMilliseconds).ToArray();
+                    });
+                });
+                return;
+            }
             var s = LyricViewModel.LoadLrcFile(lrcPath);
             source.Clear();
             foreach (var item in s)
