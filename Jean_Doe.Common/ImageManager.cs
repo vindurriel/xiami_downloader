@@ -21,6 +21,8 @@ namespace Jean_Doe.Common
             BitmapImage bi = new BitmapImage();
             bi.BeginInit();
             bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.DecodePixelWidth = 50;
+            bi.DecodePixelHeight = 50;
             bi.StreamSource = byteStream;
             bi.EndInit();
             byteStream.Close();

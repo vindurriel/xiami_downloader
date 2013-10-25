@@ -30,8 +30,13 @@ namespace Jean_Doe.MusicControl
         private static bool TryScrollToCenterOfView(this ItemsControl itemsControl, object item)
         {
             // Find the container
-            var container = itemsControl.ItemContainerGenerator.ContainerFromItem(item) as UIElement;
-            if (container == null) return false;
+            var index = itemsControl.Items.IndexOf(item);
+            if (index == -1) return false;
+            var container = itemsControl.ItemContainerGenerator.ContainerFromIndex(index) as UIElement;
+            if (container == null)
+            {
+                 return false;
+            }
 
             // Find the ScrollContentPresenter
             ScrollContentPresenter presenter = null;
@@ -54,14 +59,26 @@ namespace Jean_Doe.MusicControl
             center.X += scrollInfo.HorizontalOffset;
 
             // Adjust for logical scrolling
-            if (scrollInfo is StackPanel || scrollInfo is VirtualizingStackPanel)
+            if (scrollInfo is StackPanel || scrollInfo is VirtualizingStackPanel || scrollInfo is VirtualizingWrapPanel)
             {
                 double logicalCenter = itemsControl.ItemContainerGenerator.IndexFromContainer(container) + 0.5;
-                Orientation orientation = scrollInfo is StackPanel ? ((StackPanel)scrollInfo).Orientation : ((VirtualizingStackPanel)scrollInfo).Orientation;
+                dynamic x = scrollInfo;
+                Orientation orientation = x.Orientation;
                 if (orientation == Orientation.Horizontal)
                     center.X = logicalCenter;
                 else
                     center.Y = logicalCenter;
+                if (scrollInfo is VirtualizingWrapPanel)
+                {
+                    var vsp = scrollInfo as VirtualizingWrapPanel;
+                    var section = vsp.AbstractPanel[index].Section;
+                    if (orientation == Orientation.Horizontal)
+                    {
+
+                        center.Y = section;
+                    }
+
+                }
             }
 
             // Scroll the center of the container to the center of the viewport

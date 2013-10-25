@@ -11,11 +11,12 @@ namespace Jean_Doe.MusicControl
     public class MusicViewModelList : ObservableCollection<MusicViewModel>
     {
         ConcurrentQueue<IMusic> queue = new ConcurrentQueue<IMusic>();
+        public int slowCount = 30;
         public void AddItems(List<IMusic> inlist, bool toFront = false)
         {
             int count = inlist.Count();
             if (count == 0) return;
-            if (count > 10) count = 10;
+            count = Math.Min(slowCount, count);
             int s = 1000 / count;
             Task.Run(() =>
             {
