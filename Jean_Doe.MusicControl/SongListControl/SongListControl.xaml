@@ -6,21 +6,12 @@
         xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
         Foreground="{DynamicResource lightBrush}" xmlns:my='clr-namespace:Jean_Doe.MusicControl' x:Name="me">
     <UserControl.Resources>
-        <Style TargetType="TextBlock" x:Key="label_base">
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="FontSize" Value="15" />
-            <Setter Property="LineHeight" Value="22" />
-            <Setter Property="LineStackingStrategy" Value="BlockLineHeight" />
-            <Setter Property="TextWrapping" Value="NoWrap" />
-            <!--<Setter Property="TextTrimming" Value="CharacterEllipsis" />-->
-        </Style>
         <my:IntToVisibilityConverter x:Key="int2vis" />
         <my:BoolToOpacityConverter x:Key='bool2opa' />
         <my:BoolToVisibilityConverter x:Key="bool2vis" />
         <my:DivideConverter x:Key="divconv" />
         <ItemsPanelTemplate x:Key="vsp">
-            <my:VirtualizingTilePanel HorizontalAlignment="Stretch" ChildHeight="80" ChildWidth="220" />
+            <my:VirtualizingTilePanel HorizontalAlignment="Stretch" ChildHeight="80" ChildWidth="240" />
             <!--<my:VirtualizingWrapPanel ItemHeight="40" ItemWidth="200" Orientation="Horizontal" />-->
             <!--<VirtualizingStackPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" />-->
         </ItemsPanelTemplate>
@@ -28,50 +19,17 @@
             <TextBlock Text="{Binding Date, StringFormat={}{0:yyyy/MM/dd HH:mm:ss}}"
                     Style="{DynamicResource label_base}" />
         </DataTemplate>
-        <DataTemplate x:Key="t_image">
-            <Grid VerticalAlignment="Top" Width="50" Height="50">
-                <Border x:Name="border"
-                        BorderBrush="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
-                        BorderThickness="0">
-                    <Grid>
-                        <TextBlock FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Text="{Binding TypeImage}" FontFamily="{DynamicResource font_symbol}" />
-                        <Border Name="mask" Background="White" CornerRadius="30" />
-                        <Image
-                                Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                                Stretch="Uniform">
-                            <!--<Image.OpacityMask>
-                                <VisualBrush Visual="{Binding ElementName=mask}" />
-                            </Image.OpacityMask>-->
-                        </Image>
-                        <Grid Margin="3,0,0,0" Visibility="{Binding InFav,Converter={StaticResource bool2vis}}"
-                                x:Name="corner_select" HorizontalAlignment="Center" VerticalAlignment="Top">
-                            <Path
-                                    Stroke="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
-                                    StrokeThickness="1" Data="M 0,0 L 10,0 10,20 5,15 0,20 Z"
-                                    Fill="{DynamicResource skinBrush}" />
-                        </Grid>
-                    </Grid>
-                </Border>
-            </Grid>
-        </DataTemplate>
         <DataTemplate x:Key="t_search">
             <DockPanel>
-                <TextBlock Text="{Binding  Recommends,StringFormat={}热度{0} }" Height="20" Opacity="0.3">
-                    <TextBlock.ToolTip>
-                        <TextBlock Text="{Binding  Recommends,StringFormat={}热度{0}}" />
-                    </TextBlock.ToolTip>
-                </TextBlock>
-                <TextBlock Text="{Binding Description}" Height="20" Opacity="0.3" MaxWidth="400"
-                        Style="{DynamicResource label_base}">
-                    <TextBlock.ToolTip>
-                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" MaxWidth="400" />
-                    </TextBlock.ToolTip>
-                    </TextBlock>
+                <TextBlock Text="{Binding Description}" Opacity="0.3" MaxWidth="400"
+                        Style="{DynamicResource label_base}" />
             </DockPanel>
         </DataTemplate>
         <DataTemplate x:Key="t_download">
             <Grid MinWidth="100" Margin="0,2,0,0">
+                <Grid.ToolTip>
+                    <TextBlock Text="{Binding Description}" />
+                </Grid.ToolTip>
                 <Grid.Resources>
                     <Style TargetType='Rectangle'>
                         <Setter Property='Width' Value='200' />
@@ -83,9 +41,6 @@
                     </Style>
                 </Grid.Resources>
                 <Rectangle Opacity='{Binding HasMp3,Converter={StaticResource bool2opa}}'>
-                    <Rectangle.ToolTip>
-                        <TextBlock Text="{Binding Description}" />
-                    </Rectangle.ToolTip>
                 </Rectangle>
                 <Rectangle>
                     <Rectangle.RenderTransform>
@@ -94,20 +49,6 @@
                 </Rectangle>
             </Grid>
         </DataTemplate>
-        <Style x:Key="simple_container" TargetType="{x:Type ListViewItem}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ListViewItem}">
-                        <ContentPresenter />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <DataTemplate x:Key="simple_item">
-            <Button Style="{StaticResource AppBarButtonStyle}" Padding="2" Width="30" Height="30"
-                    ToolTip="{Binding Label}" Content="{Binding Icon}" x:Name="btn" Background="Black"
-                    Foreground="White" Tag="{Binding Label}" Click="charmBarAct" />
-        </DataTemplate>
         <DataTemplate x:Key="t_complete">
             <Grid />
         </DataTemplate>
@@ -115,44 +56,23 @@
                 completeTemplate="{StaticResource t_complete}" downloadTemplate="{StaticResource t_download}" />
         <DataTemplate x:Key="listTemplate">
             <Grid HorizontalAlignment="Left" Margin="0,0,0,0" x:Name="root" ClipToBounds="True">
-                <DockPanel Margin="0,0,0,0"  >
+                <DockPanel Margin="0,0,0,0">
                     <DockPanel.Resources>
                         <Style TargetType="TextBlock" BasedOn="{StaticResource label_base}">
                             <Setter Property="Margin" Value="0,0,5,0" />
                             <Setter Property="DockPanel.Dock" Value="Left" />
                         </Style>
                     </DockPanel.Resources>
-                    <Border SnapsToDevicePixels="False" Width="50" Height="50" Margin="0,0,5,0" DockPanel.Dock="Left"  CornerRadius="25"
-                            BorderBrush="{DynamicResource lightBrush}" BorderThickness="0">
-                        <Grid>
-                            <Border Name="mask" Background="White" CornerRadius="25" />
-                            <Image Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                                    Stretch="Uniform">
-                                <Image.OpacityMask>
-                                    <VisualBrush  Visual="{Binding ElementName=mask}" />
-                                </Image.OpacityMask>
-                            </Image>
-                            <TextBlock FontFamily="{DynamicResource font_symbol}" HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom"
-                                    Visibility="{Binding IsNowPlaying,Converter={StaticResource bool2vis}}"
-                                    Text="&#xE1e9;" />
-                        </Grid>
-                    </Border>
-                    <!--<Grid Width="50"  DockPanel.Dock="Left">
+                    <ContentControl Margin="0,0,5,0" DockPanel.Dock="Left" Content="{Binding}"
+                            ContentTemplate="{StaticResource t_image}" />
+                    <DockPanel DockPanel.Dock="Top">
+                        <TextBlock Text="{Binding Name}" FontSize="15" />
                         <TextBlock FontFamily="{DynamicResource font_symbol}" HorizontalAlignment="Center"
                                 Visibility="{Binding IsNowPlaying,Converter={StaticResource bool2vis}}" Text="&#xE1e9;" />
-                    </Grid>-->
-                    <DockPanel DockPanel.Dock="Top">
-                        <TextBlock Text="{Binding Name}" DockPanel.Dock="Left" />
-                        <Button x:Name="btn_item_action" Click="btn_item_action_Click" HorizontalAlignment="Left"
-                                Content="&#xE013;"
-                                Visibility="{Binding IsSelected, Converter={StaticResource bool2vis}, RelativeSource={RelativeSource AncestorType=ListViewItem}}"
-                                Foreground="White" SnapsToDevicePixels="True"
-                                Style="{DynamicResource AppBarButtonStyle}" MinHeight="0" />
                     </DockPanel>
                     <DockPanel DockPanel.Dock="Top">
                         <TextBlock Text="{Binding ArtistName}" Opacity=".5" />
-                        <TextBlock Text="{Binding AlbumName}" Opacity=".3" />
+                        <TextBlock Text="{Binding AlbumName}" Opacity=".5" />
                     </DockPanel>
                     <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource templateSelector}" />
                 </DockPanel>
@@ -168,9 +88,6 @@
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>
-                <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                    <Setter Property="Background" Value="#11888888"></Setter>
-                </Trigger>
                 <Trigger Property="IsSelected" Value="true">
                     <Setter Property="Foreground" Value="White" />
                 </Trigger>
@@ -180,7 +97,7 @@
             <Setter Property="Background" Value="#11888888" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="Opacity" Value="0" />
-            <Setter Property="Padding" Value="10" />
+            <Setter Property="Padding" Value="10,10,10,0" />
             <Setter Property="Foreground" Value="{DynamicResource lightBrush}" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -193,6 +110,12 @@
                                 <Border Background="{DynamicResource skinBrush}" />
                             </Grid>
                             <ContentPresenter Margin="{TemplateBinding Padding}" />
+                            <Button Click="btn_item_action_Click" VerticalAlignment="Top" HorizontalAlignment="Right"
+                                    Content="&#xE0c3;"
+                                    Visibility="{Binding IsSelected, Converter={StaticResource bool2vis}, RelativeSource={RelativeSource AncestorType=ListViewItem}}"
+                                    Foreground="White" SnapsToDevicePixels="True"
+                                    Style="{DynamicResource AppBarButtonStyle}" Padding="0" Width="15" Height="15"
+                                    FontSize="10" MinHeight="0" />
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Normal" />
@@ -234,7 +157,7 @@
             <RowDefinition Height="35" />
         </Grid.RowDefinitions>
         <ListView Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Grid.Row="0" Margin="0,0,0,0"
-                x:Name="virtualView" VirtualizingPanel.VirtualizationMode="Standard" AlternationCount="2"
+                x:Name="virtualView" VirtualizingPanel.VirtualizationMode="Standard"
                 VirtualizingPanel.IsVirtualizing="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                 ScrollViewer.VerticalScrollBarVisibility="Auto" BorderThickness="0" Background="Transparent"
                 PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"

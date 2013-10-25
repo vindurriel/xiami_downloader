@@ -26,7 +26,24 @@ namespace Jean_Doe.MusicControl
                 }));
             }
         }
-
+        static T getChild<T>(DependencyObject p) where T : DependencyObject
+        {
+            if (p == null)
+                return null;
+            if (p is T)
+                return p as T;
+            DependencyObject c = null;
+            var childrenCount = VisualTreeHelper.GetChildrenCount(p);
+            if (childrenCount > 0)
+                for (int i = 0; i < childrenCount; i++)
+                {
+                    c = VisualTreeHelper.GetChild(p, i);
+                    var r = getChild<T>(c);
+                    if (r != null)
+                        return r;
+                }
+            return null;
+        }
         private static bool TryScrollToCenterOfView(this ItemsControl itemsControl, object item)
         {
             // Find the container
@@ -35,14 +52,10 @@ namespace Jean_Doe.MusicControl
             var container = itemsControl.ItemContainerGenerator.ContainerFromIndex(index) as UIElement;
             if (container == null)
             {
-                 return false;
             }
 
             // Find the ScrollContentPresenter
-            ScrollContentPresenter presenter = null;
-            for (Visual vis = container; vis != null && vis != itemsControl; vis = VisualTreeHelper.GetParent(vis) as Visual)
-                if ((presenter = vis as ScrollContentPresenter) != null)
-                    break;
+            ScrollContentPresenter presenter = getChild<ScrollContentPresenter>(itemsControl);
             if (presenter == null) return false;
 
             // Find the IScrollInfo
@@ -53,31 +66,29 @@ namespace Jean_Doe.MusicControl
                 presenter;
 
             // Compute the center point of the container relative to the scrollInfo
-            Size size = container.RenderSize;
-            Point center = container.TransformToAncestor((Visual)scrollInfo).Transform(new Point(size.Width / 2, size.Height / 2));
-            center.Y += scrollInfo.VerticalOffset;
-            center.X += scrollInfo.HorizontalOffset;
-
+            //Size size = container.RenderSize;
+            //Point center = container.TransformToAncestor((Visual)scrollInfo).Transform(new Point(size.Width / 2, size.Height / 2));
+            //center.Y += scrollInfo.VerticalOffset;
+            //center.X += scrollInfo.HorizontalOffset;
+            Point center = new Point();
             // Adjust for logical scrolling
-            if (scrollInfo is StackPanel || scrollInfo is VirtualizingStackPanel || scrollInfo is VirtualizingWrapPanel)
+            if (scrollInfo is StackPanel || scrollInfo is VirtualizingPanel)
             {
-                double logicalCenter = itemsControl.ItemContainerGenerator.IndexFromContainer(container) + 0.5;
-                dynamic x = scrollInfo;
-                Orientation orientation = x.Orientation;
-                if (orientation == Orientation.Horizontal)
-                    center.X = logicalCenter;
-                else
-                    center.Y = logicalCenter;
-                if (scrollInfo is VirtualizingWrapPanel)
+                double logicalCenter = index + 0.5;
+
+                if (scrollInfo is VirtualizingTilePanel)
                 {
-                    var vsp = scrollInfo as VirtualizingWrapPanel;
-                    var section = vsp.AbstractPanel[index].Section;
+                    var vsp = scrollInfo as VirtualizingTilePanel;
+                    center.Y = vsp.ChildHeight * index / vsp.ChildrenPerRow;
+                }
+                else
+                {
+                    dynamic x = scrollInfo;
+                    Orientation orientation = x.Orientation;
                     if (orientation == Orientation.Horizontal)
-                    {
-
-                        center.Y = section;
-                    }
-
+                        center.X = logicalCenter;
+                    else
+                        center.Y = logicalCenter;
                 }
             }
 

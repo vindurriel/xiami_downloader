@@ -179,12 +179,10 @@ public class XiamiSearchProvider : ISearchProvider
                 if (nodes != null)
                     foreach (var x in nodes)
                     {
-                        var duo = getIdName(x, "/album/").Split('\t');
-                        var id = duo[0];
-                        var name = duo[1];
-                        duo = getIdName(x, "/artist/").Split('\t');
-                        var artist_id = duo[0];
-                        var artist_name = duo[1];
+                        string id, name, artist_id, artist_name;
+                        string logo=x.SelectSingleNode(".//img").Attributes["src"].Value;
+                        getIdName(x, "/album/", out id, out name);
+                        getIdName(x, "/artist/", out artist_id, out artist_name);
                         obj.alls.Add(JObject.Parse(string.Format(@"
                     {{
                         Type: 'album',
@@ -192,18 +190,17 @@ public class XiamiSearchProvider : ISearchProvider
                         album_name : '{1}',
                         artist_id : '{2}',
                         artist_name : '{3}',
-                    }}", id, name, artist_id, artist_name)));
+                        logo:'{4}',
+                    }}", id, name, artist_id, artist_name,logo)));
                     }
                 nodes = doc.DocumentNode.SelectNodes("*[contains(concat(' ', @class, ' '), ' collect ')]");
                 if (nodes != null)
                     foreach (var x in nodes)
                     {
-                        var duo = getIdName(x, "/song/showcollect/id/").Split('\t');
-                        var id = duo[0];
-                        var name = duo[1];
-                        duo = getIdName(x, "/u/").Split('\t');
-                        var artist_id = duo[0];
-                        var artist_name = duo[1];
+                        string id, name, artist_id, artist_name;
+                        string logo = x.SelectSingleNode(".//img").Attributes["src"].Value;
+                        getIdName(x, "/song/showcollect/id/", out id, out name);
+                        getIdName(x, "/u/", out artist_id, out artist_name);
                         obj.alls.Add(JObject.Parse(string.Format(@"
                     {{
                         Type: 'collect',
@@ -211,7 +208,8 @@ public class XiamiSearchProvider : ISearchProvider
                         collect_name : '{1}',
                         user_id : '{2}',
                         user_name : '{3}',
-                    }}", id, name, artist_id, artist_name)));
+                        logo:'{4}',
+                    }}", id, name, artist_id, artist_name, logo)));
                     }
             }
             else if (key == "collect_recommend")
@@ -266,12 +264,11 @@ public class XiamiSearchProvider : ISearchProvider
         }
     }
 
-    private static string getIdName(HtmlNode x, string prefix)
+    private static void getIdName(HtmlNode x, string prefix, out string id, out string name)
     {
         var node = x.SelectNodes(string.Format(".//a[starts-with(@href,'{0}')]", prefix)).Last();
-        string id = node.Attributes["href"].Value.Substring(prefix.Length);
-        string name = node.InnerText;
-        return string.Join("\t", id, name);
+        id = node.Attributes["href"].Value.Substring(prefix.Length);
+        name = node.InnerText;
     }
 
     static async Task<SearchResult> SearchByKey(string key, EnumMusicType type)

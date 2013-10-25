@@ -27,7 +27,6 @@ namespace MusicPlayer
         {
             InitializeComponent();
             Global.ListenToEvent("xiami_avatar", SetAvatar);
-            Global.ListenToEvent("xiami_avatar", SetIsLoggedIn);
             Global.ListenToEvent("xiami_nick_name", SetNickName);
             Source = new ObservableCollection<CharmAction>
             {
@@ -63,11 +62,6 @@ namespace MusicPlayer
         public BitmapSource Avatar { get { return avatar; } set { avatar = value; Notify("Avatar"); } }
         void SetAvatar(string s)
         {
-            if (!XiamiClient.GetDefault().IsLoggedIn)
-            {
-                Avatar = null;
-                return;
-            }
             ImageManager.Get(string.Format("user_{0}.jpg", Global.AppSettings["xiami_uid"]), s, (img) => Avatar = img);
         }
         public void SetNickName(string s)
@@ -77,10 +71,7 @@ namespace MusicPlayer
             //else
             //    username.Text = "欢迎，" + s;
         }
-        public void SetIsLoggedIn(String s)
-        {
-            IsLoggedIn = !string.IsNullOrEmpty(s) && XiamiClient.GetDefault().IsLoggedIn;
-        }
+     
         private async void btn_user_song_Click(object sender, RoutedEventArgs e)
         {
             Jean_Doe.MusicControl.SongViewModel.ClearFav();

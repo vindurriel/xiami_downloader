@@ -73,6 +73,7 @@ namespace Jean_Doe.MusicControl
         double[] timelist = null;
         void OnMp3PlayerSongChanged(object sender, SongChangedEventArgs e)
         {
+            source.Clear();
             SongViewModel svm = SongViewModel.GetId(e.Id);
             if (svm == null) return;
             var lrcPath = Path.Combine(Global.AppSettings["DownloadFolder"], svm.FileNameBase + ".lrc");
@@ -97,7 +98,6 @@ namespace Jean_Doe.MusicControl
                     var f = LyricViewModel.LoadLrcFile(lrcPath);
                     UIHelper.RunOnUI(() =>
                     {
-                        source.Clear();
                         foreach (var item in f)
                         {
                             source.Add(item);
@@ -108,7 +108,6 @@ namespace Jean_Doe.MusicControl
                 return;
             }
             var s = LyricViewModel.LoadLrcFile(lrcPath);
-            source.Clear();
             foreach (var item in s)
             {
                 source.Add(item);

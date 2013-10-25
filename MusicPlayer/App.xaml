@@ -26,7 +26,7 @@
                         </Setter>
                     </Style>
                     <Style x:Key="menu_container" TargetType="{x:Type MenuItem}">
-                        <Setter Property="Margin" Value="10,0,0,0" />
+                        <Setter Property="Margin" Value="10" />
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="MenuItem">
@@ -37,30 +37,67 @@
                             </Setter.Value>
                         </Setter>
                     </Style>
+                    <Style TargetType="TextBlock" x:Key="label_base">
+                        <Setter Property="ToolTip" Value="{Binding Text,RelativeSource={RelativeSource Self}}" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="HorizontalAlignment" Value="Left" />
+                        <Setter Property="FontSize" Value="13" />
+                        <Setter Property="LineStackingStrategy" Value="BlockLineHeight" />
+                        <Setter Property="TextWrapping" Value="NoWrap" />
+                        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                    </Style>
                     <DataTemplate x:Key="simple_item">
-                        <Button Style="{StaticResource AppBarButtonStyle}" Padding="2" Width="30" Height="30"
-                                Content="{Binding Icon}" x:Name="btn" Background="Black" Foreground="White"
-                                Tag="{Binding Label}" Click="btn_Click" />
+                        <DockPanel LastChildFill="False" MouseLeftButtonUp="btn_Click">
+                            <Button Style="{StaticResource AppBarButtonStyle}" Padding="2" Width="30" Height="30"
+                                    Content="{Binding Icon}" x:Name="btn" Tag="{Binding Label}" Click="btn_Click" />
+                            <TextBlock Margin="5,0,0,0" Text="{Binding Label}" Foreground="{DynamicResource lightBrush}"
+                                    Style="{DynamicResource label_base}" />
+                        </DockPanel>
                     </DataTemplate>
+                    <DataTemplate x:Key="t_image">
+                        <Grid VerticalAlignment="Top" Width="50" Height="50">
+                            <Border x:Name="border">
+                                <Grid>
+                                    <Ellipse Fill="Transparent" StrokeThickness="17" Stroke="White" Opacity="1" />
+                                    <Ellipse Name="mask" Fill="Transparent" StrokeThickness="15"
+                                            Stroke="{DynamicResource darkBrush}" />
+                                    <Image Stretch="Uniform"
+                                            Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}">
+                                        <Image.OpacityMask>
+                                            <VisualBrush Visual="{Binding ElementName=mask}" />
+                                        </Image.OpacityMask>
+                                    </Image>
+                                    <!--<Ellipse Fill="{DynamicResource darkBrush}" Width="15" Height="15" />-->
+                                    <!--<Grid Margin="3,0,0,0" Visibility="{Binding InFav,Converter={StaticResource bool2vis}}"
+                                x:Name="corner_select" HorizontalAlignment="Center" VerticalAlignment="Top">
+                            <Path
+                                    Stroke="{Binding Foreground,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
+                                    StrokeThickness="1" Data="M 0,0 L 10,0 10,20 5,15 0,20 Z"
+                                    Fill="{DynamicResource skinBrush}" />
+                        </Grid>-->
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                    <Style x:Key="{x:Type ContextMenu}" TargetType="ContextMenu">
+                        <Setter Property="Background" Value="{DynamicResource darkBrush}" />
+                        <Setter Property="OverridesDefaultStyle" Value="True" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ContextMenu}">
+                                    <Border Background="{TemplateBinding Background}" BorderThickness="0">
+                                        <StackPanel ClipToBounds="True" Orientation="Vertical" IsItemsHost="True"
+                                                Margin="0" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="ItemTemplate" Value="{DynamicResource simple_item}" />
+                        <Setter Property="ItemContainerStyle" Value="{DynamicResource menu_container}" />
+                    </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
-            <Style x:Key="{x:Type ContextMenu}" TargetType="ContextMenu">
-                <Setter Property="Background" Value="{DynamicResource skinBrush}" />
-                <Setter Property="OverridesDefaultStyle" Value="True" />
-                <Setter Property="BorderThickness" Value="0" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ContextMenu}">
-                            <Border Background="{TemplateBinding Background}" BorderThickness="0">
-                                <StackPanel ClipToBounds="True" Orientation="Horizontal" IsItemsHost="True" Margin="0" />
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="ItemTemplate" Value="{DynamicResource simple_item}" />
-                <Setter Property="ItemContainerStyle" Value="{DynamicResource menu_container}" />
-            </Style>
-
         </ResourceDictionary>
     </Application.Resources>
 </Application>

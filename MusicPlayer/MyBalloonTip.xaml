@@ -62,12 +62,7 @@
                 <RowDefinition />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Grid Width="60" Height="60" VerticalAlignment="Top">
-                <Border BorderBrush="{DynamicResource lightBrush}" BorderThickness="3">
-                    <Image IsHitTestVisible="False" Source="{Binding ImageSource}" Stretch="Uniform"
-                            VerticalAlignment="Top" />
-                </Border>
-            </Grid>
+            <ContentControl VerticalAlignment="Top" ContentTemplate="{DynamicResource t_image}" Content="{Binding}" />
             <ScrollViewer Grid.Column="1" Grid.RowSpan="2" Style="{StaticResource scrollstyle}" VerticalAlignment="Top">
                 <StackPanel>
                     <TextBlock Text="{Binding Name}" Style="{DynamicResource label_base}" />

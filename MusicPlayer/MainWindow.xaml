@@ -117,7 +117,7 @@
                         </Style>
                     </DockPanel.Resources>
                     <my:UserActionsControl />
-               
+
 
                     <ToggleButton Tag="2">
                         <DockPanel HorizontalAlignment="Center">
@@ -239,7 +239,7 @@
         </Grid>
         <Grid x:Name="part_nowPlaying" Height="60" VerticalAlignment="Bottom" Margin="2" DataContext="{x:Null}"
                 Background="{DynamicResource selectBrush}" Grid.Row="1">
-        <Grid.RowDefinitions>
+            <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
@@ -249,11 +249,7 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <DockPanel Grid.Row="1">
-                <Border BorderBrush="{DynamicResource lightBrush}" BorderThickness="0">
-                    <Image Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}"
-                            Stretch="Uniform">
-                    </Image>
-                </Border>
+                <ContentControl ContentTemplate="{DynamicResource t_image}" Content="{Binding}" />
                 <StackPanel Margin="5,3,0,0">
                     <TextBlock Text="{Binding Name}" />
                     <TextBlock Text="{Binding ArtistName}" />
@@ -268,9 +264,10 @@
                         <Setter Property="Margin" Value="10,0" />
                     </Style>
                 </DockPanel.Resources>
-                <Button x:Name="btn_select_now_playing" Content="&#xE1e9;" Click="btn_select_now_playing_Click" ToolTip="选中正在播放"/>
-                <Button x:Name="btn_plause" Content="&#xE102;" Click="btn_plause_Click" ToolTip="播放/暂停"/>
-                <Button x:Name="btn_next" Content="&#xE101;" Click="btn_next_Click" ToolTip="下一首"/>
+                <Button x:Name="btn_select_now_playing" Content="&#xE1e9;" Click="btn_select_now_playing_Click"
+                        ToolTip="选中正在播放" />
+                <Button x:Name="btn_plause" Content="&#xE102;" Click="btn_plause_Click" ToolTip="播放/暂停" />
+                <Button x:Name="btn_next" Content="&#xE101;" Click="btn_next_Click" ToolTip="下一首" />
             </DockPanel>
             <Grid Grid.Row="1" Grid.Column="2" x:Name="lrc">
                 <controls:LyricControl Margin="0,-7,0,0" HorizontalAlignment="Right" x:Name="lyricShow"

@@ -16,21 +16,6 @@ namespace Jean_Doe.MusicControl
             this.RenderTransform = _trans;
         }
 
-        //// Dependency property that controls the size of the child elements
-        //public static readonly DependencyProperty ChildSizeProperty
-        //   = DependencyProperty.RegisterAttached("ChildSize", typeof(double), typeof(VirtualizingTilePanel),
-        //      new FrameworkPropertyMetadata(200.0d, FrameworkPropertyMetadataOptions.AffectsMeasure |
-        //      FrameworkPropertyMetadataOptions.AffectsArrange));
-
-        //// Accessor for the child size dependency property
-        //public double ChildSize
-        //{
-        //    get { return (double)GetValue(ChildSizeProperty); }
-        //    set { SetValue(ChildSizeProperty, value); }
-        //}
-
-
-
         public double ChildWidth
         {
             get { return (double)GetValue(ChildWidthProperty); }
@@ -234,12 +219,14 @@ namespace Jean_Doe.MusicControl
         private void ArrangeChild(int itemIndex, UIElement child, Size finalSize)
         {
             int childrenPerRow = CalculateChildrenPerRow(finalSize);
-
+            ChildrenPerRow = childrenPerRow;
             int row = itemIndex / childrenPerRow;
             int column = itemIndex % childrenPerRow;
 
             child.Arrange(new Rect(column * this.ChildWidth, row * this.ChildHeight, this.ChildWidth, this.ChildHeight));
         }
+
+        public int ChildrenPerRow { get; private set; }
 
         /// <summary>
         /// Helper function for tiling layout
