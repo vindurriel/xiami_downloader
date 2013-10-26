@@ -47,7 +47,7 @@ namespace Jean_Doe.Common
                 {"不限制","9999"},
             }},
             {"Theme", new Dictionary<string,string>{
-                {"明亮","#eee #000 #ddd"},
+                {"明亮","#eee #000 #fff"},
                 {"黑暗","#333 #eee #000"},
             }},
             {"SongnamePattern", new Dictionary<string,string>{

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         x:Class="MusicPlayer.MainWindow" WindowStyle="None" Foreground="{DynamicResource lightBrush}"
         AllowsTransparency="True" Background="#01ffffff" Icon="Resources/icon.ico" SnapsToDevicePixels="True"
-        FontSize="15" ResizeMode="CanResizeWithGrip" x:Name="me" MinHeight="480" SizeToContent="Manual" MinWidth="350"
+        FontSize="15" ResizeMode="CanResizeWithGrip" x:Name="me" MinHeight="480" SizeToContent="Manual" MinWidth="250"
         FontFamily="{DynamicResource font}" Title="虾米下载" BorderWidth="5">
     <controls:ResizeWindow.Resources>
         <controls:BoolToVisibilityConverter x:Key="bool2vis" />
@@ -16,14 +16,14 @@
             <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetProperty="Height" />
         </Storyboard>
         <Storyboard x:Key="SlideInRight">
-            <ThicknessAnimation Duration="0:0:.2" Storyboard.TargetProperty="Margin" From="30,0,-30,0" To="0"
+            <ThicknessAnimation Duration="0:0:.3" Storyboard.TargetProperty="Margin" From="30,0,-30,0" To="0"
                     EasingFunction="{StaticResource easeFunc}" />
             <DoubleAnimation Duration="0:0:.1" Storyboard.TargetProperty="Opacity" From="0" To="1" />
             <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="IsHitTestVisible">
                 <DiscreteBooleanKeyFrame KeyTime="0" Value="True" />
             </BooleanAnimationUsingKeyFrames>
         </Storyboard>
-        <Storyboard x:Key="SlideInLeft">
+        <Storyboard x:Key="SlideInLeft" BeginTime="0:0:0.1">
             <ThicknessAnimation Duration="0:0:.2" Storyboard.TargetProperty="Margin" From="-30,0,30,0" To="0"
                     EasingFunction="{StaticResource easeFunc}" />
             <DoubleAnimation Duration="0:0:.1" Storyboard.TargetProperty="Opacity" From="0" To="1" />
@@ -36,6 +36,37 @@
             <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="IsHitTestVisible">
                 <DiscreteBooleanKeyFrame KeyTime="0" Value="False" />
             </BooleanAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="MoveFar">
+
+        </Storyboard>
+        <Storyboard x:Key="MoveNear">
+            <DoubleAnimation Duration="0:0:0.2" EasingFunction="{DynamicResource easeFunc}"
+                    Storyboard.TargetProperty="ScaleX" To="1" />
+            <DoubleAnimation Duration="0:0:0.2" EasingFunction="{DynamicResource easeFunc}"
+                    Storyboard.TargetProperty="ScaleY" To="1" />
+            <DoubleAnimation Duration="0:0:0.2" EasingFunction="{DynamicResource easeFunc}"
+                    Storyboard.TargetProperty="Opacity" To="1" />
+        </Storyboard>
+        <Storyboard x:Key="SlideUp">
+            <DoubleAnimation BeginTime="0:0:.3" Duration="0:0:0.5" Storyboard.TargetName="part_nowPlaying"
+                    EasingFunction="{DynamicResource easeFunc}" Storyboard.TargetProperty="Height" />
+            <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetName="content_scale"
+                    EasingFunction="{DynamicResource easeFunc}" Storyboard.TargetProperty="ScaleX" To="0.7" />
+            <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetName="content_scale"
+                    EasingFunction="{DynamicResource easeFunc}" Storyboard.TargetProperty="ScaleY" To="0.7" />
+            <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetName="content_mask"
+                    EasingFunction="{DynamicResource easeFunc}" Storyboard.TargetProperty="Opacity" To=".5" />
+        </Storyboard>
+        <Storyboard x:Key="SlideDown">
+            <DoubleAnimation Duration="0:0:0.5" EasingFunction="{DynamicResource easeFunc}"
+                    Storyboard.TargetName="part_nowPlaying" Storyboard.TargetProperty="Height" />
+            <DoubleAnimation BeginTime="0:0:.4" Duration="0:0:0.2" Storyboard.TargetName="content_scale"
+                    EasingFunction="{DynamicResource easeFunc}" Storyboard.TargetProperty="ScaleX" To="1" />
+            <DoubleAnimation BeginTime="0:0:.4" Duration="0:0:0.2" Storyboard.TargetName="content_scale"
+                    EasingFunction="{DynamicResource easeFunc}" Storyboard.TargetProperty="ScaleY" To="1" />
+            <DoubleAnimation BeginTime="0:0:.4" Duration="0:0:0.2" Storyboard.TargetName="content_mask"
+                    EasingFunction="{DynamicResource easeFunc}" Storyboard.TargetProperty="Opacity" To="0" />
         </Storyboard>
         <Storyboard x:Key="anim_show_more" Storyboard.TargetName="navi">
             <DoubleAnimation Storyboard.TargetProperty="Height" Duration="0:0:0.2" To="80"
@@ -88,7 +119,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <!--navigation-->
-            <Grid x:Name="navi" HorizontalAlignment="Stretch" Height="50">
+            <Grid x:Name="navi" HorizontalAlignment="Stretch" Background="{DynamicResource selectBrush}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -115,76 +146,38 @@
                         <Style TargetType="ToggleButton" BasedOn="{StaticResource toggleStyle}">
                             <Setter Property="Background" Value="{DynamicResource selectBrush}" />
                         </Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource AppBarButtonStyle}">
+                            <Setter Property="Margin" Value="5,0" />
+                            <Setter Property="MinHeight" Value="0" />
+                            <Setter Property="Width" Value="50" />
+                            <Setter Property="Height" Value="50" />
+                            <Setter Property="FontSize" Value="20" />
+                        </Style>
                     </DockPanel.Resources>
-                    <my:UserActionsControl />
-
-
-                    <ToggleButton Tag="2">
-                        <DockPanel HorizontalAlignment="Center">
-                            <TextBlock Text="&#xE11a;" Style="{StaticResource glyph}" />
-                            <TextBlock
-                                    Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_search}"
-                                    Text="{Binding ItemsCount, ElementName=list_search, StringFormat=\{0\}}" />
-                        </DockPanel>
-                    </ToggleButton>
-                    <ToggleButton Tag="3">
-                        <DockPanel HorizontalAlignment="Center">
-                            <TextBlock Text="&#xE118;" Style="{StaticResource glyph}" />
-                            <TextBlock
-                                    Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}, ElementName=list_download}"
-                                    Text="{Binding ItemsCount, ElementName=list_download, StringFormat= \{0\}}" />
-                        </DockPanel>
-                    </ToggleButton>
-
-                    <ToggleButton Tag="4">
-                        <DockPanel HorizontalAlignment="Center">
-                            <TextBlock Text="&#xE142;" Style="{StaticResource glyph}" />
-                            <TextBlock
-                                    Visibility="{Binding ItemsCount, Converter={StaticResource int2vis}, ElementName=list_complete}"
-                                    Text="{Binding ItemsCount, ElementName=list_complete, StringFormat=\{0\}}" />
-                        </DockPanel>
-                    </ToggleButton>
-                    <Button x:Name="btn_close" Background="Transparent" Foreground="{DynamicResource lightBrush}"
-                            MinWidth="0" Width="50" Margin="0" Height="50" Click="btn_close_Click"
-                            DockPanel.Dock="Right">
-                        <TextBlock Text="&#xe0e1;" Style="{StaticResource glyph}" />
-                    </Button>
-                    <Button x:Name="btn_min" Background="Transparent" Foreground="{DynamicResource lightBrush}"
-                            MinWidth="0" Width="50" Margin="0" Height="50" Click="btn_min_Click" DockPanel.Dock="Right">
-                        <TextBlock Text="&#xE0A1;" Style="{StaticResource glyph}" />
-                    </Button>
-                    <Button x:Name="btn_restart" Visibility="Collapsed" Background="Transparent"
-                            Foreground="{DynamicResource lightBrush}" ToolTip="重启以更新程序" MinWidth="0" Width="50"
-                            Margin="0" Height="50" Click="btn_restart_Click" DockPanel.Dock="Right">
-                        <TextBlock Text="&#xe149;" Style="{StaticResource glyph}" />
-                    </Button>
-                    <ToggleButton DockPanel.Dock="Right" Tag="5">
-                        <DockPanel HorizontalAlignment="Center">
-                            <TextBlock Text="&#xE115;" Style="{StaticResource glyph}" />
-                        </DockPanel>
-                    </ToggleButton>
-                    <Grid Background="{DynamicResource selectBrush}">
-                        <Grid MouseLeftButtonDown="btn_move_MouseDown" Background="{DynamicResource darkBrush}">
-                            <Grid.Style>
-                                <Style TargetType="Grid">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Opacity" Value="1" />
-                                        </Trigger>
-                                        <Trigger Property="IsMouseOver" Value="False">
-                                            <Setter Property="Opacity" Value="0" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Grid.Style>
-                        </Grid>
-                    </Grid>
+                    <my:UserActionsControl Margin="5" />
+                    <ContentControl x:Name="heading" Margin="5,0" DataContext="{x:Null}" Content="{Binding}">
+                        <ContentControl.ContentTemplate>
+                            <DataTemplate>
+                                <Button PreviewMouseLeftButtonUp="header_MouseLeftButtonUp"
+                                        Style="{DynamicResource AppBarButtonStyle}" ToolTip="{Binding Label}"
+                                        Content="{Binding Icon}" />
+                            </DataTemplate>
+                        </ContentControl.ContentTemplate>
+                    </ContentControl>
+                    <TextBlock x:Name="list_count" Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}}"
+                            Text="{Binding ItemsCount, StringFormat= \{0\}}" VerticalAlignment="Center" />
+                    <Button x:Name="btn_close" Content="&#xe0e1;" Click="btn_close_Click" DockPanel.Dock="Right" />
+                    <Button x:Name="btn_min" Content="&#xE0A1;" Click="btn_min_Click" DockPanel.Dock="Right" />
+                    <Button x:Name="btn_restart" Visibility="Collapsed" ToolTip="重启以更新程序" Content="&#xe149;"
+                            MinWidth="0" Click="btn_restart_Click" DockPanel.Dock="Right" />
+                    <Grid MouseLeftButtonDown="btn_move_MouseDown" Background="#01ffffff" />
                 </DockPanel>
             </Grid>
-            <Grid x:Name="contents" Grid.Row="1" Margin="50,30,0,0">
-                <Grid x:Name="page5" Opacity="0" IsHitTestVisible="false">
-                </Grid>
-                <Grid x:Name="page1" Opacity="0" IsHitTestVisible="false">
+            <Grid x:Name="contents" Grid.Row="1" Margin="10,10,0,0" RenderTransformOrigin=".5,0">
+                <Grid.RenderTransform>
+                    <ScaleTransform x:Name="content_scale" ScaleX="1" ScaleY="1" />
+                </Grid.RenderTransform>
+                <Grid Opacity="0" IsHitTestVisible="false">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="30" />
@@ -210,10 +203,10 @@
                         <controls:SearchSongListControl Margin="0,10,0,0" x:Name="list_search" DockPanel.Dock="Top" />
                     </DockPanel>
                 </Grid>
-                <Grid x:Name="page2" Opacity="0" IsHitTestVisible="false">
+                <Grid Opacity="0" IsHitTestVisible="false">
                     <controls:DownloadSongListControl x:Name="list_download" />
                 </Grid>
-                <Grid x:Name="page3" Opacity="0" IsHitTestVisible="false">
+                <Grid Opacity="0" IsHitTestVisible="false">
                     <Grid Margin="0,0,0,0">
                         <Grid.RowDefinitions>
                             <RowDefinition />
@@ -224,7 +217,7 @@
                         </DockPanel>
                     </Grid>
                 </Grid>
-                <Grid x:Name="page4" Opacity="0" IsHitTestVisible="false">
+                <Grid Opacity="0" IsHitTestVisible="false">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
@@ -232,12 +225,14 @@
                     <my:ConfigPage x:Name="configPage" />
                 </Grid>
             </Grid>
+            <Grid x:Name="content_mask" Opacity="0" Background="{DynamicResource selectBrush}" Grid.Row="1"
+                    IsHitTestVisible="False" />
             <Grid x:Name="footer" Grid.Row="2" Margin="0,0,0,5">
                 <controls:ProgressBar x:Name="busyIndicator" Foreground="{DynamicResource skinBrush}" Margin="0"
                         VerticalAlignment="Center" HorizontalAlignment="Stretch" IsIndeterminate="False" ItemWidth="5" />
             </Grid>
         </Grid>
-        <Grid x:Name="part_nowPlaying" Height="60" VerticalAlignment="Bottom" Margin="2" DataContext="{x:Null}"
+        <Grid x:Name="part_nowPlaying" Height="60" VerticalAlignment="Bottom" DataContext="{x:Null}"
                 Background="{DynamicResource selectBrush}" Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
@@ -246,16 +241,18 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="auto" />
-                <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <DockPanel Grid.Row="1">
-                <ContentControl ContentTemplate="{DynamicResource t_image}" Content="{Binding}" />
-                <StackPanel Margin="5,3,0,0">
-                    <TextBlock Text="{Binding Name}" />
-                    <TextBlock Text="{Binding ArtistName}" />
+            <DockPanel Grid.Row="0" Height="60" x:Name="info_now" Visibility="Collapsed" HorizontalAlignment="Stretch"
+                    Background="#01ffffff">
+                <ContentControl ContentTemplate="{DynamicResource t_image}" VerticalAlignment="Center"
+                        DockPanel.Dock="Left" Margin="5" Content="{Binding}" />
+                <StackPanel Margin="5,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Name}" Style="{DynamicResource label_base}" FontSize="16" />
+                    <TextBlock Text="{Binding ArtistName}" Style="{DynamicResource label_base}" />
                 </StackPanel>
             </DockPanel>
-            <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="False" HorizontalAlignment="Center">
+            <DockPanel Grid.Row="0" Grid.Column="1" LastChildFill="False" HorizontalAlignment="Center" Margin="0,0,20,0"
+                    Height="{Binding Height,ElementName=info_now}" VerticalAlignment="Center">
                 <DockPanel.Resources>
                     <Style TargetType="Button" BasedOn="{StaticResource AppBarButtonStyle}">
                         <Setter Property="Width" Value="30" />
@@ -265,16 +262,19 @@
                     </Style>
                 </DockPanel.Resources>
                 <Button x:Name="btn_select_now_playing" Content="&#xE1e9;" Click="btn_select_now_playing_Click"
-                        ToolTip="选中正在播放" />
+                        ToolTip="" />
                 <Button x:Name="btn_plause" Content="&#xE102;" Click="btn_plause_Click" ToolTip="播放/暂停" />
                 <Button x:Name="btn_next" Content="&#xE101;" Click="btn_next_Click" ToolTip="下一首" />
             </DockPanel>
-            <Grid Grid.Row="1" Grid.Column="2" x:Name="lrc">
-                <controls:LyricControl Margin="0,-7,0,0" HorizontalAlignment="Right" x:Name="lyricShow"
-                        MaxHeight="{Binding ActualHeight,ElementName=lrc}" />
+            <Grid Grid.Row="1" Grid.ColumnSpan="3" Margin="0,5,0,0">
+                <Slider VerticalAlignment="Top" Background="Transparent" Cursor="Hand"
+                        Foreground="{DynamicResource skinBrush}" x:Name="slider" Margin="0,0,0,0" />
+                <Grid x:Name="lrc" Margin="0,5,0,0">
+                    <controls:LyricControl x:Name="lyricShow" HorizontalAlignment="Center"
+                            MaxHeight="{Binding ActualHeight,ElementName=lrc}" />
+                </Grid>
             </Grid>
-            <Slider Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Top" Background="Transparent" Cursor="Hand"
-                    Foreground="{DynamicResource skinBrush}" x:Name="slider" Margin="0,0,0,0" />
+
         </Grid>
         <my:ActionBar Height="50" VerticalAlignment="Bottom" Margin="2" x:Name="charmBar"
                 Background="{DynamicResource selectBrush}" />

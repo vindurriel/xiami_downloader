@@ -67,8 +67,7 @@
                             ContentTemplate="{StaticResource t_image}" />
                     <DockPanel DockPanel.Dock="Top">
                         <TextBlock Text="{Binding Name}" FontSize="15" />
-                        <TextBlock FontFamily="{DynamicResource font_symbol}" HorizontalAlignment="Center"
-                                Visibility="{Binding IsNowPlaying,Converter={StaticResource bool2vis}}" Text="&#xE1e9;" />
+
                     </DockPanel>
                     <DockPanel DockPanel.Dock="Top">
                         <TextBlock Text="{Binding ArtistName}" Opacity=".5" />
@@ -110,12 +109,17 @@
                                 <Border Background="{DynamicResource skinBrush}" />
                             </Grid>
                             <ContentPresenter Margin="{TemplateBinding Padding}" />
-                            <Button Click="btn_item_action_Click" VerticalAlignment="Top" HorizontalAlignment="Right"
-                                    Content="&#xE0c3;"
-                                    Visibility="{Binding IsSelected, Converter={StaticResource bool2vis}, RelativeSource={RelativeSource AncestorType=ListViewItem}}"
-                                    Foreground="White" SnapsToDevicePixels="True"
-                                    Style="{DynamicResource AppBarButtonStyle}" Padding="0" Width="15" Height="15"
-                                    FontSize="10" MinHeight="0" />
+                            <Grid Width="20" HorizontalAlignment="Right">
+                                <Button Click="btn_item_action_Click" VerticalAlignment="Top" Content="&#xE0c3;"
+                                        Visibility="{Binding IsSelected, Converter={StaticResource bool2vis}, RelativeSource={RelativeSource AncestorType=ListViewItem}}"
+                                        Foreground="White" SnapsToDevicePixels="True" Width="15"
+                                        Style="{DynamicResource AppBarButtonStyle}" Padding="0" FontSize="12"
+                                        MinHeight="0" />
+                                <TextBlock FontFamily="{DynamicResource font_symbol}" VerticalAlignment="Bottom"
+                                        Visibility="{Binding IsNowPlaying,Converter={StaticResource bool2vis}}"
+                                        Text="&#xE1e9;" />
+
+                            </Grid>
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Normal" />
@@ -147,47 +151,50 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <Grid Margin="-50,0,0,0">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Height="35" />
-        </Grid.RowDefinitions>
-        <ListView Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Grid.Row="0" Margin="0,0,0,0"
-                x:Name="virtualView" VirtualizingPanel.VirtualizationMode="Standard"
+    <Grid Margin="0,0,0,0">
+        <ListView Margin="0,0,0,0" x:Name="virtualView" VirtualizingPanel.VirtualizationMode="Standard"
                 VirtualizingPanel.IsVirtualizing="True" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                 ScrollViewer.VerticalScrollBarVisibility="Auto" BorderThickness="0" Background="Transparent"
                 PreviewMouseLeftButtonDown="List_PreviewMouseLeftButtonDown" PreviewMouseMove="List_MouseMove"
                 ItemContainerStyle="{StaticResource lviStyle}" ItemsSource="{Binding}" SelectionMode="Extended"
                 ItemTemplate="{StaticResource listTemplate}" ItemsPanel="{StaticResource vsp}">
         </ListView>
-        <TextBlock Grid.Column="1" x:Name="emptyText" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top"
+        <TextBlock x:Name="emptyText" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top"
                 Style="{DynamicResource label_base}" Margin="0,10,0,0">列表为空</TextBlock>
-        <Grid Grid.Row="1" Width="50" Margin="0,5,0,0">
-            <ToggleButton Style="{DynamicResource toggleStyle}" Grid.Row="1" MinWidth="0" Width="30" Height="30"
-                    Background="Transparent" BorderThickness="0" HorizontalAlignment="Center" Padding="0"
-                    FontFamily="{DynamicResource font_symbol}" Content="&#xE16E;" ToolTip="筛选" x:Name="btn_more" />
-        </Grid>
-        <DockPanel Margin="0,5,0,0" Grid.Column="1" Grid.Row="1"
-                Visibility="{Binding IsChecked,Converter={StaticResource bool2vis},ElementName=btn_more}">
-            <ComboBox x:Name="combo_sort">
-                <ComboBoxItem Tag="Default_Asc" IsSelected="True">无排序</ComboBoxItem>
-                <ComboBoxItem Tag="Recommends_Dsc">推荐数降序</ComboBoxItem>
-                <ComboBoxItem Tag="Name_Asc">名称升序</ComboBoxItem>
-                <ComboBoxItem Tag="AlbumName_Asc">专辑升序</ComboBoxItem>
-                <ComboBoxItem Tag="ArtistName_Asc">艺术家升序</ComboBoxItem>
-                <ComboBoxItem Tag="Playlist_Asc">播放顺序</ComboBoxItem>
-            </ComboBox>
-            <Grid Margin="10,0" x:Name="part_filter">
-                <TextBox VerticalContentAlignment="Center" Background="{DynamicResource selectBrush}" Opacity="0.2"
-                        HorizontalAlignment="Left" Foreground="{DynamicResource lightBrush}" BorderThickness="0"
-                        Width="200" x:Name="input_filter" />
-                <TextBlock VerticalAlignment="Center" Margin="3" x:Name="mask_filter" Text="输入字符以过滤"
-                        HorizontalAlignment="Left" IsHitTestVisible="False" Foreground="{DynamicResource lightBrush}" />
-            </Grid>
+        <Border Background="{DynamicResource darkBrush}" VerticalAlignment="Bottom" Height="50" Margin="0,0,20,0"
+                IsHitTestVisible="False">
+            <Border.OpacityMask>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#0000" Offset="0" />
+                    <GradientStop Color="#000" Offset="1" />
+                </LinearGradientBrush>
+            </Border.OpacityMask>
+        </Border>
+        <DockPanel VerticalAlignment="Bottom" LastChildFill="False" Margin="0,0,20,0">
+            <ToggleButton DockPanel.Dock="Right" Style="{DynamicResource toggleStyle}"
+                    Background="{DynamicResource darkBrush}" MinWidth="0" Width="30" Height="30" BorderThickness="0"
+                    Padding="0" FontFamily="{DynamicResource font_symbol}" Content="&#xE16E;" ToolTip="筛选"
+                    x:Name="btn_more" />
+            <DockPanel DockPanel.Dock="Right" Height="30"
+                    Visibility="{Binding IsChecked,Converter={StaticResource bool2vis},ElementName=btn_more}"
+                    Background="{DynamicResource darkBrush}">
+                <ComboBox x:Name="combo_sort">
+                    <ComboBoxItem Tag="Default_Asc" IsSelected="True">无排序</ComboBoxItem>
+                    <ComboBoxItem Tag="Recommends_Dsc">推荐数降序</ComboBoxItem>
+                    <ComboBoxItem Tag="Name_Asc">名称升序</ComboBoxItem>
+                    <ComboBoxItem Tag="AlbumName_Asc">专辑升序</ComboBoxItem>
+                    <ComboBoxItem Tag="ArtistName_Asc">艺术家升序</ComboBoxItem>
+                    <ComboBoxItem Tag="Playlist_Asc">播放顺序</ComboBoxItem>
+                </ComboBox>
+                <Grid Margin="10,0" x:Name="part_filter">
+                    <TextBox VerticalContentAlignment="Center" Background="{DynamicResource selectBrush}" Opacity="0.2"
+                            HorizontalAlignment="Left" Foreground="{DynamicResource lightBrush}" BorderThickness="0"
+                            Width="200" x:Name="input_filter" />
+                    <TextBlock VerticalAlignment="Center" Margin="3" x:Name="mask_filter" Text="输入字符以过滤"
+                            HorizontalAlignment="Left" IsHitTestVisible="False"
+                            Foreground="{DynamicResource lightBrush}" />
+                </Grid>
+            </DockPanel>
         </DockPanel>
     </Grid>
 </UserControl>

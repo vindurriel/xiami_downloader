@@ -42,14 +42,7 @@ namespace Jean_Doe.MusicControl
 
         void btn_more_Click(object sender, RoutedEventArgs e)
         {
-            if (btn_more.IsChecked == true)
-            {
-                Grid.SetRowSpan(virtualView, 1);
-            }
-            else
-            {
-                Grid.SetRowSpan(virtualView, 2);
-            }
+
         }
         protected void addCommonActions()
         {

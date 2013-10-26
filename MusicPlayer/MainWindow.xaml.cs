@@ -36,20 +36,26 @@ namespace MusicPlayer
             get { return page; }
             set
             {
-                if (value == page) return;
+                if (value > headingSource.Count - 1) value = 0;
                 bool isLeft = value > page;
                 page = value;
+
                 foreach (var header in headers.Children.OfType<ToggleButton>())
                 {
                     header.IsChecked = header.Tag.ToString() == page.ToString();
                 }
-                if (contents.Children.Count > page - 1)
+                if (contents.Children.Count > page)
                 {
-                    var content = contents.Children[page - 1] as FrameworkElement;
+                    var content = contents.Children[page] as FrameworkElement;
                     if (content != null)
-                        showPage(content, isLeft);
+                        showPage(content);
                 }
                 ActionBarService.ContextName = page.ToString();
+                heading.DataContext = headingSource[page];
+                if (page < lists.Count)
+                    list_count.DataContext = lists[page];
+                else
+                    list_count.DataContext = null;
             }
         }
         void showPage(FrameworkElement content, bool isLeft = true)
@@ -59,24 +65,27 @@ namespace MusicPlayer
             var slideOut = FindResource("SlideOut") as Storyboard;
             var slideIn = FindResource(slideInName) as Storyboard;
             if (lastPage != null)
+            {
                 slideOut.Begin(lastPage, true);
+            }
             slideIn.Begin(content, true);
             lastPage = content;
         }
+
         public MainWindow()
         {
             Global.LoadSettings();
             Global.ListenToEvent("EnableMagnet", SetEnableMagnet);
             Global.ListenToEvent("ColorSkin", SetColorSkin);
             Global.ListenToEvent("Theme", SetTheme);
+            Loaded += MainWindow_Loaded;
+            Closing += MainWindow_Closing;
             InitializeComponent();
             Global.ListenToEvent("PlayNextMode", SetPlayNextMode);
             Artwork.DataBus.DataBus.Set("MainWindow", this);
             DataContext = this;
             MessageBus.Instance.Subscribe(this);
             loadSongLists();
-            Loaded += MainWindow_Loaded;
-            Closing += MainWindow_Closing;
             ActionBarService.RegisterActionBar(this.charmBar);
             Artwork.DataBus.DataBus.Set("list_download", list_download);
             Mp3Player.SongChanged += OnMp3PlayerSongChanged;
@@ -94,7 +103,17 @@ namespace MusicPlayer
                 item.PropertyChanged += songlist_PropertyChanged;
                 item.ListView.SelectionChanged += ListView_SelectionChanged;
             }
+            content_mask.MouseLeftButtonUp += btn_toggle_detail_Click;
+            info_now.MouseLeftButtonUp += btn_toggle_detail_Click;
+            headingSource = new List<CharmAction>
+                {
+                    new CharmAction("在线", "\xE11a", (a,b)=>Page=0),
+                    new CharmAction("下载", "\xE118", (a,b)=>Page=1),
+                    new CharmAction("本地", "\xE142", (a,b)=>Page=2),
+                    new CharmAction("配置", "\xE115", (a,b)=>Page=3),
+                };
         }
+
 
         private void SetPlayNextMode(string s)
         {
@@ -114,7 +133,7 @@ namespace MusicPlayer
                     break;
             }
             btn_select_now_playing.Content = c;
-            btn_select_now_playing.ToolTip = tooltip;
+            btn_select_now_playing.ToolTip = "播放模式:" + tooltip;
         }
         List<SongListControl> lists;
         bool isSyncingSelection = false;
@@ -138,11 +157,14 @@ namespace MusicPlayer
         {
             get
             {
-                foreach (var item in lists)
+                try
                 {
-                    if (item.IsHitTestVisible) return item;
+                    return lists[page];
                 }
-                return lists[0];
+                catch
+                {
+                }
+                return list_complete;
             }
         }
         void songlist_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -208,6 +230,7 @@ namespace MusicPlayer
                 });
                 SongViewModel.NowPlaying.IsNowPlaying = true;
                 var now = SongViewModel.NowPlaying;
+                info_now.Visibility = Visibility.Visible;
                 part_nowPlaying.DataContext = now;
                 Title = string.Format("{0} - {1}      ", now.Name, now.ArtistName);
                 counter = 0;
@@ -240,9 +263,9 @@ namespace MusicPlayer
         void initActionBar()
         {
             //ActionBarService.RegisterContext("1", userPage, "IsLoggedIn");
-            ActionBarService.RegisterContext("2", list_search, "SelectCount");
-            ActionBarService.RegisterContext("3", list_download, "SelectCount");
-            ActionBarService.RegisterContext("4", list_complete, "SelectCount");
+            ActionBarService.RegisterContext("0", list_search, "SelectCount");
+            ActionBarService.RegisterContext("1", list_download, "SelectCount");
+            ActionBarService.RegisterContext("2", list_complete, "SelectCount");
         }
         void MainWindow_Loaded(object sender, RoutedEventArgs a)
         {
@@ -473,7 +496,15 @@ namespace MusicPlayer
         {
             currentList.PerformAction("播放/暂停");
         }
-
+        private void btn_toggle_detail_Click(object sender, RoutedEventArgs e)
+        {
+            bool flag = part_nowPlaying.Height == 60;
+            var s = (this.TryFindResource(flag ? "SlideUp" : "SlideDown") as Storyboard);
+            (s.Children[0] as DoubleAnimation).To = flag ? content_mask.ActualHeight : 60;
+            content_mask.IsHitTestVisible = flag;
+            info_now.IsHitTestVisible = !flag;
+            s.Begin();
+        }
         private void btn_next_Click(object sender, RoutedEventArgs e)
         {
             currentList.PerformAction("下一首");
@@ -509,6 +540,18 @@ namespace MusicPlayer
             else if (cmd == "pause")
                 UIHelper.RunOnUI(() => btn_plause_Click(null, null));
             UIHelper.RunOnUI(() => ActionBarService.Refresh());
+        }
+        List<CharmAction> headingSource;
+        private void header_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var cm = new ContextMenu();
+            cm.PreviewMouseLeftButtonUp += (s, a) => (s as ContextMenu).IsOpen = false;
+            var current = heading.DataContext as CharmAction;
+            cm.ItemsSource = headingSource.Where(x => x != current);
+            cm.Placement = PlacementMode.Bottom;
+            cm.PlacementTarget = sender as UIElement;
+            cm.StaysOpen = false;
+            cm.IsOpen = true;
         }
     }
 }
