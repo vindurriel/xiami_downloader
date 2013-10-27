@@ -155,15 +155,9 @@
                         </Style>
                     </DockPanel.Resources>
                     <my:UserActionsControl Margin="5" />
-                    <ContentControl x:Name="heading" Margin="5,0" DataContext="{x:Null}" Content="{Binding}">
-                        <ContentControl.ContentTemplate>
-                            <DataTemplate>
-                                <Button PreviewMouseLeftButtonUp="header_MouseLeftButtonUp"
-                                        Style="{DynamicResource AppBarButtonStyle}" ToolTip="{Binding Label}"
-                                        Content="{Binding Icon}" />
-                            </DataTemplate>
-                        </ContentControl.ContentTemplate>
-                    </ContentControl>
+                    <Button x:Name="heading" Margin="5,0" DataContext="{x:Null}"
+                            PreviewMouseLeftButtonUp="header_MouseLeftButtonUp" ToolTip="{Binding Label}"
+                            Content="{Binding Icon}" />
                     <TextBlock x:Name="list_count" Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}}"
                             Text="{Binding ItemsCount, StringFormat= \{0\}}" VerticalAlignment="Center" />
                     <Button x:Name="btn_close" Content="&#xe0e1;" Click="btn_close_Click" DockPanel.Dock="Right" />

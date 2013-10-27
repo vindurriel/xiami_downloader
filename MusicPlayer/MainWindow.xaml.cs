@@ -400,7 +400,7 @@ namespace MusicPlayer
                 case EnumSearchState.Started:
                     UIHelper.RunOnUI(() =>
                     {
-                        Page = 2;
+                        Page = 0;
                     });
                     MessageBus.Instance.Publish(new MsgSetBusy(this, true));
                     break;
@@ -408,7 +408,7 @@ namespace MusicPlayer
                 case EnumSearchState.Finished:
                     UIHelper.RunOnUI(() =>
                     {
-                        Page = 2;
+                        Page = 0;
                     });
                     MessageBus.Instance.Publish(new MsgSetBusy(this, false));
                     break;
