@@ -14,7 +14,7 @@ namespace Jean_Doe.MusicControl
         {
             album = a;
             TypeImage = "\xE1d2";
-            ImageManager.Get(string.Format("album_{0}.jpg", album.Id), a.Logo, ApplyLogo);
+            InitLogo(string.Format("album_{0}.jpg", Id));
         }
         public string AlbumName { get { return "的专辑"; } }
         public string ArtistName { get { return album.ArtistName; } }

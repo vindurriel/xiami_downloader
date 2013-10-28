@@ -183,7 +183,7 @@ namespace Jean_Doe.MusicControl
         {
             this.song = song;
             TypeImage = "\xE189";
-            ImageManager.Get(string.Format("{0}.art", song.AlbumId), song.Logo, ApplyLogo);
+            InitLogo(string.Format("{0}.art", song.AlbumId));
         }
         public override string Description
         {

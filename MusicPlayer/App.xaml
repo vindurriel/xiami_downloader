@@ -60,11 +60,27 @@
                                 BorderThickness="2" CornerRadius="25">
                             <Grid>
                                 <Ellipse Name="mask" Fill="{DynamicResource selectBrush}" />
-                                <Image Stretch="Uniform"
+
+                                <Image
+                                        IsHitTestVisible="{Binding IsSelected,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
                                         Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}">
-                                    <Image.OpacityMask>
-                                        <VisualBrush Visual="{Binding ElementName=mask}" />
-                                    </Image.OpacityMask>
+                                    <Image.Clip>
+                                        <EllipseGeometry RadiusX="23" RadiusY="23" Center="23,23" />
+                                    </Image.Clip>
+                                    <Image.Effect>
+                                        <BlurEffect
+                                                Radius="{Binding MinHeight,RelativeSource={RelativeSource AncestorType=Image}}" />
+                                    </Image.Effect>
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Setter Property="MinHeight" Value="5" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsHitTestVisible" Value="true">
+                                                    <Setter Property="MinHeight" Value="0" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
                                 </Image>
                             </Grid>
                         </Border>

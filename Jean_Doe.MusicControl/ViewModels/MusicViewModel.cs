@@ -46,6 +46,10 @@ namespace Jean_Doe.MusicControl
             if (m.Logo != null)
                 m.Logo = m.Logo.Replace("_1.jpg", ".jpg");
         }
+        protected void InitLogo(string imgId)
+        {
+            ImageManager.Get(imgId, Logo, ApplyLogo);
+        }
         public void ApplyLogo(BitmapImage src)
         {
             UIHelper.RunOnUI(() => ImageSource = src);
