@@ -25,7 +25,7 @@
         </Storyboard>
         <Storyboard x:Key="SlideInLeft" BeginTime="0:0:0.1">
             <ThicknessAnimation Duration="0:0:.2" Storyboard.TargetProperty="Margin" From="-30,0,30,0" To="0"
-                    EasingFunction="{StaticResource easeFunc}" />
+                   DecelerationRatio=".7" EasingFunction="{DynamicResource easeFunc}" />
             <DoubleAnimation Duration="0:0:.1" Storyboard.TargetProperty="Opacity" From="0" To="1" />
             <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="IsHitTestVisible">
                 <DiscreteBooleanKeyFrame KeyTime="0" Value="True" />
@@ -37,20 +37,10 @@
                 <DiscreteBooleanKeyFrame KeyTime="0" Value="False" />
             </BooleanAnimationUsingKeyFrames>
         </Storyboard>
-        <Storyboard x:Key="MoveFar">
-
-        </Storyboard>
-        <Storyboard x:Key="MoveNear">
-            <DoubleAnimation Duration="0:0:0.2" EasingFunction="{DynamicResource easeFunc}"
-                    Storyboard.TargetProperty="ScaleX" To="1" />
-            <DoubleAnimation Duration="0:0:0.2" EasingFunction="{DynamicResource easeFunc}"
-                    Storyboard.TargetProperty="ScaleY" To="1" />
-            <DoubleAnimation Duration="0:0:0.2" EasingFunction="{DynamicResource easeFunc}"
-                    Storyboard.TargetProperty="Opacity" To="1" />
-        </Storyboard>
         <Storyboard x:Key="SlideUp">
-            <DoubleAnimation BeginTime="0:0:.3" Duration="0:0:0.5" Storyboard.TargetName="part_nowPlaying"
-                    EasingFunction="{DynamicResource easeFunc}" Storyboard.TargetProperty="Height" />
+            <DoubleAnimation BeginTime="0:0:.2" Duration="0:0:0.5" Storyboard.TargetName="part_nowPlaying"
+                    DecelerationRatio=".7" EasingFunction="{DynamicResource easeFunc}"
+                    Storyboard.TargetProperty="Height" />
             <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetName="content_scale"
                     EasingFunction="{DynamicResource easeFunc}" Storyboard.TargetProperty="ScaleX" To="0.7" />
             <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetName="content_scale"
@@ -59,7 +49,7 @@
                     EasingFunction="{DynamicResource easeFunc}" Storyboard.TargetProperty="Opacity" To=".5" />
         </Storyboard>
         <Storyboard x:Key="SlideDown">
-            <DoubleAnimation Duration="0:0:0.5" EasingFunction="{DynamicResource easeFunc}"
+            <DoubleAnimation Duration="0:0:0.5" DecelerationRatio=".7" EasingFunction="{DynamicResource easeFunc}"
                     Storyboard.TargetName="part_nowPlaying" Storyboard.TargetProperty="Height" />
             <DoubleAnimation BeginTime="0:0:.4" Duration="0:0:0.2" Storyboard.TargetName="content_scale"
                     EasingFunction="{DynamicResource easeFunc}" Storyboard.TargetProperty="ScaleX" To="1" />
@@ -160,6 +150,7 @@
                             Content="{Binding Icon}" />
                     <TextBlock x:Name="list_count" Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}}"
                             Text="{Binding ItemsCount, StringFormat= \{0\}}" VerticalAlignment="Center" />
+                    <controls:SearchControl Margin="2,0,0,0"  x:Name="searchKeywordControl" Visibility="{Binding IsHitTestVisible,ElementName=list_search,Converter={StaticResource bool2vis}}"/>
                     <Button x:Name="btn_close" Content="&#xe0e1;" Click="btn_close_Click" DockPanel.Dock="Right" />
                     <Button x:Name="btn_min" Content="&#xE0A1;" Click="btn_min_Click" DockPanel.Dock="Right" />
                     <Button x:Name="btn_restart" Visibility="Collapsed" ToolTip="重启以更新程序" Content="&#xe149;"
@@ -174,7 +165,7 @@
                 <Grid Opacity="0" IsHitTestVisible="false">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
-                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="0" />
                     </Grid.ColumnDefinitions>
                     <GridSplitter Width="30" Background="{DynamicResource lightBrush}" Opacity="0.02" Grid.Column="1"
                             HorizontalAlignment="Left" />
@@ -193,7 +184,6 @@
                     </DockPanel>
                     <Border Margin="30,0,0,0" x:Name="webBrowserPlaceHolder" Grid.Column="1" />
                     <DockPanel>
-                        <controls:SearchControl Margin="2,0,0,0" DockPanel.Dock="Top" x:Name="searchKeywordControl" />
                         <controls:SearchSongListControl Margin="0,10,0,0" x:Name="list_search" DockPanel.Dock="Top" />
                     </DockPanel>
                 </Grid>

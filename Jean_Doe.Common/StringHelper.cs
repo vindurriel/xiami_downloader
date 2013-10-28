@@ -25,7 +25,7 @@ namespace Jean_Doe.Common
         }
         public static string toUtf8(this string s)
         {
-            return Encoding.UTF8.GetString(Encoding.GetEncoding(936).GetBytes(s));
+            return  Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(s));
         }
         public static string toGBK(this string s)
         {

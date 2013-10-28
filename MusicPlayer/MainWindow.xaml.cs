@@ -308,7 +308,11 @@ namespace MusicPlayer
             //load last active page
             var lastPage = int.Parse(Global.AppSettings["ActivePage"]);
             Page = lastPage;
+            //initWebBrowser();
+        }
 
+        private void initWebBrowser()
+        {
             WebBrowserOverlay wbo = new WebBrowserOverlay(webBrowserPlaceHolder);
             webcontrol = wbo.WebBrowser;
             webcontrol.Navigated += (s, e) =>

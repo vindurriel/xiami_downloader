@@ -100,6 +100,7 @@ namespace Jean_Doe.MusicControl
             {
                 if (SearchManager.State == EnumSearchState.Finished)
                 {
+                    historySearch.DoesMoveHistory = true;
                     await SearchManager.Search(Key, SearchType);
                 }
                 else
@@ -116,6 +117,7 @@ namespace Jean_Doe.MusicControl
         {
             try
             {
+                historySearch.DoesMoveHistory = false;
                 var i = historySearch.SelectedIndex;
                 if (i < 0 || i > historySearch.Items.Count - 1) { CanGoBack = false; return; }
                 historySearch.SelectedIndex = i + 1;

@@ -1,24 +1,23 @@
-﻿<ComboBox x:Class="Jean_Doe.MusicControl.HistorySearch"
-          TextSearch.TextPath="Key"
-          IsEditable="True"
-          TextBoxBase.TextChanged="ComboBox_TextChanged_1"
-          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<ComboBox x:Class="Jean_Doe.MusicControl.HistorySearch" TextSearch.TextPath="Key" IsEditable="True"
+        BorderBrush="{DynamicResource darkBrush}" BorderThickness="2" TextBoxBase.TextChanged="ComboBox_TextChanged_1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ComboBox.Style>
-        <Style   TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}"/>
+        <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}" />
     </ComboBox.Style>
     <ComboBox.ItemTemplate>
         <DataTemplate>
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
-                <DockPanel  Margin="5,0,0,0" >
-                    <TextBlock  Text="{Binding FriendlyName}" VerticalAlignment="Center" TextTrimming="WordEllipsis"/>
+                <DockPanel Margin="5,0,0,0">
+                    <TextBlock Text="{Binding FriendlyName}" VerticalAlignment="Center" TextTrimming="WordEllipsis" />
                     <!--<TextBlock Grid.Column="1" Margin="5,0,0,0"  Text="{Binding SearchCount,StringFormat={}搜索{0}次}" />-->
                 </DockPanel>
-                <FrameworkElement Grid.Column="1"  Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
+                <FrameworkElement Grid.Column="1"
+                        Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
             </Grid>
         </DataTemplate>
     </ComboBox.ItemTemplate>

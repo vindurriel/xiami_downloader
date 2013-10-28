@@ -59,6 +59,7 @@ namespace Jean_Doe.MusicControl
         }
         bool isChanging = false;
         public bool IsChanging { get { return isChanging; } }
+        public bool DoesMoveHistory = false;
         public void Upsert(EnumSearchType t, string key, long counter)
         {
             isChanging = true;
@@ -78,10 +79,13 @@ namespace Jean_Doe.MusicControl
                 item.SearchCount++;
                 item.SearchType = t;
                 item.ResultCount = counter;
-                HistoryItems.Remove(item);
-                HistoryItems.Insert(0, item);
+                //if (DoesMoveHistory)
+                //{
+                //    HistoryItems.Remove(item);
+                //    HistoryItems.Insert(0, item);
+                //}
             }
-            SelectedIndex = 0;
+            SelectedItem = item;
             isChanging = false;
         }
         ICollectionView Source;

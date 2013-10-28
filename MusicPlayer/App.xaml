@@ -15,7 +15,7 @@
                     <SolidColorBrush x:Key='skinBrush' />
                     <FontFamily x:Key="font_symbol">/xiami;component/Resources/#Segoe UI Symbol</FontFamily>
                     <FontFamily x:Key="font">/xiami;component/Resources/#Soho Gothic Pro Light,Microsoft Yahei Light</FontFamily>
-                    <QuinticEase x:Key="easeFunc" EasingMode="EaseOut" />
+                    <PowerEase x:Key="easeFunc" EasingMode="EaseOut" Power="2" />
                     <Style x:Key="simple_container" TargetType="{x:Type ListViewItem}">
                         <Setter Property="Template">
                             <Setter.Value>
