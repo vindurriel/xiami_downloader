@@ -46,9 +46,9 @@ namespace Jean_Doe.MusicControl
             new HistorySearchItem{ Key="user:artist",SearchType=EnumSearchType.artist},
             new HistorySearchItem{ Key="user:collect",SearchType=EnumSearchType.collect},
             new HistorySearchItem{ Key="user:album",SearchType=EnumSearchType.album},
-            new HistorySearchItem{ Key="user:collect_recommend",SearchType=EnumSearchType.collect},
+            //new HistorySearchItem{ Key="user:collect_recommend",SearchType=EnumSearchType.collect},
             new HistorySearchItem{ Key="user:guess",SearchType=EnumSearchType.song},
-            new HistorySearchItem{ Key="user:daily",SearchType=EnumSearchType.song},
+            //new HistorySearchItem{ Key="user:daily",SearchType=EnumSearchType.song},
         };
     }
 }

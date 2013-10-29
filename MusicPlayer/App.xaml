@@ -59,10 +59,10 @@
                         <Border x:Name="border" VerticalAlignment="Top" Width="50" Height="50" BorderBrush="#afff"
                                 BorderThickness="2" CornerRadius="25">
                             <Grid>
-                                <Ellipse Name="mask" Fill="{DynamicResource selectBrush}" />
+                                <Ellipse Name="mask" Fill="{DynamicResource selectBrush}" Margin="1"/>
 
                                 <Image
-                                        IsHitTestVisible="{Binding IsSelected,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
+                                        IsEnabled="{Binding IsMouseOver,RelativeSource={RelativeSource AncestorType=ListViewItem}}"
                                         Source="{Binding ImageSource,NotifyOnTargetUpdated=True,UpdateSourceTrigger=PropertyChanged}">
                                     <Image.Clip>
                                         <EllipseGeometry RadiusX="23" RadiusY="23" Center="23,23" />
@@ -75,7 +75,7 @@
                                         <Style TargetType="Image">
                                             <Setter Property="MinHeight" Value="5" />
                                             <Style.Triggers>
-                                                <Trigger Property="IsHitTestVisible" Value="true">
+                                                <Trigger Property="IsEnabled" Value="true">
                                                     <Setter Property="MinHeight" Value="0" />
                                                 </Trigger>
                                             </Style.Triggers>

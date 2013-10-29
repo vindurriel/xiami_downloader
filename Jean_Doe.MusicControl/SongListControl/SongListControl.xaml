@@ -21,8 +21,6 @@
         </DataTemplate>
         <DataTemplate x:Key="t_search">
             <DockPanel>
-                <TextBlock Text="{Binding Description}" Opacity="0.3" MaxWidth="400"
-                        Style="{DynamicResource label_base}" />
             </DockPanel>
         </DataTemplate>
         <DataTemplate x:Key="t_download">
@@ -64,7 +62,7 @@
                         </Style>
                     </DockPanel.Resources>
                     <ContentControl Margin="0,0,5,0" DockPanel.Dock="Left" Content="{Binding}"
-                            ContentTemplate="{StaticResource t_image}" />
+                            ToolTip="{Binding Description}" ContentTemplate="{StaticResource t_image}" />
                     <DockPanel DockPanel.Dock="Top">
                         <TextBlock Text="{Binding Name}" FontSize="15" />
 

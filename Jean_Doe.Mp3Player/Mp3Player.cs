@@ -12,18 +12,23 @@ namespace Jean_Doe.Mp3Player
 
         public double Play()
         {
-            try
+            Exception x = null;
+            for (int i = 0; i < 3; i++)
             {
-                Pause();
-                device.Play();
-                return stream.TotalTime.TotalMilliseconds;
+                try
+                {
+                    device.Play();
+                    return stream.TotalTime.TotalMilliseconds;
+                }
+                catch (Exception e)
+                {
+                    x = e;
+                    Initialize(f);
+                }
             }
-            catch (Exception e)
-            {
-                log(e);
-                log(new Exception(f));
-                return 0.0;
-            }
+            log(x);
+            log(new Exception(f));
+            return Double.PositiveInfinity;
         }
 
         public void Pause()

@@ -19,12 +19,12 @@ namespace Jean_Doe.MusicControl
     /// </summary>
     public partial class HistorySearch : IHandle<SearchResult>
     {
+        int numOfHistory = 10;
         public HistorySearch()
         {
             InitializeComponent();
             MessageBus.Instance.Subscribe(this);
             Source = CollectionViewSource.GetDefaultView(HistoryItems);
-            Source.Filter = (s) => { return HistorySearchItem.Defaults.IndexOf(s as HistorySearchItem) != -1 || HistoryItems.IndexOf(s as HistorySearchItem) < 10; };
             ItemsSource = Source;
             MinWidth = 200;
             MouseLeftButtonUp += HistorySearch_MouseLeftButtonUp;
@@ -36,7 +36,7 @@ namespace Jean_Doe.MusicControl
             HistoryItems.Clear();
             try
             {
-                PersistHelper.Load<HistorySearchItem>().ForEach(x => HistoryItems.Add(x));
+                //PersistHelper.Load<HistorySearchItem>().Take(numOfHistory).ToList().ForEach(x => HistoryItems.Add(x));
                 HistorySearchItem.Defaults.ForEach(x => HistoryItems.Add(x));
             }
             catch (Exception e)
@@ -59,33 +59,33 @@ namespace Jean_Doe.MusicControl
         }
         bool isChanging = false;
         public bool IsChanging { get { return isChanging; } }
-        public bool DoesMoveHistory = false;
-        public void Upsert(EnumSearchType t, string key, long counter)
+        public void RemoveAt(int i)
+        {
+            HistoryItems.RemoveAt(i);
+        }
+
+        public void Insert(EnumSearchType t, string key, long counter)
         {
             isChanging = true;
             if (string.IsNullOrEmpty(key)) return;
             var k = key.ToLower().Trim();
-            var item = HistoryItems.FirstOrDefault(x => x.Key == k);
-            if (item == null)
-                HistoryItems.Insert(0, new HistorySearchItem
-                {
-                    Key = k,
-                    SearchType = t,
-                    SearchCount = 1,
-                    ResultCount = counter,
-                });
-            else
+            if (k == HistoryItems[0].Key && t == HistoryItems[0].SearchType)
             {
-                item.SearchCount++;
-                item.SearchType = t;
-                item.ResultCount = counter;
-                //if (DoesMoveHistory)
-                //{
-                //    HistoryItems.Remove(item);
-                //    HistoryItems.Insert(0, item);
-                //}
+                isChanging = false;
+                return;
             }
-            SelectedItem = item;
+            if (HistoryItems.Count == numOfHistory + HistorySearchItem.Defaults.Count)
+            {
+                HistoryItems.RemoveAt(numOfHistory - 1);
+            }
+            HistoryItems.Insert(0, new HistorySearchItem
+            {
+                Key = k,
+                SearchType = t,
+                SearchCount = 1,
+                ResultCount = counter,
+            });
+            SelectedIndex = 0;
             isChanging = false;
         }
         ICollectionView Source;
@@ -111,7 +111,7 @@ namespace Jean_Doe.MusicControl
             if (message == null || string.IsNullOrEmpty(message.Keyword)) return;
             UIHelper.RunOnUI(() =>
             {
-                this.Upsert(message.SearchType, message.Keyword, message.Count);
+                this.Insert(message.SearchType, message.Keyword, message.Count);
                 this.Save();
             });
         }

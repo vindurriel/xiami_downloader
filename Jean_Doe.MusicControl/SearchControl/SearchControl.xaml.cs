@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Artwork.MessageBus;
+using Artwork.MessageBus.Interfaces;
+using Jean_Doe.Common;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Artwork.MessageBus;
-using Artwork.MessageBus.Interfaces;
-using Jean_Doe.Common;
 
 namespace Jean_Doe.MusicControl
 {
@@ -34,7 +25,6 @@ namespace Jean_Doe.MusicControl
             Loaded += SearchControl_Loaded;
 
         }
-
         void historySearch_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (historySearch.IsChanging) return;
@@ -100,7 +90,6 @@ namespace Jean_Doe.MusicControl
             {
                 if (SearchManager.State == EnumSearchState.Finished)
                 {
-                    historySearch.DoesMoveHistory = true;
                     await SearchManager.Search(Key, SearchType);
                 }
                 else
@@ -117,11 +106,9 @@ namespace Jean_Doe.MusicControl
         {
             try
             {
-                historySearch.DoesMoveHistory = false;
-                var i = historySearch.SelectedIndex;
-                if (i < 0 || i > historySearch.Items.Count - 1) { CanGoBack = false; return; }
-                historySearch.SelectedIndex = i + 1;
-                //btn_search_Click(this, e);
+                historySearch.RemoveAt(0);
+                historySearch.SelectedIndex = 0;
+                if (historySearch.Items.Count <= HistorySearchItem.Defaults.Count+1) { CanGoBack = false; return; }
             }
             catch (Exception ex)
             {
