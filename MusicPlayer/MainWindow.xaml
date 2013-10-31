@@ -257,13 +257,13 @@
                 <Button x:Name="btn_next" Content="&#xE101;" Click="btn_next_Click" ToolTip="下一首" />
             </DockPanel>
             <Grid Grid.Row="1" Grid.ColumnSpan="3" Margin="0,5,0,0">
-                <Slider VerticalAlignment="Top" Background="Transparent" Cursor="Hand"
-                        Foreground="{DynamicResource skinBrush}" x:Name="slider" Margin="0,0,0,0" />
-                <Grid Margin="0,5,5,0">
+                <Grid Margin="0,10,0,0">
                     <Image Source="{Binding Logo}" Stretch="UniformToFill" />
                     <Border Background="{DynamicResource selectBrush}" Opacity=".5" />
                 </Grid>
-                <Grid x:Name="lrc" Margin="0,5,0,0">
+                <Slider VerticalAlignment="Top" Background="Transparent" Cursor="Hand"
+                        Foreground="{DynamicResource skinBrush}" x:Name="slider" Margin="0,0,0,0" />
+                <Grid x:Name="lrc" Margin="0,10,0,0">
                     <controls:LyricControl x:Name="lyricShow" HorizontalAlignment="Center"
                             HorizontalContentAlignment="Center" MaxHeight="{Binding ActualHeight,ElementName=lrc}" />
                 </Grid>
