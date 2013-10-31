@@ -25,8 +25,9 @@
         </Storyboard>
         <Storyboard x:Key="SlideInLeft" BeginTime="0:0:0.1">
             <ThicknessAnimation Duration="0:0:.2" Storyboard.TargetProperty="Margin" From="-30,0,30,0" To="0"
-                    DecelerationRatio=".7" EasingFunction="{DynamicResource easeFunc}" />
-            <DoubleAnimation Duration="0:0:.1" Storyboard.TargetProperty="Opacity" From="0" To="1" />
+                    DecelerationRatio=".6" />
+            <DoubleAnimation Duration="0:0:.2" DecelerationRatio=".6" Storyboard.TargetProperty="Opacity" From="0"
+                    To="1" />
             <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="IsHitTestVisible">
                 <DiscreteBooleanKeyFrame KeyTime="0" Value="True" />
             </BooleanAnimationUsingKeyFrames>
@@ -39,24 +40,23 @@
         </Storyboard>
         <Storyboard x:Key="SlideUp">
             <DoubleAnimation BeginTime="0:0:.2" Duration="0:0:0.5" Storyboard.TargetName="part_nowPlaying"
-                    DecelerationRatio=".7" EasingFunction="{DynamicResource easeFunc}"
-                    Storyboard.TargetProperty="Height" />
-            <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetName="content_scale"
-                    EasingFunction="{DynamicResource easeFunc}" Storyboard.TargetProperty="ScaleX" To="0.7" />
-            <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetName="content_scale"
-                    EasingFunction="{DynamicResource easeFunc}" Storyboard.TargetProperty="ScaleY" To="0.7" />
-            <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetName="content_mask"
-                    EasingFunction="{DynamicResource easeFunc}" Storyboard.TargetProperty="Opacity" To=".5" />
+                    DecelerationRatio=".6" Storyboard.TargetProperty="Height" />
+            <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetName="content_scale" Storyboard.TargetProperty="ScaleX"
+                    To="0.7" />
+            <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetName="content_scale" Storyboard.TargetProperty="ScaleY"
+                    To="0.7" />
+            <DoubleAnimation Duration="0:0:0.2" Storyboard.TargetName="content_mask" Storyboard.TargetProperty="Opacity"
+                    To=".5" />
         </Storyboard>
         <Storyboard x:Key="SlideDown">
-            <DoubleAnimation Duration="0:0:0.5" DecelerationRatio=".7" EasingFunction="{DynamicResource easeFunc}"
-                    Storyboard.TargetName="part_nowPlaying" Storyboard.TargetProperty="Height" />
-            <DoubleAnimation BeginTime="0:0:.4" Duration="0:0:0.2" Storyboard.TargetName="content_scale"
-                    EasingFunction="{DynamicResource easeFunc}" Storyboard.TargetProperty="ScaleX" To="1" />
-            <DoubleAnimation BeginTime="0:0:.4" Duration="0:0:0.2" Storyboard.TargetName="content_scale"
-                    EasingFunction="{DynamicResource easeFunc}" Storyboard.TargetProperty="ScaleY" To="1" />
-            <DoubleAnimation BeginTime="0:0:.4" Duration="0:0:0.2" Storyboard.TargetName="content_mask"
-                    EasingFunction="{DynamicResource easeFunc}" Storyboard.TargetProperty="Opacity" To="0" />
+            <DoubleAnimation Duration="0:0:0.5" DecelerationRatio=".6" Storyboard.TargetName="part_nowPlaying"
+                    Storyboard.TargetProperty="Height" />
+            <DoubleAnimation BeginTime="0:0:.3" Duration="0:0:0.2" Storyboard.TargetName="content_scale"
+                    Storyboard.TargetProperty="ScaleX" To="1" />
+            <DoubleAnimation BeginTime="0:0:.3" Duration="0:0:0.2" Storyboard.TargetName="content_scale"
+                    Storyboard.TargetProperty="ScaleY" To="1" />
+            <DoubleAnimation BeginTime="0:0:.3" Duration="0:0:0.2" Storyboard.TargetName="content_mask"
+                    Storyboard.TargetProperty="Opacity" To="0" />
         </Storyboard>
         <Storyboard x:Key="anim_show_more" Storyboard.TargetName="navi">
             <DoubleAnimation Storyboard.TargetProperty="Height" Duration="0:0:0.2" To="80"
@@ -151,7 +151,7 @@
                     <Grid Width="25">
                         <TextBlock x:Name="list_count"
                                 Visibility="{Binding ItemsCount,Converter={StaticResource int2vis}}"
-                                Text="{Binding ItemsCount, StringFormat= \{0\}}" VerticalAlignment="Center"/>
+                                Text="{Binding ItemsCount, StringFormat= \{0\}}" VerticalAlignment="Center" />
                     </Grid>
                     <controls:SearchControl Margin="5,0,0,0" x:Name="searchKeywordControl"
                             Visibility="{Binding IsHitTestVisible,ElementName=list_search,Converter={StaticResource bool2vis}}" />
@@ -249,6 +249,8 @@
                         <Setter Property="Margin" Value="10,0" />
                     </Style>
                 </DockPanel.Resources>
+                <Button x:Name="btn_now_action" Content="···" Click="btn_now_action_Click"
+                        Visibility="{Binding IsHitTestVisible,ElementName=content_mask,Converter={StaticResource bool2vis}}" />
                 <Button x:Name="btn_select_now_playing" Content="&#xE1e9;" Click="btn_select_now_playing_Click"
                         ToolTip="" />
                 <Button x:Name="btn_plause" Content="&#xE102;" Click="btn_plause_Click" ToolTip="播放/暂停" />
@@ -257,9 +259,13 @@
             <Grid Grid.Row="1" Grid.ColumnSpan="3" Margin="0,5,0,0">
                 <Slider VerticalAlignment="Top" Background="Transparent" Cursor="Hand"
                         Foreground="{DynamicResource skinBrush}" x:Name="slider" Margin="0,0,0,0" />
+                <Grid Margin="0,5,5,0">
+                    <Image Source="{Binding Logo}" Stretch="UniformToFill" />
+                    <Border Background="{DynamicResource selectBrush}" Opacity=".5" />
+                </Grid>
                 <Grid x:Name="lrc" Margin="0,5,0,0">
                     <controls:LyricControl x:Name="lyricShow" HorizontalAlignment="Center"
-                            MaxHeight="{Binding ActualHeight,ElementName=lrc}" />
+                            HorizontalContentAlignment="Center" MaxHeight="{Binding ActualHeight,ElementName=lrc}" />
                 </Grid>
             </Grid>
 

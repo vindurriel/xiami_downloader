@@ -549,10 +549,30 @@ namespace MusicPlayer
         private void header_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var cm = new ContextMenu();
+            cm.ItemTemplate = App.Current.TryFindResource("simple_hover_item") as DataTemplate;
             cm.PreviewMouseLeftButtonUp += (s, a) => (s as ContextMenu).IsOpen = false;
             var current = heading.DataContext as CharmAction;
-            cm.ItemsSource = headingSource.Where(x => x != current);
+            cm.ItemsSource = headingSource;
             cm.Placement = PlacementMode.Bottom;
+            cm.PlacementTarget = sender as UIElement;
+            cm.StaysOpen = false;
+            cm.IsOpen = true;
+        }
+
+        private void btn_now_action_Click(object sender, RoutedEventArgs e)
+        {
+            var cm = new ContextMenu();
+            var source = new List<CharmAction>
+            {
+                list_complete.GetAction("查看专辑"),
+                list_complete.GetAction("查看艺术家"),
+                list_complete.GetAction("在浏览器中打开"),
+                list_complete.GetAction("收藏"),
+                list_complete.GetAction("不再收藏"),
+            };
+            cm.ItemsSource = source;
+            cm.Placement = PlacementMode.Bottom;
+            cm.PreviewMouseUp += (s, a) => { (s as ContextMenu).IsOpen = false; };
             cm.PlacementTarget = sender as UIElement;
             cm.StaysOpen = false;
             cm.IsOpen = true;

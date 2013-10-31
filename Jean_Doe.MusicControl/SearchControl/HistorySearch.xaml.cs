@@ -36,7 +36,9 @@ namespace Jean_Doe.MusicControl
             HistoryItems.Clear();
             try
             {
-                //PersistHelper.Load<HistorySearchItem>().Take(numOfHistory).ToList().ForEach(x => HistoryItems.Add(x));
+                var dd = PersistHelper.Load<HistorySearchItem>();
+                dd.Reverse();
+                dd.Take(numOfHistory).ToList().ForEach(x => HistoryItems.Add(x));
                 HistorySearchItem.Defaults.ForEach(x => HistoryItems.Add(x));
             }
             catch (Exception e)

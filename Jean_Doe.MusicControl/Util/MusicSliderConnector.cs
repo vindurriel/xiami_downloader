@@ -64,7 +64,8 @@ namespace Jean_Doe.MusicControl
         void Mp3Player_SongChanged(object sender, SongChangedEventArgs e)
         {
             _slider.Visibility = Visibility.Visible;
-            canReposition = SongViewModel.GetId(e.Id).Song.DownloadState == "complete";
+            //canReposition = SongViewModel.GetId(e.Id).Song.DownloadState == "complete";
+            canReposition = true;
             _slider.Cursor = canReposition ? System.Windows.Input.Cursors.Hand : System.Windows.Input.Cursors.No;
             if (_slider.Maximum != e.Total)
             {

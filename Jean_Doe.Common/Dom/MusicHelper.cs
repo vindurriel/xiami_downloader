@@ -41,6 +41,8 @@ public static class MusicHelper
                 }
             }
         }
+        if (res != null)
+            res = string.Format("{0}", res).Replace("&#039;","'");
         return string.Format("{0}", res);
     }
 }

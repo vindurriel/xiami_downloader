@@ -69,7 +69,6 @@
                     </DockPanel>
                     <DockPanel DockPanel.Dock="Top">
                         <TextBlock Text="{Binding ArtistName}" Opacity=".5" />
-                        <TextBlock Text="{Binding AlbumName}" Opacity=".5" />
                     </DockPanel>
                     <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource templateSelector}" />
                 </DockPanel>

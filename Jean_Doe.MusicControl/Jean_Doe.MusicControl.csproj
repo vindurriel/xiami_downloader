@@ -143,7 +143,6 @@
     <Compile Include="LyricViewModel.cs" />
     <Compile Include="PlayList.cs" />
     <Compile Include="SongListControl\VirtualizingTilePanel.cs" />
-    <Compile Include="SongListControl\VirtualizingWrapPanel.cs" />
     <Compile Include="Util\AfterDownloadManager.cs" />
     <Compile Include="Util\ImageHelper.cs" />
     <Compile Include="Util\ListViewExtension.cs" />
