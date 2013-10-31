@@ -463,8 +463,9 @@ public class XiamiSearchProvider : ISearchProvider
         List<IMusic> res = new List<IMusic>();
         try
         {
-            var obj = json["song"];
-            var song = MusicFactory.CreateFromJson(obj, EnumMusicType.song);
+            if (json["song"] != null)
+                json = json["song"];
+            var song = MusicFactory.CreateFromJson(json, EnumMusicType.song);
             res.Add(song);
         }
         catch { }

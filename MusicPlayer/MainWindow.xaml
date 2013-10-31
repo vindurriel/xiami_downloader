@@ -249,7 +249,7 @@
                         <Setter Property="Margin" Value="10,0" />
                     </Style>
                 </DockPanel.Resources>
-                <Button x:Name="btn_now_action" Content="···" Click="btn_now_action_Click"
+                <Button x:Name="btn_now_action" Content="&#xE10C;" Click="btn_now_action_Click"
                         Visibility="{Binding IsHitTestVisible,ElementName=content_mask,Converter={StaticResource bool2vis}}" />
                 <Button x:Name="btn_select_now_playing" Content="&#xE1e9;" Click="btn_select_now_playing_Click"
                         ToolTip="" />

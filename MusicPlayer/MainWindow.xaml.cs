@@ -117,16 +117,16 @@ namespace MusicPlayer
 
         private void SetPlayNextMode(string s)
         {
-            string c = "顺";
+            string c = "\xE1CD";
             string tooltip = "顺序播放";
             switch (s)
             {
                 case "Random":
-                    c = "随";
+                    c = "\xE14B";
                     tooltip = "随机播放";
                     break;
                 case "Repeat":
-                    c = "单";
+                    c = "\xE1CC";
                     tooltip = "单曲循环";
                     break;
                 default:
