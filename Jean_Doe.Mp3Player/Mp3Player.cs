@@ -28,7 +28,7 @@ namespace Jean_Doe.Mp3Player
             }
             log(x);
             log(new Exception(f));
-            return Double.PositiveInfinity;
+            return 65536.00;
         }
 
         public void Pause()
