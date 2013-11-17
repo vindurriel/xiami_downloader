@@ -61,9 +61,10 @@ namespace MusicPlayer
                 new ButtonConfigItem("百度云账户","登录",btn_baidu_login_Click),
                 new LabelConfigItem("百度云账户","baidu_access_token","令牌"),
                 new LabelConfigItem("软件更新","UpdateInfo",""),
+                new ButtonConfigItem("软件更新","检查更新",btn_check_update_Click),
             };
             foreach (var item in Configs)
-            {
+            { 
                 if (!groups.ContainsKey(item.GroupName))
                     groups[item.GroupName] = new List<ConfigItem>();
                 groups[item.GroupName].Add(item);
@@ -95,12 +96,12 @@ namespace MusicPlayer
             await XiamiClient.GetDefault().Login();
             Artwork.MessageBus.MessageBus.Instance.Publish(new MsgSetBusy(this, false));
         }
-        private  void btn_baidu_login_Click(object sender, RoutedEventArgs a)
+        private void btn_baidu_login_Click(object sender, RoutedEventArgs a)
         {
             var b = new System.Windows.Forms.WebBrowser();
             b.Width = 800;
             b.Height = 600;
-            b.AllowNavigation=true;
+            b.AllowNavigation = true;
             var w = new System.Windows.Window();
             b.Navigated += (s, e) =>
             {
@@ -120,7 +121,7 @@ namespace MusicPlayer
                 {
                     Logger.Error(ex);
                 }
-               
+
             };
             b.Navigate(new PCS_client().GetAccessTokenPage());
             var h = new System.Windows.Forms.Integration.WindowsFormsHost();
@@ -142,6 +143,13 @@ namespace MusicPlayer
             {
                 Global.AppSettings["DownloadFolder"] = dialog.SelectedPath;
             }
+        }
+        private void btn_check_update_Click(object sender, RoutedEventArgs e)
+        {
+            Task.Run(() =>
+            {
+                Updater.CheckUpdate();
+            });
         }
     }
 }

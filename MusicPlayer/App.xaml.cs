@@ -39,16 +39,7 @@ namespace MusicPlayer
                 Global.ListenToEvent("baidu_access_token", (s) =>
                 {
                     if (string.IsNullOrEmpty(s)) return;
-                    Global.AppSettings["UpdateInfo"] = "正在检查更新";
-                    if (!Updater.IsLatest())
-                    {
-                        Global.AppSettings["UpdateInfo"] = "正在下载更新";
-                        Updater.Download();
-                    }
-                    else
-                    {
-                        Global.AppSettings["UpdateInfo"] = "已经是最新版本";
-                    }
+                    Updater.CheckUpdate();
                 });
                 if (string.IsNullOrEmpty(Global.AppSettings["baidu_access_token"]))
                 {
