@@ -29,7 +29,20 @@ namespace MusicPlayer
             }
             return res;
         }
-        public static bool IsLatest()
+        public static void CheckUpdate()
+        {
+            Global.AppSettings["UpdateInfo"] = "正在检查更新";
+            if (!Updater.IsLatest())
+            {
+                Global.AppSettings["UpdateInfo"] = "正在下载更新";
+                Updater.Download();
+            }
+            else
+            {
+                Global.AppSettings["UpdateInfo"] = "已经是最新版本";
+            }
+        }
+        static bool IsLatest()
         {
             var client = new PCS_client();
             client.DownloadFile("/apps/folder1/version.txt", Global.CWD("latest.txt"));
@@ -44,7 +57,7 @@ namespace MusicPlayer
                 current = File.ReadAllText(Global.CWD("current.txt"));
             return current == latest;
         }
-        public static void Download()
+        static void Download()
         {
             var dest = Global.CWD("latest.zip");
             if (File.Exists(dest))

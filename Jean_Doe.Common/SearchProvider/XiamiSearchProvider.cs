@@ -149,6 +149,7 @@ public class XiamiSearchProvider : ISearchProvider
         }
         return sr;
     }
+    static bool isGuessUsed=false;
     static async Task getUserMusic(string key)
     {
         bool isKeyValidMusicType = new Regex("^(song|album|artist|collect)$").IsMatch(key.Trim());
@@ -167,6 +168,11 @@ public class XiamiSearchProvider : ISearchProvider
                 obj = await XiamiClient.GetDefault().Call_xiami_api("Recommend.DailySongs");
             else if (key == "guess")
             {
+                if (!isGuessUsed)
+                {
+                    await Http.Get("http://www.xiami.com/index/feeds",null);
+                    isGuessUsed = true;
+                }
                 musicType = EnumMusicType.all;
                 searchType = EnumSearchType.all;
                 var html = await Http.Get(string.Format(XiamiUrl.url_recommend_guess, page), null);
