@@ -564,11 +564,11 @@ namespace MusicPlayer
             var cm = new ContextMenu();
             var source = new List<CharmAction>
             {
-                list_complete.GetAction("查看专辑"),
-                list_complete.GetAction("查看艺术家"),
-                list_complete.GetAction("在浏览器中打开"),
-                list_complete.GetAction("收藏"),
-                list_complete.GetAction("不再收藏"),
+                currentList.GetAction("查看专辑"),
+                currentList.GetAction("查看艺术家"),
+                currentList.GetAction("在浏览器中打开"),
+                currentList.GetAction("收藏"),
+                currentList.GetAction("不再收藏"),
             };
             cm.ItemsSource = source;
             cm.Placement = PlacementMode.Bottom;

@@ -115,7 +115,6 @@
                                 <TextBlock FontFamily="{DynamicResource font_symbol}" VerticalAlignment="Bottom"
                                         Visibility="{Binding IsNowPlaying,Converter={StaticResource bool2vis}}"
                                         Text="&#xE1e9;" />
-
                             </Grid>
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
